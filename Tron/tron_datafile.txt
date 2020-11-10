@@ -24,8 +24,17 @@
 ;/*   line before the data as data also. */
 
 commentline 0000 Tron 8/9 in MAME
-ascii 006b-008d
+ascii 006b-008c
+commentline 04b0 Default high score initials
+ascii 04b0-04cd
 ascii 0513-051a
+data  0b57-0b57
+ascii 0b58-0b82
+data  0b86-0b86
+ascii 0b87-0bc2
+ascii 120c-123b
+ascii 1653-165b
+ascii 1d0e-1e10
 commentline C000 RAM
 
 

@@ -94,8 +94,9 @@ ORG $0000
 006A: 76             HALT  
 
 006B: COPYRIGHT 1982 BALLY MIDWAY MFG 
-008B: CO
+008B: CO
 
+008D: 08             EX    AF,AF'
 008E: C4 0C 29       CALL  NZ,$290C
 0091: 85             ADD   A,L
 0092: 39             ADD   HL,SP
@@ -777,36 +778,10 @@ ORG $0000
 04AD: 00             NOP   
 04AE: 00             NOP   
 04AF: 00             NOP   
-04B0: 4A             LD    C,D
-04B1: 50             LD    D,B
-04B2: 00             NOP   
-04B3: 42             LD    B,D
-04B4: 41             LD    B,C
-04B5: 00             NOP   
-04B6: 47             LD    B,A
-04B7: 47             LD    B,A
-04B8: 00             NOP   
-04B9: 45             LD    B,L
-04BA: 56             LD    D,(HL)
-04BB: 00             NOP   
-04BC: 41             LD    B,C
-04BD: 47             LD    B,A
-04BE: 00             NOP   
-04BF: 4A             LD    C,D
-04C0: 4D             LD    C,L
-04C1: 00             NOP   
-04C2: 54             LD    D,H
-04C3: 4C             LD    C,H
-04C4: 00             NOP   
-04C5: 53             LD    D,E
-04C6: 42             LD    B,D
-04C7: 00             NOP   
-04C8: 4D             LD    C,L
-04C9: 4A             LD    C,D
-04CA: 00             NOP   
-04CB: 4A             LD    C,D
-04CC: 4A             LD    C,D
-04CD: 00             NOP   
+
+*** Default high score initials
+04B0: JP<NUL>BA<NUL>GG<NUL>EV<NUL>AG<NUL>JM<NUL>TL<NUL>SB<NUL>MJ<NUL>JJ<NUL>
+
 04CE: 00             NOP   
 04CF: 20 00          JR    NZ,$04D1
 
@@ -861,7 +836,7 @@ ORG $0000
 050F: 32 BD FC       LD    ($FCBD),A
 0512: C9             RET   
 
-0513: CREDITS<
+0513: CREDITS<NUL>
 
 051B: 21 63 C4       LD    HL,$C463
 051E: 7E             LD    A,(HL)
@@ -1822,115 +1797,18 @@ ORG $0000
 
 0B55: 91             SUB   A,C
 0B56: 51             LD    D,C
-0B57: 20 43          JR    NZ,$0B9C
 
-0B59: 4F             LD    C,A
-0B5A: 50             LD    D,B
-0B5B: 59             LD    E,C
-0B5C: 52             LD    D,D
-0B5D: 49             LD    C,C
-0B5E: 47             LD    B,A
-0B5F: 48             LD    C,B
-0B60: 54             LD    D,H
-0B61: 20 4D          JR    NZ,$0BB0
+0B58: COPYRIGHT MCMLXXXI<NUL>WALT DISNEY P
+0B78: RODUCTIONS<NUL>
 
-0B63: 43             LD    B,E
-0B64: 4D             LD    C,L
-0B65: 4C             LD    C,H
-0B66: 58             LD    E,B
-0B67: 58             LD    E,B
-0B68: 58             LD    E,B
-0B69: 49             LD    C,C
-0B6A: 00             NOP   
-0B6B: 57             LD    D,A
-0B6C: 41             LD    B,C
-0B6D: 4C             LD    C,H
-0B6E: 54             LD    D,H
-0B6F: 20 44          JR    NZ,$0BB5
-
-0B71: 49             LD    C,C
-0B72: 53             LD    D,E
-0B73: 4E             LD    C,(HL)
-0B74: 45             LD    B,L
-0B75: 59             LD    E,C
-0B76: 20 50          JR    NZ,$0BC8
-
-0B78: 52             LD    D,D
-0B79: 4F             LD    C,A
-0B7A: 44             LD    B,H
-0B7B: 55             LD    D,L
-0B7C: 43             LD    B,E
-0B7D: 54             LD    D,H
-0B7E: 49             LD    C,C
-0B7F: 4F             LD    C,A
-0B80: 4E             LD    C,(HL)
-0B81: 53             LD    D,E
-0B82: 00             NOP   
 0B83: FF             RST   $38
 
 0B84: 91             SUB   A,C
 0B85: 51             LD    D,C
-0B86: 20 43          JR    NZ,$0BCB
 
-0B88: 4F             LD    C,A
-0B89: 50             LD    D,B
-0B8A: 59             LD    E,C
-0B8B: 52             LD    D,D
-0B8C: 49             LD    C,C
-0B8D: 47             LD    B,A
-0B8E: 48             LD    C,B
-0B8F: 54             LD    D,H
-0B90: 20 4D          JR    NZ,$0BDF
+0B87: COPYRIGHT MCMLXXXII<NUL>BALLY MIDWAY
+0BA7:  MFG CO<NUL>ALL RIGHTS RESERVED<NUL>
 
-0B92: 43             LD    B,E
-0B93: 4D             LD    C,L
-0B94: 4C             LD    C,H
-0B95: 58             LD    E,B
-0B96: 58             LD    E,B
-0B97: 58             LD    E,B
-0B98: 49             LD    C,C
-0B99: 49             LD    C,C
-0B9A: 00             NOP   
-0B9B: 42             LD    B,D
-0B9C: 41             LD    B,C
-0B9D: 4C             LD    C,H
-0B9E: 4C             LD    C,H
-0B9F: 59             LD    E,C
-0BA0: 20 4D          JR    NZ,$0BEF
-
-0BA2: 49             LD    C,C
-0BA3: 44             LD    B,H
-0BA4: 57             LD    D,A
-0BA5: 41             LD    B,C
-0BA6: 59             LD    E,C
-0BA7: 20 4D          JR    NZ,$0BF6
-
-0BA9: 46             LD    B,(HL)
-0BAA: 47             LD    B,A
-0BAB: 20 43          JR    NZ,$0BF0
-
-0BAD: 4F             LD    C,A
-0BAE: 00             NOP   
-0BAF: 41             LD    B,C
-0BB0: 4C             LD    C,H
-0BB1: 4C             LD    C,H
-0BB2: 20 52          JR    NZ,$0C06
-
-0BB4: 49             LD    C,C
-0BB5: 47             LD    B,A
-0BB6: 48             LD    C,B
-0BB7: 54             LD    D,H
-0BB8: 53             LD    D,E
-0BB9: 20 52          JR    NZ,$0C0D
-
-0BBB: 45             LD    B,L
-0BBC: 53             LD    D,E
-0BBD: 45             LD    B,L
-0BBE: 52             LD    D,D
-0BBF: 56             LD    D,(HL)
-0BC0: 45             LD    B,L
-0BC1: 44             LD    B,H
-0BC2: 00             NOP   
 0BC3: AF             XOR   A,A
 0BC4: 32 15 C4       LD    ($C415),A
 0BC7: 32 60 C4       LD    ($C460),A
@@ -2866,52 +2744,9 @@ ORG $0000
 1208: 4D             LD    C,L
 1209: C3 FF 6F       JP    $6FFF
 
-120C: 59             LD    E,C
-120D: 4F             LD    C,A
-120E: 55             LD    D,L
-120F: 52             LD    D,D
-1210: 20 53          JR    NZ,$1265
+120C: YOUR SCORE<NUL>RANKING IS<NUL>NOT IN THE
+122C:  TOP<NUL>100 SCORES<NUL>
 
-1212: 43             LD    B,E
-1213: 4F             LD    C,A
-1214: 52             LD    D,D
-1215: 45             LD    B,L
-1216: 00             NOP   
-1217: 52             LD    D,D
-1218: 41             LD    B,C
-1219: 4E             LD    C,(HL)
-121A: 4B             LD    C,E
-121B: 49             LD    C,C
-121C: 4E             LD    C,(HL)
-121D: 47             LD    B,A
-121E: 20 49          JR    NZ,$1269
-
-1220: 53             LD    D,E
-1221: 00             NOP   
-1222: 4E             LD    C,(HL)
-1223: 4F             LD    C,A
-1224: 54             LD    D,H
-1225: 20 49          JR    NZ,$1270
-
-1227: 4E             LD    C,(HL)
-1228: 20 54          JR    NZ,$127E
-
-122A: 48             LD    C,B
-122B: 45             LD    B,L
-122C: 20 54          JR    NZ,$1282
-
-122E: 4F             LD    C,A
-122F: 50             LD    D,B
-1230: 00             NOP   
-1231: 31 30 30       LD    SP,$3030
-1234: 20 53          JR    NZ,$1289
-
-1236: 43             LD    B,E
-1237: 4F             LD    C,A
-1238: 52             LD    D,D
-1239: 45             LD    B,L
-123A: 53             LD    D,E
-123B: 00             NOP   
 123C: DB 00          IN    A,($00)
 123E: 2F             CPL   
 123F: E6 0C          AND   A,#$0C
@@ -3630,15 +3465,8 @@ ORG $0000
 164D: 01 80 00       LD    BC,$0080
 1650: C3 38 15       JP    $1538
 
-1653: 52             LD    D,D
-1654: 41             LD    B,C
-1655: 4E             LD    C,(HL)
-1656: 4B             LD    C,E
-1657: 49             LD    C,C
-1658: 4E             LD    C,(HL)
-1659: 47             LD    B,A
-165A: 53             LD    D,E
-165B: 00             NOP   
+1653: RANKINGS<NUL>
+
 165C: 01 CA FC       LD    BC,$FCCA
 165F: 11 AB 16       LD    DE,$16AB
 1662: CD FF 6F       CALL  $6FFF
@@ -5141,259 +4969,15 @@ ORG $0000
 1D0B: 00             NOP   
 1D0C: 00             NOP   
 1D0D: 01 4D 43       LD    BC,$434D
-1D10: 50             LD    D,B
-1D11: 20 47          JR    NZ,$1D5A
+1D10: P GAME<NUL>PLAYER    TRON<NUL>JOYSTICK  
+1D30: MOVES TRON<NUL>TRIGGER   FIRES DISK<NUL>
+1D50: KNOB      AIMS DISK<NUL>ENTER THE MA
+1D70: STER CONTROL<NUL>PROGRAM CONE WITHOU
+1D90: T<NUL>TOUCHING A BLOCK<NUL>REMOVE BLOCKS
+1DB0:  BY STRIKING<NUL>WITH THE DISK<NUL>1000 
+1DD0: BONUS FOR ENTERING<NUL>THE CONE<NUL>1000
+1DF0:  BONUS FOR DESTROYING<NUL>ALL BLOCKS
 
-1D13: 41             LD    B,C
-1D14: 4D             LD    C,L
-1D15: 45             LD    B,L
-1D16: 00             NOP   
-1D17: 50             LD    D,B
-1D18: 4C             LD    C,H
-1D19: 41             LD    B,C
-1D1A: 59             LD    E,C
-1D1B: 45             LD    B,L
-1D1C: 52             LD    D,D
-1D1D: 20 20          JR    NZ,$1D3F
-
-1D1F: 20 20          JR    NZ,$1D41
-
-1D21: 54             LD    D,H
-1D22: 52             LD    D,D
-1D23: 4F             LD    C,A
-1D24: 4E             LD    C,(HL)
-1D25: 00             NOP   
-1D26: 4A             LD    C,D
-1D27: 4F             LD    C,A
-1D28: 59             LD    E,C
-1D29: 53             LD    D,E
-1D2A: 54             LD    D,H
-1D2B: 49             LD    C,C
-1D2C: 43             LD    B,E
-1D2D: 4B             LD    C,E
-1D2E: 20 20          JR    NZ,$1D50
-
-1D30: 4D             LD    C,L
-1D31: 4F             LD    C,A
-1D32: 56             LD    D,(HL)
-1D33: 45             LD    B,L
-1D34: 53             LD    D,E
-1D35: 20 54          JR    NZ,$1D8B
-
-1D37: 52             LD    D,D
-1D38: 4F             LD    C,A
-1D39: 4E             LD    C,(HL)
-1D3A: 00             NOP   
-1D3B: 54             LD    D,H
-1D3C: 52             LD    D,D
-1D3D: 49             LD    C,C
-1D3E: 47             LD    B,A
-1D3F: 47             LD    B,A
-1D40: 45             LD    B,L
-1D41: 52             LD    D,D
-1D42: 20 20          JR    NZ,$1D64
-
-1D44: 20 46          JR    NZ,$1D8C
-
-1D46: 49             LD    C,C
-1D47: 52             LD    D,D
-1D48: 45             LD    B,L
-1D49: 53             LD    D,E
-1D4A: 20 44          JR    NZ,$1D90
-
-1D4C: 49             LD    C,C
-1D4D: 53             LD    D,E
-1D4E: 4B             LD    C,E
-1D4F: 00             NOP   
-1D50: 4B             LD    C,E
-1D51: 4E             LD    C,(HL)
-1D52: 4F             LD    C,A
-1D53: 42             LD    B,D
-1D54: 20 20          JR    NZ,$1D76
-
-1D56: 20 20          JR    NZ,$1D78
-
-1D58: 20 20          JR    NZ,$1D7A
-
-1D5A: 41             LD    B,C
-1D5B: 49             LD    C,C
-1D5C: 4D             LD    C,L
-1D5D: 53             LD    D,E
-1D5E: 20 44          JR    NZ,$1DA4
-
-1D60: 49             LD    C,C
-1D61: 53             LD    D,E
-1D62: 4B             LD    C,E
-1D63: 00             NOP   
-1D64: 45             LD    B,L
-1D65: 4E             LD    C,(HL)
-1D66: 54             LD    D,H
-1D67: 45             LD    B,L
-1D68: 52             LD    D,D
-1D69: 20 54          JR    NZ,$1DBF
-
-1D6B: 48             LD    C,B
-1D6C: 45             LD    B,L
-1D6D: 20 4D          JR    NZ,$1DBC
-
-1D6F: 41             LD    B,C
-1D70: 53             LD    D,E
-1D71: 54             LD    D,H
-1D72: 45             LD    B,L
-1D73: 52             LD    D,D
-1D74: 20 43          JR    NZ,$1DB9
-
-1D76: 4F             LD    C,A
-1D77: 4E             LD    C,(HL)
-1D78: 54             LD    D,H
-1D79: 52             LD    D,D
-1D7A: 4F             LD    C,A
-1D7B: 4C             LD    C,H
-1D7C: 00             NOP   
-1D7D: 50             LD    D,B
-1D7E: 52             LD    D,D
-1D7F: 4F             LD    C,A
-1D80: 47             LD    B,A
-1D81: 52             LD    D,D
-1D82: 41             LD    B,C
-1D83: 4D             LD    C,L
-1D84: 20 43          JR    NZ,$1DC9
-
-1D86: 4F             LD    C,A
-1D87: 4E             LD    C,(HL)
-1D88: 45             LD    B,L
-1D89: 20 57          JR    NZ,$1DE2
-
-1D8B: 49             LD    C,C
-1D8C: 54             LD    D,H
-1D8D: 48             LD    C,B
-1D8E: 4F             LD    C,A
-1D8F: 55             LD    D,L
-1D90: 54             LD    D,H
-1D91: 00             NOP   
-1D92: 54             LD    D,H
-1D93: 4F             LD    C,A
-1D94: 55             LD    D,L
-1D95: 43             LD    B,E
-1D96: 48             LD    C,B
-1D97: 49             LD    C,C
-1D98: 4E             LD    C,(HL)
-1D99: 47             LD    B,A
-1D9A: 20 41          JR    NZ,$1DDD
-
-1D9C: 20 42          JR    NZ,$1DE0
-
-1D9E: 4C             LD    C,H
-1D9F: 4F             LD    C,A
-1DA0: 43             LD    B,E
-1DA1: 4B             LD    C,E
-1DA2: 00             NOP   
-1DA3: 52             LD    D,D
-1DA4: 45             LD    B,L
-1DA5: 4D             LD    C,L
-1DA6: 4F             LD    C,A
-1DA7: 56             LD    D,(HL)
-1DA8: 45             LD    B,L
-1DA9: 20 42          JR    NZ,$1DED
-
-1DAB: 4C             LD    C,H
-1DAC: 4F             LD    C,A
-1DAD: 43             LD    B,E
-1DAE: 4B             LD    C,E
-1DAF: 53             LD    D,E
-1DB0: 20 42          JR    NZ,$1DF4
-
-1DB2: 59             LD    E,C
-1DB3: 20 53          JR    NZ,$1E08
-
-1DB5: 54             LD    D,H
-1DB6: 52             LD    D,D
-1DB7: 49             LD    C,C
-1DB8: 4B             LD    C,E
-1DB9: 49             LD    C,C
-1DBA: 4E             LD    C,(HL)
-1DBB: 47             LD    B,A
-1DBC: 00             NOP   
-1DBD: 57             LD    D,A
-1DBE: 49             LD    C,C
-1DBF: 54             LD    D,H
-1DC0: 48             LD    C,B
-1DC1: 20 54          JR    NZ,$1E17
-
-1DC3: 48             LD    C,B
-1DC4: 45             LD    B,L
-1DC5: 20 44          JR    NZ,$1E0B
-
-1DC7: 49             LD    C,C
-1DC8: 53             LD    D,E
-1DC9: 4B             LD    C,E
-1DCA: 00             NOP   
-1DCB: 31 30 30       LD    SP,$3030
-1DCE: 30 20          JR    NC,$1DF0
-
-1DD0: 42             LD    B,D
-1DD1: 4F             LD    C,A
-1DD2: 4E             LD    C,(HL)
-1DD3: 55             LD    D,L
-1DD4: 53             LD    D,E
-1DD5: 20 46          JR    NZ,$1E1D
-
-1DD7: 4F             LD    C,A
-1DD8: 52             LD    D,D
-1DD9: 20 45          JR    NZ,$1E20
-
-1DDB: 4E             LD    C,(HL)
-1DDC: 54             LD    D,H
-1DDD: 45             LD    B,L
-1DDE: 52             LD    D,D
-1DDF: 49             LD    C,C
-1DE0: 4E             LD    C,(HL)
-1DE1: 47             LD    B,A
-1DE2: 00             NOP   
-1DE3: 54             LD    D,H
-1DE4: 48             LD    C,B
-1DE5: 45             LD    B,L
-1DE6: 20 43          JR    NZ,$1E2B
-
-1DE8: 4F             LD    C,A
-1DE9: 4E             LD    C,(HL)
-1DEA: 45             LD    B,L
-1DEB: 00             NOP   
-1DEC: 31 30 30       LD    SP,$3030
-1DEF: 30 20          JR    NC,$1E11
-
-1DF1: 42             LD    B,D
-1DF2: 4F             LD    C,A
-1DF3: 4E             LD    C,(HL)
-1DF4: 55             LD    D,L
-1DF5: 53             LD    D,E
-1DF6: 20 46          JR    NZ,$1E3E
-
-1DF8: 4F             LD    C,A
-1DF9: 52             LD    D,D
-1DFA: 20 44          JR    NZ,$1E40
-
-1DFC: 45             LD    B,L
-1DFD: 53             LD    D,E
-1DFE: 54             LD    D,H
-1DFF: 52             LD    D,D
-1E00: 4F             LD    C,A
-1E01: 59             LD    E,C
-1E02: 49             LD    C,C
-1E03: 4E             LD    C,(HL)
-1E04: 47             LD    B,A
-1E05: 00             NOP   
-1E06: 41             LD    B,C
-1E07: 4C             LD    C,H
-1E08: 4C             LD    C,H
-1E09: 20 42          JR    NZ,$1E4D
-
-1E0B: 4C             LD    C,H
-1E0C: 4F             LD    C,A
-1E0D: 43             LD    B,E
-1E0E: 4B             LD    C,E
-1E0F: 53             LD    D,E
-1E10: 00             NOP   
 1E11: 33             INC   SP
 1E12: AB             XOR   A,E
 1E13: EB             EX    DE,HL
