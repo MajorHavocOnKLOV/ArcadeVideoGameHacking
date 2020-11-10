@@ -1,0 +1,90 @@
+;/* The optional data file contains 6 types of lines: */
+;/* o Remarks - these are lines beginning with a semi-colon (;) */
+;/*   they are completely ignored. */
+;/* o 1 ORG line - gives the origin of the code; this is the starting */
+;/*   address to be used for the disassembly. */
+;/* o COMMENT lines - used to add comments to the end of lines of the */
+;/*   disassembly. */
+;/* o COMMENTLINE lines - provide full-line comments to be included before */
+;/*   a given address in the disassembly. */
+;/* o DATA lines - mark sections as data.  These sections will not be */
+;/*   disassembled, but dumped as hex data instead. */
+;/* o ASCII lines - mark sections as text.  These sections will not be */
+;/*   disassembled, but printed as text instead. */
+;
+;/* current limitations: */
+;/* o number of LABEL, DATA/ASCII, COMMENT and COMMENTLINE lines determined */
+;/*   at compile-time - see MAXLABEL, MAXDATA, MAXCOMMENT and MAXCOMMLINE */
+;/* o all DATA/ASCII lines in data file must be sorted in ascending */
+;/*   address order */
+;/* o ditto for COMMENT and COMMENTLINE lines */
+;/* o if a DATA/ASCII area is preceded by what Z80dasm thinks is code */
+;/*   that continues into the DATA/ASCII area, the data will not be marked */
+;/*   as such, and an error will be printed.  If this is the case, mark the */
+;/*   line before the data as data also. */
+
+commentline 0000 Tron 8/9 in MAME
+ascii 006b-008d
+ascii 0513-051a
+commentline C000 RAM
+
+
+;Williams Robotron data file for 6809dasm
+;yellow label ROMs w/orange stripe
+;please send additions/changes to seanriddle <at> airosurf <dot> com
+;look for newest files at http://www.seanriddle.com
+
+;date 10/9/95
+
+;label c000 COLOR_REGISTERS
+;label c804 WIDGET_PIA_DATAA
+;label c805 WIDGET_PIA_CTRLA
+;label c806 WIDGET_PIA_DATAB
+;label c807 WIDGET_PIA_CTRLB
+;label c80c ROM_PIA_DATAA
+;label c80d ROM_PIA_CTRLA
+;label c80e ROM_PIA_DATAB
+;label c80f ROM_PIA_CTRLB
+;label C900 ROM_ENABLE_SCR_CTRL
+;label CA00 START_BLITTER
+;label CA01 BLITTER_MASK
+;label CA02 BLITTER_SOURCE
+;label CA04 BLITTER_DEST
+;label CA06 BLITTER_W_H
+;label cbff WATCHDOG
+;
+;commentline 0 Robotron Yellow Label w/ Orange Stripe
+;commentline 9000 RAM
+;ascii 28da-28fd
+;ascii 41e5-420d
+;ascii 4cf1-4d0f
+;ascii 5cf9-5d47
+;ascii 6f65-6f95
+;ascii 7f50-7fa2
+;ascii 8870-88be
+;data 8e0f-8fff
+;data 9000-bfff
+;commentline C000 I/O space
+;data c000-cfff
+;ascii d4a8-d4fb
+;ascii de8a-dedd
+;data dede-df3f
+;ascii e194-e1e2
+;ascii ffcb-ffee
+;data ffef
+;data fff0-fff1
+;commentline fff2 CPU vectors
+;data fff2-fff3
+;comment fff2 SWI3 vector
+;data fff4-fff5
+;comment fff4 SWI2 vector
+;data fff6-fff7
+;comment fff6 FIRQ vector
+;data fff8-fff9
+;comment fff8 IRQ vector
+;data fffa-fffb
+;comment fffA SWI vector
+;data fffc-fffd
+;comment fffc NMI vector
+;data fffe-ffff
+;comment fffe RESET vector

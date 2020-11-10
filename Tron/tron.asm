@@ -1,4 +1,6 @@
 ORG $0000
+
+*** Tron 8/9 in MAME
 0000: C3 00 01       JP    $0100
 
 0003: 34             INC   (HL)
@@ -91,41 +93,9 @@ ORG $0000
 0068: D3 E8          OUT   ($E8),A
 006A: 76             HALT  
 
-006B: 43             LD    B,E
-006C: 4F             LD    C,A
-006D: 50             LD    D,B
-006E: 59             LD    E,C
-006F: 52             LD    D,D
-0070: 49             LD    C,C
-0071: 47             LD    B,A
-0072: 48             LD    C,B
-0073: 54             LD    D,H
-0074: 20 31          JR    NZ,$00A7
+006B: COPYRIGHT 1982 BALLY MIDWAY MFG 
+008B: CO
 
-0076: 39             ADD   HL,SP
-0077: 38 32          JR    C,$00AB
-
-0079: 20 42          JR    NZ,$00BD
-
-007B: 41             LD    B,C
-007C: 4C             LD    C,H
-007D: 4C             LD    C,H
-007E: 59             LD    E,C
-007F: 20 4D          JR    NZ,$00CE
-
-0081: 49             LD    C,C
-0082: 44             LD    B,H
-0083: 57             LD    D,A
-0084: 41             LD    B,C
-0085: 59             LD    E,C
-0086: 20 4D          JR    NZ,$00D5
-
-0088: 46             LD    B,(HL)
-0089: 47             LD    B,A
-008A: 20 43          JR    NZ,$00CF
-
-008C: 4F             LD    C,A
-008D: 08             EX    AF,AF'
 008E: C4 0C 29       CALL  NZ,$290C
 0091: 85             ADD   A,L
 0092: 39             ADD   HL,SP
@@ -891,14 +861,8 @@ ORG $0000
 050F: 32 BD FC       LD    ($FCBD),A
 0512: C9             RET   
 
-0513: 43             LD    B,E
-0514: 52             LD    D,D
-0515: 45             LD    B,L
-0516: 44             LD    B,H
-0517: 49             LD    C,C
-0518: 54             LD    D,H
-0519: 53             LD    D,E
-051A: 00             NOP   
+0513: CREDITS<
+
 051B: 21 63 C4       LD    HL,$C463
 051E: 7E             LD    A,(HL)
 051F: B7             OR    A,A
