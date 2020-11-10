@@ -1,0 +1,112 @@
+    CPU #1
+    ========================================================================
+    0000-6FFF   R     xxxxxxxx    Program ROM
+    7000-77FF   R/W   xxxxxxxx    NVRAM
+    F000-F1FF   R/W   xxxxxxxx    Sprite RAM
+    F400-F41F     W   xxxxxxxx    Palette RAM blue/green
+    F800-F81F     W   xxxxxxxx    Palette RAM red
+    FC00-FFFF   R/W   xxxxxxxx    Background video RAM
+    ========================================================================
+    0000        R     x-xxxxxx    Input ports
+                R     x-------    Service switch (active low)
+                R     --x-----    Tilt
+                R     ---xxx--    External inputs
+                R     ------x-    Right coin
+                R     -------x    Left coin
+    0000        W     xxxxxxxx    Data latch OP0 (coin meters, 2 led's and cocktail 'flip')
+    0001        R     xxxxxxxx    External inputs
+    0002        R     xxxxxxxx    External inputs
+    0003        R     xxxxxxxx    DIP switches
+    0004        R     xxxxxxxx    External inputs
+    0004        W     xxxxxxxx    Data latch OP4 (comm. with external hardware)
+    0007        R     xxxxxxxx    Audio status
+    001C-001F   W     xxxxxxxx    Audio latches 1-4
+    00E0        W     --------    Watchdog reset
+    00E8        W     xxxxxxxx    Unknown (written at initialization time)
+    00F0-00F3   W     xxxxxxxx    CTC communications
+
+
+Journey
+- 2020-10-22
+- Pushing the joystick up to make Jonathan Cain jump is really annoying.  How do I make the button an option for jump up, like every other game (hello Donkey Kong)?
+- Download latest MAME (https://www.mamedev.org/release.html) and Journey ROMs
+- Look at memory map here: https://github.com/mamedev/mame/blob/master/src/mame/drivers/mcr.cpp
+- It turns out the Z80 is not memory mapped but IO mapped!  It has separate instructions (in, out) for reading from and writing to the IO ports.
+- The Z80 starts running at address 0000.  Disassemble Z80: https://clrhome.org/table/
+- Poke around in MAME to find where the control panel input is read.  MAME has seperate address spaces for the program (maincpu program space memory) and IO (maincpu io space memory).
+- Look at the player controls in MAME (press tab and select "Input (this machine)" which are set for:
+   P1: Arrow keys and Ctrl
+   P2: DRGF and A
+- As I press these controls, I see them affecting the following bits (all bits are 1/on until pressed when they go to 0/off) in IO (listed as port:bit):
+   P1: Left: 1:0 Up: 1:2 Right: 1:1 Down: 1:3 Button: 0:4 (0:xxxBxxxx) (1:xxxxDURL)
+   P2: Left: 2:0 Up: 2:2 Right: 2:1 Down: 2:3 Button: 2:4 (2:xxxBDURL)
+   8 4 2 1 - Bit value
+   7 B D E - Nibble value when joystick pressed (4-way joystick so can't press two at a time/diagonals!)
+   D U R L - Direction
+   3 2 1 0 - Bit number
+- wpiset 0,3,r (watch io ports 0, 1, and 2 for reads) (wpset = program memory, wpiset = io memory, wpdset = data memory.  See https://docs.mamedev.org/debugger/watchpoint.html#debugger-command-wpset)
+- this broke at 090A (might stop at other places too).  I stepped through this code to find the following:
+08F4-0931: function processes control panel input for current player and places result in C160.  No user registers should be affected
+C160 - xxxBLDRU - control panel input for current player
+C1AD - player number - 1 (P1 = 0, P2 = 1)
+- pressing the button while playing Jonathan Cain displays a temporary message "PUSH JOYSTICK UP TO JUMP".  Argh!  Did they have to put the message in because it was not intuitive or did they make the game harder and wanted to make sure people were made aware of this or both?
+find 0,65535,"JOYSTICK" (note: I typed it lower case the first time around.  Fortunately I thought to retry with upper case before too long ...)
+4036 is the string "PUSH JOYSTICK UP TO JUMP", so ...
+wpset 4036,1,r
+44AE Write the joystick up message
+
+0346-0370 Print message to the screen
+031D-0345 output ($c0a9) messages from c0aa
+
+5713-57D8? Handle input for SP (while going up?).  Once it processes a direction, skips the rest of them.
+  573D-5757 Up
+  5758-5771 Down
+  5772-5793 Right
+  5794-57B3 Left
+  57B4-57D8,5801-5805? Handle fire button
+  
+6A95-6ABC Add a screen message to the queue (limit is 12)
+
+C0A7 = holds next spot in message array (starts at C0AA)
+C0A9 = number of messages (max is 0C, or 12)
+C0AA-C0F2 is an array of 6 bytes, 12 times.  
+
+- MCR games set the Z80 in Interrupt Mode 2.  This combines the I register (upper) with 7? bits on the address bus (lower) to create interrupt vector.
+
+C214 - Level/Round of sets of minigames.  0-4?  5 crashed MAME
+C2C1 - row of JC.  0 is top, 3 is bottom.
+- these two variables are used to ensure that the "PUSH JOYSTICK UP TO JUMP" message only displays in the first level/round and only in the top half of the screen!
+4494-45AB Process input (at least for JC going down)
+
+449B-44BC Replaced code in JC going down that checks whether button pressed in top half of the screen the first time through, and prints a message to "USE THE JOYSTICK, BRUH" with something more sensible, like the ability to use the damn button too, if you prefer.
+
+0090 - ? Initialize values in RAM
+
+15E9-16C9 Mini-game selection (handle input during)
+- Processed in the following order: UDRL ($01,$04,$02,$08)
+
+- it has no checks about invalid inputs like DU at the same time.
+
+9226-931E Check RAM & ROM?  Reads BALLY/MIDWAY COPYRIGHT near the beginning of ROM space
+
+931F - ROM check table starts here.  Size:word, Start location:word, checksum:byte, ?:byte
+
+ROM checksum
+9304 Bad ROM starts here
+
+00D8-0145 Interrupt service
+
+C1BE - some data for P1?
+C1C1 - some data for P2?
+
+3DFF - frame updates?
+
+0609 - loop for RV?
+060A-068C loop for ?
+
+Checks for P1 or P2:
+0110
+08F5
+093A
+098C
+140D

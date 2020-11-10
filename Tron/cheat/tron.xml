@@ -1,0 +1,119 @@
+<mamecheat version="1">
+
+  <cheat desc="Infinite Time(disable on MCP)">
+    <script state="run">
+      <action>maincpu.pb@C00E=08</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Lives">
+    <script state="run">
+      <action>maincpu.pb@C41F=04</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility Light Cycle Game"> <comment>Try not to go off-screen as it may have strange effects</comment>
+    <script state="on">
+      <action>temp0 =maincpu.mb@542F</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mb@542F=00</action>
+    </script>
+    <script state="off">
+      <action>maincpu.mb@542F=temp0 </action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility TANK Game">
+    <script state="on">
+      <action>temp0 =maincpu.mb@473B</action>
+      <action>temp1 =maincpu.mb@3F91</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mb@473B=18</action>
+      <action>maincpu.mb@3F91=18</action> <!-- Part 1 takes care of bullets, Part 2 does Tank to Tank collisions -->
+    </script>
+    <script state="off">
+      <action>maincpu.mb@473B=temp0 </action>
+      <action>maincpu.mb@3F91=temp1 </action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility Circle Game">
+    <script state="on">
+      <action>temp0 =maincpu.mb@68C1</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mb@68C1=C9</action>
+    </script>
+    <script state="off">
+      <action>maincpu.mb@68C1=temp0 </action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility MCP Game">
+    <script state="on">
+      <action>temp0 =maincpu.mb@3471</action>
+      <action>temp1 =maincpu.mb@346A</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mb@3471=11</action>
+      <action>maincpu.mb@346A=18</action> <!-- Part 1 takes care of first collision, Part 2 does later collisions -->
+    </script>
+    <script state="off">
+      <action>maincpu.mb@3471=temp0 </action>
+      <action>maincpu.mb@346A=temp1 </action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Starting Level"> <comment>Level appears to repeat USER continuously after level 12</comment>
+    <parameter>
+      <item value="0x00">01 RPG</item>
+      <item value="0x01">02 COBOL</item>
+      <item value="0x02">03 BASIC</item>
+      <item value="0x03">04 FORTRAN</item>
+      <item value="0x04">05 SNOBOL</item>
+      <item value="0x05">P1 06</item>
+      <item value="0x06">07 PASCAL</item>
+      <item value="0x07">08 ALGOL</item>
+      <item value="0x08">09 ASSEMBLY</item>
+      <item value="0x09">10 OS</item>
+      <item value="0x0A">11 JCL</item>
+      <item value="0x0B">12 USER</item>
+    </parameter>
+    <script state="run">
+      <action condition="(maincpu.pb@C422==00)">maincpu.pb@C422=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Skip RAM/ROM Check">
+    <script state="on">
+      <action>temp0 =maincpu.mb@ABC3</action>
+      <action>temp1 =maincpu.mb@ACED</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mb@ABC3=C9</action>
+      <action>maincpu.mb@ACED=C9</action> <!-- 1st = RAM Check, 2nd = ROM Check -->
+    </script>
+    <script state="off">
+      <action>maincpu.mb@ABC3=temp0 </action>
+      <action>maincpu.mb@ACED=temp1 </action>
+    </script>
+  </cheat>
+
+  <cheat desc="Skip minigame instructions">
+    <script state="on">
+      <action>temp0 =maincpu.mb@1FC0</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mb@1FC0=18</action>
+    </script>
+    <script state="off">
+      <action>maincpu.mb@1FC0=temp0 </action>
+    </script>
+  </cheat>
+
+</mamecheat>
+<!-- Cheat file downloaded from http://www.mamecheat.co.uk, see cheat.txt for list of contributors. -->

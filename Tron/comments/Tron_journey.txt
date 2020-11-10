@@ -1,0 +1,312 @@
+    CPU #1
+    ========================================================================
+    0000-6FFF   R     xxxxxxxx    Program ROM
+    7000-77FF   R/W   xxxxxxxx    NVRAM
+    F000-F1FF   R/W   xxxxxxxx    Sprite RAM
+    F400-F41F     W   xxxxxxxx    Palette RAM blue/green
+    F800-F81F     W   xxxxxxxx    Palette RAM red
+    FC00-FFFF   R/W   xxxxxxxx    Background video RAM
+    ========================================================================
+    0000        R     x-xxxxxx    Input ports
+                R     x-------    Service switch (active low)
+                R     --x-----    Tilt
+                R     ---xxx--    External inputs
+                R     ------x-    Right coin
+                R     -------x    Left coin
+    0000        W     xxxxxxxx    Data latch OP0 (coin meters, 2 led's and cocktail 'flip')
+    0001        R     xxxxxxxx    External inputs
+    0002        R     xxxxxxxx    External inputs
+    0003        R     xxxxxxxx    DIP switches
+    0004        R     xxxxxxxx    External inputs
+    0004        W     xxxxxxxx    Data latch OP4 (comm. with external hardware)
+    0007        R     xxxxxxxx    Audio status
+    001C-001F   W     xxxxxxxx    Audio latches 1-4
+    00E0        W     --------    Watchdog reset
+    00E8        W     xxxxxxxx    Unknown (written at initialization time)
+    00F0-00F3   W     xxxxxxxx    CTC communications
+
+
+  device :maincpu space program read:
+0000 - bfff: memory@0
+c000 - dfff: memory@c000
+e000 - e7ff: memory@e000
+e800 - efff: memory@e800
+f000 - f7ff: memory@e000
+f800 - ffff: memory@e800
+
+  device :maincpu space program write:
+0000 - bfff: unmapped
+c000 - dfff: memory@c000
+e000 - e7ff: memory@e000
+e800 - efff: mcr_state::mcr_90010_videoram_w
+f000 - f7ff: memory@e000
+f800 - ffff: mcr_state::mcr_90010_videoram_w
+
+  device :maincpu space io read:
+0000 - 0000: (wp@0) midway_ssio_device::ioport_read
+0001 - 0004: midway_ssio_device::ioport_read
+0005 - 0006: unmapped
+0007 - 0007: midway_ssio_device::read
+0008 - 000c: midway_ssio_device::ioport_read
+000d - 000e: unmapped
+000f - 000f: midway_ssio_device::read
+0010 - 0014: midway_ssio_device::ioport_read
+0015 - 0016: unmapped
+0017 - 0017: midway_ssio_device::read
+0018 - 001c: midway_ssio_device::ioport_read
+001d - 001e: unmapped
+001f - 001f: midway_ssio_device::read
+0020 - 00ef: unmapped
+00f0 - 00f3: z80ctc_device::read
+00f4 - ffff: unmapped
+
+  device :maincpu space io write:
+0000 - 0007: midway_ssio_device::ioport_write
+0008 - 001b: unmapped
+001c - 001f: midway_ssio_device::write
+0020 - 00df: unmapped
+00e0 - 00e0: watchdog_timer_device::reset_w
+00e1 - 00e7: unmapped
+00e8 - 00e8: nop
+00e9 - 00ef: unmapped
+00f0 - 00f3: z80ctc_device::write
+00f4 - ffff: unmapped
+
+
+MAME
+- getting the full ROMs was a pain.  Had to DL two different sets, combine them, rename a PROM, and then delete out unused files.  WHY?
+
+02E3-033F Get input from joystick trigger +?
+
+03C0 - copy from here into background RAM?
+
+01CB-0220 Service interrupt routine
+
+0401-0483 Put null-terminated message in DE to HL
+
+04B0-04CD Default high score table.  10x 3 bytes (FI,LI,level)
+
+06CA-0785 Print out messages in queue.  Count @C466 and data starting @C4D8
+
+0786-0824 Teletype printing to the screen until null byte.
+- FF byte has some special processing at 07CC
+- 00 byte falls to 07E7
+
+0959-? ?
+
+0991-? ?
+
+0D38-? Update tank shot sprite positions?  Or is it 456D?  Or is it 47c7?  Argh!!!!
+
+0D52-0DC2 Read and process input ports
+- I/O byte 00, bit 4 is trigger. 0 when trigger is pulled, 1 otherwise
+
+0E55- Copy C419-C42E to C42F
+
+1185 - what is this section doing?  Checking RAM?
+
+1558-161C+ Printing out high scores
+  15C3- printing out high scores ...
+  161C- print out level (programming language)
+
+1F00-? ?
+
+1F4D-1F96: ?
+
+1F97-20A6: Build screen to pick a mini-game?  No boo-boo! :-(
+- 1FBC- Load level from C422.  If not zero, skip printing instructions
+- 1FC2-1FD0 - Pick printing instructions
+
+204F-20A6 Finished level?
+
+20A7-2114 Table of Difficulty level settings.  Difficulty level stored in C456, values 01-09.  Taken from Setup Options screen when service switch is turned on.  The data is values between 0-20 for how hard the level plays.  Difficulty 1 moves from 0 to 20 one at a time.  Difficulty 9 moves 0,4,10,15,20
+  20A7-20B8 Pointers to below
+  20B9-2114 9x variable byte blocks
+    21 bytes
+	15 bytes
+	13 bytes
+	10 bytes
+	8 bytes
+	7 bytes
+	7 bytes
+	6 bytes
+	5 bytes
+
+2115- ?
+
+2070 - increment level (C422)
+
+2207-226D Modify mini-games screen to disable completed and show type of game if already attempted
+???
+
+231A-2321? Table of instruction printing
+  5E36 Circle/Spiders
+  5000
+  2336
+  5103
+
+233E-? Table of ? 3 bytes each entry used in 223x range of code
+
+234B-2AC9 Background for picking minigame
+
+2ACA-2AEF Color palette for minigame selection
+
+2C00-? ?
+
+2D22-2FEC set up for cone?
+
+3BE0-? ?
+
+51AA-? ?
+
+-5E7D Put Circle/Spiders instruction strings in a message queue
+
+5E7E-5EB6 Data for Circle/Spiders instructions.  3x (destination, source). 2x 00 to end loop @5E6D 3x null-terminated string. 56 bytes (0x38)
+
+5F47-5F72 ?
+
+5F73-601F handles joystick input?
+  IO:0000 - xxxBxxxx
+  IO:0002 - xxxxDURL
+  
+6020-? ?
+
+6065-60EC ?
+
+6065-6120 Set up sprites for tron at bottom middle of screen (MCP & Circle/Spiders)?
+  60CE-60EC Tron fires his disk here (so don't set up disk in hand, maybe?)
+  
+6127-? Move spiders?
+
+621D-6235 Set some values in C02x?
+
+6B39-6B78 Table of 16x 4 bytes used by joystick direction input @5FB3.  There are 8 valid inputs (D,U,R,L,DR,DL,UR,UL).  All others (no input or invalid input) are set to all zeroes effectively ging you no input.
+
+6B79? Data for setting up tron sprites?
+
+6F00-6F04 Add A to L and handle carry into H
+
+6F17-6F24 Reset watchdog until C400 is one
+  6F20 is hit for every tick of the teletype (which strikes twice per character)
+
+6F2D-6FB7? Set color RAMs in some way?
+  6F35 - is another entry point
+  
+
+6FFF-701F Add a message to the output queue.  Maximum of 6!  BC is destination and DE is source
+
+6FC7-6FED - clear screen (set background RAM to 51 and 5E)
+
+7020-7034: Clear RAM (00) C400-
+  7020 - to C418
+  7026 = to C450
+
+7035-7048 Paint background screen from HL
+- 2x reset watchdog until C400 is one
+- ldir (copy from HL to F800 until BC (0780) is decremented to zero)
+
+7049-705C Initialize sprites (X=0, picture=3F, Y=0, unused=0)
+
+705D-707D ?
+
+7159-7164 Return C687 in A.  If non-zero, subtract 7.  Do not affect other registers.
+
+7200-797F Background for tank minigame
+
+7980-799F Color palette for tanks
+
+ABD1-AC6E: Check RAM?
+
+B126-B182: Table of User levels (12 x 2bytes of null-terminated string location.) and then the strings.
+
+C029-C02C Joystick input array (from table at 6B39)
+
+C14A - Number of tanks
+
+C419-C42E: 22 bytes of table data.  Gets copied to C42F
+C42F-C444: copied from C419-C42E
+
+C422 - Display level language and decide whether to type instructions
+- test RAM
+  ABFB - 00
+  ABFB - FF
+  AC1A - 00
+  AC38 - walking bits from 0 to 7
+- ?
+  AC5A - 00
+  702A - 00 (fill C450-C400 with 00)
+- attract mode
+  0E7D - set to 0 before starting game selection
+- Start 1P game
+  702A - 00
+  0E7D - set to 0 before starting game selection
+  
+C424 - Direction chosen for P1 or P2!  01=Left,02=Right,04=Up,08=Down
+Game type?: 08=Circle/Spiders, 01=Light Cycle, 04=MCP, 02=Tanks
+
+C456 Difficulty of this level.  From table at 20A7
+C45F - Player number, P1=0, P2=1
+
+C466=# of messages, max 06! (used by service routine and the message array at C4D6)
+
+C469, C46B, AND C48E only get updated when interrupts are disabled!
+
+C473 Left coin
+C474 Right coin
+
+C4B8- screen destination
+C4BA- source
+
+C4D6-CD60? - array of messages to display.  C466=# of messages.  First 2 bytes are next array entry.  Each entry is 2 bytes destination & 2 bytes source
+
+C4F6 - Difficulty level picked by operator?
+C4F7-C4FC High score digits
+
+C504-C522 High score initials table.  10x 3 bytes  (first initial, last initial, level).
+C52C-C54C High scores in BCD?  3 bytes each (so 6 digits)
+
+F000-F1FF Sprite RAM (X, picture, Y, unused?: Can I read it?  If so, I can use it!)
+  Pictures: (bit 7=flipX & 6=flipY)
+    00 = explosion small
+	01 = explosion large A
+	02 = explosion large B (only 1 bit looks different from A???)
+	03 = explosion large C
+	04 = tank shot right
+	05 = tank shot up
+	06 = dot large
+	07 = dot small
+	08 = enemy tank facing right
+	09 = enemy tank facing up
+	0A = tank right
+	0B = explosion small (looks identical to 00)
+	0C = BIT!
+	0D = side of MCP cone?
+	0E = spider egg
+	0F = spider full kick
+	10 = spider half kick
+	11 = spider squat
+	12 = spider lift
+	13-1C = cannon from tank, left (90 degrees) to up (0 degrees) (10 positions, 18 & 19 are 45 degrees and just ever so slightly different)
+	1D - tron torso and head, legs together
+	1E - tron legs, together
+	1F - tron torso and head, legs apart
+	20 - tron legs, apart
+	21-2A - tron arm throwing, up (0 degrees) to left (270 degrees) (10 positions)
+	2B - tron arm other lifted
+	2C - tron arm other down
+	2D - enemy light cycle up
+	2E - enemy light cycle right
+	2F - light cycle up
+	30 - light cycle right
+	31-36 - MCP brick left to right (6 positions)
+	37 - MCP cone block
+	38 - MCP cone left triangle?
+	39 - MCP cone right triangle?
+	3A - tron torso derez
+	3B - tron legs derez
+	3C - solar sailor (drops off bit)
+	3D - Recognizer right
+	3E - Recognizer up
+	3F - nothing/empty/null
+	
+F800-FF7F - background RAM.  Starts top right, moves down and then left when it wraps around.  One byte picks the character or sprite, the other picks the color palette, flip, reverse, etc.
