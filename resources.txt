@@ -1,0 +1,11 @@
+MAME:
+
+z80:
+https://clrhome.org/table/
+http://www.z80.info/z80sflag.htm
+https://www.seanriddle.com/midway.html
+
+Other:
+https://docs.microsoft.com/en-us/sysinternals/downloads/strings
+https://github.com/MajorHavocOnKLOV/
+

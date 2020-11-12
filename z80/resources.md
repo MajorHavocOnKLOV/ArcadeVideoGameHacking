@@ -1,1 +1,0 @@
-https://www.seanriddle.com/midway.html
