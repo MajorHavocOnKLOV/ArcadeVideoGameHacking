@@ -1,0 +1,308 @@
+; Bally Midway Journey data file for z80dasm
+; Journey ROMs used by MAME (labelled as journey)
+; please send additions/changes to Franklin <at> FranklinBowen <dot> net
+; look for newest files at http://www.FranklinBowen.net
+
+; date 2020-11-12
+
+; o Remarks - these are lines beginning with a semi-colon (;) they are completely ignored.
+; o 1 ORG line - gives the origin of the code; this is the startingaddress to be used for the disassembly.
+; o COMMENT lines - used to add comments to the end of lines of the disassembly.
+; o COMMENTLINE lines - provide full-line comments to be included before a given address in the disassembly.
+; o DATA lines - mark sections as data.  These sections will not be disassembled, but dumped as hex data instead.
+; o ASCII lines - mark sections as text.  These sections will not be disassembled, but printed as text instead.
+;
+; current limitations:
+; o number of LABEL, DATA/ASCII, COMMENT and COMMENTLINE lines determined at compile-time - see MAXLABEL, MAXDATA, MAXCOMMENT and MAXCOMMLINE
+; o all DATA/ASCII lines in data file must be sorted in ascending address order
+; o ditto for COMMENT and COMMENTLINE lines
+; o if a DATA/ASCII area is preceded by what Z80dasm thinks is code that continues into the DATA/ASCII area, the data will not be marked
+;   as such, and an error will be printed.  If this is the case, mark the line before the data as data also.
+
+
+;label 234A BACKGROUND_FOR_1
+;label 7200 BACKGROUND_FOR_TANK_GAME
+;label 8900 BACKGROUND_FOR_2
+;label 9100 BACKGROUND_FOR_3
+;label 7a00 BACKGROUND_FOR_4
+;
+;; map(0xc000, 0xc7ff).mirror(0x1800)
+;label C000 NVRAM
+;label C800 NVRAM_M1
+;label D000 NVRAM_M2
+;label D800 NVRAM_M3
+;; map(0xe000, 0xe1ff).mirror(0x1600)
+;label E000 SPRITE_RAM
+;label E200 SPRITE_RAM_M1
+;label E400 SPRITE_RAM_M2
+;label E600 SPRITE_RAM_M3
+;
+;; map(0xe800, 0xefff).mirror(0x1000)
+;label e800 VIDEO_RAM
+;
+;label F000 SPRITE_RAM_M4
+;label F200 SPRITE_RAM_M5
+;label F400 SPRITE_RAM_M6
+;label F600 SPRITE_RAM_M7
+;
+;label f800 VIDEO_RAM_M1
+
+
+org 0000
+;commentline 0000 Dissasembly of the Tron 8/9 ROMs used by MAME (labelled as tron)
+
+;ascii 006b-008c
+
+;commentline 04b0 Default high score initials
+
+ascii 006b-0089
+ascii 047a-0480
+ascii 0481-0494
+ascii 0495-04a3
+ascii 04a4-04af
+ascii 08d2-08e2
+ascii 08e3-08f3
+ascii 0b27-0b3a
+ascii 0b3b-0b58
+ascii 0b59-0b74
+ascii 0c18-0c2c
+ascii 0c2d-0c41
+ascii 0c42-0c56
+ascii 0c57-0c62
+ascii 0c64-0c7b
+ascii 0c7c-0c92
+ascii 0c93-0ca7
+ascii 0ca8-0cbb
+ascii 0cbc-0cc4
+ascii 0cc6-0cdc
+ascii 0cdd-0cf2
+ascii 0cf3-0d0b
+ascii 0d0c-0d23
+ascii 0d24-0d36
+ascii 0d38-0d4e
+ascii 0d4f-0d64
+ascii 0d65-0d79
+ascii 0d7a-0d91
+ascii 0d92-0d99
+ascii 0d9b-0db2
+ascii 0db3-0dcb
+ascii 0dcc-0de3
+ascii 0de4-0dfc
+ascii 0dfd-0e14
+ascii 0e37-0e4b
+ascii 0e4c-0e5c
+ascii 0e5d-0e70
+ascii 0f3e-0f49
+ascii 0f4a-0f50
+ascii 0f51-0f57
+ascii 0f58-0f60
+ascii 0f61-0f6f
+ascii 0f70-0f7d
+ascii 0f7e-0f8c
+ascii 0f8d-0f98
+ascii 0f99-0fa5
+ascii 0fa6-0fb6
+ascii 0fb7-0fc4
+ascii 107e-1083
+ascii 1084-1089
+ascii 108a-108f
+ascii 1090-1095
+ascii 1096-109b
+ascii 109c-10a1
+ascii 10a2-10a7
+ascii 10a8-10ad
+ascii 10ae-10b3
+ascii 10b4-10b9
+ascii 10ba-10bf
+ascii 10c0-10d0
+ascii 10d1-10dc
+ascii 10dd-10e9
+ascii 10ea-10ed
+ascii 10ee-10fc
+ascii 10fd-1110
+ascii 119f-11a8
+ascii 11c1-11cc
+ascii 186d-1872
+ascii 1873-1878
+ascii 1879-187e
+ascii 187f-1884
+ascii 1885-188a
+ascii 188b-1890
+ascii 1891-1896
+ascii 1897-189c
+ascii 189d-18a2
+ascii 18a3-18a8
+ascii 18a9-18ae
+ascii 1a7e-1a88
+ascii 1a89-1a94
+ascii 1a95-1aa0
+ascii 1aab-1ac1
+ascii 23bc-23c7
+ascii 26ef-26ff
+ascii 31cf-31e3
+ascii 31e4-31f8
+ascii 31f9-320a
+ascii 320b-3223
+ascii 338a-3395
+ascii 3396-33b0
+ascii 33b1-33cb
+ascii 33cc-33e6
+ascii 4028-4035
+ascii 4036-404e
+ascii 404f-4067
+ascii 4aa0-4aab
+ascii 4aac-4ac0
+ascii 4ac1-4ad5
+ascii 5b1a-5b21
+ascii 6363-6371
+ascii 6b14-6b1e
+ascii 6b1f-6b29
+ascii 8b15-8b24
+ascii 8b25-8b32
+ascii 8b33-8b40
+ascii 8b41-8b4d
+ascii 8b4e-8b5b
+ascii 8b5c-8b69
+ascii 8b6a-8b76
+ascii 8b77-8b82
+ascii 8b83-8b8f
+ascii 8cd7-8ce3
+ascii 8ce4-8ced
+ascii 8cee-8cf7
+ascii 8cf8-8d01
+ascii 8d02-8d0b
+ascii 8d0c-8d15
+ascii 8d16-8d1f
+ascii 8d5b-8d68
+ascii 8f12-8f1d
+ascii 8f1e-8f30
+ascii 8f31-8f39
+ascii 8f3a-8f48
+ascii 8f49-8f56
+ascii 8f57-8f66
+ascii 8f67-8f75
+ascii 8f76-8f7d
+ascii 8f7e-8f8c
+ascii 8f8d-8f9c
+ascii 8f9d-8fb8
+ascii 8fb9-8fd4
+ascii 90e6-90ec
+ascii 90ef-90f5
+ascii 90f8-9106
+ascii 9109-9111
+ascii 9114-911c
+ascii 911f-912d
+ascii 9130-913b
+ascii 913e-914b
+ascii 914e-915c
+ascii 915f-916c
+ascii 916f-917d
+ascii 9180-918b
+ascii 918e-919b
+ascii 919e-91ac
+ascii 91af-91bc
+ascii 91bf-91cb
+ascii 91cc-91d8
+ascii 91db-91e8
+ascii 91e9-91f6
+ascii 9350-9359
+ascii 935a-935d
+ascii 935e-9361
+ascii 9362-9365
+ascii 9366-9369
+ascii 936a-936c
+ascii 93e5-93f2
+ascii 93f3-9403
+ascii 9404-9415
+ascii 9416-9428
+ascii 9429-943b
+ascii 943c-944e
+ascii 944f-9461
+ascii 9462-9474
+ascii 9475-9487
+ascii 9488-9496
+ascii 9589-9598
+ascii 9599-95a6
+ascii 95a7-95b2
+ascii 95c3-95c6
+ascii 95c7-95ca
+ascii 95cb-95ce
+ascii 95cf-95d3
+ascii 95d4-95d6
+ascii 96bf-96cd
+ascii 96ce-96d8
+ascii 96d9-96dd
+ascii 96de-96e2
+ascii 96e3-96e7
+ascii 96e8-96ed
+ascii 96ee-96f5
+ascii 96f6-96fd
+ascii 96fe-9705
+ascii 9706-970d
+ascii 970e-9715
+ascii 9716-971b
+ascii 971c-9724
+ascii 9725-9729
+ascii 972a-972e
+ascii 972f-9734
+ascii 9735-973a
+ascii 973b-9741
+ascii 9742-9748
+ascii 9749-9750
+ascii 9751-9758
+ascii 9759-975f
+ascii 9760-9766
+ascii 9767-976e
+ascii 976f-9773
+ascii 9774-977b
+ascii 977c-9783
+ascii 9784-978a
+ascii 978b-9791
+ascii 9792-9798
+ascii 9799-979d
+ascii 979e-97a2
+ascii 97a3-97a9
+ascii 97aa-97b0
+ascii 97b1-97b9
+ascii 97ba-97c2
+ascii 9880-988b
+ascii 988c-9898
+ascii 9899-98a5
+ascii 98a6-98b3
+ascii 98b4-98c2
+ascii 98c3-98d1
+ascii 98d2-98dc
+ascii 98dd-98e7
+ascii 98e8-98f2
+ascii 98f3-98fd
+ascii 98fe-9918
+ascii 99c6-99d3
+ascii 99d4-99ea
+ascii 99eb-9a04
+ascii 9a05-9a14
+ascii 9a15-9a18
+ascii 9a19-9a1c
+ascii 9b17-9b29
+ascii 9b2a-9b35
+ascii 9b36-9b48
+ascii 9b49-9b50
+ascii 9b7d-9b8a
+ascii 9b8b-9b9b
+ascii 9d64-9d71
+ascii 9d72-9d7e
+ascii 9d7f-9d88
+ascii 9d89-9d90
+ascii 9d91-9d9d
+ascii 9d9e-9daa
+ascii 9dab-9dae
+ascii 9daf-9dbf
+ascii 9dc0-9dc7
+ascii 9dc8-9ddc
+ascii 9ddd-9de1
+ascii 9de2-9dfb
+ascii 9dfc-9e13
+ascii 9e14-9e24
+ascii 9e25-9e33
+ascii 9e34-9e48
+ascii 9e49-9e4b
+ascii 9e4c-9e4e
