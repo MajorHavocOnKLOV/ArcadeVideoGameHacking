@@ -1,6 +1,26 @@
+BACKGROUND_FOR_1 EQU $234A
+BACKGROUND_FOR_TANK_GAME EQU $7200
+BACKGROUND_FOR_2 EQU $8900
+BACKGROUND_FOR_3 EQU $9100
+BACKGROUND_FOR_4 EQU $7A00
+NVRAM EQU $C000
+NVRAM_M1 EQU $C800
+NVRAM_M2 EQU $D000
+NVRAM_M3 EQU $D800
+SPRITE_RAM EQU $E000
+SPRITE_RAM_M1 EQU $E200
+SPRITE_RAM_M2 EQU $E400
+SPRITE_RAM_M3 EQU $E600
+VIDEO_RAM EQU $E800
+SPRITE_RAM_M4 EQU $F000
+SPRITE_RAM_M5 EQU $F200
+SPRITE_RAM_M6 EQU $F400
+SPRITE_RAM_M7 EQU $F600
+VIDEO_RAM_M1 EQU $F800
+
 ORG $0000
 
-*** Tron 8/9 in MAME
+*** Dissasembly of the Tron 8/9 ROMs used by MAME (labelled as tron)
 0000: C3 00 01       JP    $0100
 
 0003: 34             INC   (HL)
@@ -780,7 +800,25 @@ ORG $0000
 04AF: 00             NOP   
 
 *** Default high score initials
-04B0: JP<NUL>BA<NUL>GG<NUL>EV<NUL>AG<NUL>JM<NUL>TL<NUL>SB<NUL>MJ<NUL>JJ<NUL>
+04B0: JP
+
+04B3: BA
+
+04B6: GG
+
+04B9: EV
+
+04BC: AG
+
+04BF: JM
+
+04C2: TL
+
+04C5: SB
+
+04C8: MJ
+
+04CB: JJ
 
 04CE: 00             NOP   
 04CF: 20 00          JR    NZ,$04D1
@@ -836,7 +874,7 @@ ORG $0000
 050F: 32 BD FC       LD    ($FCBD),A
 0512: C9             RET   
 
-0513: CREDITS<NUL>
+0513: CREDITS
 
 051B: 21 63 C4       LD    HL,$C463
 051E: 7E             LD    A,(HL)
@@ -1797,17 +1835,23 @@ ORG $0000
 
 0B55: 91             SUB   A,C
 0B56: 51             LD    D,C
+0B57: 20 43          JR    NZ,$0B9C
 
-0B58: COPYRIGHT MCMLXXXI<NUL>WALT DISNEY P
-0B78: RODUCTIONS<NUL>
+0B59: OPYRIGHT MCMLXXXI
+
+0B6B: WALT DISNEY PRODUCTIONS
 
 0B83: FF             RST   $38
 
 0B84: 91             SUB   A,C
 0B85: 51             LD    D,C
+0B86: 20 43          JR    NZ,$0BCB
 
-0B87: COPYRIGHT MCMLXXXII<NUL>BALLY MIDWAY
-0BA7:  MFG CO<NUL>ALL RIGHTS RESERVED<NUL>
+0B88: OPYRIGHT MCMLXXXII
+
+0B9B: BALLY MIDWAY MFG CO
+
+0BAF: ALL RIGHTS RESERVED
 
 0BC3: AF             XOR   A,A
 0BC4: 32 15 C4       LD    ($C415),A
@@ -2125,8 +2169,8 @@ ORG $0000
 0DFB: 35             DEC   (HL)
 0DFC: 3C             INC   A
 0DFD: 26 35          LD    H,#$35
-0DFF: 48             LD    C,B
-0E00: 00             NOP   
+0DFF: H
+
 0E01: 36 48          LD    (HL),#$48
 0E03: 0C             INC   C
 0E04: 36 48          LD    (HL),#$48
@@ -2353,7 +2397,7 @@ ORG $0000
 0F6C: CD 17 6F       CALL  $6F17
 0F6F: 10 FB          DJNZ  $0F6C
 
-0F71: 3A 00 C0       LD    A,($C000)
+0F71: 3A 00 C0       LD    A,(NVRAM)
 0F74: FE 0B          CP    A,#$0B
 0F76: DC 7F 0F       CALL  C,$0F7F
 0F79: CD 3F 13       CALL  $133F
@@ -2437,43 +2481,18 @@ ORG $0000
 1018: 10 00          DJNZ  $101A
 
 101A: 00             NOP   
-101B: 50             LD    D,B
-101C: 4C             LD    C,H
-101D: 45             LD    B,L
-101E: 41             LD    B,C
-101F: 53             LD    D,E
-1020: 45             LD    B,L
-1021: 00             NOP   
-1022: 45             LD    B,L
-1023: 4E             LD    C,(HL)
-1024: 54             LD    D,H
-1025: 45             LD    B,L
-1026: 52             LD    D,D
-1027: 00             NOP   
-1028: 59             LD    E,C
-1029: 4F             LD    C,A
-102A: 55             LD    D,L
-102B: 52             LD    D,D
-102C: 00             NOP   
-102D: 49             LD    C,C
-102E: 4E             LD    C,(HL)
-102F: 49             LD    C,C
-1030: 54             LD    D,H
-1031: 49             LD    C,C
-1032: 41             LD    B,C
-1033: 4C             LD    C,H
-1034: 53             LD    D,E
-1035: 00             NOP   
-1036: 45             LD    B,L
-1037: 52             LD    D,D
-1038: 41             LD    B,C
-1039: 53             LD    D,E
-103A: 45             LD    B,L
-103B: 00             NOP   
-103C: 45             LD    B,L
-103D: 4E             LD    C,(HL)
-103E: 44             LD    B,H
-103F: 00             NOP   
+101B: PLEASE
+
+1022: ENTER
+
+1028: YOUR
+
+102D: INITIALS
+
+1036: ERASE
+
+103C: END
+
 1040: DB 02          IN    A,($02)
 1042: 2F             CPL   
 1043: 4F             LD    C,A
@@ -2581,19 +2600,9 @@ ORG $0000
 10EA: 36 51          LD    (HL),#$51
 10EC: C9             RET   
 
-10ED: 20 45          JR    NZ,$1134
+10ED:  ERASE 
 
-10EF: 52             LD    D,D
-10F0: 41             LD    B,C
-10F1: 53             LD    D,E
-10F2: 45             LD    B,L
-10F3: 20 00          JR    NZ,$10F5
-
-10F5: 20 45          JR    NZ,$113C
-
-10F7: 4E             LD    C,(HL)
-10F8: 44             LD    B,H
-10F9: 20 00          JR    NZ,$10FB
+10F5:  END 
 
 10FB: 21 45 C4       LD    HL,$C445
 10FE: 3A 5F C4       LD    A,($C45F)
@@ -2618,7 +2627,7 @@ ORG $0000
 111C: C9             RET   
 
 111D: DD 21 1F C5    LD    IX,$C51F
-1121: 21 00 C0       LD    HL,$C000
+1121: 21 00 C0       LD    HL,NVRAM
 1124: 3E 0A          LD    A,#$0A
 1126: 96             SUB   A,(HL)
 1127: 28 1A          JR    Z,$1143
@@ -2698,13 +2707,13 @@ ORG $0000
 11B5: FE 65          CP    A,#$65
 11B7: 38 0F          JR    C,$11C8
 
-11B9: 32 00 C0       LD    ($C000),A
+11B9: 32 00 C0       LD    (NVRAM),A
 11BC: 11 22 12       LD    DE,$1222
 11BF: CD F4 6F       CALL  $6FF4
 11C2: 11 31 12       LD    DE,$1231
 11C5: C3 F4 6F       JP    $6FF4
 
-11C8: 32 00 C0       LD    ($C000),A
+11C8: 32 00 C0       LD    (NVRAM),A
 11CB: 21 16 C4       LD    HL,$C416
 11CE: 06 03          LD    B,#$03
 11D0: 7E             LD    A,(HL)
@@ -2714,7 +2723,7 @@ ORG $0000
 11D7: 10 F7          DJNZ  $11D0
 
 11D9: 21 05 C0       LD    HL,$C005
-11DC: 3A 00 C0       LD    A,($C000)
+11DC: 3A 00 C0       LD    A,(NVRAM)
 11DF: FE 64          CP    A,#$64
 11E1: 38 05          JR    C,$11E8
 
@@ -2744,8 +2753,13 @@ ORG $0000
 1208: 4D             LD    C,L
 1209: C3 FF 6F       JP    $6FFF
 
-120C: YOUR SCORE<NUL>RANKING IS<NUL>NOT IN THE
-122C:  TOP<NUL>100 SCORES<NUL>
+120C: YOUR SCORE
+
+1217: RANKING IS
+
+1222: NOT IN THE TOP
+
+1231: 100 SCORES
 
 123C: DB 00          IN    A,($00)
 123E: 2F             CPL   
@@ -2915,10 +2929,9 @@ ORG $0000
 1346: 06 09          LD    B,#$09
 1348: 3A 16 C4       LD    A,($C416)
 134B: DD BE 00       CP    A,(IX+$00)
-134E: 38 20          JR    C,$1370
+134E: 8  
 
-1350: 20 14          JR    NZ,$1366
-
+1351: 14             INC   D
 1352: 3A 17 C4       LD    A,($C417)
 1355: DD BE 01       CP    A,(IX+$01)
 1358: 38 16          JR    C,$1370
@@ -3076,8 +3089,7 @@ ORG $0000
 1430: 35             DEC   (HL)
 1431: 56             LD    D,(HL)
 1432: 1C             INC   E
-1433: 58             LD    E,B
-1434: 30 31          JR    NC,$1467
+1433: X01
 
 1436: 99             SBC   A,C
 1437: 01 02 0C       LD    BC,$0C02
@@ -3376,7 +3388,7 @@ ORG $0000
 15BA: 0E 03          LD    C,#$03
 15BC: 11 BF FF       LD    DE,$FFBF
 15BF: AF             XOR   A,A
-15C0: 32 00 C0       LD    ($C000),A
+15C0: 32 00 C0       LD    (NVRAM),A
 15C3: FD 7E 00       LD    A,(IY+$00)
 15C6: CB 3F          SRL   A
 15C8: CB 3F          SRL   A
@@ -3386,7 +3398,7 @@ ORG $0000
 15D0: FE 30          CP    A,#$30
 15D2: 20 0D          JR    NZ,$15E1
 
-15D4: 3A 00 C0       LD    A,($C000)
+15D4: 3A 00 C0       LD    A,(NVRAM)
 15D7: B7             OR    A,A
 15D8: 20 05          JR    NZ,$15DF
 
@@ -3395,7 +3407,10 @@ ORG $0000
 15DD: 18 09          JR    $15E8
 
 15DF: 3E 30          LD    A,#$30
-15E1: 32 00 C0       LD    ($C000),A
+15E1: 2
+
+15E3: C0             RET   NZ
+
 15E4: 77             LD    (HL),A
 15E5: 23             INC   HL
 15E6: 36 50          LD    (HL),#$50
@@ -3406,7 +3421,7 @@ ORG $0000
 15F0: FE 30          CP    A,#$30
 15F2: 20 12          JR    NZ,$1606
 
-15F4: 3A 00 C0       LD    A,($C000)
+15F4: 3A 00 C0       LD    A,(NVRAM)
 15F7: B7             OR    A,A
 15F8: 20 0A          JR    NZ,$1604
 
@@ -3419,7 +3434,10 @@ ORG $0000
 1602: 18 09          JR    $160D
 
 1604: 3E 30          LD    A,#$30
-1606: 32 00 C0       LD    ($C000),A
+1606: 2
+
+1608: C0             RET   NZ
+
 1609: 77             LD    (HL),A
 160A: 23             INC   HL
 160B: 36 50          LD    (HL),#$50
@@ -3439,7 +3457,7 @@ ORG $0000
 161C: DD 21 06 C5    LD    IX,$C506
 1620: 01 8C FA       LD    BC,$FA8C
 1623: 3E 0A          LD    A,#$0A
-1625: 32 00 C0       LD    ($C000),A
+1625: 32 00 C0       LD    (NVRAM),A
 1628: DD 7E 00       LD    A,(IX+$00)
 162B: FE 0C          CP    A,#$0C
 162D: 38 02          JR    C,$1631
@@ -3458,14 +3476,14 @@ ORG $0000
 1644: 03             INC   BC
 1645: 03             INC   BC
 1646: 03             INC   BC
-1647: 21 00 C0       LD    HL,$C000
+1647: 21 00 C0       LD    HL,NVRAM
 164A: 35             DEC   (HL)
 164B: 20 DB          JR    NZ,$1628
 
 164D: 01 80 00       LD    BC,$0080
 1650: C3 38 15       JP    $1538
 
-1653: RANKINGS<NUL>
+1653: RANKINGS
 
 165C: 01 CA FC       LD    BC,$FCCA
 165F: 11 AB 16       LD    DE,$16AB
@@ -3499,19 +3517,8 @@ ORG $0000
 16A7: DD 19          ADD   IX,DE
 16A9: 18 C2          JR    $166D
 
-16AB: 50             LD    D,B
-16AC: 4F             LD    C,A
-16AD: 49             LD    C,C
-16AE: 4E             LD    C,(HL)
-16AF: 54             LD    D,H
-16B0: 20 56          JR    NZ,$1708
+16AB: POINT VALUES
 
-16B2: 41             LD    B,C
-16B3: 4C             LD    C,H
-16B4: 55             LD    D,L
-16B5: 45             LD    B,L
-16B6: 53             LD    D,E
-16B7: 00             NOP   
 16B8: 48             LD    C,B
 16B9: 48             LD    C,B
 16BA: 08             EX    AF,AF'
@@ -3520,7 +3527,7 @@ ORG $0000
 
 16BF: 16 60          LD    D,#$60
 16C1: 48             LD    C,B
-16C2: 11 00 D8       LD    DE,$D800
+16C2: 11 00 D8       LD    DE,NVRAM_M3
 16C5: FC F6 16       CALL  M,$16F6
 16C8: 78             LD    A,B
 16C9: 48             LD    C,B
@@ -3533,9 +3540,8 @@ ORG $0000
 16D1: 40             LD    B,B
 16D2: 31 A0 50       LD    SP,$50A0
 16D5: 36 90          LD    (HL),#$90
-16D7: 48             LD    C,B
-16D8: 39             ADD   HL,SP
-16D9: 00             NOP   
+16D7: H9
+
 16DA: E6 FC          AND   A,#$FC
 16DC: 14             INC   D
 16DD: 17             RLA   
@@ -3547,78 +3553,15 @@ ORG $0000
 16E4: 23             INC   HL
 16E5: 17             RLA   
 16E6: 00             NOP   
-16E7: 54             LD    D,H
-16E8: 41             LD    B,C
-16E9: 4E             LD    C,(HL)
-16EA: 4B             LD    C,E
-16EB: 53             LD    D,E
-16EC: 20 20          JR    NZ,$170E
+16E7: TANKS      500
 
-16EE: 20 20          JR    NZ,$1710
+16F6: GRID BUGS   50
 
-16F0: 20 20          JR    NZ,$1712
+1705: CYCLES     500
 
-16F2: 35             DEC   (HL)
-16F3: 30 30          JR    NC,$1725
+1714: MCP BLOCKS  25
 
-16F5: 00             NOP   
-16F6: 47             LD    B,A
-16F7: 52             LD    D,D
-16F8: 49             LD    C,C
-16F9: 44             LD    B,H
-16FA: 20 42          JR    NZ,$173E
-
-16FC: 55             LD    D,L
-16FD: 47             LD    B,A
-16FE: 53             LD    D,E
-16FF: 20 20          JR    NZ,$1721
-
-1701: 20 35          JR    NZ,$1738
-
-1703: 30 00          JR    NC,$1705
-
-1705: 43             LD    B,E
-1706: 59             LD    E,C
-1707: 43             LD    B,E
-1708: 4C             LD    C,H
-1709: 45             LD    B,L
-170A: 53             LD    D,E
-170B: 20 20          JR    NZ,$172D
-
-170D: 20 20          JR    NZ,$172F
-
-170F: 20 35          JR    NZ,$1746
-
-1711: 30 30          JR    NC,$1743
-
-1713: 00             NOP   
-1714: 4D             LD    C,L
-1715: 43             LD    B,E
-1716: 50             LD    D,B
-1717: 20 42          JR    NZ,$175B
-
-1719: 4C             LD    C,H
-171A: 4F             LD    C,A
-171B: 43             LD    B,E
-171C: 4B             LD    C,E
-171D: 53             LD    D,E
-171E: 20 20          JR    NZ,$1740
-
-1720: 32 35 00       LD    ($0035),A
-1723: 42             LD    B,D
-1724: 49             LD    C,C
-1725: 54             LD    D,H
-1726: 20 20          JR    NZ,$1748
-
-1728: 20 20          JR    NZ,$174A
-
-172A: 20 20          JR    NZ,$174C
-
-172C: 20 35          JR    NZ,$1763
-
-172E: 30 30          JR    NC,$1760
-
-1730: 30 00          JR    NC,$1732
+1723: BIT       5000
 
 1732: DD 4E 00       LD    C,(IX+$00)
 1735: DD 46 01       LD    B,(IX+$01)
@@ -3707,384 +3650,42 @@ ORG $0000
 17B7: 00             NOP   
 17B8: 00             NOP   
 17B9: 01 4D 41       LD    BC,$414D
-17BC: 50             LD    D,B
-17BD: 20 4F          JR    NZ,$180E
+17BC: P OF GAME GRID
 
-17BF: 46             LD    B,(HL)
-17C0: 20 47          JR    NZ,$1809
+17CB: PLAYER    DOT
 
-17C2: 41             LD    B,C
-17C3: 4D             LD    C,L
-17C4: 45             LD    B,L
-17C5: 20 47          JR    NZ,$180E
+17D9: JOYSTICK  MOVES DOT
 
-17C7: 52             LD    D,D
-17C8: 49             LD    C,C
-17C9: 44             LD    B,H
-17CA: 00             NOP   
-17CB: 50             LD    D,B
-17CC: 4C             LD    C,H
-17CD: 41             LD    B,C
-17CE: 59             LD    E,C
-17CF: 45             LD    B,L
-17D0: 52             LD    D,D
-17D1: 20 20          JR    NZ,$17F3
+17ED: TRIGGER   NOT USED
 
-17D3: 20 20          JR    NZ,$17F5
+1800: KNOB      NOT USED
 
-17D5: 44             LD    B,H
-17D6: 4F             LD    C,A
-17D7: 54             LD    D,H
-17D8: 00             NOP   
-17D9: 4A             LD    C,D
-17DA: 4F             LD    C,A
-17DB: 59             LD    E,C
-17DC: 53             LD    D,E
-17DD: 54             LD    D,H
-17DE: 49             LD    C,C
-17DF: 43             LD    B,E
-17E0: 4B             LD    C,E
-17E1: 20 20          JR    NZ,$1803
+1813: TRON CONSISTS OF 4 GAMES
 
-17E3: 4D             LD    C,L
-17E4: 4F             LD    C,A
-17E5: 56             LD    D,(HL)
-17E6: 45             LD    B,L
-17E7: 53             LD    D,E
-17E8: 20 44          JR    NZ,$182E
+182C: EACH COLORED AREA
 
-17EA: 4F             LD    C,A
-17EB: 54             LD    D,H
-17EC: 00             NOP   
-17ED: 54             LD    D,H
-17EE: 52             LD    D,D
-17EF: 49             LD    C,C
-17F0: 47             LD    B,A
-17F1: 47             LD    B,A
-17F2: 45             LD    B,L
-17F3: 52             LD    D,D
-17F4: 20 20          JR    NZ,$1816
+183E: REPRESENTS A GAME
 
-17F6: 20 4E          JR    NZ,$1846
+1850: SELECT AN AREA BY MOVING
 
-17F8: 4F             LD    C,A
-17F9: 54             LD    D,H
-17FA: 20 55          JR    NZ,$1851
+1869: TO THE OUTSIDE EDGE OF THE
 
-17FC: 53             LD    D,E
-17FD: 45             LD    B,L
-17FE: 44             LD    B,H
-17FF: 00             NOP   
-1800: 4B             LD    C,E
-1801: 4E             LD    C,(HL)
-1802: 4F             LD    C,A
-1803: 42             LD    B,D
-1804: 20 20          JR    NZ,$1826
+1884: CIRCLE BEFORE THE TIMER
 
-1806: 20 20          JR    NZ,$1828
+189C: INSIDE THE CENTER OF THE
 
-1808: 20 20          JR    NZ,$182A
+18B5: CIRCLE EXPIRES
 
-180A: 4E             LD    C,(HL)
-180B: 4F             LD    C,A
-180C: 54             LD    D,H
-180D: 20 55          JR    NZ,$1864
+18C4: UPON SUCCESSFUL COMPLETION
 
-180F: 53             LD    D,E
-1810: 45             LD    B,L
-1811: 44             LD    B,H
-1812: 00             NOP   
-1813: 54             LD    D,H
-1814: 52             LD    D,D
-1815: 4F             LD    C,A
-1816: 4E             LD    C,(HL)
-1817: 20 43          JR    NZ,$185C
+18DF: OF A GAME IN AN AREA THE
 
-1819: 4F             LD    C,A
-181A: 4E             LD    C,(HL)
-181B: 53             LD    D,E
-181C: 49             LD    C,C
-181D: 53             LD    D,E
-181E: 54             LD    D,H
-181F: 53             LD    D,E
-1820: 20 4F          JR    NZ,$1871
+18F8: AREA CAN NOT BE REENTERED
 
-1822: 46             LD    B,(HL)
-1823: 20 34          JR    NZ,$1859
+1912: UNTIL ALL AREAS HAVE BEEN
 
-1825: 20 47          JR    NZ,$186E
+192C: CONQUERED
 
-1827: 41             LD    B,C
-1828: 4D             LD    C,L
-1829: 45             LD    B,L
-182A: 53             LD    D,E
-182B: 00             NOP   
-182C: 45             LD    B,L
-182D: 41             LD    B,C
-182E: 43             LD    B,E
-182F: 48             LD    C,B
-1830: 20 43          JR    NZ,$1875
-
-1832: 4F             LD    C,A
-1833: 4C             LD    C,H
-1834: 4F             LD    C,A
-1835: 52             LD    D,D
-1836: 45             LD    B,L
-1837: 44             LD    B,H
-1838: 20 41          JR    NZ,$187B
-
-183A: 52             LD    D,D
-183B: 45             LD    B,L
-183C: 41             LD    B,C
-183D: 00             NOP   
-183E: 52             LD    D,D
-183F: 45             LD    B,L
-1840: 50             LD    D,B
-1841: 52             LD    D,D
-1842: 45             LD    B,L
-1843: 53             LD    D,E
-1844: 45             LD    B,L
-1845: 4E             LD    C,(HL)
-1846: 54             LD    D,H
-1847: 53             LD    D,E
-1848: 20 41          JR    NZ,$188B
-
-184A: 20 47          JR    NZ,$1893
-
-184C: 41             LD    B,C
-184D: 4D             LD    C,L
-184E: 45             LD    B,L
-184F: 00             NOP   
-1850: 53             LD    D,E
-1851: 45             LD    B,L
-1852: 4C             LD    C,H
-1853: 45             LD    B,L
-1854: 43             LD    B,E
-1855: 54             LD    D,H
-1856: 20 41          JR    NZ,$1899
-
-1858: 4E             LD    C,(HL)
-1859: 20 41          JR    NZ,$189C
-
-185B: 52             LD    D,D
-185C: 45             LD    B,L
-185D: 41             LD    B,C
-185E: 20 42          JR    NZ,$18A2
-
-1860: 59             LD    E,C
-1861: 20 4D          JR    NZ,$18B0
-
-1863: 4F             LD    C,A
-1864: 56             LD    D,(HL)
-1865: 49             LD    C,C
-1866: 4E             LD    C,(HL)
-1867: 47             LD    B,A
-1868: 00             NOP   
-1869: 54             LD    D,H
-186A: 4F             LD    C,A
-186B: 20 54          JR    NZ,$18C1
-
-186D: 48             LD    C,B
-186E: 45             LD    B,L
-186F: 20 4F          JR    NZ,$18C0
-
-1871: 55             LD    D,L
-1872: 54             LD    D,H
-1873: 53             LD    D,E
-1874: 49             LD    C,C
-1875: 44             LD    B,H
-1876: 45             LD    B,L
-1877: 20 45          JR    NZ,$18BE
-
-1879: 44             LD    B,H
-187A: 47             LD    B,A
-187B: 45             LD    B,L
-187C: 20 4F          JR    NZ,$18CD
-
-187E: 46             LD    B,(HL)
-187F: 20 54          JR    NZ,$18D5
-
-1881: 48             LD    C,B
-1882: 45             LD    B,L
-1883: 00             NOP   
-1884: 43             LD    B,E
-1885: 49             LD    C,C
-1886: 52             LD    D,D
-1887: 43             LD    B,E
-1888: 4C             LD    C,H
-1889: 45             LD    B,L
-188A: 20 42          JR    NZ,$18CE
-
-188C: 45             LD    B,L
-188D: 46             LD    B,(HL)
-188E: 4F             LD    C,A
-188F: 52             LD    D,D
-1890: 45             LD    B,L
-1891: 20 54          JR    NZ,$18E7
-
-1893: 48             LD    C,B
-1894: 45             LD    B,L
-1895: 20 54          JR    NZ,$18EB
-
-1897: 49             LD    C,C
-1898: 4D             LD    C,L
-1899: 45             LD    B,L
-189A: 52             LD    D,D
-189B: 00             NOP   
-189C: 49             LD    C,C
-189D: 4E             LD    C,(HL)
-189E: 53             LD    D,E
-189F: 49             LD    C,C
-18A0: 44             LD    B,H
-18A1: 45             LD    B,L
-18A2: 20 54          JR    NZ,$18F8
-
-18A4: 48             LD    C,B
-18A5: 45             LD    B,L
-18A6: 20 43          JR    NZ,$18EB
-
-18A8: 45             LD    B,L
-18A9: 4E             LD    C,(HL)
-18AA: 54             LD    D,H
-18AB: 45             LD    B,L
-18AC: 52             LD    D,D
-18AD: 20 4F          JR    NZ,$18FE
-
-18AF: 46             LD    B,(HL)
-18B0: 20 54          JR    NZ,$1906
-
-18B2: 48             LD    C,B
-18B3: 45             LD    B,L
-18B4: 00             NOP   
-18B5: 43             LD    B,E
-18B6: 49             LD    C,C
-18B7: 52             LD    D,D
-18B8: 43             LD    B,E
-18B9: 4C             LD    C,H
-18BA: 45             LD    B,L
-18BB: 20 45          JR    NZ,$1902
-
-18BD: 58             LD    E,B
-18BE: 50             LD    D,B
-18BF: 49             LD    C,C
-18C0: 52             LD    D,D
-18C1: 45             LD    B,L
-18C2: 53             LD    D,E
-18C3: 00             NOP   
-18C4: 55             LD    D,L
-18C5: 50             LD    D,B
-18C6: 4F             LD    C,A
-18C7: 4E             LD    C,(HL)
-18C8: 20 53          JR    NZ,$191D
-
-18CA: 55             LD    D,L
-18CB: 43             LD    B,E
-18CC: 43             LD    B,E
-18CD: 45             LD    B,L
-18CE: 53             LD    D,E
-18CF: 53             LD    D,E
-18D0: 46             LD    B,(HL)
-18D1: 55             LD    D,L
-18D2: 4C             LD    C,H
-18D3: 20 43          JR    NZ,$1918
-
-18D5: 4F             LD    C,A
-18D6: 4D             LD    C,L
-18D7: 50             LD    D,B
-18D8: 4C             LD    C,H
-18D9: 45             LD    B,L
-18DA: 54             LD    D,H
-18DB: 49             LD    C,C
-18DC: 4F             LD    C,A
-18DD: 4E             LD    C,(HL)
-18DE: 00             NOP   
-18DF: 4F             LD    C,A
-18E0: 46             LD    B,(HL)
-18E1: 20 41          JR    NZ,$1924
-
-18E3: 20 47          JR    NZ,$192C
-
-18E5: 41             LD    B,C
-18E6: 4D             LD    C,L
-18E7: 45             LD    B,L
-18E8: 20 49          JR    NZ,$1933
-
-18EA: 4E             LD    C,(HL)
-18EB: 20 41          JR    NZ,$192E
-
-18ED: 4E             LD    C,(HL)
-18EE: 20 41          JR    NZ,$1931
-
-18F0: 52             LD    D,D
-18F1: 45             LD    B,L
-18F2: 41             LD    B,C
-18F3: 20 54          JR    NZ,$1949
-
-18F5: 48             LD    C,B
-18F6: 45             LD    B,L
-18F7: 00             NOP   
-18F8: 41             LD    B,C
-18F9: 52             LD    D,D
-18FA: 45             LD    B,L
-18FB: 41             LD    B,C
-18FC: 20 43          JR    NZ,$1941
-
-18FE: 41             LD    B,C
-18FF: 4E             LD    C,(HL)
-1900: 20 4E          JR    NZ,$1950
-
-1902: 4F             LD    C,A
-1903: 54             LD    D,H
-1904: 20 42          JR    NZ,$1948
-
-1906: 45             LD    B,L
-1907: 20 52          JR    NZ,$195B
-
-1909: 45             LD    B,L
-190A: 45             LD    B,L
-190B: 4E             LD    C,(HL)
-190C: 54             LD    D,H
-190D: 45             LD    B,L
-190E: 52             LD    D,D
-190F: 45             LD    B,L
-1910: 44             LD    B,H
-1911: 00             NOP   
-1912: 55             LD    D,L
-1913: 4E             LD    C,(HL)
-1914: 54             LD    D,H
-1915: 49             LD    C,C
-1916: 4C             LD    C,H
-1917: 20 41          JR    NZ,$195A
-
-1919: 4C             LD    C,H
-191A: 4C             LD    C,H
-191B: 20 41          JR    NZ,$195E
-
-191D: 52             LD    D,D
-191E: 45             LD    B,L
-191F: 41             LD    B,C
-1920: 53             LD    D,E
-1921: 20 48          JR    NZ,$196B
-
-1923: 41             LD    B,C
-1924: 56             LD    D,(HL)
-1925: 45             LD    B,L
-1926: 20 42          JR    NZ,$196A
-
-1928: 45             LD    B,L
-1929: 45             LD    B,L
-192A: 4E             LD    C,(HL)
-192B: 00             NOP   
-192C: 43             LD    B,E
-192D: 4F             LD    C,A
-192E: 4E             LD    C,(HL)
-192F: 51             LD    D,C
-1930: 55             LD    D,L
-1931: 45             LD    B,L
-1932: 52             LD    D,D
-1933: 45             LD    B,L
-1934: 44             LD    B,H
-1935: 00             NOP   
 1936: DD 21 3D 19    LD    IX,$193D
 193A: C3 32 17       JP    $1732
 
@@ -4127,225 +3728,30 @@ ORG $0000
 196E: 00             NOP   
 196F: 00             NOP   
 1970: 01 54 41       LD    BC,$4154
-1973: 4E             LD    C,(HL)
-1974: 4B             LD    C,E
-1975: 20 47          JR    NZ,$19BE
+1973: NK GAME
 
-1977: 41             LD    B,C
-1978: 4D             LD    C,L
-1979: 45             LD    B,L
-197A: 00             NOP   
-197B: 50             LD    D,B
-197C: 4C             LD    C,H
-197D: 41             LD    B,C
-197E: 59             LD    E,C
-197F: 45             LD    B,L
-1980: 52             LD    D,D
-1981: 20 20          JR    NZ,$19A3
+197B: PLAYER    RED TANK
 
-1983: 20 20          JR    NZ,$19A5
+198E: JOYSTICK  MOVES TANK
 
-1985: 52             LD    D,D
-1986: 45             LD    B,L
-1987: 44             LD    B,H
-1988: 20 54          JR    NZ,$19DE
+19A3: TRIGGER   FIRES DISK
 
-198A: 41             LD    B,C
-198B: 4E             LD    C,(HL)
-198C: 4B             LD    C,E
-198D: 00             NOP   
-198E: 4A             LD    C,D
-198F: 4F             LD    C,A
-1990: 59             LD    E,C
-1991: 53             LD    D,E
-1992: 54             LD    D,H
-1993: 49             LD    C,C
-1994: 43             LD    B,E
-1995: 4B             LD    C,E
-1996: 20 20          JR    NZ,$19B8
+19B8: KNOB      AIMS DISK
 
-1998: 4D             LD    C,L
-1999: 4F             LD    C,A
-199A: 56             LD    D,(HL)
-199B: 45             LD    B,L
-199C: 53             LD    D,E
-199D: 20 54          JR    NZ,$19F3
+19CC: DESTROY ALL ENEMY TANKS
 
-199F: 41             LD    B,C
-19A0: 4E             LD    C,(HL)
-19A1: 4B             LD    C,E
-19A2: 00             NOP   
-19A3: 54             LD    D,H
-19A4: 52             LD    D,D
-19A5: 49             LD    C,C
-19A6: 47             LD    B,A
-19A7: 47             LD    B,A
-19A8: 45             LD    B,L
-19A9: 52             LD    D,D
-19AA: 20 20          JR    NZ,$19CC
+19E4: EACH ENEMY MUST BE
 
-19AC: 20 46          JR    NZ,$19F4
+19F7: HIT 3 TIMES TO BE
 
-19AE: 49             LD    C,C
-19AF: 52             LD    D,D
-19B0: 45             LD    B,L
-19B1: 53             LD    D,E
-19B2: 20 44          JR    NZ,$19F8
+1A09: DESTROYED
 
-19B4: 49             LD    C,C
-19B5: 53             LD    D,E
-19B6: 4B             LD    C,E
-19B7: 00             NOP   
-19B8: 4B             LD    C,E
-19B9: 4E             LD    C,(HL)
-19BA: 4F             LD    C,A
-19BB: 42             LD    B,D
-19BC: 20 20          JR    NZ,$19DE
+1A13: 1ST HIT   100 POINTS
 
-19BE: 20 20          JR    NZ,$19E0
+1A28: 2ND HIT   300 POINTS
 
-19C0: 20 20          JR    NZ,$19E2
+1A3D: 3RD HIT   500 POINTS
 
-19C2: 41             LD    B,C
-19C3: 49             LD    C,C
-19C4: 4D             LD    C,L
-19C5: 53             LD    D,E
-19C6: 20 44          JR    NZ,$1A0C
-
-19C8: 49             LD    C,C
-19C9: 53             LD    D,E
-19CA: 4B             LD    C,E
-19CB: 00             NOP   
-19CC: 44             LD    B,H
-19CD: 45             LD    B,L
-19CE: 53             LD    D,E
-19CF: 54             LD    D,H
-19D0: 52             LD    D,D
-19D1: 4F             LD    C,A
-19D2: 59             LD    E,C
-19D3: 20 41          JR    NZ,$1A16
-
-19D5: 4C             LD    C,H
-19D6: 4C             LD    C,H
-19D7: 20 45          JR    NZ,$1A1E
-
-19D9: 4E             LD    C,(HL)
-19DA: 45             LD    B,L
-19DB: 4D             LD    C,L
-19DC: 59             LD    E,C
-19DD: 20 54          JR    NZ,$1A33
-
-19DF: 41             LD    B,C
-19E0: 4E             LD    C,(HL)
-19E1: 4B             LD    C,E
-19E2: 53             LD    D,E
-19E3: 00             NOP   
-19E4: 45             LD    B,L
-19E5: 41             LD    B,C
-19E6: 43             LD    B,E
-19E7: 48             LD    C,B
-19E8: 20 45          JR    NZ,$1A2F
-
-19EA: 4E             LD    C,(HL)
-19EB: 45             LD    B,L
-19EC: 4D             LD    C,L
-19ED: 59             LD    E,C
-19EE: 20 4D          JR    NZ,$1A3D
-
-19F0: 55             LD    D,L
-19F1: 53             LD    D,E
-19F2: 54             LD    D,H
-19F3: 20 42          JR    NZ,$1A37
-
-19F5: 45             LD    B,L
-19F6: 00             NOP   
-19F7: 48             LD    C,B
-19F8: 49             LD    C,C
-19F9: 54             LD    D,H
-19FA: 20 33          JR    NZ,$1A2F
-
-19FC: 20 54          JR    NZ,$1A52
-
-19FE: 49             LD    C,C
-19FF: 4D             LD    C,L
-1A00: 45             LD    B,L
-1A01: 53             LD    D,E
-1A02: 20 54          JR    NZ,$1A58
-
-1A04: 4F             LD    C,A
-1A05: 20 42          JR    NZ,$1A49
-
-1A07: 45             LD    B,L
-1A08: 00             NOP   
-1A09: 44             LD    B,H
-1A0A: 45             LD    B,L
-1A0B: 53             LD    D,E
-1A0C: 54             LD    D,H
-1A0D: 52             LD    D,D
-1A0E: 4F             LD    C,A
-1A0F: 59             LD    E,C
-1A10: 45             LD    B,L
-1A11: 44             LD    B,H
-1A12: 00             NOP   
-1A13: 31 53 54       LD    SP,$5453
-1A16: 20 48          JR    NZ,$1A60
-
-1A18: 49             LD    C,C
-1A19: 54             LD    D,H
-1A1A: 20 20          JR    NZ,$1A3C
-
-1A1C: 20 31          JR    NZ,$1A4F
-
-1A1E: 30 30          JR    NC,$1A50
-
-1A20: 20 50          JR    NZ,$1A72
-
-1A22: 4F             LD    C,A
-1A23: 49             LD    C,C
-1A24: 4E             LD    C,(HL)
-1A25: 54             LD    D,H
-1A26: 53             LD    D,E
-1A27: 00             NOP   
-1A28: 32 4E 44       LD    ($444E),A
-1A2B: 20 48          JR    NZ,$1A75
-
-1A2D: 49             LD    C,C
-1A2E: 54             LD    D,H
-1A2F: 20 20          JR    NZ,$1A51
-
-1A31: 20 33          JR    NZ,$1A66
-
-1A33: 30 30          JR    NC,$1A65
-
-1A35: 20 50          JR    NZ,$1A87
-
-1A37: 4F             LD    C,A
-1A38: 49             LD    C,C
-1A39: 4E             LD    C,(HL)
-1A3A: 54             LD    D,H
-1A3B: 53             LD    D,E
-1A3C: 00             NOP   
-1A3D: 33             INC   SP
-1A3E: 52             LD    D,D
-1A3F: 44             LD    B,H
-1A40: 20 48          JR    NZ,$1A8A
-
-1A42: 49             LD    C,C
-1A43: 54             LD    D,H
-1A44: 20 20          JR    NZ,$1A66
-
-1A46: 20 35          JR    NZ,$1A7D
-
-1A48: 30 30          JR    NC,$1A7A
-
-1A4A: 20 50          JR    NZ,$1A9C
-
-1A4C: 4F             LD    C,A
-1A4D: 49             LD    C,C
-1A4E: 4E             LD    C,(HL)
-1A4F: 54             LD    D,H
-1A50: 53             LD    D,E
-1A51: 00             NOP   
 1A52: DD 21 59 1A    LD    IX,$1A59
 1A56: C3 32 17       JP    $1732
 
@@ -4386,228 +3792,28 @@ ORG $0000
 1A86: 00             NOP   
 1A87: 00             NOP   
 1A88: 01 43 59       LD    BC,$5943
-1A8B: 43             LD    B,E
-1A8C: 4C             LD    C,H
-1A8D: 45             LD    B,L
-1A8E: 20 47          JR    NZ,$1AD7
+1A8B: CLE GAME
 
-1A90: 41             LD    B,C
-1A91: 4D             LD    C,L
-1A92: 45             LD    B,L
-1A93: 00             NOP   
-1A94: 50             LD    D,B
-1A95: 4C             LD    C,H
-1A96: 41             LD    B,C
-1A97: 59             LD    E,C
-1A98: 45             LD    B,L
-1A99: 52             LD    D,D
-1A9A: 20 20          JR    NZ,$1ABC
+1A94: PLAYER    BLUE CYCLE
 
-1A9C: 20 20          JR    NZ,$1ABE
+1AA9: JOYSTICK  MOVES CYCLE
 
-1A9E: 42             LD    B,D
-1A9F: 4C             LD    C,H
-1AA0: 55             LD    D,L
-1AA1: 45             LD    B,L
-1AA2: 20 43          JR    NZ,$1AE7
+1ABF: TRIGGER   SPEED CONTROL
 
-1AA4: 59             LD    E,C
-1AA5: 43             LD    B,E
-1AA6: 4C             LD    C,H
-1AA7: 45             LD    B,L
-1AA8: 00             NOP   
-1AA9: 4A             LD    C,D
-1AAA: 4F             LD    C,A
-1AAB: 59             LD    E,C
-1AAC: 53             LD    D,E
-1AAD: 54             LD    D,H
-1AAE: 49             LD    C,C
-1AAF: 43             LD    B,E
-1AB0: 4B             LD    C,E
-1AB1: 20 20          JR    NZ,$1AD3
+1AD7: KNOB      NOT USED
 
-1AB3: 4D             LD    C,L
-1AB4: 4F             LD    C,A
-1AB5: 56             LD    D,(HL)
-1AB6: 45             LD    B,L
-1AB7: 53             LD    D,E
-1AB8: 20 43          JR    NZ,$1AFD
+1AEA: TOUCHING A WALL OR LIGHT
 
-1ABA: 59             LD    E,C
-1ABB: 43             LD    B,E
-1ABC: 4C             LD    C,H
-1ABD: 45             LD    B,L
-1ABE: 00             NOP   
-1ABF: 54             LD    D,H
-1AC0: 52             LD    D,D
-1AC1: 49             LD    C,C
-1AC2: 47             LD    B,A
-1AC3: 47             LD    B,A
-1AC4: 45             LD    B,L
-1AC5: 52             LD    D,D
-1AC6: 20 20          JR    NZ,$1AE8
+1B03: TRACE DESTROYS A CYCLE
 
-1AC8: 20 53          JR    NZ,$1B1D
+1B1A: MAKE LIGHT PATHS
 
-1ACA: 50             LD    D,B
-1ACB: 45             LD    B,L
-1ACC: 45             LD    B,L
-1ACD: 44             LD    B,H
-1ACE: 20 43          JR    NZ,$1B13
+1B2B: WHICH FORCE THE YELLOW
 
-1AD0: 4F             LD    C,A
-1AD1: 4E             LD    C,(HL)
-1AD2: 54             LD    D,H
-1AD3: 52             LD    D,D
-1AD4: 4F             LD    C,A
-1AD5: 4C             LD    C,H
-1AD6: 00             NOP   
-1AD7: 4B             LD    C,E
-1AD8: 4E             LD    C,(HL)
-1AD9: 4F             LD    C,A
-1ADA: 42             LD    B,D
-1ADB: 20 20          JR    NZ,$1AFD
+1B42: CYCLES INTO THE WALLS AND
 
-1ADD: 20 20          JR    NZ,$1AFF
+1B5C: LIGHT TRACES
 
-1ADF: 20 20          JR    NZ,$1B01
-
-1AE1: 4E             LD    C,(HL)
-1AE2: 4F             LD    C,A
-1AE3: 54             LD    D,H
-1AE4: 20 55          JR    NZ,$1B3B
-
-1AE6: 53             LD    D,E
-1AE7: 45             LD    B,L
-1AE8: 44             LD    B,H
-1AE9: 00             NOP   
-1AEA: 54             LD    D,H
-1AEB: 4F             LD    C,A
-1AEC: 55             LD    D,L
-1AED: 43             LD    B,E
-1AEE: 48             LD    C,B
-1AEF: 49             LD    C,C
-1AF0: 4E             LD    C,(HL)
-1AF1: 47             LD    B,A
-1AF2: 20 41          JR    NZ,$1B35
-
-1AF4: 20 57          JR    NZ,$1B4D
-
-1AF6: 41             LD    B,C
-1AF7: 4C             LD    C,H
-1AF8: 4C             LD    C,H
-1AF9: 20 4F          JR    NZ,$1B4A
-
-1AFB: 52             LD    D,D
-1AFC: 20 4C          JR    NZ,$1B4A
-
-1AFE: 49             LD    C,C
-1AFF: 47             LD    B,A
-1B00: 48             LD    C,B
-1B01: 54             LD    D,H
-1B02: 00             NOP   
-1B03: 54             LD    D,H
-1B04: 52             LD    D,D
-1B05: 41             LD    B,C
-1B06: 43             LD    B,E
-1B07: 45             LD    B,L
-1B08: 20 44          JR    NZ,$1B4E
-
-1B0A: 45             LD    B,L
-1B0B: 53             LD    D,E
-1B0C: 54             LD    D,H
-1B0D: 52             LD    D,D
-1B0E: 4F             LD    C,A
-1B0F: 59             LD    E,C
-1B10: 53             LD    D,E
-1B11: 20 41          JR    NZ,$1B54
-
-1B13: 20 43          JR    NZ,$1B58
-
-1B15: 59             LD    E,C
-1B16: 43             LD    B,E
-1B17: 4C             LD    C,H
-1B18: 45             LD    B,L
-1B19: 00             NOP   
-1B1A: 4D             LD    C,L
-1B1B: 41             LD    B,C
-1B1C: 4B             LD    C,E
-1B1D: 45             LD    B,L
-1B1E: 20 4C          JR    NZ,$1B6C
-
-1B20: 49             LD    C,C
-1B21: 47             LD    B,A
-1B22: 48             LD    C,B
-1B23: 54             LD    D,H
-1B24: 20 50          JR    NZ,$1B76
-
-1B26: 41             LD    B,C
-1B27: 54             LD    D,H
-1B28: 48             LD    C,B
-1B29: 53             LD    D,E
-1B2A: 00             NOP   
-1B2B: 57             LD    D,A
-1B2C: 48             LD    C,B
-1B2D: 49             LD    C,C
-1B2E: 43             LD    B,E
-1B2F: 48             LD    C,B
-1B30: 20 46          JR    NZ,$1B78
-
-1B32: 4F             LD    C,A
-1B33: 52             LD    D,D
-1B34: 43             LD    B,E
-1B35: 45             LD    B,L
-1B36: 20 54          JR    NZ,$1B8C
-
-1B38: 48             LD    C,B
-1B39: 45             LD    B,L
-1B3A: 20 59          JR    NZ,$1B95
-
-1B3C: 45             LD    B,L
-1B3D: 4C             LD    C,H
-1B3E: 4C             LD    C,H
-1B3F: 4F             LD    C,A
-1B40: 57             LD    D,A
-1B41: 00             NOP   
-1B42: 43             LD    B,E
-1B43: 59             LD    E,C
-1B44: 43             LD    B,E
-1B45: 4C             LD    C,H
-1B46: 45             LD    B,L
-1B47: 53             LD    D,E
-1B48: 20 49          JR    NZ,$1B93
-
-1B4A: 4E             LD    C,(HL)
-1B4B: 54             LD    D,H
-1B4C: 4F             LD    C,A
-1B4D: 20 54          JR    NZ,$1BA3
-
-1B4F: 48             LD    C,B
-1B50: 45             LD    B,L
-1B51: 20 57          JR    NZ,$1BAA
-
-1B53: 41             LD    B,C
-1B54: 4C             LD    C,H
-1B55: 4C             LD    C,H
-1B56: 53             LD    D,E
-1B57: 20 41          JR    NZ,$1B9A
-
-1B59: 4E             LD    C,(HL)
-1B5A: 44             LD    B,H
-1B5B: 00             NOP   
-1B5C: 4C             LD    C,H
-1B5D: 49             LD    C,C
-1B5E: 47             LD    B,A
-1B5F: 48             LD    C,B
-1B60: 54             LD    D,H
-1B61: 20 54          JR    NZ,$1BB7
-
-1B63: 52             LD    D,D
-1B64: 41             LD    B,C
-1B65: 43             LD    B,E
-1B66: 45             LD    B,L
-1B67: 53             LD    D,E
-1B68: 00             NOP   
 1B69: DD 21 7A 1B    LD    IX,$1B7A
 1B6D: CD 32 17       CALL  $1732
 1B70: CD C7 6F       CALL  $6FC7
@@ -4668,251 +3874,36 @@ ORG $0000
 1BBF: 00             NOP   
 1BC0: 00             NOP   
 1BC1: 01 49 4F       LD    BC,$4F49
-1BC4: 20 54          JR    NZ,$1C1A
+1BC4:  TOWER GAME
 
-1BC6: 4F             LD    C,A
-1BC7: 57             LD    D,A
-1BC8: 45             LD    B,L
-1BC9: 52             LD    D,D
-1BCA: 20 47          JR    NZ,$1C13
+1BD0: PLAYER   TRON
 
-1BCC: 41             LD    B,C
-1BCD: 4D             LD    C,L
-1BCE: 45             LD    B,L
-1BCF: 00             NOP   
-1BD0: 50             LD    D,B
-1BD1: 4C             LD    C,H
-1BD2: 41             LD    B,C
-1BD3: 59             LD    E,C
-1BD4: 45             LD    B,L
-1BD5: 52             LD    D,D
-1BD6: 20 20          JR    NZ,$1BF8
+1BDE: JOYSTICK  MOVES TRON
 
-1BD8: 20 54          JR    NZ,$1C2E
+1BF3: TRIGGER   FIRES DISK
 
-1BDA: 52             LD    D,D
-1BDB: 4F             LD    C,A
-1BDC: 4E             LD    C,(HL)
-1BDD: 00             NOP   
-1BDE: 4A             LD    C,D
-1BDF: 4F             LD    C,A
-1BE0: 59             LD    E,C
-1BE1: 53             LD    D,E
-1BE2: 54             LD    D,H
-1BE3: 49             LD    C,C
-1BE4: 43             LD    B,E
-1BE5: 4B             LD    C,E
-1BE6: 20 20          JR    NZ,$1C08
+1C08: KNOB      AIMS DISK
 
-1BE8: 4D             LD    C,L
-1BE9: 4F             LD    C,A
-1BEA: 56             LD    D,(HL)
-1BEB: 45             LD    B,L
-1BEC: 53             LD    D,E
-1BED: 20 54          JR    NZ,$1C43
+1C1C: ENTER THE IO TOWER
 
-1BEF: 52             LD    D,D
-1BF0: 4F             LD    C,A
-1BF1: 4E             LD    C,(HL)
-1BF2: 00             NOP   
-1BF3: 54             LD    D,H
-1BF4: 52             LD    D,D
-1BF5: 49             LD    C,C
-1BF6: 47             LD    B,A
-1BF7: 47             LD    B,A
-1BF8: 45             LD    B,L
-1BF9: 52             LD    D,D
-1BFA: 20 20          JR    NZ,$1C1C
+1C2F: BEFORE THE TIMER
 
-1BFC: 20 46          JR    NZ,$1C44
+1C40: EXPIRES
 
-1BFE: 49             LD    C,C
-1BFF: 52             LD    D,D
-1C00: 45             LD    B,L
-1C01: 53             LD    D,E
-1C02: 20 44          JR    NZ,$1C48
+1C48: TOUCHING A GRID BUG
 
-1C04: 49             LD    C,C
-1C05: 53             LD    D,E
-1C06: 4B             LD    C,E
-1C07: 00             NOP   
-1C08: 4B             LD    C,E
-1C09: 4E             LD    C,(HL)
-1C0A: 4F             LD    C,A
-1C0B: 42             LD    B,D
-1C0C: 20 20          JR    NZ,$1C2E
+1C5C: RESULTS IN TRON
 
-1C0E: 20 20          JR    NZ,$1C30
+1C6C: DEREZ
 
-1C10: 20 20          JR    NZ,$1C32
+1C72: THE TIMER VALUE IS
 
-1C12: 41             LD    B,C
-1C13: 49             LD    C,C
-1C14: 4D             LD    C,L
-1C15: 53             LD    D,E
-1C16: 20 44          JR    NZ,$1C5C
+1C85: AWARDED AS A BONUS
 
-1C18: 49             LD    C,C
-1C19: 53             LD    D,E
-1C1A: 4B             LD    C,E
-1C1B: 00             NOP   
-1C1C: 45             LD    B,L
-1C1D: 4E             LD    C,(HL)
-1C1E: 54             LD    D,H
-1C1F: 45             LD    B,L
-1C20: 52             LD    D,D
-1C21: 20 54          JR    NZ,$1C77
+1C98: WHEN THE PLAYER
 
-1C23: 48             LD    C,B
-1C24: 45             LD    B,L
-1C25: 20 49          JR    NZ,$1C70
+1CA8: ENTERS THE TOWER
 
-1C27: 4F             LD    C,A
-1C28: 20 54          JR    NZ,$1C7E
-
-1C2A: 4F             LD    C,A
-1C2B: 57             LD    D,A
-1C2C: 45             LD    B,L
-1C2D: 52             LD    D,D
-1C2E: 00             NOP   
-1C2F: 42             LD    B,D
-1C30: 45             LD    B,L
-1C31: 46             LD    B,(HL)
-1C32: 4F             LD    C,A
-1C33: 52             LD    D,D
-1C34: 45             LD    B,L
-1C35: 20 54          JR    NZ,$1C8B
-
-1C37: 48             LD    C,B
-1C38: 45             LD    B,L
-1C39: 20 54          JR    NZ,$1C8F
-
-1C3B: 49             LD    C,C
-1C3C: 4D             LD    C,L
-1C3D: 45             LD    B,L
-1C3E: 52             LD    D,D
-1C3F: 00             NOP   
-1C40: 45             LD    B,L
-1C41: 58             LD    E,B
-1C42: 50             LD    D,B
-1C43: 49             LD    C,C
-1C44: 52             LD    D,D
-1C45: 45             LD    B,L
-1C46: 53             LD    D,E
-1C47: 00             NOP   
-1C48: 54             LD    D,H
-1C49: 4F             LD    C,A
-1C4A: 55             LD    D,L
-1C4B: 43             LD    B,E
-1C4C: 48             LD    C,B
-1C4D: 49             LD    C,C
-1C4E: 4E             LD    C,(HL)
-1C4F: 47             LD    B,A
-1C50: 20 41          JR    NZ,$1C93
-
-1C52: 20 47          JR    NZ,$1C9B
-
-1C54: 52             LD    D,D
-1C55: 49             LD    C,C
-1C56: 44             LD    B,H
-1C57: 20 42          JR    NZ,$1C9B
-
-1C59: 55             LD    D,L
-1C5A: 47             LD    B,A
-1C5B: 00             NOP   
-1C5C: 52             LD    D,D
-1C5D: 45             LD    B,L
-1C5E: 53             LD    D,E
-1C5F: 55             LD    D,L
-1C60: 4C             LD    C,H
-1C61: 54             LD    D,H
-1C62: 53             LD    D,E
-1C63: 20 49          JR    NZ,$1CAE
-
-1C65: 4E             LD    C,(HL)
-1C66: 20 54          JR    NZ,$1CBC
-
-1C68: 52             LD    D,D
-1C69: 4F             LD    C,A
-1C6A: 4E             LD    C,(HL)
-1C6B: 00             NOP   
-1C6C: 44             LD    B,H
-1C6D: 45             LD    B,L
-1C6E: 52             LD    D,D
-1C6F: 45             LD    B,L
-1C70: 5A             LD    E,D
-1C71: 00             NOP   
-1C72: 54             LD    D,H
-1C73: 48             LD    C,B
-1C74: 45             LD    B,L
-1C75: 20 54          JR    NZ,$1CCB
-
-1C77: 49             LD    C,C
-1C78: 4D             LD    C,L
-1C79: 45             LD    B,L
-1C7A: 52             LD    D,D
-1C7B: 20 56          JR    NZ,$1CD3
-
-1C7D: 41             LD    B,C
-1C7E: 4C             LD    C,H
-1C7F: 55             LD    D,L
-1C80: 45             LD    B,L
-1C81: 20 49          JR    NZ,$1CCC
-
-1C83: 53             LD    D,E
-1C84: 00             NOP   
-1C85: 41             LD    B,C
-1C86: 57             LD    D,A
-1C87: 41             LD    B,C
-1C88: 52             LD    D,D
-1C89: 44             LD    B,H
-1C8A: 45             LD    B,L
-1C8B: 44             LD    B,H
-1C8C: 20 41          JR    NZ,$1CCF
-
-1C8E: 53             LD    D,E
-1C8F: 20 41          JR    NZ,$1CD2
-
-1C91: 20 42          JR    NZ,$1CD5
-
-1C93: 4F             LD    C,A
-1C94: 4E             LD    C,(HL)
-1C95: 55             LD    D,L
-1C96: 53             LD    D,E
-1C97: 00             NOP   
-1C98: 57             LD    D,A
-1C99: 48             LD    C,B
-1C9A: 45             LD    B,L
-1C9B: 4E             LD    C,(HL)
-1C9C: 20 54          JR    NZ,$1CF2
-
-1C9E: 48             LD    C,B
-1C9F: 45             LD    B,L
-1CA0: 20 50          JR    NZ,$1CF2
-
-1CA2: 4C             LD    C,H
-1CA3: 41             LD    B,C
-1CA4: 59             LD    E,C
-1CA5: 45             LD    B,L
-1CA6: 52             LD    D,D
-1CA7: 00             NOP   
-1CA8: 45             LD    B,L
-1CA9: 4E             LD    C,(HL)
-1CAA: 54             LD    D,H
-1CAB: 45             LD    B,L
-1CAC: 52             LD    D,D
-1CAD: 53             LD    D,E
-1CAE: 20 54          JR    NZ,$1D04
-
-1CB0: 48             LD    C,B
-1CB1: 45             LD    B,L
-1CB2: 20 54          JR    NZ,$1D08
-
-1CB4: 4F             LD    C,A
-1CB5: 57             LD    D,A
-1CB6: 45             LD    B,L
-1CB7: 52             LD    D,D
-1CB8: 00             NOP   
 1CB9: DD 21 CA 1C    LD    IX,$1CCA
 1CBD: CD 32 17       CALL  $1732
 1CC0: CD C7 6F       CALL  $6FC7
@@ -4969,14 +3960,33 @@ ORG $0000
 1D0B: 00             NOP   
 1D0C: 00             NOP   
 1D0D: 01 4D 43       LD    BC,$434D
-1D10: P GAME<NUL>PLAYER    TRON<NUL>JOYSTICK  
-1D30: MOVES TRON<NUL>TRIGGER   FIRES DISK<NUL>
-1D50: KNOB      AIMS DISK<NUL>ENTER THE MA
-1D70: STER CONTROL<NUL>PROGRAM CONE WITHOU
-1D90: T<NUL>TOUCHING A BLOCK<NUL>REMOVE BLOCKS
-1DB0:  BY STRIKING<NUL>WITH THE DISK<NUL>1000 
-1DD0: BONUS FOR ENTERING<NUL>THE CONE<NUL>1000
-1DF0:  BONUS FOR DESTROYING<NUL>ALL BLOCKS
+1D10: P GAME
+
+1D17: PLAYER    TRON
+
+1D26: JOYSTICK  MOVES TRON
+
+1D3B: TRIGGER   FIRES DISK
+
+1D50: KNOB      AIMS DISK
+
+1D64: ENTER THE MASTER CONTROL
+
+1D7D: PROGRAM CONE WITHOUT
+
+1D92: TOUCHING A BLOCK
+
+1DA3: REMOVE BLOCKS BY STRIKING
+
+1DBD: WITH THE DISK
+
+1DCB: 1000 BONUS FOR ENTERING
+
+1DE3: THE CONE
+
+1DEC: 1000 BONUS FOR DESTROYING
+
+1E06: ALL BLOCKS
 
 1E11: 33             INC   SP
 1E12: AB             XOR   A,E
@@ -5246,7 +4256,7 @@ ORG $0000
 1F4D: FD 21 04 F0    LD    IY,$F004
 1F51: DD 2A 58 C4    LD    IX,($C458)
 1F55: 06 02          LD    B,#$02
-1F57: 3A 00 C0       LD    A,($C000)
+1F57: 3A 00 C0       LD    A,(NVRAM)
 1F5A: DD BE 00       CP    A,(IX+$00)
 1F5D: 28 07          JR    Z,$1F66
 
@@ -5255,7 +4265,7 @@ ORG $0000
 
 1F63: 0E FF          LD    C,#$FF
 1F65: 81             ADD   A,C
-1F66: 32 00 C0       LD    ($C000),A
+1F66: 32 00 C0       LD    (NVRAM),A
 1F69: FD 77 00       LD    (IY+$00),A
 1F6C: 3A 02 C0       LD    A,($C002)
 1F6F: DD BE 01       CP    A,(IX+$01)
@@ -5273,7 +4283,7 @@ ORG $0000
 1F87: DD BE 01       CP    A,(IX+$01)
 1F8A: 20 08          JR    NZ,$1F94
 
-1F8C: 3A 00 C0       LD    A,($C000)
+1F8C: 3A 00 C0       LD    A,(NVRAM)
 1F8F: DD BE 00       CP    A,(IX+$00)
 1F92: 28 03          JR    Z,$1F97
 
@@ -5328,7 +4338,7 @@ ORG $0000
 1FF0: 3E 01          LD    A,#$01
 1FF2: 32 08 C4       LD    ($C408),A
 1FF5: CD 49 70       CALL  $7049
-1FF8: 21 4A 23       LD    HL,$234A
+1FF8: 21 4A 23       LD    HL,BACKGROUND_FOR_1
 1FFB: CD 35 70       CALL  $7035
 1FFE: 21 CA 2A       LD    HL,$2ACA
 2001: CD 35 6F       CALL  $6F35
@@ -5339,7 +4349,7 @@ ORG $0000
 2010: CD 07 22       CALL  $2207
 2013: FD 21 04 F0    LD    IY,$F004
 2017: 3E 80          LD    A,#$80
-2019: 32 00 C0       LD    ($C000),A
+2019: 32 00 C0       LD    (NVRAM),A
 201C: FD 77 00       LD    (IY+$00),A
 201F: 3E A4          LD    A,#$A4
 2021: 32 02 C0       LD    ($C002),A
@@ -5580,7 +4590,7 @@ ORG $0000
 217D: 21 B8 22       LD    HL,$22B8
 2180: 87             ADD   A,A
 2181: CD 00 6F       CALL  $6F00
-2184: 3A 00 C0       LD    A,($C000)
+2184: 3A 00 C0       LD    A,(NVRAM)
 2187: 86             ADD   A,(HL)
 2188: 47             LD    B,A
 2189: 23             INC   HL
@@ -5661,7 +4671,7 @@ ORG $0000
 
 21F4: C1             POP   BC
 21F5: 78             LD    A,B
-21F6: 32 00 C0       LD    ($C000),A
+21F6: 32 00 C0       LD    (NVRAM),A
 21F9: 32 04 F0       LD    ($F004),A
 21FC: 79             LD    A,C
 21FD: 32 02 C0       LD    ($C002),A
@@ -5886,1829 +4896,130 @@ ORG $0000
 2341: F4 C0 A4       CALL  P,$A4C0
 2344: E2 80 74       JP    PO,$7480
 
-2347: F6 80          OR    A,#$80
-2349: D4 4B 41       CALL  NC,$414B
-234C: 4B             LD    C,E
-234D: 41             LD    B,C
-234E: 4B             LD    C,E
-234F: 41             LD    B,C
-2350: 4B             LD    C,E
-2351: 41             LD    B,C
-2352: 4B             LD    C,E
-2353: 41             LD    B,C
-2354: 4B             LD    C,E
-2355: 41             LD    B,C
-2356: 4B             LD    C,E
-2357: 41             LD    B,C
-2358: 4B             LD    C,E
-2359: 41             LD    B,C
-235A: 4B             LD    C,E
-235B: 41             LD    B,C
-235C: 4B             LD    C,E
-235D: 59             LD    E,C
-235E: 4B             LD    C,E
-235F: 5B             LD    E,E
-2360: 4B             LD    C,E
-2361: 5B             LD    E,E
-2362: 4B             LD    C,E
-2363: 5B             LD    E,E
-2364: 4B             LD    C,E
-2365: 5B             LD    E,E
-2366: 4B             LD    C,E
-2367: 5B             LD    E,E
-2368: 4B             LD    C,E
-2369: 5B             LD    E,E
-236A: 4B             LD    C,E
-236B: 5B             LD    E,E
-236C: 4B             LD    C,E
-236D: 5B             LD    E,E
-236E: 4B             LD    C,E
-236F: 5B             LD    E,E
-2370: 4B             LD    C,E
-2371: 5B             LD    E,E
-2372: 4B             LD    C,E
-2373: 5B             LD    E,E
-2374: 4B             LD    C,E
-2375: 5B             LD    E,E
-2376: 4B             LD    C,E
-2377: 5B             LD    E,E
-2378: 4B             LD    C,E
-2379: 5B             LD    E,E
-237A: 4B             LD    C,E
-237B: 5B             LD    E,E
-237C: 4B             LD    C,E
-237D: 5B             LD    E,E
-237E: 4B             LD    C,E
-237F: 5B             LD    E,E
-2380: 4B             LD    C,E
-2381: 5B             LD    E,E
-2382: 4B             LD    C,E
-2383: 5B             LD    E,E
-2384: 4B             LD    C,E
-2385: 5B             LD    E,E
-2386: 4B             LD    C,E
-2387: 59             LD    E,C
-2388: 4B             LD    C,E
-2389: 59             LD    E,C
-238A: 4B             LD    C,E
-238B: 41             LD    B,C
-238C: 4B             LD    C,E
-238D: 41             LD    B,C
-238E: 4B             LD    C,E
-238F: 41             LD    B,C
-2390: 4B             LD    C,E
-2391: 41             LD    B,C
-2392: 4B             LD    C,E
-2393: 41             LD    B,C
-2394: 4B             LD    C,E
-2395: 41             LD    B,C
-2396: 4B             LD    C,E
-2397: 41             LD    B,C
-2398: 4B             LD    C,E
-2399: 41             LD    B,C
-239A: 4B             LD    C,E
-239B: 41             LD    B,C
-239C: 4B             LD    C,E
-239D: 59             LD    E,C
-239E: 4B             LD    C,E
-239F: 59             LD    E,C
-23A0: 4B             LD    C,E
-23A1: 59             LD    E,C
-23A2: 4B             LD    C,E
-23A3: 59             LD    E,C
-23A4: 4B             LD    C,E
-23A5: 59             LD    E,C
-23A6: 4B             LD    C,E
-23A7: 59             LD    E,C
-23A8: 4B             LD    C,E
-23A9: 59             LD    E,C
-23AA: 4B             LD    C,E
-23AB: 59             LD    E,C
-23AC: 4B             LD    C,E
-23AD: 59             LD    E,C
-23AE: 3A 5D 4B       LD    A,($4B5D)
-23B1: 59             LD    E,C
-23B2: 4B             LD    C,E
-23B3: 59             LD    E,C
-23B4: 4B             LD    C,E
-23B5: 59             LD    E,C
-23B6: 4B             LD    C,E
-23B7: 59             LD    E,C
-23B8: 4B             LD    C,E
-23B9: 59             LD    E,C
-23BA: 4B             LD    C,E
-23BB: 59             LD    E,C
-23BC: 4B             LD    C,E
-23BD: 59             LD    E,C
-23BE: 4B             LD    C,E
-23BF: 59             LD    E,C
-23C0: 4B             LD    C,E
-23C1: 59             LD    E,C
-23C2: 4B             LD    C,E
-23C3: 59             LD    E,C
-23C4: 4B             LD    C,E
-23C5: 59             LD    E,C
-23C6: 4B             LD    C,E
-23C7: 59             LD    E,C
-23C8: 4B             LD    C,E
-23C9: 59             LD    E,C
-23CA: 4B             LD    C,E
-23CB: 41             LD    B,C
-23CC: 4B             LD    C,E
-23CD: 41             LD    B,C
-23CE: 4B             LD    C,E
-23CF: 41             LD    B,C
-23D0: 4B             LD    C,E
-23D1: 41             LD    B,C
-23D2: 4B             LD    C,E
-23D3: 41             LD    B,C
-23D4: 4B             LD    C,E
-23D5: 41             LD    B,C
-23D6: 4B             LD    C,E
-23D7: 41             LD    B,C
-23D8: 4B             LD    C,E
-23D9: 41             LD    B,C
-23DA: 4B             LD    C,E
-23DB: 41             LD    B,C
-23DC: 4B             LD    C,E
-23DD: 59             LD    E,C
-23DE: 4B             LD    C,E
-23DF: 59             LD    E,C
-23E0: 4B             LD    C,E
-23E1: 59             LD    E,C
-23E2: 4B             LD    C,E
-23E3: 59             LD    E,C
-23E4: 4B             LD    C,E
-23E5: 59             LD    E,C
-23E6: 4B             LD    C,E
-23E7: 59             LD    E,C
-23E8: 4B             LD    C,E
-23E9: 59             LD    E,C
-23EA: 4B             LD    C,E
-23EB: 59             LD    E,C
-23EC: 4B             LD    C,E
-23ED: 59             LD    E,C
-23EE: 38 59          JR    C,$2449
+2347: F6 80 D4 
 
-23F0: 38 59          JR    C,$244B
+BACKGROUND_FOR_1:
+234A: 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 
+235A: 4B 41 4B 59 4B 5B 4B 5B 4B 5B 4B 5B 4B 5B 4B 5B 
+236A: 4B 5B 4B 5B 4B 5B 4B 5B 4B 5B 4B 5B 4B 5B 4B 5B 
+237A: 4B 5B 4B 5B 4B 5B 4B 5B 4B 5B 4B 5B 4B 59 4B 59 
+238A: 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 
+239A: 4B 41 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 
+23AA: 4B 59 4B 59 3A 5D 4B 59 4B 59 4B 59 4B 59 4B 59 
+23BA: 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 
+23CA: 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 
+23DA: 4B 41 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 
+23EA: 4B 59 4B 59 38 59 38 59 3A 5D 3A 5D 3A 5D 3A 5D 
+23FA: 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 
+240A: 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 
+241A: 4B 41 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 
+242A: 37 5F 4B 59 4B 59 39 59 38 59 38 5D 38 59 38 5D 
+243A: 4B 59 3A 5D 3A 5D 4B 59 4B 59 4B 59 4B 59 4B 59 
+244A: 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 
+245A: 4B 41 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 38 5B 
+246A: 37 59 4B 59 37 5F 39 59 3B 59 38 5B 38 59 4B 59 
+247A: 4B 59 37 5B 4B 59 38 59 4B 59 4B 59 4B 59 4B 59 
+248A: 4B 41 4B 41 4B 41 4B 41 4B 41 2D 41 2E 41 25 41 
+249A: 2F 41 4B 59 4B 59 4B 59 4B 59 4B 59 38 5B 37 59 
+24AA: 4B 59 39 5D 39 59 38 59 3B 59 37 5B 37 59 38 5B 
+24BA: 38 59 4B 59 38 59 37 5F 4B 59 4B 59 4B 59 4B 59 
+24CA: 4B 41 4B 41 4B 41 4B 41 4B 41 23 41 24 41 26 41 
+24DA: 27 41 4B 59 4B 59 4B 59 4B 59 37 59 38 5B 4B 59 
+24EA: 37 59 4B 59 37 5D 4B 59 4B 59 39 5D 39 5D 37 5D 
+24FA: 4B 59 37 5D 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 
+250A: 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 29 41 28 41 
+251A: 4B 41 4B 59 4B 59 4B 59 37 59 4B 59 38 59 4B 59 
+252A: 38 59 4B 59 37 5F 4B 59 4B 59 38 59 38 5B 4B 59 
+253A: 38 59 37 5F 4B 59 37 59 38 59 4B 59 4B 59 4B 59 
+254A: 4B 41 4B 41 4B 41 4B 41 4B 41 22 41 2A 41 4F 41 
+255A: 0C 41 4B 59 4B 59 4B 59 38 59 38 5B 38 59 38 59 
+256A: 4B 59 38 59 37 5D 4B 59 37 5F 37 5B 37 59 37 5D 
+257A: 4B 59 4B 59 37 5F 4B 5F 38 5B 4B 59 4B 59 4B 59 
+258A: 4B 41 4B 41 4B 41 4B 41 4B 41 21 41 2B 41 1B 41 
+259A: 0B 41 4B 59 4B 59 30 5D 32 5B 30 5D 31 59 39 59 
+25AA: 3B 5B 38 59 39 59 4B 59 38 59 4B 59 4B 59 38 5B 
+25BA: 41 5D 41 59 38 59 38 5D 4B 59 42 5B 4B 59 4B 59 
+25CA: 4B 41 4B 41 4B 41 4B 41 4B 41 20 41 15 45 16 45 
+25DA: 19 41 4B 59 4B 59 31 59 32 5F 31 59 31 5B 31 5B 
+25EA: 30 5F 38 59 3A 59 3A 59 38 59 38 59 38 5B 41 5B 
+25FA: 4B 59 41 5B 4B 59 4B 59 42 5B 42 5D 4B 59 4B 59 
+260A: 4B 41 4B 41 4B 41 4B 41 4B 41 1E 41 4E 41 17 41 
+261A: 1A 41 4B 59 4B 59 4B 59 31 5B 36 5B 31 5B 34 5D 
+262A: 4B 59 31 59 38 59 4B 59 4B 59 38 59 4B 59 43 5B 
+263A: 41 5B 42 59 42 59 4B 59 42 5F 4B 59 4B 59 4B 59 
+264A: 4B 41 4B 41 4B 41 4B 41 4B 41 1C 41 50 41 4D 41 
+265A: 04 41 4B 59 4B 59 32 59 35 5D 31 5D 31 5D 34 5D 
+266A: 34 59 31 59 31 59 3A 59 37 5D 38 5D 4B 59 41 59 
+267A: 43 5F 41 59 43 59 4B 59 42 5B 41 5F 4B 59 4B 59 
+268A: 4B 41 4B 41 4B 41 4B 41 4B 41 1D 41 4E 45 18 41 
+269A: 1A 45 4B 59 4B 59 32 5D 32 5F 34 59 31 5B 30 5D 
+26AA: 36 59 31 59 30 5F 49 5F 4A 5F 4A 5D 49 5D 4B 59 
+26BA: 4B 59 4B 59 41 59 41 59 41 5B 41 5B 42 59 4B 59 
+26CA: 4B 41 4B 41 4B 41 4B 41 4B 41 1F 41 15 41 16 41 
+26DA: 12 41 4B 59 4B 59 4B 59 30 5D 31 59 31 59 31 59 
+26EA: 36 59 31 5B 32 5B 40 47 4B 59 4B 59 40 45 3C 59 
+26FA: 3C 59 41 59 41 5B 41 59 41 5B 4B 59 42 5F 4B 59 
+270A: 4B 41 4B 41 4B 41 4B 41 4B 41 20 41 15 45 4B 41 
+271A: 11 41 4B 59 36 59 31 59 31 59 30 5B 33 5F 31 59 
+272A: 32 5B 4B 59 32 5D 40 43 4B 59 4B 59 40 41 3C 5D 
+273A: 3C 5D 41 5B 41 5F 41 59 4B 59 3C 59 42 5B 4B 59 
+274A: 4B 41 4B 41 4B 41 4B 41 4B 41 1E 41 13 41 4C 41 
+275A: 10 41 4B 59 36 59 4B 59 31 59 32 59 32 5F 35 59 
+276A: 35 5B 30 5B 30 5F 49 5B 4A 5B 4A 59 49 59 4B 59 
+277A: 42 5D 41 5B 41 59 41 59 4B 59 3C 5D 42 5D 4B 59 
+278A: 4B 41 4B 41 4B 41 4B 41 4B 41 09 41 4B 41 0E 41 
+279A: 0F 41 4B 59 4B 59 34 59 34 59 33 59 4B 59 30 5B 
+27AA: 31 59 31 59 31 5D 45 5D 45 5D 4B 5D 47 5D 47 59 
+27BA: 4B 59 4B 59 4B 59 4B 59 3E 59 3E 5B 4B 59 4B 59 
+27CA: 4B 41 4B 41 4B 41 4B 41 4B 41 09 41 4B 41 0D 41 
+27DA: 0C 41 4B 59 4B 59 30 5B 30 59 36 59 32 5B 34 59 
+27EA: 31 59 31 59 4B 59 47 59 47 5D 4B 5D 45 59 45 59 
+27FA: 4B 59 4B 59 3D 5F 41 59 3D 59 3D 5B 4B 59 4B 59 
+280A: 4B 41 4B 41 4B 41 4B 41 4B 41 08 41 4B 41 0A 41 
+281A: 0B 41 4B 59 4B 59 30 59 30 5D 36 59 35 59 31 59 
+282A: 4B 59 34 59 4B 59 4B 5B 47 5B 46 5B 47 59 4B 5B 
+283A: 47 5B 47 59 41 59 41 5B 41 59 41 5B 4B 59 4B 59 
+284A: 4B 41 4B 41 4B 41 4B 41 4B 41 00 45 4B 41 4B 41 
+285A: 4B 41 4B 59 4B 59 4B 59 4B 59 31 5B 4B 59 4B 59 
+286A: 30 59 46 59 44 59 4B 59 47 59 46 5F 44 5D 47 59 
+287A: 45 59 45 59 4B 59 47 5B 47 59 4B 59 4B 59 4B 59 
+288A: 4B 41 4B 41 4B 41 4B 41 4B 41 01 45 07 45 06 45 
+289A: 05 45 4B 59 4B 59 4B 59 4B 59 30 59 31 5D 31 59 
+28AA: 31 5D 46 5D 4B 59 44 59 4B 59 46 59 4B 59 47 5B 
+28BA: 47 5B 47 59 47 5B 4B 59 47 5B 4B 59 4B 59 4B 59 
+28CA: 4B 41 4B 41 4B 41 4B 41 4B 41 FF 40 02 41 03 41 
+28DA: 04 41 4B 59 4B 59 4B 59 4B 59 4B 59 47 5B 47 59 
+28EA: 46 59 47 59 47 59 4B 59 44 59 46 59 47 5B 47 5B 
+28FA: 4B 59 4B 59 4B 59 47 5B 4B 59 4B 59 4B 59 4B 59 
+290A: 4B 41 4B 41 4B 41 4B 41 4B 41 01 41 07 41 06 41 
+291A: 05 41 4B 59 4B 59 4B 59 4B 59 4B 59 47 59 4B 59 
+292A: 46 5B 44 59 47 59 47 59 44 5B 4B 59 4B 59 47 59 
+293A: 47 5B 47 59 47 5B 47 5B 47 59 4B 59 4B 59 4B 59 
+294A: 4B 41 4B 41 4B 41 4B 41 4B 41 00 41 4B 41 4B 41 
+295A: 4B 41 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 47 59 
+296A: 46 5B 45 5D 48 59 45 5D 46 59 45 59 45 59 47 59 
+297A: 47 5B 47 59 47 5B 47 5B 45 59 4B 59 4B 59 4B 59 
+298A: 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 
+299A: 4B 41 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 
+29AA: 4B 59 44 5F 4B 59 46 59 46 59 4B 59 44 5B 47 59 
+29BA: 47 5B 47 59 47 5B 4B 59 4B 59 4B 59 4B 59 4B 59 
+29CA: 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 
+29DA: 4B 41 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 
+29EA: 4B 59 4B 59 47 59 44 5B 46 59 45 5D 46 5B 4B 59 
+29FA: 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 
+2A0A: 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 
+2A1A: 4B 41 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 
+2A2A: 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 
+2A3A: 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 
+2A4A: 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 
+2A5A: 4B 41 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 
+2A6A: 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 
+2A7A: 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 
+2A8A: 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 
+2A9A: 4B 41 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 
+2AAA: 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 
+2ABA: 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 
 
-23F2: 3A 5D 3A       LD    A,($3A5D)
-23F5: 5D             LD    E,L
-23F6: 3A 5D 3A       LD    A,($3A5D)
-23F9: 5D             LD    E,L
-23FA: 4B             LD    C,E
-23FB: 59             LD    E,C
-23FC: 4B             LD    C,E
-23FD: 59             LD    E,C
-23FE: 4B             LD    C,E
-23FF: 59             LD    E,C
-2400: 4B             LD    C,E
-2401: 59             LD    E,C
-2402: 4B             LD    C,E
-2403: 59             LD    E,C
-2404: 4B             LD    C,E
-2405: 59             LD    E,C
-2406: 4B             LD    C,E
-2407: 59             LD    E,C
-2408: 4B             LD    C,E
-2409: 59             LD    E,C
-240A: 4B             LD    C,E
-240B: 41             LD    B,C
-240C: 4B             LD    C,E
-240D: 41             LD    B,C
-240E: 4B             LD    C,E
-240F: 41             LD    B,C
-2410: 4B             LD    C,E
-2411: 41             LD    B,C
-2412: 4B             LD    C,E
-2413: 41             LD    B,C
-2414: 4B             LD    C,E
-2415: 41             LD    B,C
-2416: 4B             LD    C,E
-2417: 41             LD    B,C
-2418: 4B             LD    C,E
-2419: 41             LD    B,C
-241A: 4B             LD    C,E
-241B: 41             LD    B,C
-241C: 4B             LD    C,E
-241D: 59             LD    E,C
-241E: 4B             LD    C,E
-241F: 59             LD    E,C
-2420: 4B             LD    C,E
-2421: 59             LD    E,C
-2422: 4B             LD    C,E
-2423: 59             LD    E,C
-2424: 4B             LD    C,E
-2425: 59             LD    E,C
-2426: 4B             LD    C,E
-2427: 59             LD    E,C
-2428: 4B             LD    C,E
-2429: 59             LD    E,C
-242A: 37             SCF   
-242B: 5F             LD    E,A
-242C: 4B             LD    C,E
-242D: 59             LD    E,C
-242E: 4B             LD    C,E
-242F: 59             LD    E,C
-2430: 39             ADD   HL,SP
-2431: 59             LD    E,C
-2432: 38 59          JR    C,$248D
-
-2434: 38 5D          JR    C,$2493
-
-2436: 38 59          JR    C,$2491
-
-2438: 38 5D          JR    C,$2497
-
-243A: 4B             LD    C,E
-243B: 59             LD    E,C
-243C: 3A 5D 3A       LD    A,($3A5D)
-243F: 5D             LD    E,L
-2440: 4B             LD    C,E
-2441: 59             LD    E,C
-2442: 4B             LD    C,E
-2443: 59             LD    E,C
-2444: 4B             LD    C,E
-2445: 59             LD    E,C
-2446: 4B             LD    C,E
-2447: 59             LD    E,C
-2448: 4B             LD    C,E
-2449: 59             LD    E,C
-244A: 4B             LD    C,E
-244B: 41             LD    B,C
-244C: 4B             LD    C,E
-244D: 41             LD    B,C
-244E: 4B             LD    C,E
-244F: 41             LD    B,C
-2450: 4B             LD    C,E
-2451: 41             LD    B,C
-2452: 4B             LD    C,E
-2453: 41             LD    B,C
-2454: 4B             LD    C,E
-2455: 41             LD    B,C
-2456: 4B             LD    C,E
-2457: 41             LD    B,C
-2458: 4B             LD    C,E
-2459: 41             LD    B,C
-245A: 4B             LD    C,E
-245B: 41             LD    B,C
-245C: 4B             LD    C,E
-245D: 59             LD    E,C
-245E: 4B             LD    C,E
-245F: 59             LD    E,C
-2460: 4B             LD    C,E
-2461: 59             LD    E,C
-2462: 4B             LD    C,E
-2463: 59             LD    E,C
-2464: 4B             LD    C,E
-2465: 59             LD    E,C
-2466: 4B             LD    C,E
-2467: 59             LD    E,C
-2468: 38 5B          JR    C,$24C5
-
-246A: 37             SCF   
-246B: 59             LD    E,C
-246C: 4B             LD    C,E
-246D: 59             LD    E,C
-246E: 37             SCF   
-246F: 5F             LD    E,A
-2470: 39             ADD   HL,SP
-2471: 59             LD    E,C
-2472: 3B             DEC   SP
-2473: 59             LD    E,C
-2474: 38 5B          JR    C,$24D1
-
-2476: 38 59          JR    C,$24D1
-
-2478: 4B             LD    C,E
-2479: 59             LD    E,C
-247A: 4B             LD    C,E
-247B: 59             LD    E,C
-247C: 37             SCF   
-247D: 5B             LD    E,E
-247E: 4B             LD    C,E
-247F: 59             LD    E,C
-2480: 38 59          JR    C,$24DB
-
-2482: 4B             LD    C,E
-2483: 59             LD    E,C
-2484: 4B             LD    C,E
-2485: 59             LD    E,C
-2486: 4B             LD    C,E
-2487: 59             LD    E,C
-2488: 4B             LD    C,E
-2489: 59             LD    E,C
-248A: 4B             LD    C,E
-248B: 41             LD    B,C
-248C: 4B             LD    C,E
-248D: 41             LD    B,C
-248E: 4B             LD    C,E
-248F: 41             LD    B,C
-2490: 4B             LD    C,E
-2491: 41             LD    B,C
-2492: 4B             LD    C,E
-2493: 41             LD    B,C
-2494: 2D             DEC   L
-2495: 41             LD    B,C
-2496: 2E 41          LD    L,#$41
-2498: 25             DEC   H
-2499: 41             LD    B,C
-249A: 2F             CPL   
-249B: 41             LD    B,C
-249C: 4B             LD    C,E
-249D: 59             LD    E,C
-249E: 4B             LD    C,E
-249F: 59             LD    E,C
-24A0: 4B             LD    C,E
-24A1: 59             LD    E,C
-24A2: 4B             LD    C,E
-24A3: 59             LD    E,C
-24A4: 4B             LD    C,E
-24A5: 59             LD    E,C
-24A6: 38 5B          JR    C,$2503
-
-24A8: 37             SCF   
-24A9: 59             LD    E,C
-24AA: 4B             LD    C,E
-24AB: 59             LD    E,C
-24AC: 39             ADD   HL,SP
-24AD: 5D             LD    E,L
-24AE: 39             ADD   HL,SP
-24AF: 59             LD    E,C
-24B0: 38 59          JR    C,$250B
-
-24B2: 3B             DEC   SP
-24B3: 59             LD    E,C
-24B4: 37             SCF   
-24B5: 5B             LD    E,E
-24B6: 37             SCF   
-24B7: 59             LD    E,C
-24B8: 38 5B          JR    C,$2515
-
-24BA: 38 59          JR    C,$2515
-
-24BC: 4B             LD    C,E
-24BD: 59             LD    E,C
-24BE: 38 59          JR    C,$2519
-
-24C0: 37             SCF   
-24C1: 5F             LD    E,A
-24C2: 4B             LD    C,E
-24C3: 59             LD    E,C
-24C4: 4B             LD    C,E
-24C5: 59             LD    E,C
-24C6: 4B             LD    C,E
-24C7: 59             LD    E,C
-24C8: 4B             LD    C,E
-24C9: 59             LD    E,C
-24CA: 4B             LD    C,E
-24CB: 41             LD    B,C
-24CC: 4B             LD    C,E
-24CD: 41             LD    B,C
-24CE: 4B             LD    C,E
-24CF: 41             LD    B,C
-24D0: 4B             LD    C,E
-24D1: 41             LD    B,C
-24D2: 4B             LD    C,E
-24D3: 41             LD    B,C
-24D4: 23             INC   HL
-24D5: 41             LD    B,C
-24D6: 24             INC   H
-24D7: 41             LD    B,C
-24D8: 26 41          LD    H,#$41
-24DA: 27             DAA   
-24DB: 41             LD    B,C
-24DC: 4B             LD    C,E
-24DD: 59             LD    E,C
-24DE: 4B             LD    C,E
-24DF: 59             LD    E,C
-24E0: 4B             LD    C,E
-24E1: 59             LD    E,C
-24E2: 4B             LD    C,E
-24E3: 59             LD    E,C
-24E4: 37             SCF   
-24E5: 59             LD    E,C
-24E6: 38 5B          JR    C,$2543
-
-24E8: 4B             LD    C,E
-24E9: 59             LD    E,C
-24EA: 37             SCF   
-24EB: 59             LD    E,C
-24EC: 4B             LD    C,E
-24ED: 59             LD    E,C
-24EE: 37             SCF   
-24EF: 5D             LD    E,L
-24F0: 4B             LD    C,E
-24F1: 59             LD    E,C
-24F2: 4B             LD    C,E
-24F3: 59             LD    E,C
-24F4: 39             ADD   HL,SP
-24F5: 5D             LD    E,L
-24F6: 39             ADD   HL,SP
-24F7: 5D             LD    E,L
-24F8: 37             SCF   
-24F9: 5D             LD    E,L
-24FA: 4B             LD    C,E
-24FB: 59             LD    E,C
-24FC: 37             SCF   
-24FD: 5D             LD    E,L
-24FE: 4B             LD    C,E
-24FF: 59             LD    E,C
-2500: 4B             LD    C,E
-2501: 59             LD    E,C
-2502: 4B             LD    C,E
-2503: 59             LD    E,C
-2504: 4B             LD    C,E
-2505: 59             LD    E,C
-2506: 4B             LD    C,E
-2507: 59             LD    E,C
-2508: 4B             LD    C,E
-2509: 59             LD    E,C
-250A: 4B             LD    C,E
-250B: 41             LD    B,C
-250C: 4B             LD    C,E
-250D: 41             LD    B,C
-250E: 4B             LD    C,E
-250F: 41             LD    B,C
-2510: 4B             LD    C,E
-2511: 41             LD    B,C
-2512: 4B             LD    C,E
-2513: 41             LD    B,C
-2514: 4B             LD    C,E
-2515: 41             LD    B,C
-2516: 29             ADD   HL,HL
-2517: 41             LD    B,C
-2518: 28 41          JR    Z,$255B
-
-251A: 4B             LD    C,E
-251B: 41             LD    B,C
-251C: 4B             LD    C,E
-251D: 59             LD    E,C
-251E: 4B             LD    C,E
-251F: 59             LD    E,C
-2520: 4B             LD    C,E
-2521: 59             LD    E,C
-2522: 37             SCF   
-2523: 59             LD    E,C
-2524: 4B             LD    C,E
-2525: 59             LD    E,C
-2526: 38 59          JR    C,$2581
-
-2528: 4B             LD    C,E
-2529: 59             LD    E,C
-252A: 38 59          JR    C,$2585
-
-252C: 4B             LD    C,E
-252D: 59             LD    E,C
-252E: 37             SCF   
-252F: 5F             LD    E,A
-2530: 4B             LD    C,E
-2531: 59             LD    E,C
-2532: 4B             LD    C,E
-2533: 59             LD    E,C
-2534: 38 59          JR    C,$258F
-
-2536: 38 5B          JR    C,$2593
-
-2538: 4B             LD    C,E
-2539: 59             LD    E,C
-253A: 38 59          JR    C,$2595
-
-253C: 37             SCF   
-253D: 5F             LD    E,A
-253E: 4B             LD    C,E
-253F: 59             LD    E,C
-2540: 37             SCF   
-2541: 59             LD    E,C
-2542: 38 59          JR    C,$259D
-
-2544: 4B             LD    C,E
-2545: 59             LD    E,C
-2546: 4B             LD    C,E
-2547: 59             LD    E,C
-2548: 4B             LD    C,E
-2549: 59             LD    E,C
-254A: 4B             LD    C,E
-254B: 41             LD    B,C
-254C: 4B             LD    C,E
-254D: 41             LD    B,C
-254E: 4B             LD    C,E
-254F: 41             LD    B,C
-2550: 4B             LD    C,E
-2551: 41             LD    B,C
-2552: 4B             LD    C,E
-2553: 41             LD    B,C
-2554: 22 41 2A       LD    ($2A41),HL
-2557: 41             LD    B,C
-2558: 4F             LD    C,A
-2559: 41             LD    B,C
-255A: 0C             INC   C
-255B: 41             LD    B,C
-255C: 4B             LD    C,E
-255D: 59             LD    E,C
-255E: 4B             LD    C,E
-255F: 59             LD    E,C
-2560: 4B             LD    C,E
-2561: 59             LD    E,C
-2562: 38 59          JR    C,$25BD
-
-2564: 38 5B          JR    C,$25C1
-
-2566: 38 59          JR    C,$25C1
-
-2568: 38 59          JR    C,$25C3
-
-256A: 4B             LD    C,E
-256B: 59             LD    E,C
-256C: 38 59          JR    C,$25C7
-
-256E: 37             SCF   
-256F: 5D             LD    E,L
-2570: 4B             LD    C,E
-2571: 59             LD    E,C
-2572: 37             SCF   
-2573: 5F             LD    E,A
-2574: 37             SCF   
-2575: 5B             LD    E,E
-2576: 37             SCF   
-2577: 59             LD    E,C
-2578: 37             SCF   
-2579: 5D             LD    E,L
-257A: 4B             LD    C,E
-257B: 59             LD    E,C
-257C: 4B             LD    C,E
-257D: 59             LD    E,C
-257E: 37             SCF   
-257F: 5F             LD    E,A
-2580: 4B             LD    C,E
-2581: 5F             LD    E,A
-2582: 38 5B          JR    C,$25DF
-
-2584: 4B             LD    C,E
-2585: 59             LD    E,C
-2586: 4B             LD    C,E
-2587: 59             LD    E,C
-2588: 4B             LD    C,E
-2589: 59             LD    E,C
-258A: 4B             LD    C,E
-258B: 41             LD    B,C
-258C: 4B             LD    C,E
-258D: 41             LD    B,C
-258E: 4B             LD    C,E
-258F: 41             LD    B,C
-2590: 4B             LD    C,E
-2591: 41             LD    B,C
-2592: 4B             LD    C,E
-2593: 41             LD    B,C
-2594: 21 41 2B       LD    HL,$2B41
-2597: 41             LD    B,C
-2598: 1B             DEC   DE
-2599: 41             LD    B,C
-259A: 0B             DEC   BC
-259B: 41             LD    B,C
-259C: 4B             LD    C,E
-259D: 59             LD    E,C
-259E: 4B             LD    C,E
-259F: 59             LD    E,C
-25A0: 30 5D          JR    NC,$25FF
-
-25A2: 32 5B 30       LD    ($305B),A
-25A5: 5D             LD    E,L
-25A6: 31 59 39       LD    SP,$3959
-25A9: 59             LD    E,C
-25AA: 3B             DEC   SP
-25AB: 5B             LD    E,E
-25AC: 38 59          JR    C,$2607
-
-25AE: 39             ADD   HL,SP
-25AF: 59             LD    E,C
-25B0: 4B             LD    C,E
-25B1: 59             LD    E,C
-25B2: 38 59          JR    C,$260D
-
-25B4: 4B             LD    C,E
-25B5: 59             LD    E,C
-25B6: 4B             LD    C,E
-25B7: 59             LD    E,C
-25B8: 38 5B          JR    C,$2615
-
-25BA: 41             LD    B,C
-25BB: 5D             LD    E,L
-25BC: 41             LD    B,C
-25BD: 59             LD    E,C
-25BE: 38 59          JR    C,$2619
-
-25C0: 38 5D          JR    C,$261F
-
-25C2: 4B             LD    C,E
-25C3: 59             LD    E,C
-25C4: 42             LD    B,D
-25C5: 5B             LD    E,E
-25C6: 4B             LD    C,E
-25C7: 59             LD    E,C
-25C8: 4B             LD    C,E
-25C9: 59             LD    E,C
-25CA: 4B             LD    C,E
-25CB: 41             LD    B,C
-25CC: 4B             LD    C,E
-25CD: 41             LD    B,C
-25CE: 4B             LD    C,E
-25CF: 41             LD    B,C
-25D0: 4B             LD    C,E
-25D1: 41             LD    B,C
-25D2: 4B             LD    C,E
-25D3: 41             LD    B,C
-25D4: 20 41          JR    NZ,$2617
-
-25D6: 15             DEC   D
-25D7: 45             LD    B,L
-25D8: 16 45          LD    D,#$45
-25DA: 19             ADD   HL,DE
-25DB: 41             LD    B,C
-25DC: 4B             LD    C,E
-25DD: 59             LD    E,C
-25DE: 4B             LD    C,E
-25DF: 59             LD    E,C
-25E0: 31 59 32       LD    SP,$3259
-25E3: 5F             LD    E,A
-25E4: 31 59 31       LD    SP,$3159
-25E7: 5B             LD    E,E
-25E8: 31 5B 30       LD    SP,$305B
-25EB: 5F             LD    E,A
-25EC: 38 59          JR    C,$2647
-
-25EE: 3A 59 3A       LD    A,($3A59)
-25F1: 59             LD    E,C
-25F2: 38 59          JR    C,$264D
-
-25F4: 38 59          JR    C,$264F
-
-25F6: 38 5B          JR    C,$2653
-
-25F8: 41             LD    B,C
-25F9: 5B             LD    E,E
-25FA: 4B             LD    C,E
-25FB: 59             LD    E,C
-25FC: 41             LD    B,C
-25FD: 5B             LD    E,E
-25FE: 4B             LD    C,E
-25FF: 59             LD    E,C
-2600: 4B             LD    C,E
-2601: 59             LD    E,C
-2602: 42             LD    B,D
-2603: 5B             LD    E,E
-2604: 42             LD    B,D
-2605: 5D             LD    E,L
-2606: 4B             LD    C,E
-2607: 59             LD    E,C
-2608: 4B             LD    C,E
-2609: 59             LD    E,C
-260A: 4B             LD    C,E
-260B: 41             LD    B,C
-260C: 4B             LD    C,E
-260D: 41             LD    B,C
-260E: 4B             LD    C,E
-260F: 41             LD    B,C
-2610: 4B             LD    C,E
-2611: 41             LD    B,C
-2612: 4B             LD    C,E
-2613: 41             LD    B,C
-2614: 1E 41          LD    E,#$41
-2616: 4E             LD    C,(HL)
-2617: 41             LD    B,C
-2618: 17             RLA   
-2619: 41             LD    B,C
-261A: 1A             LD    A,(DE)
-261B: 41             LD    B,C
-261C: 4B             LD    C,E
-261D: 59             LD    E,C
-261E: 4B             LD    C,E
-261F: 59             LD    E,C
-2620: 4B             LD    C,E
-2621: 59             LD    E,C
-2622: 31 5B 36       LD    SP,$365B
-2625: 5B             LD    E,E
-2626: 31 5B 34       LD    SP,$345B
-2629: 5D             LD    E,L
-262A: 4B             LD    C,E
-262B: 59             LD    E,C
-262C: 31 59 38       LD    SP,$3859
-262F: 59             LD    E,C
-2630: 4B             LD    C,E
-2631: 59             LD    E,C
-2632: 4B             LD    C,E
-2633: 59             LD    E,C
-2634: 38 59          JR    C,$268F
-
-2636: 4B             LD    C,E
-2637: 59             LD    E,C
-2638: 43             LD    B,E
-2639: 5B             LD    E,E
-263A: 41             LD    B,C
-263B: 5B             LD    E,E
-263C: 42             LD    B,D
-263D: 59             LD    E,C
-263E: 42             LD    B,D
-263F: 59             LD    E,C
-2640: 4B             LD    C,E
-2641: 59             LD    E,C
-2642: 42             LD    B,D
-2643: 5F             LD    E,A
-2644: 4B             LD    C,E
-2645: 59             LD    E,C
-2646: 4B             LD    C,E
-2647: 59             LD    E,C
-2648: 4B             LD    C,E
-2649: 59             LD    E,C
-264A: 4B             LD    C,E
-264B: 41             LD    B,C
-264C: 4B             LD    C,E
-264D: 41             LD    B,C
-264E: 4B             LD    C,E
-264F: 41             LD    B,C
-2650: 4B             LD    C,E
-2651: 41             LD    B,C
-2652: 4B             LD    C,E
-2653: 41             LD    B,C
-2654: 1C             INC   E
-2655: 41             LD    B,C
-2656: 50             LD    D,B
-2657: 41             LD    B,C
-2658: 4D             LD    C,L
-2659: 41             LD    B,C
-265A: 04             INC   B
-265B: 41             LD    B,C
-265C: 4B             LD    C,E
-265D: 59             LD    E,C
-265E: 4B             LD    C,E
-265F: 59             LD    E,C
-2660: 32 59 35       LD    ($3559),A
-2663: 5D             LD    E,L
-2664: 31 5D 31       LD    SP,$315D
-2667: 5D             LD    E,L
-2668: 34             INC   (HL)
-2669: 5D             LD    E,L
-266A: 34             INC   (HL)
-266B: 59             LD    E,C
-266C: 31 59 31       LD    SP,$3159
-266F: 59             LD    E,C
-2670: 3A 59 37       LD    A,($3759)
-2673: 5D             LD    E,L
-2674: 38 5D          JR    C,$26D3
-
-2676: 4B             LD    C,E
-2677: 59             LD    E,C
-2678: 41             LD    B,C
-2679: 59             LD    E,C
-267A: 43             LD    B,E
-267B: 5F             LD    E,A
-267C: 41             LD    B,C
-267D: 59             LD    E,C
-267E: 43             LD    B,E
-267F: 59             LD    E,C
-2680: 4B             LD    C,E
-2681: 59             LD    E,C
-2682: 42             LD    B,D
-2683: 5B             LD    E,E
-2684: 41             LD    B,C
-2685: 5F             LD    E,A
-2686: 4B             LD    C,E
-2687: 59             LD    E,C
-2688: 4B             LD    C,E
-2689: 59             LD    E,C
-268A: 4B             LD    C,E
-268B: 41             LD    B,C
-268C: 4B             LD    C,E
-268D: 41             LD    B,C
-268E: 4B             LD    C,E
-268F: 41             LD    B,C
-2690: 4B             LD    C,E
-2691: 41             LD    B,C
-2692: 4B             LD    C,E
-2693: 41             LD    B,C
-2694: 1D             DEC   E
-2695: 41             LD    B,C
-2696: 4E             LD    C,(HL)
-2697: 45             LD    B,L
-2698: 18 41          JR    $26DB
-
-269A: 1A             LD    A,(DE)
-269B: 45             LD    B,L
-269C: 4B             LD    C,E
-269D: 59             LD    E,C
-269E: 4B             LD    C,E
-269F: 59             LD    E,C
-26A0: 32 5D 32       LD    ($325D),A
-26A3: 5F             LD    E,A
-26A4: 34             INC   (HL)
-26A5: 59             LD    E,C
-26A6: 31 5B 30       LD    SP,$305B
-26A9: 5D             LD    E,L
-26AA: 36 59          LD    (HL),#$59
-26AC: 31 59 30       LD    SP,$3059
-26AF: 5F             LD    E,A
-26B0: 49             LD    C,C
-26B1: 5F             LD    E,A
-26B2: 4A             LD    C,D
-26B3: 5F             LD    E,A
-26B4: 4A             LD    C,D
-26B5: 5D             LD    E,L
-26B6: 49             LD    C,C
-26B7: 5D             LD    E,L
-26B8: 4B             LD    C,E
-26B9: 59             LD    E,C
-26BA: 4B             LD    C,E
-26BB: 59             LD    E,C
-26BC: 4B             LD    C,E
-26BD: 59             LD    E,C
-26BE: 41             LD    B,C
-26BF: 59             LD    E,C
-26C0: 41             LD    B,C
-26C1: 59             LD    E,C
-26C2: 41             LD    B,C
-26C3: 5B             LD    E,E
-26C4: 41             LD    B,C
-26C5: 5B             LD    E,E
-26C6: 42             LD    B,D
-26C7: 59             LD    E,C
-26C8: 4B             LD    C,E
-26C9: 59             LD    E,C
-26CA: 4B             LD    C,E
-26CB: 41             LD    B,C
-26CC: 4B             LD    C,E
-26CD: 41             LD    B,C
-26CE: 4B             LD    C,E
-26CF: 41             LD    B,C
-26D0: 4B             LD    C,E
-26D1: 41             LD    B,C
-26D2: 4B             LD    C,E
-26D3: 41             LD    B,C
-26D4: 1F             RRA   
-26D5: 41             LD    B,C
-26D6: 15             DEC   D
-26D7: 41             LD    B,C
-26D8: 16 41          LD    D,#$41
-26DA: 12             LD    (DE),A
-26DB: 41             LD    B,C
-26DC: 4B             LD    C,E
-26DD: 59             LD    E,C
-26DE: 4B             LD    C,E
-26DF: 59             LD    E,C
-26E0: 4B             LD    C,E
-26E1: 59             LD    E,C
-26E2: 30 5D          JR    NC,$2741
-
-26E4: 31 59 31       LD    SP,$3159
-26E7: 59             LD    E,C
-26E8: 31 59 36       LD    SP,$3659
-26EB: 59             LD    E,C
-26EC: 31 5B 32       LD    SP,$325B
-26EF: 5B             LD    E,E
-26F0: 40             LD    B,B
-26F1: 47             LD    B,A
-26F2: 4B             LD    C,E
-26F3: 59             LD    E,C
-26F4: 4B             LD    C,E
-26F5: 59             LD    E,C
-26F6: 40             LD    B,B
-26F7: 45             LD    B,L
-26F8: 3C             INC   A
-26F9: 59             LD    E,C
-26FA: 3C             INC   A
-26FB: 59             LD    E,C
-26FC: 41             LD    B,C
-26FD: 59             LD    E,C
-26FE: 41             LD    B,C
-26FF: 5B             LD    E,E
-2700: 41             LD    B,C
-2701: 59             LD    E,C
-2702: 41             LD    B,C
-2703: 5B             LD    E,E
-2704: 4B             LD    C,E
-2705: 59             LD    E,C
-2706: 42             LD    B,D
-2707: 5F             LD    E,A
-2708: 4B             LD    C,E
-2709: 59             LD    E,C
-270A: 4B             LD    C,E
-270B: 41             LD    B,C
-270C: 4B             LD    C,E
-270D: 41             LD    B,C
-270E: 4B             LD    C,E
-270F: 41             LD    B,C
-2710: 4B             LD    C,E
-2711: 41             LD    B,C
-2712: 4B             LD    C,E
-2713: 41             LD    B,C
-2714: 20 41          JR    NZ,$2757
-
-2716: 15             DEC   D
-2717: 45             LD    B,L
-2718: 4B             LD    C,E
-2719: 41             LD    B,C
-271A: 11 41 4B       LD    DE,$4B41
-271D: 59             LD    E,C
-271E: 36 59          LD    (HL),#$59
-2720: 31 59 31       LD    SP,$3159
-2723: 59             LD    E,C
-2724: 30 5B          JR    NC,$2781
-
-2726: 33             INC   SP
-2727: 5F             LD    E,A
-2728: 31 59 32       LD    SP,$3259
-272B: 5B             LD    E,E
-272C: 4B             LD    C,E
-272D: 59             LD    E,C
-272E: 32 5D 40       LD    ($405D),A
-2731: 43             LD    B,E
-2732: 4B             LD    C,E
-2733: 59             LD    E,C
-2734: 4B             LD    C,E
-2735: 59             LD    E,C
-2736: 40             LD    B,B
-2737: 41             LD    B,C
-2738: 3C             INC   A
-2739: 5D             LD    E,L
-273A: 3C             INC   A
-273B: 5D             LD    E,L
-273C: 41             LD    B,C
-273D: 5B             LD    E,E
-273E: 41             LD    B,C
-273F: 5F             LD    E,A
-2740: 41             LD    B,C
-2741: 59             LD    E,C
-2742: 4B             LD    C,E
-2743: 59             LD    E,C
-2744: 3C             INC   A
-2745: 59             LD    E,C
-2746: 42             LD    B,D
-2747: 5B             LD    E,E
-2748: 4B             LD    C,E
-2749: 59             LD    E,C
-274A: 4B             LD    C,E
-274B: 41             LD    B,C
-274C: 4B             LD    C,E
-274D: 41             LD    B,C
-274E: 4B             LD    C,E
-274F: 41             LD    B,C
-2750: 4B             LD    C,E
-2751: 41             LD    B,C
-2752: 4B             LD    C,E
-2753: 41             LD    B,C
-2754: 1E 41          LD    E,#$41
-2756: 13             INC   DE
-2757: 41             LD    B,C
-2758: 4C             LD    C,H
-2759: 41             LD    B,C
-275A: 10 41          DJNZ  $279D
-
-275C: 4B             LD    C,E
-275D: 59             LD    E,C
-275E: 36 59          LD    (HL),#$59
-2760: 4B             LD    C,E
-2761: 59             LD    E,C
-2762: 31 59 32       LD    SP,$3259
-2765: 59             LD    E,C
-2766: 32 5F 35       LD    ($355F),A
-2769: 59             LD    E,C
-276A: 35             DEC   (HL)
-276B: 5B             LD    E,E
-276C: 30 5B          JR    NC,$27C9
-
-276E: 30 5F          JR    NC,$27CF
-
-2770: 49             LD    C,C
-2771: 5B             LD    E,E
-2772: 4A             LD    C,D
-2773: 5B             LD    E,E
-2774: 4A             LD    C,D
-2775: 59             LD    E,C
-2776: 49             LD    C,C
-2777: 59             LD    E,C
-2778: 4B             LD    C,E
-2779: 59             LD    E,C
-277A: 42             LD    B,D
-277B: 5D             LD    E,L
-277C: 41             LD    B,C
-277D: 5B             LD    E,E
-277E: 41             LD    B,C
-277F: 59             LD    E,C
-2780: 41             LD    B,C
-2781: 59             LD    E,C
-2782: 4B             LD    C,E
-2783: 59             LD    E,C
-2784: 3C             INC   A
-2785: 5D             LD    E,L
-2786: 42             LD    B,D
-2787: 5D             LD    E,L
-2788: 4B             LD    C,E
-2789: 59             LD    E,C
-278A: 4B             LD    C,E
-278B: 41             LD    B,C
-278C: 4B             LD    C,E
-278D: 41             LD    B,C
-278E: 4B             LD    C,E
-278F: 41             LD    B,C
-2790: 4B             LD    C,E
-2791: 41             LD    B,C
-2792: 4B             LD    C,E
-2793: 41             LD    B,C
-2794: 09             ADD   HL,BC
-2795: 41             LD    B,C
-2796: 4B             LD    C,E
-2797: 41             LD    B,C
-2798: 0E 41          LD    C,#$41
-279A: 0F             RRCA  
-279B: 41             LD    B,C
-279C: 4B             LD    C,E
-279D: 59             LD    E,C
-279E: 4B             LD    C,E
-279F: 59             LD    E,C
-27A0: 34             INC   (HL)
-27A1: 59             LD    E,C
-27A2: 34             INC   (HL)
-27A3: 59             LD    E,C
-27A4: 33             INC   SP
-27A5: 59             LD    E,C
-27A6: 4B             LD    C,E
-27A7: 59             LD    E,C
-27A8: 30 5B          JR    NC,$2805
-
-27AA: 31 59 31       LD    SP,$3159
-27AD: 59             LD    E,C
-27AE: 31 5D 45       LD    SP,$455D
-27B1: 5D             LD    E,L
-27B2: 45             LD    B,L
-27B3: 5D             LD    E,L
-27B4: 4B             LD    C,E
-27B5: 5D             LD    E,L
-27B6: 47             LD    B,A
-27B7: 5D             LD    E,L
-27B8: 47             LD    B,A
-27B9: 59             LD    E,C
-27BA: 4B             LD    C,E
-27BB: 59             LD    E,C
-27BC: 4B             LD    C,E
-27BD: 59             LD    E,C
-27BE: 4B             LD    C,E
-27BF: 59             LD    E,C
-27C0: 4B             LD    C,E
-27C1: 59             LD    E,C
-27C2: 3E 59          LD    A,#$59
-27C4: 3E 5B          LD    A,#$5B
-27C6: 4B             LD    C,E
-27C7: 59             LD    E,C
-27C8: 4B             LD    C,E
-27C9: 59             LD    E,C
-27CA: 4B             LD    C,E
-27CB: 41             LD    B,C
-27CC: 4B             LD    C,E
-27CD: 41             LD    B,C
-27CE: 4B             LD    C,E
-27CF: 41             LD    B,C
-27D0: 4B             LD    C,E
-27D1: 41             LD    B,C
-27D2: 4B             LD    C,E
-27D3: 41             LD    B,C
-27D4: 09             ADD   HL,BC
-27D5: 41             LD    B,C
-27D6: 4B             LD    C,E
-27D7: 41             LD    B,C
-27D8: 0D             DEC   C
-27D9: 41             LD    B,C
-27DA: 0C             INC   C
-27DB: 41             LD    B,C
-27DC: 4B             LD    C,E
-27DD: 59             LD    E,C
-27DE: 4B             LD    C,E
-27DF: 59             LD    E,C
-27E0: 30 5B          JR    NC,$283D
-
-27E2: 30 59          JR    NC,$283D
-
-27E4: 36 59          LD    (HL),#$59
-27E6: 32 5B 34       LD    ($345B),A
-27E9: 59             LD    E,C
-27EA: 31 59 31       LD    SP,$3159
-27ED: 59             LD    E,C
-27EE: 4B             LD    C,E
-27EF: 59             LD    E,C
-27F0: 47             LD    B,A
-27F1: 59             LD    E,C
-27F2: 47             LD    B,A
-27F3: 5D             LD    E,L
-27F4: 4B             LD    C,E
-27F5: 5D             LD    E,L
-27F6: 45             LD    B,L
-27F7: 59             LD    E,C
-27F8: 45             LD    B,L
-27F9: 59             LD    E,C
-27FA: 4B             LD    C,E
-27FB: 59             LD    E,C
-27FC: 4B             LD    C,E
-27FD: 59             LD    E,C
-27FE: 3D             DEC   A
-27FF: 5F             LD    E,A
-2800: 41             LD    B,C
-2801: 59             LD    E,C
-2802: 3D             DEC   A
-2803: 59             LD    E,C
-2804: 3D             DEC   A
-2805: 5B             LD    E,E
-2806: 4B             LD    C,E
-2807: 59             LD    E,C
-2808: 4B             LD    C,E
-2809: 59             LD    E,C
-280A: 4B             LD    C,E
-280B: 41             LD    B,C
-280C: 4B             LD    C,E
-280D: 41             LD    B,C
-280E: 4B             LD    C,E
-280F: 41             LD    B,C
-2810: 4B             LD    C,E
-2811: 41             LD    B,C
-2812: 4B             LD    C,E
-2813: 41             LD    B,C
-2814: 08             EX    AF,AF'
-2815: 41             LD    B,C
-2816: 4B             LD    C,E
-2817: 41             LD    B,C
-2818: 0A             LD    A,(BC)
-2819: 41             LD    B,C
-281A: 0B             DEC   BC
-281B: 41             LD    B,C
-281C: 4B             LD    C,E
-281D: 59             LD    E,C
-281E: 4B             LD    C,E
-281F: 59             LD    E,C
-2820: 30 59          JR    NC,$287B
-
-2822: 30 5D          JR    NC,$2881
-
-2824: 36 59          LD    (HL),#$59
-2826: 35             DEC   (HL)
-2827: 59             LD    E,C
-2828: 31 59 4B       LD    SP,$4B59
-282B: 59             LD    E,C
-282C: 34             INC   (HL)
-282D: 59             LD    E,C
-282E: 4B             LD    C,E
-282F: 59             LD    E,C
-2830: 4B             LD    C,E
-2831: 5B             LD    E,E
-2832: 47             LD    B,A
-2833: 5B             LD    E,E
-2834: 46             LD    B,(HL)
-2835: 5B             LD    E,E
-2836: 47             LD    B,A
-2837: 59             LD    E,C
-2838: 4B             LD    C,E
-2839: 5B             LD    E,E
-283A: 47             LD    B,A
-283B: 5B             LD    E,E
-283C: 47             LD    B,A
-283D: 59             LD    E,C
-283E: 41             LD    B,C
-283F: 59             LD    E,C
-2840: 41             LD    B,C
-2841: 5B             LD    E,E
-2842: 41             LD    B,C
-2843: 59             LD    E,C
-2844: 41             LD    B,C
-2845: 5B             LD    E,E
-2846: 4B             LD    C,E
-2847: 59             LD    E,C
-2848: 4B             LD    C,E
-2849: 59             LD    E,C
-284A: 4B             LD    C,E
-284B: 41             LD    B,C
-284C: 4B             LD    C,E
-284D: 41             LD    B,C
-284E: 4B             LD    C,E
-284F: 41             LD    B,C
-2850: 4B             LD    C,E
-2851: 41             LD    B,C
-2852: 4B             LD    C,E
-2853: 41             LD    B,C
-2854: 00             NOP   
-2855: 45             LD    B,L
-2856: 4B             LD    C,E
-2857: 41             LD    B,C
-2858: 4B             LD    C,E
-2859: 41             LD    B,C
-285A: 4B             LD    C,E
-285B: 41             LD    B,C
-285C: 4B             LD    C,E
-285D: 59             LD    E,C
-285E: 4B             LD    C,E
-285F: 59             LD    E,C
-2860: 4B             LD    C,E
-2861: 59             LD    E,C
-2862: 4B             LD    C,E
-2863: 59             LD    E,C
-2864: 31 5B 4B       LD    SP,$4B5B
-2867: 59             LD    E,C
-2868: 4B             LD    C,E
-2869: 59             LD    E,C
-286A: 30 59          JR    NC,$28C5
-
-286C: 46             LD    B,(HL)
-286D: 59             LD    E,C
-286E: 44             LD    B,H
-286F: 59             LD    E,C
-2870: 4B             LD    C,E
-2871: 59             LD    E,C
-2872: 47             LD    B,A
-2873: 59             LD    E,C
-2874: 46             LD    B,(HL)
-2875: 5F             LD    E,A
-2876: 44             LD    B,H
-2877: 5D             LD    E,L
-2878: 47             LD    B,A
-2879: 59             LD    E,C
-287A: 45             LD    B,L
-287B: 59             LD    E,C
-287C: 45             LD    B,L
-287D: 59             LD    E,C
-287E: 4B             LD    C,E
-287F: 59             LD    E,C
-2880: 47             LD    B,A
-2881: 5B             LD    E,E
-2882: 47             LD    B,A
-2883: 59             LD    E,C
-2884: 4B             LD    C,E
-2885: 59             LD    E,C
-2886: 4B             LD    C,E
-2887: 59             LD    E,C
-2888: 4B             LD    C,E
-2889: 59             LD    E,C
-288A: 4B             LD    C,E
-288B: 41             LD    B,C
-288C: 4B             LD    C,E
-288D: 41             LD    B,C
-288E: 4B             LD    C,E
-288F: 41             LD    B,C
-2890: 4B             LD    C,E
-2891: 41             LD    B,C
-2892: 4B             LD    C,E
-2893: 41             LD    B,C
-2894: 01 45 07       LD    BC,$0745
-2897: 45             LD    B,L
-2898: 06 45          LD    B,#$45
-289A: 05             DEC   B
-289B: 45             LD    B,L
-289C: 4B             LD    C,E
-289D: 59             LD    E,C
-289E: 4B             LD    C,E
-289F: 59             LD    E,C
-28A0: 4B             LD    C,E
-28A1: 59             LD    E,C
-28A2: 4B             LD    C,E
-28A3: 59             LD    E,C
-28A4: 30 59          JR    NC,$28FF
-
-28A6: 31 5D 31       LD    SP,$315D
-28A9: 59             LD    E,C
-28AA: 31 5D 46       LD    SP,$465D
-28AD: 5D             LD    E,L
-28AE: 4B             LD    C,E
-28AF: 59             LD    E,C
-28B0: 44             LD    B,H
-28B1: 59             LD    E,C
-28B2: 4B             LD    C,E
-28B3: 59             LD    E,C
-28B4: 46             LD    B,(HL)
-28B5: 59             LD    E,C
-28B6: 4B             LD    C,E
-28B7: 59             LD    E,C
-28B8: 47             LD    B,A
-28B9: 5B             LD    E,E
-28BA: 47             LD    B,A
-28BB: 5B             LD    E,E
-28BC: 47             LD    B,A
-28BD: 59             LD    E,C
-28BE: 47             LD    B,A
-28BF: 5B             LD    E,E
-28C0: 4B             LD    C,E
-28C1: 59             LD    E,C
-28C2: 47             LD    B,A
-28C3: 5B             LD    E,E
-28C4: 4B             LD    C,E
-28C5: 59             LD    E,C
-28C6: 4B             LD    C,E
-28C7: 59             LD    E,C
-28C8: 4B             LD    C,E
-28C9: 59             LD    E,C
-28CA: 4B             LD    C,E
-28CB: 41             LD    B,C
-28CC: 4B             LD    C,E
-28CD: 41             LD    B,C
-28CE: 4B             LD    C,E
-28CF: 41             LD    B,C
-28D0: 4B             LD    C,E
-28D1: 41             LD    B,C
-28D2: 4B             LD    C,E
-28D3: 41             LD    B,C
-28D4: FF             RST   $38
-
-28D5: 40             LD    B,B
-28D6: 02             LD    (BC),A
-28D7: 41             LD    B,C
-28D8: 03             INC   BC
-28D9: 41             LD    B,C
-28DA: 04             INC   B
-28DB: 41             LD    B,C
-28DC: 4B             LD    C,E
-28DD: 59             LD    E,C
-28DE: 4B             LD    C,E
-28DF: 59             LD    E,C
-28E0: 4B             LD    C,E
-28E1: 59             LD    E,C
-28E2: 4B             LD    C,E
-28E3: 59             LD    E,C
-28E4: 4B             LD    C,E
-28E5: 59             LD    E,C
-28E6: 47             LD    B,A
-28E7: 5B             LD    E,E
-28E8: 47             LD    B,A
-28E9: 59             LD    E,C
-28EA: 46             LD    B,(HL)
-28EB: 59             LD    E,C
-28EC: 47             LD    B,A
-28ED: 59             LD    E,C
-28EE: 47             LD    B,A
-28EF: 59             LD    E,C
-28F0: 4B             LD    C,E
-28F1: 59             LD    E,C
-28F2: 44             LD    B,H
-28F3: 59             LD    E,C
-28F4: 46             LD    B,(HL)
-28F5: 59             LD    E,C
-28F6: 47             LD    B,A
-28F7: 5B             LD    E,E
-28F8: 47             LD    B,A
-28F9: 5B             LD    E,E
-28FA: 4B             LD    C,E
-28FB: 59             LD    E,C
-28FC: 4B             LD    C,E
-28FD: 59             LD    E,C
-28FE: 4B             LD    C,E
-28FF: 59             LD    E,C
-2900: 47             LD    B,A
-2901: 5B             LD    E,E
-2902: 4B             LD    C,E
-2903: 59             LD    E,C
-2904: 4B             LD    C,E
-2905: 59             LD    E,C
-2906: 4B             LD    C,E
-2907: 59             LD    E,C
-2908: 4B             LD    C,E
-2909: 59             LD    E,C
-290A: 4B             LD    C,E
-290B: 41             LD    B,C
-290C: 4B             LD    C,E
-290D: 41             LD    B,C
-290E: 4B             LD    C,E
-290F: 41             LD    B,C
-2910: 4B             LD    C,E
-2911: 41             LD    B,C
-2912: 4B             LD    C,E
-2913: 41             LD    B,C
-2914: 01 41 07       LD    BC,$0741
-2917: 41             LD    B,C
-2918: 06 41          LD    B,#$41
-291A: 05             DEC   B
-291B: 41             LD    B,C
-291C: 4B             LD    C,E
-291D: 59             LD    E,C
-291E: 4B             LD    C,E
-291F: 59             LD    E,C
-2920: 4B             LD    C,E
-2921: 59             LD    E,C
-2922: 4B             LD    C,E
-2923: 59             LD    E,C
-2924: 4B             LD    C,E
-2925: 59             LD    E,C
-2926: 47             LD    B,A
-2927: 59             LD    E,C
-2928: 4B             LD    C,E
-2929: 59             LD    E,C
-292A: 46             LD    B,(HL)
-292B: 5B             LD    E,E
-292C: 44             LD    B,H
-292D: 59             LD    E,C
-292E: 47             LD    B,A
-292F: 59             LD    E,C
-2930: 47             LD    B,A
-2931: 59             LD    E,C
-2932: 44             LD    B,H
-2933: 5B             LD    E,E
-2934: 4B             LD    C,E
-2935: 59             LD    E,C
-2936: 4B             LD    C,E
-2937: 59             LD    E,C
-2938: 47             LD    B,A
-2939: 59             LD    E,C
-293A: 47             LD    B,A
-293B: 5B             LD    E,E
-293C: 47             LD    B,A
-293D: 59             LD    E,C
-293E: 47             LD    B,A
-293F: 5B             LD    E,E
-2940: 47             LD    B,A
-2941: 5B             LD    E,E
-2942: 47             LD    B,A
-2943: 59             LD    E,C
-2944: 4B             LD    C,E
-2945: 59             LD    E,C
-2946: 4B             LD    C,E
-2947: 59             LD    E,C
-2948: 4B             LD    C,E
-2949: 59             LD    E,C
-294A: 4B             LD    C,E
-294B: 41             LD    B,C
-294C: 4B             LD    C,E
-294D: 41             LD    B,C
-294E: 4B             LD    C,E
-294F: 41             LD    B,C
-2950: 4B             LD    C,E
-2951: 41             LD    B,C
-2952: 4B             LD    C,E
-2953: 41             LD    B,C
-2954: 00             NOP   
-2955: 41             LD    B,C
-2956: 4B             LD    C,E
-2957: 41             LD    B,C
-2958: 4B             LD    C,E
-2959: 41             LD    B,C
-295A: 4B             LD    C,E
-295B: 41             LD    B,C
-295C: 4B             LD    C,E
-295D: 59             LD    E,C
-295E: 4B             LD    C,E
-295F: 59             LD    E,C
-2960: 4B             LD    C,E
-2961: 59             LD    E,C
-2962: 4B             LD    C,E
-2963: 59             LD    E,C
-2964: 4B             LD    C,E
-2965: 59             LD    E,C
-2966: 4B             LD    C,E
-2967: 59             LD    E,C
-2968: 47             LD    B,A
-2969: 59             LD    E,C
-296A: 46             LD    B,(HL)
-296B: 5B             LD    E,E
-296C: 45             LD    B,L
-296D: 5D             LD    E,L
-296E: 48             LD    C,B
-296F: 59             LD    E,C
-2970: 45             LD    B,L
-2971: 5D             LD    E,L
-2972: 46             LD    B,(HL)
-2973: 59             LD    E,C
-2974: 45             LD    B,L
-2975: 59             LD    E,C
-2976: 45             LD    B,L
-2977: 59             LD    E,C
-2978: 47             LD    B,A
-2979: 59             LD    E,C
-297A: 47             LD    B,A
-297B: 5B             LD    E,E
-297C: 47             LD    B,A
-297D: 59             LD    E,C
-297E: 47             LD    B,A
-297F: 5B             LD    E,E
-2980: 47             LD    B,A
-2981: 5B             LD    E,E
-2982: 45             LD    B,L
-2983: 59             LD    E,C
-2984: 4B             LD    C,E
-2985: 59             LD    E,C
-2986: 4B             LD    C,E
-2987: 59             LD    E,C
-2988: 4B             LD    C,E
-2989: 59             LD    E,C
-298A: 4B             LD    C,E
-298B: 41             LD    B,C
-298C: 4B             LD    C,E
-298D: 41             LD    B,C
-298E: 4B             LD    C,E
-298F: 41             LD    B,C
-2990: 4B             LD    C,E
-2991: 41             LD    B,C
-2992: 4B             LD    C,E
-2993: 41             LD    B,C
-2994: 4B             LD    C,E
-2995: 41             LD    B,C
-2996: 4B             LD    C,E
-2997: 41             LD    B,C
-2998: 4B             LD    C,E
-2999: 41             LD    B,C
-299A: 4B             LD    C,E
-299B: 41             LD    B,C
-299C: 4B             LD    C,E
-299D: 59             LD    E,C
-299E: 4B             LD    C,E
-299F: 59             LD    E,C
-29A0: 4B             LD    C,E
-29A1: 59             LD    E,C
-29A2: 4B             LD    C,E
-29A3: 59             LD    E,C
-29A4: 4B             LD    C,E
-29A5: 59             LD    E,C
-29A6: 4B             LD    C,E
-29A7: 59             LD    E,C
-29A8: 4B             LD    C,E
-29A9: 59             LD    E,C
-29AA: 4B             LD    C,E
-29AB: 59             LD    E,C
-29AC: 44             LD    B,H
-29AD: 5F             LD    E,A
-29AE: 4B             LD    C,E
-29AF: 59             LD    E,C
-29B0: 46             LD    B,(HL)
-29B1: 59             LD    E,C
-29B2: 46             LD    B,(HL)
-29B3: 59             LD    E,C
-29B4: 4B             LD    C,E
-29B5: 59             LD    E,C
-29B6: 44             LD    B,H
-29B7: 5B             LD    E,E
-29B8: 47             LD    B,A
-29B9: 59             LD    E,C
-29BA: 47             LD    B,A
-29BB: 5B             LD    E,E
-29BC: 47             LD    B,A
-29BD: 59             LD    E,C
-29BE: 47             LD    B,A
-29BF: 5B             LD    E,E
-29C0: 4B             LD    C,E
-29C1: 59             LD    E,C
-29C2: 4B             LD    C,E
-29C3: 59             LD    E,C
-29C4: 4B             LD    C,E
-29C5: 59             LD    E,C
-29C6: 4B             LD    C,E
-29C7: 59             LD    E,C
-29C8: 4B             LD    C,E
-29C9: 59             LD    E,C
-29CA: 4B             LD    C,E
-29CB: 41             LD    B,C
-29CC: 4B             LD    C,E
-29CD: 41             LD    B,C
-29CE: 4B             LD    C,E
-29CF: 41             LD    B,C
-29D0: 4B             LD    C,E
-29D1: 41             LD    B,C
-29D2: 4B             LD    C,E
-29D3: 41             LD    B,C
-29D4: 4B             LD    C,E
-29D5: 41             LD    B,C
-29D6: 4B             LD    C,E
-29D7: 41             LD    B,C
-29D8: 4B             LD    C,E
-29D9: 41             LD    B,C
-29DA: 4B             LD    C,E
-29DB: 41             LD    B,C
-29DC: 4B             LD    C,E
-29DD: 59             LD    E,C
-29DE: 4B             LD    C,E
-29DF: 59             LD    E,C
-29E0: 4B             LD    C,E
-29E1: 59             LD    E,C
-29E2: 4B             LD    C,E
-29E3: 59             LD    E,C
-29E4: 4B             LD    C,E
-29E5: 59             LD    E,C
-29E6: 4B             LD    C,E
-29E7: 59             LD    E,C
-29E8: 4B             LD    C,E
-29E9: 59             LD    E,C
-29EA: 4B             LD    C,E
-29EB: 59             LD    E,C
-29EC: 4B             LD    C,E
-29ED: 59             LD    E,C
-29EE: 47             LD    B,A
-29EF: 59             LD    E,C
-29F0: 44             LD    B,H
-29F1: 5B             LD    E,E
-29F2: 46             LD    B,(HL)
-29F3: 59             LD    E,C
-29F4: 45             LD    B,L
-29F5: 5D             LD    E,L
-29F6: 46             LD    B,(HL)
-29F7: 5B             LD    E,E
-29F8: 4B             LD    C,E
-29F9: 59             LD    E,C
-29FA: 4B             LD    C,E
-29FB: 59             LD    E,C
-29FC: 4B             LD    C,E
-29FD: 59             LD    E,C
-29FE: 4B             LD    C,E
-29FF: 59             LD    E,C
-2A00: 4B             LD    C,E
-2A01: 59             LD    E,C
-2A02: 4B             LD    C,E
-2A03: 59             LD    E,C
-2A04: 4B             LD    C,E
-2A05: 59             LD    E,C
-2A06: 4B             LD    C,E
-2A07: 59             LD    E,C
-2A08: 4B             LD    C,E
-2A09: 59             LD    E,C
-2A0A: 4B             LD    C,E
-2A0B: 41             LD    B,C
-2A0C: 4B             LD    C,E
-2A0D: 41             LD    B,C
-2A0E: 4B             LD    C,E
-2A0F: 41             LD    B,C
-2A10: 4B             LD    C,E
-2A11: 41             LD    B,C
-2A12: 4B             LD    C,E
-2A13: 41             LD    B,C
-2A14: 4B             LD    C,E
-2A15: 41             LD    B,C
-2A16: 4B             LD    C,E
-2A17: 41             LD    B,C
-2A18: 4B             LD    C,E
-2A19: 41             LD    B,C
-2A1A: 4B             LD    C,E
-2A1B: 41             LD    B,C
-2A1C: 4B             LD    C,E
-2A1D: 59             LD    E,C
-2A1E: 4B             LD    C,E
-2A1F: 59             LD    E,C
-2A20: 4B             LD    C,E
-2A21: 59             LD    E,C
-2A22: 4B             LD    C,E
-2A23: 59             LD    E,C
-2A24: 4B             LD    C,E
-2A25: 59             LD    E,C
-2A26: 4B             LD    C,E
-2A27: 59             LD    E,C
-2A28: 4B             LD    C,E
-2A29: 59             LD    E,C
-2A2A: 4B             LD    C,E
-2A2B: 59             LD    E,C
-2A2C: 4B             LD    C,E
-2A2D: 59             LD    E,C
-2A2E: 4B             LD    C,E
-2A2F: 59             LD    E,C
-2A30: 4B             LD    C,E
-2A31: 59             LD    E,C
-2A32: 4B             LD    C,E
-2A33: 59             LD    E,C
-2A34: 4B             LD    C,E
-2A35: 59             LD    E,C
-2A36: 4B             LD    C,E
-2A37: 59             LD    E,C
-2A38: 4B             LD    C,E
-2A39: 59             LD    E,C
-2A3A: 4B             LD    C,E
-2A3B: 59             LD    E,C
-2A3C: 4B             LD    C,E
-2A3D: 59             LD    E,C
-2A3E: 4B             LD    C,E
-2A3F: 59             LD    E,C
-2A40: 4B             LD    C,E
-2A41: 59             LD    E,C
-2A42: 4B             LD    C,E
-2A43: 59             LD    E,C
-2A44: 4B             LD    C,E
-2A45: 59             LD    E,C
-2A46: 4B             LD    C,E
-2A47: 59             LD    E,C
-2A48: 4B             LD    C,E
-2A49: 59             LD    E,C
-2A4A: 4B             LD    C,E
-2A4B: 41             LD    B,C
-2A4C: 4B             LD    C,E
-2A4D: 41             LD    B,C
-2A4E: 4B             LD    C,E
-2A4F: 41             LD    B,C
-2A50: 4B             LD    C,E
-2A51: 41             LD    B,C
-2A52: 4B             LD    C,E
-2A53: 41             LD    B,C
-2A54: 4B             LD    C,E
-2A55: 41             LD    B,C
-2A56: 4B             LD    C,E
-2A57: 41             LD    B,C
-2A58: 4B             LD    C,E
-2A59: 41             LD    B,C
-2A5A: 4B             LD    C,E
-2A5B: 41             LD    B,C
-2A5C: 4B             LD    C,E
-2A5D: 59             LD    E,C
-2A5E: 4B             LD    C,E
-2A5F: 59             LD    E,C
-2A60: 4B             LD    C,E
-2A61: 59             LD    E,C
-2A62: 4B             LD    C,E
-2A63: 59             LD    E,C
-2A64: 4B             LD    C,E
-2A65: 59             LD    E,C
-2A66: 4B             LD    C,E
-2A67: 59             LD    E,C
-2A68: 4B             LD    C,E
-2A69: 59             LD    E,C
-2A6A: 4B             LD    C,E
-2A6B: 59             LD    E,C
-2A6C: 4B             LD    C,E
-2A6D: 59             LD    E,C
-2A6E: 4B             LD    C,E
-2A6F: 59             LD    E,C
-2A70: 4B             LD    C,E
-2A71: 59             LD    E,C
-2A72: 4B             LD    C,E
-2A73: 59             LD    E,C
-2A74: 4B             LD    C,E
-2A75: 59             LD    E,C
-2A76: 4B             LD    C,E
-2A77: 59             LD    E,C
-2A78: 4B             LD    C,E
-2A79: 59             LD    E,C
-2A7A: 4B             LD    C,E
-2A7B: 59             LD    E,C
-2A7C: 4B             LD    C,E
-2A7D: 59             LD    E,C
-2A7E: 4B             LD    C,E
-2A7F: 59             LD    E,C
-2A80: 4B             LD    C,E
-2A81: 59             LD    E,C
-2A82: 4B             LD    C,E
-2A83: 59             LD    E,C
-2A84: 4B             LD    C,E
-2A85: 59             LD    E,C
-2A86: 4B             LD    C,E
-2A87: 59             LD    E,C
-2A88: 4B             LD    C,E
-2A89: 59             LD    E,C
-2A8A: 4B             LD    C,E
-2A8B: 41             LD    B,C
-2A8C: 4B             LD    C,E
-2A8D: 41             LD    B,C
-2A8E: 4B             LD    C,E
-2A8F: 41             LD    B,C
-2A90: 4B             LD    C,E
-2A91: 41             LD    B,C
-2A92: 4B             LD    C,E
-2A93: 41             LD    B,C
-2A94: 4B             LD    C,E
-2A95: 41             LD    B,C
-2A96: 4B             LD    C,E
-2A97: 41             LD    B,C
-2A98: 4B             LD    C,E
-2A99: 41             LD    B,C
-2A9A: 4B             LD    C,E
-2A9B: 41             LD    B,C
-2A9C: 4B             LD    C,E
-2A9D: 59             LD    E,C
-2A9E: 4B             LD    C,E
-2A9F: 59             LD    E,C
-2AA0: 4B             LD    C,E
-2AA1: 59             LD    E,C
-2AA2: 4B             LD    C,E
-2AA3: 59             LD    E,C
-2AA4: 4B             LD    C,E
-2AA5: 59             LD    E,C
-2AA6: 4B             LD    C,E
-2AA7: 59             LD    E,C
-2AA8: 4B             LD    C,E
-2AA9: 59             LD    E,C
-2AAA: 4B             LD    C,E
-2AAB: 59             LD    E,C
-2AAC: 4B             LD    C,E
-2AAD: 59             LD    E,C
-2AAE: 4B             LD    C,E
-2AAF: 59             LD    E,C
-2AB0: 4B             LD    C,E
-2AB1: 59             LD    E,C
-2AB2: 4B             LD    C,E
-2AB3: 59             LD    E,C
-2AB4: 4B             LD    C,E
-2AB5: 59             LD    E,C
-2AB6: 4B             LD    C,E
-2AB7: 59             LD    E,C
-2AB8: 4B             LD    C,E
-2AB9: 59             LD    E,C
-2ABA: 4B             LD    C,E
-2ABB: 59             LD    E,C
-2ABC: 4B             LD    C,E
-2ABD: 59             LD    E,C
-2ABE: 4B             LD    C,E
-2ABF: 59             LD    E,C
-2AC0: 4B             LD    C,E
-2AC1: 59             LD    E,C
-2AC2: 4B             LD    C,E
-2AC3: 59             LD    E,C
-2AC4: 4B             LD    C,E
-2AC5: 59             LD    E,C
-2AC6: 4B             LD    C,E
-2AC7: 59             LD    E,C
-2AC8: 4B             LD    C,E
-2AC9: 59             LD    E,C
 2ACA: 00             NOP   
 2ACB: 00             NOP   
 2ACC: 01 48 00       LD    BC,$0048
@@ -8010,51 +5321,10 @@ ORG $0000
 2C4A: 00             NOP   
 2C4B: 02             LD    (BC),A
 2C4C: 00             NOP   
-2C4D: 31 30 30       LD    SP,$3030
-2C50: 30 20          JR    NC,$2C72
+2C4D: 1000 BONUS ALL BLOCKS HIT
 
-2C52: 42             LD    B,D
-2C53: 4F             LD    C,A
-2C54: 4E             LD    C,(HL)
-2C55: 55             LD    D,L
-2C56: 53             LD    D,E
-2C57: 20 41          JR    NZ,$2C9A
+2C67: 1000 FOR ENTERING CONE
 
-2C59: 4C             LD    C,H
-2C5A: 4C             LD    C,H
-2C5B: 20 42          JR    NZ,$2C9F
-
-2C5D: 4C             LD    C,H
-2C5E: 4F             LD    C,A
-2C5F: 43             LD    B,E
-2C60: 4B             LD    C,E
-2C61: 53             LD    D,E
-2C62: 20 48          JR    NZ,$2CAC
-
-2C64: 49             LD    C,C
-2C65: 54             LD    D,H
-2C66: 00             NOP   
-2C67: 31 30 30       LD    SP,$3030
-2C6A: 30 20          JR    NC,$2C8C
-
-2C6C: 46             LD    B,(HL)
-2C6D: 4F             LD    C,A
-2C6E: 52             LD    D,D
-2C6F: 20 45          JR    NZ,$2CB6
-
-2C71: 4E             LD    C,(HL)
-2C72: 54             LD    D,H
-2C73: 45             LD    B,L
-2C74: 52             LD    D,D
-2C75: 49             LD    C,C
-2C76: 4E             LD    C,(HL)
-2C77: 47             LD    B,A
-2C78: 20 43          JR    NZ,$2CBD
-
-2C7A: 4F             LD    C,A
-2C7B: 4E             LD    C,(HL)
-2C7C: 45             LD    B,L
-2C7D: 00             NOP   
 2C7E: 21 26 39       LD    HL,$3926
 2C81: CD 35 6F       CALL  $6F35
 2C84: CD 20 70       CALL  $7020
@@ -8112,32 +5382,10 @@ ORG $0000
 2CF5: 2D             DEC   L
 2CF6: 00             NOP   
 2CF7: 00             NOP   
-2CF8: 54             LD    D,H
-2CF9: 52             LD    D,D
-2CFA: 59             LD    E,C
-2CFB: 20 54          JR    NZ,$2D51
+2CF8: TRY TO ENTER
 
-2CFD: 4F             LD    C,A
-2CFE: 20 45          JR    NZ,$2D45
+2D05: THE MCP CONE
 
-2D00: 4E             LD    C,(HL)
-2D01: 54             LD    D,H
-2D02: 45             LD    B,L
-2D03: 52             LD    D,D
-2D04: 00             NOP   
-2D05: 54             LD    D,H
-2D06: 48             LD    C,B
-2D07: 45             LD    B,L
-2D08: 20 4D          JR    NZ,$2D57
-
-2D0A: 43             LD    B,E
-2D0B: 50             LD    D,B
-2D0C: 20 43          JR    NZ,$2D51
-
-2D0E: 4F             LD    C,A
-2D0F: 4E             LD    C,(HL)
-2D10: 45             LD    B,L
-2D11: 00             NOP   
 2D12: 21 26 39       LD    HL,$3926
 2D15: CD 35 6F       CALL  $6F35
 2D18: CD 20 70       CALL  $7020
@@ -8388,7 +5636,7 @@ ORG $0000
 2ECA: 3A 0B C0       LD    A,($C00B)
 2ECD: 21 0D C0       LD    HL,$C00D
 2ED0: B6             OR    A,(HL)
-2ED1: 21 00 C0       LD    HL,$C000
+2ED1: 21 00 C0       LD    HL,NVRAM
 2ED4: 28 06          JR    Z,$2EDC
 
 2ED6: 35             DEC   (HL)
@@ -10171,7 +7419,7 @@ ORG $0000
 3A08: 32 5B C4       LD    ($C45B),A
 3A0B: 3E 10          LD    A,#$10
 3A0D: 32 4E C1       LD    ($C14E),A
-3A10: 21 00 72       LD    HL,$7200
+3A10: 21 00 72       LD    HL,BACKGROUND_FOR_TANK_GAME
 3A13: CD 35 70       CALL  $7035
 3A16: 21 80 79       LD    HL,$7980
 3A19: CD 35 6F       CALL  $6F35
@@ -10371,7 +7619,7 @@ ORG $0000
 3BA0: 0D             DEC   C
 3BA1: 20 DE          JR    NZ,$3B81
 
-3BA3: 21 00 C0       LD    HL,$C000
+3BA3: 21 00 C0       LD    HL,NVRAM
 3BA6: 3E 61          LD    A,#$61
 3BA8: 77             LD    (HL),A
 3BA9: C6 08          ADD   A,#$08
@@ -10546,7 +7794,7 @@ ORG $0000
 3CEF: 32 05 C4       LD    ($C405),A
 3CF2: 3E 01          LD    A,#$01
 3CF4: 32 08 C4       LD    ($C408),A
-3CF7: 21 00 C0       LD    HL,$C000
+3CF7: 21 00 C0       LD    HL,NVRAM
 3CFA: 3E 61          LD    A,#$61
 3CFC: 77             LD    (HL),A
 3CFD: C6 08          ADD   A,#$08
@@ -10577,30 +7825,10 @@ ORG $0000
 3D2F: 01 CE FD       LD    BC,$FDCE
 3D32: C3 5D 70       JP    $705D
 
-3D35: 44             LD    B,H
-3D36: 45             LD    B,L
-3D37: 53             LD    D,E
-3D38: 54             LD    D,H
-3D39: 52             LD    D,D
-3D3A: 4F             LD    C,A
-3D3B: 59             LD    E,C
-3D3C: 20 41          JR    NZ,$3D7F
+3D35: DESTROY ALL
 
-3D3E: 4C             LD    C,H
-3D3F: 4C             LD    C,H
-3D40: 00             NOP   
-3D41: 45             LD    B,L
-3D42: 4E             LD    C,(HL)
-3D43: 45             LD    B,L
-3D44: 4D             LD    C,L
-3D45: 59             LD    E,C
-3D46: 20 54          JR    NZ,$3D9C
+3D41: ENEMY TANKS
 
-3D48: 41             LD    B,C
-3D49: 4E             LD    C,(HL)
-3D4A: 4B             LD    C,E
-3D4B: 53             LD    D,E
-3D4C: 00             NOP   
 3D4D: 00             NOP   
 3D4E: 00             NOP   
 3D4F: 00             NOP   
@@ -10776,7 +8004,7 @@ ORG $0000
 3E20: 28 03          JR    Z,$3E25
 
 3E22: 32 50 C1       LD    ($C150),A
-3E25: 3A 00 C0       LD    A,($C000)
+3E25: 3A 00 C0       LD    A,(NVRAM)
 3E28: 47             LD    B,A
 3E29: 3A 03 C0       LD    A,($C003)
 3E2C: 80             ADD   A,B
@@ -10849,7 +8077,7 @@ ORG $0000
 3E9C: 78             LD    A,B
 3E9D: 21 03 C0       LD    HL,$C003
 3EA0: 96             SUB   A,(HL)
-3EA1: 32 00 C0       LD    ($C000),A
+3EA1: 32 00 C0       LD    (NVRAM),A
 3EA4: C6 08          ADD   A,#$08
 3EA6: 47             LD    B,A
 3EA7: 3A 06 C0       LD    A,($C006)
@@ -10943,7 +8171,7 @@ ORG $0000
 
 3F51: DD 7E 05       LD    A,(IX+$05)
 3F54: 32 10 C0       LD    ($C010),A
-3F57: 3A 00 C0       LD    A,($C000)
+3F57: 3A 00 C0       LD    A,(NVRAM)
 3F5A: 21 03 C0       LD    HL,$C003
 3F5D: 86             ADD   A,(HL)
 3F5E: 47             LD    B,A
@@ -11329,7 +8557,7 @@ ORG $0000
 40CF: C9             RET   
 
 40D0: 21 04 F0       LD    HL,$F004
-40D3: 3A 00 C0       LD    A,($C000)
+40D3: 3A 00 C0       LD    A,(NVRAM)
 40D6: CD 65 71       CALL  $7165
 40D9: 77             LD    (HL),A
 40DA: 23             INC   HL
@@ -11342,7 +8570,7 @@ ORG $0000
 40E8: 77             LD    (HL),A
 40E9: C9             RET   
 
-40EA: 3A 00 C0       LD    A,($C000)
+40EA: 3A 00 C0       LD    A,(NVRAM)
 40ED: FE 81          CP    A,#$81
 40EF: 20 33          JR    NZ,$4124
 
@@ -11365,7 +8593,7 @@ ORG $0000
 410B: 24             INC   H
 410C: 6F             LD    L,A
 410D: 7E             LD    A,(HL)
-410E: 32 00 C0       LD    ($C000),A
+410E: 32 00 C0       LD    (NVRAM),A
 4111: 23             INC   HL
 4112: 7E             LD    A,(HL)
 4113: 32 02 C0       LD    ($C002),A
@@ -11741,7 +8969,7 @@ ORG $0000
 42CD: FE 01          CP    A,#$01
 42CF: 20 28          JR    NZ,$42F9
 
-42D1: 3A 00 C0       LD    A,($C000)
+42D1: 3A 00 C0       LD    A,(NVRAM)
 42D4: D6 10          SUB   A,#$10
 42D6: DD BE 00       CP    A,(IX+$00)
 42D9: 38 28          JR    C,$4303
@@ -11765,7 +8993,7 @@ ORG $0000
 42F5: DD 77 0E       LD    (IX+$0E),A
 42F8: C9             RET   
 
-42F9: 3A 00 C0       LD    A,($C000)
+42F9: 3A 00 C0       LD    A,(NVRAM)
 42FC: C6 10          ADD   A,#$10
 42FE: DD BE 00       CP    A,(IX+$00)
 4301: 38 D8          JR    C,$42DB
@@ -11774,7 +9002,7 @@ ORG $0000
 4306: 38 D3          JR    C,$42DB
 
 4308: CD 43 44       CALL  $4443
-430B: 3A 00 C0       LD    A,($C000)
+430B: 3A 00 C0       LD    A,(NVRAM)
 430E: DD 96 00       SUB   A,(IX+$00)
 4311: 30 01          JR    NC,$4314
 
@@ -11902,7 +9130,7 @@ ORG $0000
 43D7: 18 1A          JR    $43F3
 
 43D9: 06 FF          LD    B,#$FF
-43DB: 3A 00 C0       LD    A,($C000)
+43DB: 3A 00 C0       LD    A,(NVRAM)
 43DE: DD BE 00       CP    A,(IX+$00)
 43E1: 30 10          JR    NC,$43F3
 
@@ -11910,7 +9138,7 @@ ORG $0000
 43E5: 18 0C          JR    $43F3
 
 43E7: 06 01          LD    B,#$01
-43E9: 3A 00 C0       LD    A,($C000)
+43E9: 3A 00 C0       LD    A,(NVRAM)
 43EC: DD BE 00       CP    A,(IX+$00)
 43EF: 30 02          JR    NC,$43F3
 
@@ -12399,7 +9627,7 @@ ORG $0000
 4729: E1             POP   HL
 472A: C9             RET   
 
-472B: 3A 00 C0       LD    A,($C000)
+472B: 3A 00 C0       LD    A,(NVRAM)
 472E: E5             PUSH  HL
 472F: 21 03 C0       LD    HL,$C003
 4732: 86             ADD   A,(HL)
@@ -12568,7 +9796,7 @@ ORG $0000
 4848: B7             OR    A,A
 4849: 28 35          JR    Z,$4880
 
-484B: 3A 00 C0       LD    A,($C000)
+484B: 3A 00 C0       LD    A,(NVRAM)
 484E: 4F             LD    C,A
 484F: 3A 0B C0       LD    A,($C00B)
 4852: 81             ADD   A,C
@@ -12883,7 +10111,7 @@ ORG $0000
 49EE: 24             INC   H
 49EF: 6F             LD    L,A
 49F0: DD 21 08 F0    LD    IX,$F008
-49F4: 3A 00 C0       LD    A,($C000)
+49F4: 3A 00 C0       LD    A,(NVRAM)
 49F7: 47             LD    B,A
 49F8: 3A 0B C0       LD    A,($C00B)
 49FB: 80             ADD   A,B
@@ -12959,7 +10187,7 @@ ORG $0000
 4A78: DD BE 15       CP    A,(IX+$15)
 4A7B: 20 77          JR    NZ,$4AF4
 
-4A7D: 3A 00 C0       LD    A,($C000)
+4A7D: 3A 00 C0       LD    A,(NVRAM)
 4A80: DD BE 00       CP    A,(IX+$00)
 4A83: 38 16          JR    C,$4A9B
 
@@ -12969,7 +10197,7 @@ ORG $0000
 
 4A8C: DD 46 00       LD    B,(IX+$00)
 4A8F: CD F9 4A       CALL  $4AF9
-4A92: 3A 00 C0       LD    A,($C000)
+4A92: 3A 00 C0       LD    A,(NVRAM)
 4A95: BE             CP    A,(HL)
 4A96: DC FF 4A       CALL  C,$4AFF
 4A99: 18 59          JR    $4AF4
@@ -12980,7 +10208,7 @@ ORG $0000
 
 4AA2: DD 46 00       LD    B,(IX+$00)
 4AA5: CD F9 4A       CALL  $4AF9
-4AA8: 3A 00 C0       LD    A,($C000)
+4AA8: 3A 00 C0       LD    A,(NVRAM)
 4AAB: 2B             DEC   HL
 4AAC: BE             CP    A,(HL)
 4AAD: D4 FF 4A       CALL  NC,$4AFF
@@ -13598,7 +10826,7 @@ ORG $0000
 
 4DC0: 01 0E 0E       LD    BC,$0E0E
 4DC3: 02             LD    (BC),A
-4DC4: 01 00 E8       LD    BC,$E800
+4DC4: 01 00 E8       LD    BC,VIDEO_RAM
 4DC7: 88             ADC   A,B
 4DC8: E8             RET   PE
 
@@ -13668,7 +10896,7 @@ ORG $0000
 4E19: 00             NOP   
 4E1A: 01 0E 0E       LD    BC,$0E0E
 4E1D: 02             LD    (BC),A
-4E1E: 01 00 E8       LD    BC,$E800
+4E1E: 01 00 E8       LD    BC,VIDEO_RAM
 4E21: 49             LD    C,C
 4E22: 40             LD    B,B
 4E23: 00             NOP   
@@ -13832,7 +11060,7 @@ ORG $0000
 4EEB: 00             NOP   
 4EEC: 01 0E 0E       LD    BC,$0E0E
 4EEF: 02             LD    (BC),A
-4EF0: 01 00 E8       LD    BC,$E800
+4EF0: 01 00 E8       LD    BC,VIDEO_RAM
 4EF3: 49             LD    C,C
 4EF4: 40             LD    B,B
 4EF5: 00             NOP   
@@ -14068,7 +11296,7 @@ ORG $0000
 5009: CD 20 70       CALL  $7020
 500C: 3E 05          LD    A,#$05
 500E: 32 5B C4       LD    ($C45B),A
-5011: 21 00 89       LD    HL,$8900
+5011: 21 00 89       LD    HL,BACKGROUND_FOR_2
 5014: CD 35 70       CALL  $7035
 5017: 3E 01          LD    A,#$01
 5019: 32 08 C4       LD    ($C408),A
@@ -14196,7 +11424,7 @@ ORG $0000
 50FD: CD F4 56       CALL  $56F4
 5100: C3 3B 52       JP    $523B
 
-5103: 21 00 91       LD    HL,$9100
+5103: 21 00 91       LD    HL,BACKGROUND_FOR_3
 5106: CD 35 70       CALL  $7035
 5109: CD 49 70       CALL  $7049
 510C: 21 80 90       LD    HL,$9080
@@ -14243,73 +11471,16 @@ ORG $0000
 5164: 51             LD    D,C
 5165: 00             NOP   
 5166: 00             NOP   
-5167: 41             LD    B,C
-5168: 56             LD    D,(HL)
-5169: 4F             LD    C,A
-516A: 49             LD    C,C
-516B: 44             LD    B,H
-516C: 20 48          JR    NZ,$51B6
+5167: AVOID HITTING
 
-516E: 49             LD    C,C
-516F: 54             LD    D,H
-5170: 54             LD    D,H
-5171: 49             LD    C,C
-5172: 4E             LD    C,(HL)
-5173: 47             LD    B,A
-5174: 00             NOP   
-5175: 4C             LD    C,H
-5176: 49             LD    C,C
-5177: 47             LD    B,A
-5178: 48             LD    C,B
-5179: 54             LD    D,H
-517A: 20 54          JR    NZ,$51D0
+5175: LIGHT TRACES
 
-517C: 52             LD    D,D
-517D: 41             LD    B,C
-517E: 43             LD    B,E
-517F: 45             LD    B,L
-5180: 53             LD    D,E
-5181: 00             NOP   
-5182: 41             LD    B,C
-5183: 4E             LD    C,(HL)
-5184: 44             LD    B,H
-5185: 20 57          JR    NZ,$51DE
+5182: AND WALLS
 
-5187: 41             LD    B,C
-5188: 4C             LD    C,H
-5189: 4C             LD    C,H
-518A: 53             LD    D,E
-518B: 00             NOP   
-518C: 55             LD    D,L
-518D: 53             LD    D,E
-518E: 45             LD    B,L
-518F: 20 54          JR    NZ,$51E5
+518C: USE TRIGGER FOR
 
-5191: 52             LD    D,D
-5192: 49             LD    C,C
-5193: 47             LD    B,A
-5194: 47             LD    B,A
-5195: 45             LD    B,L
-5196: 52             LD    D,D
-5197: 20 46          JR    NZ,$51DF
+519C: SPEED CONTROL
 
-5199: 4F             LD    C,A
-519A: 52             LD    D,D
-519B: 00             NOP   
-519C: 53             LD    D,E
-519D: 50             LD    D,B
-519E: 45             LD    B,L
-519F: 45             LD    B,L
-51A0: 44             LD    B,H
-51A1: 20 43          JR    NZ,$51E6
-
-51A3: 4F             LD    C,A
-51A4: 4E             LD    C,(HL)
-51A5: 54             LD    D,H
-51A6: 52             LD    D,D
-51A7: 4F             LD    C,A
-51A8: 4C             LD    C,H
-51A9: 00             NOP   
 51AA: 21 22 C2       LD    HL,$C222
 51AD: 7E             LD    A,(HL)
 51AE: B7             OR    A,A
@@ -14816,8 +11987,8 @@ ORG $0000
 554E: 05             DEC   B
 554F: 00             NOP   
 5550: 00             NOP   
-5551: 11 00 89       LD    DE,$8900
-5554: 21 00 F8       LD    HL,$F800
+5551: 11 00 89       LD    DE,BACKGROUND_FOR_2
+5554: 21 00 F8       LD    HL,VIDEO_RAM_M1
 5557: 01 80 07       LD    BC,$0780
 555A: 32 E9 C1       LD    ($C1E9),A
 555D: E5             PUSH  HL
@@ -15085,7 +12256,7 @@ ORG $0000
 56F3: C9             RET   
 
 56F4: 16 0F          LD    D,#$0F
-56F6: 21 00 F8       LD    HL,$F800
+56F6: 21 00 F8       LD    HL,VIDEO_RAM_M1
 56F9: 06 20          LD    B,#$20
 56FB: E5             PUSH  HL
 56FC: CD 1A 5A       CALL  $5A1A
@@ -15487,7 +12658,7 @@ ORG $0000
 5994: C9             RET   
 
 5995: AF             XOR   A,A
-5996: 11 00 F8       LD    DE,$F800
+5996: 11 00 F8       LD    DE,VIDEO_RAM_M1
 5999: ED 52          SBC   HL,DE
 599B: CB 3C          SRL   H
 599D: CB 1D          RR    L
@@ -15512,16 +12683,16 @@ ORG $0000
 
 59B9: CB 25          SLA   L
 59BB: CB 14          RL    H
-59BD: 11 00 F8       LD    DE,$F800
+59BD: 11 00 F8       LD    DE,VIDEO_RAM_M1
 59C0: 19             ADD   HL,DE
 59C1: C9             RET   
 
 59C2: AF             XOR   A,A
-59C3: 11 00 F8       LD    DE,$F800
+59C3: 11 00 F8       LD    DE,VIDEO_RAM_M1
 59C6: ED 52          SBC   HL,DE
 59C8: CB 3C          SRL   H
 59CA: CB 1D          RR    L
-59CC: 11 00 C0       LD    DE,$C000
+59CC: 11 00 C0       LD    DE,NVRAM
 59CF: CB 3C          SRL   H
 59D1: CB 1D          RR    L
 59D3: 38 08          JR    C,$59DD
@@ -15560,7 +12731,7 @@ ORG $0000
 59FE: 10 FA          DJNZ  $59FA
 
 5A00: 09             ADD   HL,BC
-5A01: 11 00 C0       LD    DE,$C000
+5A01: 11 00 C0       LD    DE,NVRAM
 5A04: CB 3C          SRL   H
 5A06: CB 1D          RR    L
 5A08: 38 08          JR    C,$5A12
@@ -15581,7 +12752,7 @@ ORG $0000
 
 5A1A: D5             PUSH  DE
 5A1B: A7             AND   A,A
-5A1C: 11 00 F8       LD    DE,$F800
+5A1C: 11 00 F8       LD    DE,VIDEO_RAM_M1
 5A1F: ED 52          SBC   HL,DE
 5A21: CB 3C          SRL   H
 5A23: CB 1D          RR    L
@@ -16138,7 +13309,7 @@ ORG $0000
 5D05: 32 5B C4       LD    ($C45B),A
 5D08: 3E 01          LD    A,#$01
 5D0A: 32 08 C4       LD    ($C408),A
-5D0D: 21 00 7A       LD    HL,$7A00
+5D0D: 21 00 7A       LD    HL,BACKGROUND_FOR_4
 5D10: CD 35 70       CALL  $7035
 5D13: 21 C0 79       LD    HL,$79C0
 5D16: CD 35 6F       CALL  $6F35
@@ -16300,7 +13471,7 @@ ORG $0000
 5E36: CD 20 70       CALL  $7020
 5E39: 3E 01          LD    A,#$01
 5E3B: 32 08 C4       LD    ($C408),A
-5E3E: 21 00 7A       LD    HL,$7A00
+5E3E: 21 00 7A       LD    HL,BACKGROUND_FOR_4
 5E41: CD 35 70       CALL  $7035
 5E44: 21 B7 5E       LD    HL,$5EB7
 5E47: CD 35 6F       CALL  $6F35
@@ -16337,49 +13508,12 @@ ORG $0000
 5E89: 5E             LD    E,(HL)
 5E8A: 00             NOP   
 5E8B: 00             NOP   
-5E8C: 45             LD    B,L
-5E8D: 4E             LD    C,(HL)
-5E8E: 54             LD    D,H
-5E8F: 45             LD    B,L
-5E90: 52             LD    D,D
-5E91: 20 46          JR    NZ,$5ED9
+5E8C: ENTER FLASHING
 
-5E93: 4C             LD    C,H
-5E94: 41             LD    B,C
-5E95: 53             LD    D,E
-5E96: 48             LD    C,B
-5E97: 49             LD    C,C
-5E98: 4E             LD    C,(HL)
-5E99: 47             LD    B,A
-5E9A: 00             NOP   
-5E9B: 43             LD    B,E
-5E9C: 49             LD    C,C
-5E9D: 52             LD    D,D
-5E9E: 43             LD    B,E
-5E9F: 4C             LD    C,H
-5EA0: 45             LD    B,L
-5EA1: 20 42          JR    NZ,$5EE5
+5E9B: CIRCLE BEFORE
 
-5EA3: 45             LD    B,L
-5EA4: 46             LD    B,(HL)
-5EA5: 4F             LD    C,A
-5EA6: 52             LD    D,D
-5EA7: 45             LD    B,L
-5EA8: 00             NOP   
-5EA9: 54             LD    D,H
-5EAA: 49             LD    C,C
-5EAB: 4D             LD    C,L
-5EAC: 45             LD    B,L
-5EAD: 52             LD    D,D
-5EAE: 20 45          JR    NZ,$5EF5
+5EA9: TIMER EXPIRES
 
-5EB0: 58             LD    E,B
-5EB1: 50             LD    D,B
-5EB2: 49             LD    C,C
-5EB3: 52             LD    D,D
-5EB4: 45             LD    B,L
-5EB5: 53             LD    D,E
-5EB6: 00             NOP   
 5EB7: 00             NOP   
 5EB8: 00             NOP   
 5EB9: 00             NOP   
@@ -16936,7 +14070,7 @@ ORG $0000
 626A: 22 29 C0       LD    ($C029),HL
 626D: 22 2B C0       LD    ($C02B),HL
 6270: 21 80 81       LD    HL,$8180
-6273: 11 00 F8       LD    DE,$F800
+6273: 11 00 F8       LD    DE,VIDEO_RAM_M1
 6276: 01 80 07       LD    BC,$0780
 6279: ED B0          LDIR  
 627B: CD 23 5F       CALL  $5F23
@@ -16968,7 +14102,7 @@ ORG $0000
 62AC: C9             RET   
 
 62AD: 3A 26 C0       LD    A,($C026)
-62B0: 21 00 C0       LD    HL,$C000
+62B0: 21 00 C0       LD    HL,NVRAM
 62B3: 96             SUB   A,(HL)
 62B4: 30 07          JR    NC,$62BD
 
@@ -17051,7 +14185,7 @@ ORG $0000
 6338: B9             CP    A,C
 6339: D0             RET   NC
 
-633A: 3A 00 C0       LD    A,($C000)
+633A: 3A 00 C0       LD    A,(NVRAM)
 633D: 32 28 F0       LD    ($F028),A
 6340: 3A 01 C0       LD    A,($C001)
 6343: CD 59 71       CALL  $7159
@@ -17656,7 +14790,7 @@ ORG $0000
 679D: E5             PUSH  HL
 679E: 21 E2 68       LD    HL,$68E2
 67A1: CD 00 6F       CALL  $6F00
-67A4: 11 00 C0       LD    DE,$C000
+67A4: 11 00 C0       LD    DE,NVRAM
 67A7: ED A0          LDI   
 67A9: ED A0          LDI   
 67AB: ED A0          LDI   
@@ -19158,7 +16292,7 @@ ORG $0000
 6FD5: 21 90 C4       LD    HL,$C490
 6FD8: 22 8E C4       LD    ($C48E),HL
 6FDB: FB             EI    
-6FDC: 21 00 F8       LD    HL,$F800
+6FDC: 21 00 F8       LD    HL,VIDEO_RAM_M1
 6FDF: 01 C0 03       LD    BC,$03C0
 6FE2: 36 5E          LD    (HL),#$5E
 6FE4: 23             INC   HL
@@ -19217,14 +16351,14 @@ ORG $0000
 
 7035: CD 17 6F       CALL  $6F17
 7038: CD 17 6F       CALL  $6F17
-703B: 11 00 F8       LD    DE,$F800
+703B: 11 00 F8       LD    DE,VIDEO_RAM_M1
 703E: 01 80 07       LD    BC,$0780
 7041: ED B0          LDIR  
 7043: 3E 01          LD    A,#$01
 7045: 32 65 C4       LD    ($C465),A
 7048: C9             RET   
 
-7049: 21 00 F0       LD    HL,$F000
+7049: 21 00 F0       LD    HL,SPRITE_RAM_M4
 704C: 06 80          LD    B,#$80
 704E: 36 00          LD    (HL),#$00
 7050: 23             INC   HL
@@ -19583,1610 +16717,128 @@ ORG $0000
 71F9: 11 3A B6       LD    DE,$B63A
 71FC: 09             ADD   HL,BC
 71FD: 01 FF 8F       LD    BC,$8FFF
-7200: 00             NOP   
-7201: FF             RST   $38
+BACKGROUND_FOR_TANK_GAME:
+7200: 00 FF 00 40 00 40 00 40 01 44 0A 42 0C 44 10 44 
+7210: 20 44 23 44 25 44 5D 44 60 44 64 40 70 44 72 44 
+7220: 74 44 80 44 8A 44 94 44 9F 44 98 42 20 46 23 46 
+7230: 25 44 2F 46 5D 46 60 46 64 46 AC 44 AB 44 AD 44 
+7240: 00 44 00 40 00 40 00 40 02 44 00 40 11 40 11 40 
+7250: 11 40 11 40 11 40 11 40 11 40 11 40 11 40 11 40 
+7260: 11 40 11 40 11 40 11 40 11 40 11 40 11 40 11 40 
+7270: 11 40 11 40 11 40 11 40 11 40 11 40 62 40 AE 40 
+7280: 00 40 00 40 00 40 00 40 03 40 00 40 00 40 00 40 
+7290: 00 40 0E 40 00 40 00 40 0E 40 00 40 00 40 00 40 
+72A0: 00 40 00 40 0E 40 00 40 00 40 0E 40 00 40 00 40 
+72B0: 0E 40 00 40 00 40 00 40 00 40 00 40 0E 40 AE 40 
+72C0: 00 40 00 40 00 40 00 40 03 40 0B 40 0F 40 1F 40 
+72D0: 00 40 0E 40 5C 40 00 40 0E 40 6F 40 71 40 73 40 
+72E0: 7F 40 00 40 0E 40 9E 40 00 40 0E 40 9E 40 00 40 
+72F0: 0E 40 7F 42 73 42 71 42 6F 42 00 40 0E 40 AF 44 
+7300: 00 44 00 40 00 40 00 40 04 40 00 40 11 40 11 40 
+7310: 11 40 0D 40 11 40 11 40 0D 40 11 40 11 40 11 40 
+7320: 11 40 11 40 0D 40 11 40 11 40 0D 40 11 40 11 40 
+7330: 0D 40 11 40 11 40 62 40 7E 42 00 40 0E 40 B0 44 
+7340: 00 44 00 40 00 40 00 40 03 40 00 40 0E 40 00 40 
+7350: 00 40 0E 40 00 40 00 40 00 40 00 40 00 40 0E 40 
+7360: 00 40 00 40 0E 40 00 40 00 40 00 40 00 40 00 40 
+7370: 0E 40 00 40 00 40 0E 40 6E 42 00 40 0E 40 B9 40 
+7380: 00 40 00 40 00 40 00 40 03 40 00 40 0E 40 1E 40 
+7390: 00 40 0E 40 5B 40 5F 40 63 40 6E 40 00 40 0E 40 
+73A0: 7E 40 00 40 0E 40 27 42 BA 42 22 42 16 42 00 40 
+73B0: 0E 40 9E 40 00 40 0E 40 6C 42 00 40 0E 40 3B 42 
+73C0: 00 42 00 40 00 40 00 40 05 40 00 40 0E 40 1D 40 
+73D0: 00 40 0D 40 11 40 11 40 62 40 6E 40 00 40 0D 40 
+73E0: 11 40 11 40 0D 40 11 40 11 40 62 40 15 42 00 40 
+73F0: 0D 40 11 40 11 40 0E 40 6B 42 00 40 0E 40 7D 42 
+7400: 00 42 00 40 00 40 00 40 03 40 00 40 0E 40 1C 40 
+7410: 00 40 0E 40 00 40 00 40 0E 40 6D 40 00 40 0E 40 
+7420: 00 40 00 40 00 40 00 40 00 40 0E 40 14 42 00 40 
+7430: 0E 40 00 40 00 40 0E 40 89 42 00 40 0E 40 7B 42 
+7440: 00 42 00 40 00 40 00 40 09 40 00 40 0E 40 1B 40 
+7450: 00 40 0E 40 40 40 00 40 0E 40 6C 40 00 40 0E 40 
+7460: 7D 40 89 40 93 40 9D 40 00 40 0E 40 13 42 00 40 
+7470: 0E 40 9E 40 00 40 0E 40 88 42 00 40 0E 40 7B 42 
+7480: 00 42 00 40 00 40 00 40 03 40 00 40 0E 40 1A 40 
+7490: 00 40 0D 40 11 40 11 40 0D 40 11 40 11 40 0D 40 
+74A0: 11 40 11 40 11 40 11 40 11 40 0D 40 11 40 11 40 
+74B0: 0D 40 11 40 11 40 0D 40 11 40 11 40 0E 40 78 42 
+74C0: 00 42 00 40 00 40 00 40 03 40 00 40 0E 40 19 40 
+74D0: 00 40 0E 40 00 40 00 40 0E 40 00 40 00 40 0E 40 
+74E0: 00 40 00 40 00 40 00 40 00 40 0E 40 00 40 00 40 
+74F0: 0E 40 00 40 00 40 0E 40 00 40 00 40 0E 40 77 42 
+7500: 00 42 00 40 00 40 00 40 03 40 00 40 0D 40 11 40 
+7510: 11 40 0E 40 3F 40 00 40 0E 40 6A 40 00 40 0E 40 
+7520: 7C 40 88 40 92 40 9C 40 00 40 0E 40 2B 42 00 40 
+7530: 0E 40 3F 42 00 40 0E 40 6A 42 00 40 0E 40 B8 40 
+7540: 00 40 00 40 00 40 00 40 03 40 00 40 0E 40 00 40 
+7550: 00 40 0E 40 3E 40 00 40 0E 40 6A 40 00 40 0E 40 
+7560: 7B 40 87 40 91 40 9B 40 00 40 0E 40 2A 42 00 40 
+7570: 0E 40 3E 42 00 40 0E 40 69 42 00 40 0E 40 9D 42 
+7580: 00 42 00 40 00 40 00 40 08 40 00 40 0E 40 18 40 
+7590: 00 40 0E 40 3D 40 00 40 0E 40 69 40 00 40 0D 40 
+75A0: 7A 40 86 40 90 40 9A 40 11 40 0E 40 29 42 00 40 
+75B0: 0E 40 3D 42 00 40 0E 40 68 42 00 40 0E 40 B7 40 
+75C0: 00 40 00 40 00 40 00 40 03 40 00 40 0D 40 11 40 
+75D0: 11 40 0D 40 11 40 11 40 0D 40 11 40 11 40 0E 40 
+75E0: 79 40 85 40 8F 40 99 40 00 40 0D 40 11 40 11 40 
+75F0: 0D 40 11 40 11 40 0D 40 11 40 11 40 0E 40 B6 40 
+7600: 00 40 00 40 00 40 00 40 03 40 00 40 0E 40 00 40 
+7610: 00 40 0E 40 00 40 00 40 0E 40 00 40 00 40 0E 40 
+7620: 78 40 84 40 8E 40 98 40 00 40 0E 40 00 40 00 40 
+7630: 0E 40 00 40 00 40 0E 40 00 40 00 40 0E 40 9C 42 
+7640: 00 42 00 40 00 40 00 40 03 40 00 40 0E 40 17 40 
+7650: 00 40 0E 40 3C 40 00 40 0E 40 66 40 00 40 0E 40 
+7660: 77 40 83 40 8D 40 97 40 00 40 0E 40 18 40 00 40 
+7670: 0E 40 6B 42 00 40 0E 40 1B 42 00 40 0E 40 B5 40 
+7680: 00 40 00 40 00 40 00 40 03 40 00 40 0D 40 11 40 
+7690: 11 40 0D 40 11 40 11 40 0D 40 11 40 11 40 0D 40 
+76A0: 11 40 11 40 11 40 11 40 11 40 0D 40 11 40 11 40 
+76B0: 0E 40 6C 42 00 40 0E 40 1A 42 00 40 0E 40 9B 42 
+76C0: 00 42 00 40 00 40 00 40 06 40 00 40 0E 40 00 40 
+76D0: 00 40 00 40 00 40 00 40 0E 40 00 40 00 40 0E 40 
+76E0: 00 40 00 40 00 40 00 40 00 40 0E 40 00 40 00 40 
+76F0: 0E 40 6D 42 00 40 0D 40 11 40 11 40 0E 40 B4 40 
+7700: 0E 40 0E 40 00 40 00 40 07 40 00 40 0E 40 16 40 
+7710: 22 40 BA 40 27 40 00 40 0E 40 67 40 00 40 0E 40 
+7720: 76 40 82 40 8C 40 96 40 00 40 0E 40 17 40 00 40 
+7730: 0E 40 6E 42 00 40 0E 40 00 40 00 40 0E 40 98 42 
+7740: 00 42 00 40 00 40 00 40 03 40 00 40 0E 40 15 40 
+7750: 00 40 11 40 11 40 11 40 0D 40 11 40 11 40 0D 40 
+7760: 11 40 11 40 11 40 11 40 11 40 0D 40 11 40 11 40 
+7770: 0D 40 11 40 11 40 0E 40 1C 42 00 40 0E 40 97 42 
+7780: 00 42 00 40 00 40 00 40 06 40 00 40 0E 40 14 40 
+7790: 00 40 0E 40 00 40 00 40 0E 40 00 40 00 40 0E 40 
+77A0: 00 40 00 40 0E 40 00 40 00 40 0E 40 00 40 00 40 
+77B0: 0E 40 00 40 00 40 0E 40 1D 42 00 40 0E 40 96 42 
+77C0: 00 42 00 40 00 40 00 40 05 40 00 40 0E 40 13 40 
+77D0: 00 40 0E 40 3A 40 00 40 0E 40 66 40 00 40 0E 40 
+77E0: 66 40 00 40 0E 40 66 40 00 40 0E 40 A3 40 00 40 
+77F0: 0E 40 A7 40 00 40 0E 40 1E 42 00 40 0E 40 B3 40 
+7800: 00 40 00 40 00 40 00 40 03 40 00 40 0D 40 11 40 
+7810: 11 40 0D 40 11 40 11 40 0D 40 11 40 11 40 0D 40 
+7820: 11 40 11 40 0D 40 11 40 11 40 0E 40 A2 40 00 40 
+7830: 0D 40 11 40 11 40 0D 40 11 40 11 40 0E 40 B2 40 
+7840: 00 40 00 40 00 40 00 40 04 40 00 40 0E 40 00 40 
+7850: 00 40 00 40 0E 40 00 40 00 40 00 40 00 40 0E 40 
+7860: 00 40 00 40 00 40 00 40 00 40 0E 40 A1 40 00 40 
+7870: 00 40 00 40 00 40 0E 40 00 40 00 40 0E 40 96 42 
+7880: 00 42 00 40 00 40 00 40 03 40 00 40 0E 40 21 40 
+7890: 24 40 00 40 0E 40 5E 40 61 40 65 40 00 40 0E 40 
+78A0: 75 40 81 40 8B 40 95 40 00 40 0E 40 A0 40 A4 40 
+78B0: A5 40 A6 40 00 40 0E 40 AA 40 00 40 0E 40 B1 40 
+78C0: 00 40 00 40 00 40 00 40 03 40 00 40 0D 40 11 40 
+78D0: 11 40 11 40 0D 40 11 40 11 40 11 40 11 40 0D 40 
+78E0: 11 40 11 40 11 40 11 40 11 40 0D 40 11 40 11 40 
+78F0: 11 40 11 40 11 40 0E 40 A9 40 00 40 0E 40 B0 40 
+7900: 00 40 00 40 00 40 00 40 02 40 00 40 00 40 00 40 
+7910: 00 40 00 40 00 40 00 40 00 40 00 40 00 40 00 40 
+7920: 00 40 00 40 00 40 00 40 00 40 00 40 00 40 00 40 
+7930: 00 40 00 40 00 40 00 40 A8 40 00 40 00 40 AF 40 
+7940: 00 40 00 40 00 40 00 40 01 40 0A 40 0C 40 10 40 
+7950: 20 40 23 40 2F 40 5D 40 60 40 64 40 70 40 72 40 
+7960: 74 40 80 40 8A 40 94 40 9F 40 10 42 20 42 23 42 
+7970: 2F 42 5D 42 60 40 64 42 64 42 AC 40 AB 40 AD 40 
 
-7202: 00             NOP   
-7203: 40             LD    B,B
-7204: 00             NOP   
-7205: 40             LD    B,B
-7206: 00             NOP   
-7207: 40             LD    B,B
-7208: 01 44 0A       LD    BC,$0A44
-720B: 42             LD    B,D
-720C: 0C             INC   C
-720D: 44             LD    B,H
-720E: 10 44          DJNZ  $7254
-
-7210: 20 44          JR    NZ,$7256
-
-7212: 23             INC   HL
-7213: 44             LD    B,H
-7214: 25             DEC   H
-7215: 44             LD    B,H
-7216: 5D             LD    E,L
-7217: 44             LD    B,H
-7218: 60             LD    H,B
-7219: 44             LD    B,H
-721A: 64             LD    H,H
-721B: 40             LD    B,B
-721C: 70             LD    (HL),B
-721D: 44             LD    B,H
-721E: 72             LD    (HL),D
-721F: 44             LD    B,H
-7220: 74             LD    (HL),H
-7221: 44             LD    B,H
-7222: 80             ADD   A,B
-7223: 44             LD    B,H
-7224: 8A             ADC   A,D
-7225: 44             LD    B,H
-7226: 94             SUB   A,H
-7227: 44             LD    B,H
-7228: 9F             SBC   A,A
-7229: 44             LD    B,H
-722A: 98             SBC   A,B
-722B: 42             LD    B,D
-722C: 20 46          JR    NZ,$7274
-
-722E: 23             INC   HL
-722F: 46             LD    B,(HL)
-7230: 25             DEC   H
-7231: 44             LD    B,H
-7232: 2F             CPL   
-7233: 46             LD    B,(HL)
-7234: 5D             LD    E,L
-7235: 46             LD    B,(HL)
-7236: 60             LD    H,B
-7237: 46             LD    B,(HL)
-7238: 64             LD    H,H
-7239: 46             LD    B,(HL)
-723A: AC             XOR   A,H
-723B: 44             LD    B,H
-723C: AB             XOR   A,E
-723D: 44             LD    B,H
-723E: AD             XOR   A,L
-723F: 44             LD    B,H
-7240: 00             NOP   
-7241: 44             LD    B,H
-7242: 00             NOP   
-7243: 40             LD    B,B
-7244: 00             NOP   
-7245: 40             LD    B,B
-7246: 00             NOP   
-7247: 40             LD    B,B
-7248: 02             LD    (BC),A
-7249: 44             LD    B,H
-724A: 00             NOP   
-724B: 40             LD    B,B
-724C: 11 40 11       LD    DE,$1140
-724F: 40             LD    B,B
-7250: 11 40 11       LD    DE,$1140
-7253: 40             LD    B,B
-7254: 11 40 11       LD    DE,$1140
-7257: 40             LD    B,B
-7258: 11 40 11       LD    DE,$1140
-725B: 40             LD    B,B
-725C: 11 40 11       LD    DE,$1140
-725F: 40             LD    B,B
-7260: 11 40 11       LD    DE,$1140
-7263: 40             LD    B,B
-7264: 11 40 11       LD    DE,$1140
-7267: 40             LD    B,B
-7268: 11 40 11       LD    DE,$1140
-726B: 40             LD    B,B
-726C: 11 40 11       LD    DE,$1140
-726F: 40             LD    B,B
-7270: 11 40 11       LD    DE,$1140
-7273: 40             LD    B,B
-7274: 11 40 11       LD    DE,$1140
-7277: 40             LD    B,B
-7278: 11 40 11       LD    DE,$1140
-727B: 40             LD    B,B
-727C: 62             LD    H,D
-727D: 40             LD    B,B
-727E: AE             XOR   A,(HL)
-727F: 40             LD    B,B
-7280: 00             NOP   
-7281: 40             LD    B,B
-7282: 00             NOP   
-7283: 40             LD    B,B
-7284: 00             NOP   
-7285: 40             LD    B,B
-7286: 00             NOP   
-7287: 40             LD    B,B
-7288: 03             INC   BC
-7289: 40             LD    B,B
-728A: 00             NOP   
-728B: 40             LD    B,B
-728C: 00             NOP   
-728D: 40             LD    B,B
-728E: 00             NOP   
-728F: 40             LD    B,B
-7290: 00             NOP   
-7291: 40             LD    B,B
-7292: 0E 40          LD    C,#$40
-7294: 00             NOP   
-7295: 40             LD    B,B
-7296: 00             NOP   
-7297: 40             LD    B,B
-7298: 0E 40          LD    C,#$40
-729A: 00             NOP   
-729B: 40             LD    B,B
-729C: 00             NOP   
-729D: 40             LD    B,B
-729E: 00             NOP   
-729F: 40             LD    B,B
-72A0: 00             NOP   
-72A1: 40             LD    B,B
-72A2: 00             NOP   
-72A3: 40             LD    B,B
-72A4: 0E 40          LD    C,#$40
-72A6: 00             NOP   
-72A7: 40             LD    B,B
-72A8: 00             NOP   
-72A9: 40             LD    B,B
-72AA: 0E 40          LD    C,#$40
-72AC: 00             NOP   
-72AD: 40             LD    B,B
-72AE: 00             NOP   
-72AF: 40             LD    B,B
-72B0: 0E 40          LD    C,#$40
-72B2: 00             NOP   
-72B3: 40             LD    B,B
-72B4: 00             NOP   
-72B5: 40             LD    B,B
-72B6: 00             NOP   
-72B7: 40             LD    B,B
-72B8: 00             NOP   
-72B9: 40             LD    B,B
-72BA: 00             NOP   
-72BB: 40             LD    B,B
-72BC: 0E 40          LD    C,#$40
-72BE: AE             XOR   A,(HL)
-72BF: 40             LD    B,B
-72C0: 00             NOP   
-72C1: 40             LD    B,B
-72C2: 00             NOP   
-72C3: 40             LD    B,B
-72C4: 00             NOP   
-72C5: 40             LD    B,B
-72C6: 00             NOP   
-72C7: 40             LD    B,B
-72C8: 03             INC   BC
-72C9: 40             LD    B,B
-72CA: 0B             DEC   BC
-72CB: 40             LD    B,B
-72CC: 0F             RRCA  
-72CD: 40             LD    B,B
-72CE: 1F             RRA   
-72CF: 40             LD    B,B
-72D0: 00             NOP   
-72D1: 40             LD    B,B
-72D2: 0E 40          LD    C,#$40
-72D4: 5C             LD    E,H
-72D5: 40             LD    B,B
-72D6: 00             NOP   
-72D7: 40             LD    B,B
-72D8: 0E 40          LD    C,#$40
-72DA: 6F             LD    L,A
-72DB: 40             LD    B,B
-72DC: 71             LD    (HL),C
-72DD: 40             LD    B,B
-72DE: 73             LD    (HL),E
-72DF: 40             LD    B,B
-72E0: 7F             LD    A,A
-72E1: 40             LD    B,B
-72E2: 00             NOP   
-72E3: 40             LD    B,B
-72E4: 0E 40          LD    C,#$40
-72E6: 9E             SBC   A,(HL)
-72E7: 40             LD    B,B
-72E8: 00             NOP   
-72E9: 40             LD    B,B
-72EA: 0E 40          LD    C,#$40
-72EC: 9E             SBC   A,(HL)
-72ED: 40             LD    B,B
-72EE: 00             NOP   
-72EF: 40             LD    B,B
-72F0: 0E 40          LD    C,#$40
-72F2: 7F             LD    A,A
-72F3: 42             LD    B,D
-72F4: 73             LD    (HL),E
-72F5: 42             LD    B,D
-72F6: 71             LD    (HL),C
-72F7: 42             LD    B,D
-72F8: 6F             LD    L,A
-72F9: 42             LD    B,D
-72FA: 00             NOP   
-72FB: 40             LD    B,B
-72FC: 0E 40          LD    C,#$40
-72FE: AF             XOR   A,A
-72FF: 44             LD    B,H
-7300: 00             NOP   
-7301: 44             LD    B,H
-7302: 00             NOP   
-7303: 40             LD    B,B
-7304: 00             NOP   
-7305: 40             LD    B,B
-7306: 00             NOP   
-7307: 40             LD    B,B
-7308: 04             INC   B
-7309: 40             LD    B,B
-730A: 00             NOP   
-730B: 40             LD    B,B
-730C: 11 40 11       LD    DE,$1140
-730F: 40             LD    B,B
-7310: 11 40 0D       LD    DE,$0D40
-7313: 40             LD    B,B
-7314: 11 40 11       LD    DE,$1140
-7317: 40             LD    B,B
-7318: 0D             DEC   C
-7319: 40             LD    B,B
-731A: 11 40 11       LD    DE,$1140
-731D: 40             LD    B,B
-731E: 11 40 11       LD    DE,$1140
-7321: 40             LD    B,B
-7322: 11 40 0D       LD    DE,$0D40
-7325: 40             LD    B,B
-7326: 11 40 11       LD    DE,$1140
-7329: 40             LD    B,B
-732A: 0D             DEC   C
-732B: 40             LD    B,B
-732C: 11 40 11       LD    DE,$1140
-732F: 40             LD    B,B
-7330: 0D             DEC   C
-7331: 40             LD    B,B
-7332: 11 40 11       LD    DE,$1140
-7335: 40             LD    B,B
-7336: 62             LD    H,D
-7337: 40             LD    B,B
-7338: 7E             LD    A,(HL)
-7339: 42             LD    B,D
-733A: 00             NOP   
-733B: 40             LD    B,B
-733C: 0E 40          LD    C,#$40
-733E: B0             OR    A,B
-733F: 44             LD    B,H
-7340: 00             NOP   
-7341: 44             LD    B,H
-7342: 00             NOP   
-7343: 40             LD    B,B
-7344: 00             NOP   
-7345: 40             LD    B,B
-7346: 00             NOP   
-7347: 40             LD    B,B
-7348: 03             INC   BC
-7349: 40             LD    B,B
-734A: 00             NOP   
-734B: 40             LD    B,B
-734C: 0E 40          LD    C,#$40
-734E: 00             NOP   
-734F: 40             LD    B,B
-7350: 00             NOP   
-7351: 40             LD    B,B
-7352: 0E 40          LD    C,#$40
-7354: 00             NOP   
-7355: 40             LD    B,B
-7356: 00             NOP   
-7357: 40             LD    B,B
-7358: 00             NOP   
-7359: 40             LD    B,B
-735A: 00             NOP   
-735B: 40             LD    B,B
-735C: 00             NOP   
-735D: 40             LD    B,B
-735E: 0E 40          LD    C,#$40
-7360: 00             NOP   
-7361: 40             LD    B,B
-7362: 00             NOP   
-7363: 40             LD    B,B
-7364: 0E 40          LD    C,#$40
-7366: 00             NOP   
-7367: 40             LD    B,B
-7368: 00             NOP   
-7369: 40             LD    B,B
-736A: 00             NOP   
-736B: 40             LD    B,B
-736C: 00             NOP   
-736D: 40             LD    B,B
-736E: 00             NOP   
-736F: 40             LD    B,B
-7370: 0E 40          LD    C,#$40
-7372: 00             NOP   
-7373: 40             LD    B,B
-7374: 00             NOP   
-7375: 40             LD    B,B
-7376: 0E 40          LD    C,#$40
-7378: 6E             LD    L,(HL)
-7379: 42             LD    B,D
-737A: 00             NOP   
-737B: 40             LD    B,B
-737C: 0E 40          LD    C,#$40
-737E: B9             CP    A,C
-737F: 40             LD    B,B
-7380: 00             NOP   
-7381: 40             LD    B,B
-7382: 00             NOP   
-7383: 40             LD    B,B
-7384: 00             NOP   
-7385: 40             LD    B,B
-7386: 00             NOP   
-7387: 40             LD    B,B
-7388: 03             INC   BC
-7389: 40             LD    B,B
-738A: 00             NOP   
-738B: 40             LD    B,B
-738C: 0E 40          LD    C,#$40
-738E: 1E 40          LD    E,#$40
-7390: 00             NOP   
-7391: 40             LD    B,B
-7392: 0E 40          LD    C,#$40
-7394: 5B             LD    E,E
-7395: 40             LD    B,B
-7396: 5F             LD    E,A
-7397: 40             LD    B,B
-7398: 63             LD    H,E
-7399: 40             LD    B,B
-739A: 6E             LD    L,(HL)
-739B: 40             LD    B,B
-739C: 00             NOP   
-739D: 40             LD    B,B
-739E: 0E 40          LD    C,#$40
-73A0: 7E             LD    A,(HL)
-73A1: 40             LD    B,B
-73A2: 00             NOP   
-73A3: 40             LD    B,B
-73A4: 0E 40          LD    C,#$40
-73A6: 27             DAA   
-73A7: 42             LD    B,D
-73A8: BA             CP    A,D
-73A9: 42             LD    B,D
-73AA: 22 42 16       LD    ($1642),HL
-73AD: 42             LD    B,D
-73AE: 00             NOP   
-73AF: 40             LD    B,B
-73B0: 0E 40          LD    C,#$40
-73B2: 9E             SBC   A,(HL)
-73B3: 40             LD    B,B
-73B4: 00             NOP   
-73B5: 40             LD    B,B
-73B6: 0E 40          LD    C,#$40
-73B8: 6C             LD    L,H
-73B9: 42             LD    B,D
-73BA: 00             NOP   
-73BB: 40             LD    B,B
-73BC: 0E 40          LD    C,#$40
-73BE: 3B             DEC   SP
-73BF: 42             LD    B,D
-73C0: 00             NOP   
-73C1: 42             LD    B,D
-73C2: 00             NOP   
-73C3: 40             LD    B,B
-73C4: 00             NOP   
-73C5: 40             LD    B,B
-73C6: 00             NOP   
-73C7: 40             LD    B,B
-73C8: 05             DEC   B
-73C9: 40             LD    B,B
-73CA: 00             NOP   
-73CB: 40             LD    B,B
-73CC: 0E 40          LD    C,#$40
-73CE: 1D             DEC   E
-73CF: 40             LD    B,B
-73D0: 00             NOP   
-73D1: 40             LD    B,B
-73D2: 0D             DEC   C
-73D3: 40             LD    B,B
-73D4: 11 40 11       LD    DE,$1140
-73D7: 40             LD    B,B
-73D8: 62             LD    H,D
-73D9: 40             LD    B,B
-73DA: 6E             LD    L,(HL)
-73DB: 40             LD    B,B
-73DC: 00             NOP   
-73DD: 40             LD    B,B
-73DE: 0D             DEC   C
-73DF: 40             LD    B,B
-73E0: 11 40 11       LD    DE,$1140
-73E3: 40             LD    B,B
-73E4: 0D             DEC   C
-73E5: 40             LD    B,B
-73E6: 11 40 11       LD    DE,$1140
-73E9: 40             LD    B,B
-73EA: 62             LD    H,D
-73EB: 40             LD    B,B
-73EC: 15             DEC   D
-73ED: 42             LD    B,D
-73EE: 00             NOP   
-73EF: 40             LD    B,B
-73F0: 0D             DEC   C
-73F1: 40             LD    B,B
-73F2: 11 40 11       LD    DE,$1140
-73F5: 40             LD    B,B
-73F6: 0E 40          LD    C,#$40
-73F8: 6B             LD    L,E
-73F9: 42             LD    B,D
-73FA: 00             NOP   
-73FB: 40             LD    B,B
-73FC: 0E 40          LD    C,#$40
-73FE: 7D             LD    A,L
-73FF: 42             LD    B,D
-7400: 00             NOP   
-7401: 42             LD    B,D
-7402: 00             NOP   
-7403: 40             LD    B,B
-7404: 00             NOP   
-7405: 40             LD    B,B
-7406: 00             NOP   
-7407: 40             LD    B,B
-7408: 03             INC   BC
-7409: 40             LD    B,B
-740A: 00             NOP   
-740B: 40             LD    B,B
-740C: 0E 40          LD    C,#$40
-740E: 1C             INC   E
-740F: 40             LD    B,B
-7410: 00             NOP   
-7411: 40             LD    B,B
-7412: 0E 40          LD    C,#$40
-7414: 00             NOP   
-7415: 40             LD    B,B
-7416: 00             NOP   
-7417: 40             LD    B,B
-7418: 0E 40          LD    C,#$40
-741A: 6D             LD    L,L
-741B: 40             LD    B,B
-741C: 00             NOP   
-741D: 40             LD    B,B
-741E: 0E 40          LD    C,#$40
-7420: 00             NOP   
-7421: 40             LD    B,B
-7422: 00             NOP   
-7423: 40             LD    B,B
-7424: 00             NOP   
-7425: 40             LD    B,B
-7426: 00             NOP   
-7427: 40             LD    B,B
-7428: 00             NOP   
-7429: 40             LD    B,B
-742A: 0E 40          LD    C,#$40
-742C: 14             INC   D
-742D: 42             LD    B,D
-742E: 00             NOP   
-742F: 40             LD    B,B
-7430: 0E 40          LD    C,#$40
-7432: 00             NOP   
-7433: 40             LD    B,B
-7434: 00             NOP   
-7435: 40             LD    B,B
-7436: 0E 40          LD    C,#$40
-7438: 89             ADC   A,C
-7439: 42             LD    B,D
-743A: 00             NOP   
-743B: 40             LD    B,B
-743C: 0E 40          LD    C,#$40
-743E: 7B             LD    A,E
-743F: 42             LD    B,D
-7440: 00             NOP   
-7441: 42             LD    B,D
-7442: 00             NOP   
-7443: 40             LD    B,B
-7444: 00             NOP   
-7445: 40             LD    B,B
-7446: 00             NOP   
-7447: 40             LD    B,B
-7448: 09             ADD   HL,BC
-7449: 40             LD    B,B
-744A: 00             NOP   
-744B: 40             LD    B,B
-744C: 0E 40          LD    C,#$40
-744E: 1B             DEC   DE
-744F: 40             LD    B,B
-7450: 00             NOP   
-7451: 40             LD    B,B
-7452: 0E 40          LD    C,#$40
-7454: 40             LD    B,B
-7455: 40             LD    B,B
-7456: 00             NOP   
-7457: 40             LD    B,B
-7458: 0E 40          LD    C,#$40
-745A: 6C             LD    L,H
-745B: 40             LD    B,B
-745C: 00             NOP   
-745D: 40             LD    B,B
-745E: 0E 40          LD    C,#$40
-7460: 7D             LD    A,L
-7461: 40             LD    B,B
-7462: 89             ADC   A,C
-7463: 40             LD    B,B
-7464: 93             SUB   A,E
-7465: 40             LD    B,B
-7466: 9D             SBC   A,L
-7467: 40             LD    B,B
-7468: 00             NOP   
-7469: 40             LD    B,B
-746A: 0E 40          LD    C,#$40
-746C: 13             INC   DE
-746D: 42             LD    B,D
-746E: 00             NOP   
-746F: 40             LD    B,B
-7470: 0E 40          LD    C,#$40
-7472: 9E             SBC   A,(HL)
-7473: 40             LD    B,B
-7474: 00             NOP   
-7475: 40             LD    B,B
-7476: 0E 40          LD    C,#$40
-7478: 88             ADC   A,B
-7479: 42             LD    B,D
-747A: 00             NOP   
-747B: 40             LD    B,B
-747C: 0E 40          LD    C,#$40
-747E: 7B             LD    A,E
-747F: 42             LD    B,D
-7480: 00             NOP   
-7481: 42             LD    B,D
-7482: 00             NOP   
-7483: 40             LD    B,B
-7484: 00             NOP   
-7485: 40             LD    B,B
-7486: 00             NOP   
-7487: 40             LD    B,B
-7488: 03             INC   BC
-7489: 40             LD    B,B
-748A: 00             NOP   
-748B: 40             LD    B,B
-748C: 0E 40          LD    C,#$40
-748E: 1A             LD    A,(DE)
-748F: 40             LD    B,B
-7490: 00             NOP   
-7491: 40             LD    B,B
-7492: 0D             DEC   C
-7493: 40             LD    B,B
-7494: 11 40 11       LD    DE,$1140
-7497: 40             LD    B,B
-7498: 0D             DEC   C
-7499: 40             LD    B,B
-749A: 11 40 11       LD    DE,$1140
-749D: 40             LD    B,B
-749E: 0D             DEC   C
-749F: 40             LD    B,B
-74A0: 11 40 11       LD    DE,$1140
-74A3: 40             LD    B,B
-74A4: 11 40 11       LD    DE,$1140
-74A7: 40             LD    B,B
-74A8: 11 40 0D       LD    DE,$0D40
-74AB: 40             LD    B,B
-74AC: 11 40 11       LD    DE,$1140
-74AF: 40             LD    B,B
-74B0: 0D             DEC   C
-74B1: 40             LD    B,B
-74B2: 11 40 11       LD    DE,$1140
-74B5: 40             LD    B,B
-74B6: 0D             DEC   C
-74B7: 40             LD    B,B
-74B8: 11 40 11       LD    DE,$1140
-74BB: 40             LD    B,B
-74BC: 0E 40          LD    C,#$40
-74BE: 78             LD    A,B
-74BF: 42             LD    B,D
-74C0: 00             NOP   
-74C1: 42             LD    B,D
-74C2: 00             NOP   
-74C3: 40             LD    B,B
-74C4: 00             NOP   
-74C5: 40             LD    B,B
-74C6: 00             NOP   
-74C7: 40             LD    B,B
-74C8: 03             INC   BC
-74C9: 40             LD    B,B
-74CA: 00             NOP   
-74CB: 40             LD    B,B
-74CC: 0E 40          LD    C,#$40
-74CE: 19             ADD   HL,DE
-74CF: 40             LD    B,B
-74D0: 00             NOP   
-74D1: 40             LD    B,B
-74D2: 0E 40          LD    C,#$40
-74D4: 00             NOP   
-74D5: 40             LD    B,B
-74D6: 00             NOP   
-74D7: 40             LD    B,B
-74D8: 0E 40          LD    C,#$40
-74DA: 00             NOP   
-74DB: 40             LD    B,B
-74DC: 00             NOP   
-74DD: 40             LD    B,B
-74DE: 0E 40          LD    C,#$40
-74E0: 00             NOP   
-74E1: 40             LD    B,B
-74E2: 00             NOP   
-74E3: 40             LD    B,B
-74E4: 00             NOP   
-74E5: 40             LD    B,B
-74E6: 00             NOP   
-74E7: 40             LD    B,B
-74E8: 00             NOP   
-74E9: 40             LD    B,B
-74EA: 0E 40          LD    C,#$40
-74EC: 00             NOP   
-74ED: 40             LD    B,B
-74EE: 00             NOP   
-74EF: 40             LD    B,B
-74F0: 0E 40          LD    C,#$40
-74F2: 00             NOP   
-74F3: 40             LD    B,B
-74F4: 00             NOP   
-74F5: 40             LD    B,B
-74F6: 0E 40          LD    C,#$40
-74F8: 00             NOP   
-74F9: 40             LD    B,B
-74FA: 00             NOP   
-74FB: 40             LD    B,B
-74FC: 0E 40          LD    C,#$40
-74FE: 77             LD    (HL),A
-74FF: 42             LD    B,D
-7500: 00             NOP   
-7501: 42             LD    B,D
-7502: 00             NOP   
-7503: 40             LD    B,B
-7504: 00             NOP   
-7505: 40             LD    B,B
-7506: 00             NOP   
-7507: 40             LD    B,B
-7508: 03             INC   BC
-7509: 40             LD    B,B
-750A: 00             NOP   
-750B: 40             LD    B,B
-750C: 0D             DEC   C
-750D: 40             LD    B,B
-750E: 11 40 11       LD    DE,$1140
-7511: 40             LD    B,B
-7512: 0E 40          LD    C,#$40
-7514: 3F             CCF   
-7515: 40             LD    B,B
-7516: 00             NOP   
-7517: 40             LD    B,B
-7518: 0E 40          LD    C,#$40
-751A: 6A             LD    L,D
-751B: 40             LD    B,B
-751C: 00             NOP   
-751D: 40             LD    B,B
-751E: 0E 40          LD    C,#$40
-7520: 7C             LD    A,H
-7521: 40             LD    B,B
-7522: 88             ADC   A,B
-7523: 40             LD    B,B
-7524: 92             SUB   A,D
-7525: 40             LD    B,B
-7526: 9C             SBC   A,H
-7527: 40             LD    B,B
-7528: 00             NOP   
-7529: 40             LD    B,B
-752A: 0E 40          LD    C,#$40
-752C: 2B             DEC   HL
-752D: 42             LD    B,D
-752E: 00             NOP   
-752F: 40             LD    B,B
-7530: 0E 40          LD    C,#$40
-7532: 3F             CCF   
-7533: 42             LD    B,D
-7534: 00             NOP   
-7535: 40             LD    B,B
-7536: 0E 40          LD    C,#$40
-7538: 6A             LD    L,D
-7539: 42             LD    B,D
-753A: 00             NOP   
-753B: 40             LD    B,B
-753C: 0E 40          LD    C,#$40
-753E: B8             CP    A,B
-753F: 40             LD    B,B
-7540: 00             NOP   
-7541: 40             LD    B,B
-7542: 00             NOP   
-7543: 40             LD    B,B
-7544: 00             NOP   
-7545: 40             LD    B,B
-7546: 00             NOP   
-7547: 40             LD    B,B
-7548: 03             INC   BC
-7549: 40             LD    B,B
-754A: 00             NOP   
-754B: 40             LD    B,B
-754C: 0E 40          LD    C,#$40
-754E: 00             NOP   
-754F: 40             LD    B,B
-7550: 00             NOP   
-7551: 40             LD    B,B
-7552: 0E 40          LD    C,#$40
-7554: 3E 40          LD    A,#$40
-7556: 00             NOP   
-7557: 40             LD    B,B
-7558: 0E 40          LD    C,#$40
-755A: 6A             LD    L,D
-755B: 40             LD    B,B
-755C: 00             NOP   
-755D: 40             LD    B,B
-755E: 0E 40          LD    C,#$40
-7560: 7B             LD    A,E
-7561: 40             LD    B,B
-7562: 87             ADD   A,A
-7563: 40             LD    B,B
-7564: 91             SUB   A,C
-7565: 40             LD    B,B
-7566: 9B             SBC   A,E
-7567: 40             LD    B,B
-7568: 00             NOP   
-7569: 40             LD    B,B
-756A: 0E 40          LD    C,#$40
-756C: 2A 42 00       LD    HL,($0042)
-756F: 40             LD    B,B
-7570: 0E 40          LD    C,#$40
-7572: 3E 42          LD    A,#$42
-7574: 00             NOP   
-7575: 40             LD    B,B
-7576: 0E 40          LD    C,#$40
-7578: 69             LD    L,C
-7579: 42             LD    B,D
-757A: 00             NOP   
-757B: 40             LD    B,B
-757C: 0E 40          LD    C,#$40
-757E: 9D             SBC   A,L
-757F: 42             LD    B,D
-7580: 00             NOP   
-7581: 42             LD    B,D
-7582: 00             NOP   
-7583: 40             LD    B,B
-7584: 00             NOP   
-7585: 40             LD    B,B
-7586: 00             NOP   
-7587: 40             LD    B,B
-7588: 08             EX    AF,AF'
-7589: 40             LD    B,B
-758A: 00             NOP   
-758B: 40             LD    B,B
-758C: 0E 40          LD    C,#$40
-758E: 18 40          JR    $75D0
-
-7590: 00             NOP   
-7591: 40             LD    B,B
-7592: 0E 40          LD    C,#$40
-7594: 3D             DEC   A
-7595: 40             LD    B,B
-7596: 00             NOP   
-7597: 40             LD    B,B
-7598: 0E 40          LD    C,#$40
-759A: 69             LD    L,C
-759B: 40             LD    B,B
-759C: 00             NOP   
-759D: 40             LD    B,B
-759E: 0D             DEC   C
-759F: 40             LD    B,B
-75A0: 7A             LD    A,D
-75A1: 40             LD    B,B
-75A2: 86             ADD   A,(HL)
-75A3: 40             LD    B,B
-75A4: 90             SUB   A,B
-75A5: 40             LD    B,B
-75A6: 9A             SBC   A,D
-75A7: 40             LD    B,B
-75A8: 11 40 0E       LD    DE,$0E40
-75AB: 40             LD    B,B
-75AC: 29             ADD   HL,HL
-75AD: 42             LD    B,D
-75AE: 00             NOP   
-75AF: 40             LD    B,B
-75B0: 0E 40          LD    C,#$40
-75B2: 3D             DEC   A
-75B3: 42             LD    B,D
-75B4: 00             NOP   
-75B5: 40             LD    B,B
-75B6: 0E 40          LD    C,#$40
-75B8: 68             LD    L,B
-75B9: 42             LD    B,D
-75BA: 00             NOP   
-75BB: 40             LD    B,B
-75BC: 0E 40          LD    C,#$40
-75BE: B7             OR    A,A
-75BF: 40             LD    B,B
-75C0: 00             NOP   
-75C1: 40             LD    B,B
-75C2: 00             NOP   
-75C3: 40             LD    B,B
-75C4: 00             NOP   
-75C5: 40             LD    B,B
-75C6: 00             NOP   
-75C7: 40             LD    B,B
-75C8: 03             INC   BC
-75C9: 40             LD    B,B
-75CA: 00             NOP   
-75CB: 40             LD    B,B
-75CC: 0D             DEC   C
-75CD: 40             LD    B,B
-75CE: 11 40 11       LD    DE,$1140
-75D1: 40             LD    B,B
-75D2: 0D             DEC   C
-75D3: 40             LD    B,B
-75D4: 11 40 11       LD    DE,$1140
-75D7: 40             LD    B,B
-75D8: 0D             DEC   C
-75D9: 40             LD    B,B
-75DA: 11 40 11       LD    DE,$1140
-75DD: 40             LD    B,B
-75DE: 0E 40          LD    C,#$40
-75E0: 79             LD    A,C
-75E1: 40             LD    B,B
-75E2: 85             ADD   A,L
-75E3: 40             LD    B,B
-75E4: 8F             ADC   A,A
-75E5: 40             LD    B,B
-75E6: 99             SBC   A,C
-75E7: 40             LD    B,B
-75E8: 00             NOP   
-75E9: 40             LD    B,B
-75EA: 0D             DEC   C
-75EB: 40             LD    B,B
-75EC: 11 40 11       LD    DE,$1140
-75EF: 40             LD    B,B
-75F0: 0D             DEC   C
-75F1: 40             LD    B,B
-75F2: 11 40 11       LD    DE,$1140
-75F5: 40             LD    B,B
-75F6: 0D             DEC   C
-75F7: 40             LD    B,B
-75F8: 11 40 11       LD    DE,$1140
-75FB: 40             LD    B,B
-75FC: 0E 40          LD    C,#$40
-75FE: B6             OR    A,(HL)
-75FF: 40             LD    B,B
-7600: 00             NOP   
-7601: 40             LD    B,B
-7602: 00             NOP   
-7603: 40             LD    B,B
-7604: 00             NOP   
-7605: 40             LD    B,B
-7606: 00             NOP   
-7607: 40             LD    B,B
-7608: 03             INC   BC
-7609: 40             LD    B,B
-760A: 00             NOP   
-760B: 40             LD    B,B
-760C: 0E 40          LD    C,#$40
-760E: 00             NOP   
-760F: 40             LD    B,B
-7610: 00             NOP   
-7611: 40             LD    B,B
-7612: 0E 40          LD    C,#$40
-7614: 00             NOP   
-7615: 40             LD    B,B
-7616: 00             NOP   
-7617: 40             LD    B,B
-7618: 0E 40          LD    C,#$40
-761A: 00             NOP   
-761B: 40             LD    B,B
-761C: 00             NOP   
-761D: 40             LD    B,B
-761E: 0E 40          LD    C,#$40
-7620: 78             LD    A,B
-7621: 40             LD    B,B
-7622: 84             ADD   A,H
-7623: 40             LD    B,B
-7624: 8E             ADC   A,(HL)
-7625: 40             LD    B,B
-7626: 98             SBC   A,B
-7627: 40             LD    B,B
-7628: 00             NOP   
-7629: 40             LD    B,B
-762A: 0E 40          LD    C,#$40
-762C: 00             NOP   
-762D: 40             LD    B,B
-762E: 00             NOP   
-762F: 40             LD    B,B
-7630: 0E 40          LD    C,#$40
-7632: 00             NOP   
-7633: 40             LD    B,B
-7634: 00             NOP   
-7635: 40             LD    B,B
-7636: 0E 40          LD    C,#$40
-7638: 00             NOP   
-7639: 40             LD    B,B
-763A: 00             NOP   
-763B: 40             LD    B,B
-763C: 0E 40          LD    C,#$40
-763E: 9C             SBC   A,H
-763F: 42             LD    B,D
-7640: 00             NOP   
-7641: 42             LD    B,D
-7642: 00             NOP   
-7643: 40             LD    B,B
-7644: 00             NOP   
-7645: 40             LD    B,B
-7646: 00             NOP   
-7647: 40             LD    B,B
-7648: 03             INC   BC
-7649: 40             LD    B,B
-764A: 00             NOP   
-764B: 40             LD    B,B
-764C: 0E 40          LD    C,#$40
-764E: 17             RLA   
-764F: 40             LD    B,B
-7650: 00             NOP   
-7651: 40             LD    B,B
-7652: 0E 40          LD    C,#$40
-7654: 3C             INC   A
-7655: 40             LD    B,B
-7656: 00             NOP   
-7657: 40             LD    B,B
-7658: 0E 40          LD    C,#$40
-765A: 66             LD    H,(HL)
-765B: 40             LD    B,B
-765C: 00             NOP   
-765D: 40             LD    B,B
-765E: 0E 40          LD    C,#$40
-7660: 77             LD    (HL),A
-7661: 40             LD    B,B
-7662: 83             ADD   A,E
-7663: 40             LD    B,B
-7664: 8D             ADC   A,L
-7665: 40             LD    B,B
-7666: 97             SUB   A,A
-7667: 40             LD    B,B
-7668: 00             NOP   
-7669: 40             LD    B,B
-766A: 0E 40          LD    C,#$40
-766C: 18 40          JR    $76AE
-
-766E: 00             NOP   
-766F: 40             LD    B,B
-7670: 0E 40          LD    C,#$40
-7672: 6B             LD    L,E
-7673: 42             LD    B,D
-7674: 00             NOP   
-7675: 40             LD    B,B
-7676: 0E 40          LD    C,#$40
-7678: 1B             DEC   DE
-7679: 42             LD    B,D
-767A: 00             NOP   
-767B: 40             LD    B,B
-767C: 0E 40          LD    C,#$40
-767E: B5             OR    A,L
-767F: 40             LD    B,B
-7680: 00             NOP   
-7681: 40             LD    B,B
-7682: 00             NOP   
-7683: 40             LD    B,B
-7684: 00             NOP   
-7685: 40             LD    B,B
-7686: 00             NOP   
-7687: 40             LD    B,B
-7688: 03             INC   BC
-7689: 40             LD    B,B
-768A: 00             NOP   
-768B: 40             LD    B,B
-768C: 0D             DEC   C
-768D: 40             LD    B,B
-768E: 11 40 11       LD    DE,$1140
-7691: 40             LD    B,B
-7692: 0D             DEC   C
-7693: 40             LD    B,B
-7694: 11 40 11       LD    DE,$1140
-7697: 40             LD    B,B
-7698: 0D             DEC   C
-7699: 40             LD    B,B
-769A: 11 40 11       LD    DE,$1140
-769D: 40             LD    B,B
-769E: 0D             DEC   C
-769F: 40             LD    B,B
-76A0: 11 40 11       LD    DE,$1140
-76A3: 40             LD    B,B
-76A4: 11 40 11       LD    DE,$1140
-76A7: 40             LD    B,B
-76A8: 11 40 0D       LD    DE,$0D40
-76AB: 40             LD    B,B
-76AC: 11 40 11       LD    DE,$1140
-76AF: 40             LD    B,B
-76B0: 0E 40          LD    C,#$40
-76B2: 6C             LD    L,H
-76B3: 42             LD    B,D
-76B4: 00             NOP   
-76B5: 40             LD    B,B
-76B6: 0E 40          LD    C,#$40
-76B8: 1A             LD    A,(DE)
-76B9: 42             LD    B,D
-76BA: 00             NOP   
-76BB: 40             LD    B,B
-76BC: 0E 40          LD    C,#$40
-76BE: 9B             SBC   A,E
-76BF: 42             LD    B,D
-76C0: 00             NOP   
-76C1: 42             LD    B,D
-76C2: 00             NOP   
-76C3: 40             LD    B,B
-76C4: 00             NOP   
-76C5: 40             LD    B,B
-76C6: 00             NOP   
-76C7: 40             LD    B,B
-76C8: 06 40          LD    B,#$40
-76CA: 00             NOP   
-76CB: 40             LD    B,B
-76CC: 0E 40          LD    C,#$40
-76CE: 00             NOP   
-76CF: 40             LD    B,B
-76D0: 00             NOP   
-76D1: 40             LD    B,B
-76D2: 00             NOP   
-76D3: 40             LD    B,B
-76D4: 00             NOP   
-76D5: 40             LD    B,B
-76D6: 00             NOP   
-76D7: 40             LD    B,B
-76D8: 0E 40          LD    C,#$40
-76DA: 00             NOP   
-76DB: 40             LD    B,B
-76DC: 00             NOP   
-76DD: 40             LD    B,B
-76DE: 0E 40          LD    C,#$40
-76E0: 00             NOP   
-76E1: 40             LD    B,B
-76E2: 00             NOP   
-76E3: 40             LD    B,B
-76E4: 00             NOP   
-76E5: 40             LD    B,B
-76E6: 00             NOP   
-76E7: 40             LD    B,B
-76E8: 00             NOP   
-76E9: 40             LD    B,B
-76EA: 0E 40          LD    C,#$40
-76EC: 00             NOP   
-76ED: 40             LD    B,B
-76EE: 00             NOP   
-76EF: 40             LD    B,B
-76F0: 0E 40          LD    C,#$40
-76F2: 6D             LD    L,L
-76F3: 42             LD    B,D
-76F4: 00             NOP   
-76F5: 40             LD    B,B
-76F6: 0D             DEC   C
-76F7: 40             LD    B,B
-76F8: 11 40 11       LD    DE,$1140
-76FB: 40             LD    B,B
-76FC: 0E 40          LD    C,#$40
-76FE: B4             OR    A,H
-76FF: 40             LD    B,B
-7700: 0E 40          LD    C,#$40
-7702: 0E 40          LD    C,#$40
-7704: 00             NOP   
-7705: 40             LD    B,B
-7706: 00             NOP   
-7707: 40             LD    B,B
-7708: 07             RLCA  
-7709: 40             LD    B,B
-770A: 00             NOP   
-770B: 40             LD    B,B
-770C: 0E 40          LD    C,#$40
-770E: 16 40          LD    D,#$40
-7710: 22 40 BA       LD    ($BA40),HL
-7713: 40             LD    B,B
-7714: 27             DAA   
-7715: 40             LD    B,B
-7716: 00             NOP   
-7717: 40             LD    B,B
-7718: 0E 40          LD    C,#$40
-771A: 67             LD    H,A
-771B: 40             LD    B,B
-771C: 00             NOP   
-771D: 40             LD    B,B
-771E: 0E 40          LD    C,#$40
-7720: 76             HALT  
-
-7721: 40             LD    B,B
-7722: 82             ADD   A,D
-7723: 40             LD    B,B
-7724: 8C             ADC   A,H
-7725: 40             LD    B,B
-7726: 96             SUB   A,(HL)
-7727: 40             LD    B,B
-7728: 00             NOP   
-7729: 40             LD    B,B
-772A: 0E 40          LD    C,#$40
-772C: 17             RLA   
-772D: 40             LD    B,B
-772E: 00             NOP   
-772F: 40             LD    B,B
-7730: 0E 40          LD    C,#$40
-7732: 6E             LD    L,(HL)
-7733: 42             LD    B,D
-7734: 00             NOP   
-7735: 40             LD    B,B
-7736: 0E 40          LD    C,#$40
-7738: 00             NOP   
-7739: 40             LD    B,B
-773A: 00             NOP   
-773B: 40             LD    B,B
-773C: 0E 40          LD    C,#$40
-773E: 98             SBC   A,B
-773F: 42             LD    B,D
-7740: 00             NOP   
-7741: 42             LD    B,D
-7742: 00             NOP   
-7743: 40             LD    B,B
-7744: 00             NOP   
-7745: 40             LD    B,B
-7746: 00             NOP   
-7747: 40             LD    B,B
-7748: 03             INC   BC
-7749: 40             LD    B,B
-774A: 00             NOP   
-774B: 40             LD    B,B
-774C: 0E 40          LD    C,#$40
-774E: 15             DEC   D
-774F: 40             LD    B,B
-7750: 00             NOP   
-7751: 40             LD    B,B
-7752: 11 40 11       LD    DE,$1140
-7755: 40             LD    B,B
-7756: 11 40 0D       LD    DE,$0D40
-7759: 40             LD    B,B
-775A: 11 40 11       LD    DE,$1140
-775D: 40             LD    B,B
-775E: 0D             DEC   C
-775F: 40             LD    B,B
-7760: 11 40 11       LD    DE,$1140
-7763: 40             LD    B,B
-7764: 11 40 11       LD    DE,$1140
-7767: 40             LD    B,B
-7768: 11 40 0D       LD    DE,$0D40
-776B: 40             LD    B,B
-776C: 11 40 11       LD    DE,$1140
-776F: 40             LD    B,B
-7770: 0D             DEC   C
-7771: 40             LD    B,B
-7772: 11 40 11       LD    DE,$1140
-7775: 40             LD    B,B
-7776: 0E 40          LD    C,#$40
-7778: 1C             INC   E
-7779: 42             LD    B,D
-777A: 00             NOP   
-777B: 40             LD    B,B
-777C: 0E 40          LD    C,#$40
-777E: 97             SUB   A,A
-777F: 42             LD    B,D
-7780: 00             NOP   
-7781: 42             LD    B,D
-7782: 00             NOP   
-7783: 40             LD    B,B
-7784: 00             NOP   
-7785: 40             LD    B,B
-7786: 00             NOP   
-7787: 40             LD    B,B
-7788: 06 40          LD    B,#$40
-778A: 00             NOP   
-778B: 40             LD    B,B
-778C: 0E 40          LD    C,#$40
-778E: 14             INC   D
-778F: 40             LD    B,B
-7790: 00             NOP   
-7791: 40             LD    B,B
-7792: 0E 40          LD    C,#$40
-7794: 00             NOP   
-7795: 40             LD    B,B
-7796: 00             NOP   
-7797: 40             LD    B,B
-7798: 0E 40          LD    C,#$40
-779A: 00             NOP   
-779B: 40             LD    B,B
-779C: 00             NOP   
-779D: 40             LD    B,B
-779E: 0E 40          LD    C,#$40
-77A0: 00             NOP   
-77A1: 40             LD    B,B
-77A2: 00             NOP   
-77A3: 40             LD    B,B
-77A4: 0E 40          LD    C,#$40
-77A6: 00             NOP   
-77A7: 40             LD    B,B
-77A8: 00             NOP   
-77A9: 40             LD    B,B
-77AA: 0E 40          LD    C,#$40
-77AC: 00             NOP   
-77AD: 40             LD    B,B
-77AE: 00             NOP   
-77AF: 40             LD    B,B
-77B0: 0E 40          LD    C,#$40
-77B2: 00             NOP   
-77B3: 40             LD    B,B
-77B4: 00             NOP   
-77B5: 40             LD    B,B
-77B6: 0E 40          LD    C,#$40
-77B8: 1D             DEC   E
-77B9: 42             LD    B,D
-77BA: 00             NOP   
-77BB: 40             LD    B,B
-77BC: 0E 40          LD    C,#$40
-77BE: 96             SUB   A,(HL)
-77BF: 42             LD    B,D
-77C0: 00             NOP   
-77C1: 42             LD    B,D
-77C2: 00             NOP   
-77C3: 40             LD    B,B
-77C4: 00             NOP   
-77C5: 40             LD    B,B
-77C6: 00             NOP   
-77C7: 40             LD    B,B
-77C8: 05             DEC   B
-77C9: 40             LD    B,B
-77CA: 00             NOP   
-77CB: 40             LD    B,B
-77CC: 0E 40          LD    C,#$40
-77CE: 13             INC   DE
-77CF: 40             LD    B,B
-77D0: 00             NOP   
-77D1: 40             LD    B,B
-77D2: 0E 40          LD    C,#$40
-77D4: 3A 40 00       LD    A,($0040)
-77D7: 40             LD    B,B
-77D8: 0E 40          LD    C,#$40
-77DA: 66             LD    H,(HL)
-77DB: 40             LD    B,B
-77DC: 00             NOP   
-77DD: 40             LD    B,B
-77DE: 0E 40          LD    C,#$40
-77E0: 66             LD    H,(HL)
-77E1: 40             LD    B,B
-77E2: 00             NOP   
-77E3: 40             LD    B,B
-77E4: 0E 40          LD    C,#$40
-77E6: 66             LD    H,(HL)
-77E7: 40             LD    B,B
-77E8: 00             NOP   
-77E9: 40             LD    B,B
-77EA: 0E 40          LD    C,#$40
-77EC: A3             AND   A,E
-77ED: 40             LD    B,B
-77EE: 00             NOP   
-77EF: 40             LD    B,B
-77F0: 0E 40          LD    C,#$40
-77F2: A7             AND   A,A
-77F3: 40             LD    B,B
-77F4: 00             NOP   
-77F5: 40             LD    B,B
-77F6: 0E 40          LD    C,#$40
-77F8: 1E 42          LD    E,#$42
-77FA: 00             NOP   
-77FB: 40             LD    B,B
-77FC: 0E 40          LD    C,#$40
-77FE: B3             OR    A,E
-77FF: 40             LD    B,B
-7800: 00             NOP   
-7801: 40             LD    B,B
-7802: 00             NOP   
-7803: 40             LD    B,B
-7804: 00             NOP   
-7805: 40             LD    B,B
-7806: 00             NOP   
-7807: 40             LD    B,B
-7808: 03             INC   BC
-7809: 40             LD    B,B
-780A: 00             NOP   
-780B: 40             LD    B,B
-780C: 0D             DEC   C
-780D: 40             LD    B,B
-780E: 11 40 11       LD    DE,$1140
-7811: 40             LD    B,B
-7812: 0D             DEC   C
-7813: 40             LD    B,B
-7814: 11 40 11       LD    DE,$1140
-7817: 40             LD    B,B
-7818: 0D             DEC   C
-7819: 40             LD    B,B
-781A: 11 40 11       LD    DE,$1140
-781D: 40             LD    B,B
-781E: 0D             DEC   C
-781F: 40             LD    B,B
-7820: 11 40 11       LD    DE,$1140
-7823: 40             LD    B,B
-7824: 0D             DEC   C
-7825: 40             LD    B,B
-7826: 11 40 11       LD    DE,$1140
-7829: 40             LD    B,B
-782A: 0E 40          LD    C,#$40
-782C: A2             AND   A,D
-782D: 40             LD    B,B
-782E: 00             NOP   
-782F: 40             LD    B,B
-7830: 0D             DEC   C
-7831: 40             LD    B,B
-7832: 11 40 11       LD    DE,$1140
-7835: 40             LD    B,B
-7836: 0D             DEC   C
-7837: 40             LD    B,B
-7838: 11 40 11       LD    DE,$1140
-783B: 40             LD    B,B
-783C: 0E 40          LD    C,#$40
-783E: B2             OR    A,D
-783F: 40             LD    B,B
-7840: 00             NOP   
-7841: 40             LD    B,B
-7842: 00             NOP   
-7843: 40             LD    B,B
-7844: 00             NOP   
-7845: 40             LD    B,B
-7846: 00             NOP   
-7847: 40             LD    B,B
-7848: 04             INC   B
-7849: 40             LD    B,B
-784A: 00             NOP   
-784B: 40             LD    B,B
-784C: 0E 40          LD    C,#$40
-784E: 00             NOP   
-784F: 40             LD    B,B
-7850: 00             NOP   
-7851: 40             LD    B,B
-7852: 00             NOP   
-7853: 40             LD    B,B
-7854: 0E 40          LD    C,#$40
-7856: 00             NOP   
-7857: 40             LD    B,B
-7858: 00             NOP   
-7859: 40             LD    B,B
-785A: 00             NOP   
-785B: 40             LD    B,B
-785C: 00             NOP   
-785D: 40             LD    B,B
-785E: 0E 40          LD    C,#$40
-7860: 00             NOP   
-7861: 40             LD    B,B
-7862: 00             NOP   
-7863: 40             LD    B,B
-7864: 00             NOP   
-7865: 40             LD    B,B
-7866: 00             NOP   
-7867: 40             LD    B,B
-7868: 00             NOP   
-7869: 40             LD    B,B
-786A: 0E 40          LD    C,#$40
-786C: A1             AND   A,C
-786D: 40             LD    B,B
-786E: 00             NOP   
-786F: 40             LD    B,B
-7870: 00             NOP   
-7871: 40             LD    B,B
-7872: 00             NOP   
-7873: 40             LD    B,B
-7874: 00             NOP   
-7875: 40             LD    B,B
-7876: 0E 40          LD    C,#$40
-7878: 00             NOP   
-7879: 40             LD    B,B
-787A: 00             NOP   
-787B: 40             LD    B,B
-787C: 0E 40          LD    C,#$40
-787E: 96             SUB   A,(HL)
-787F: 42             LD    B,D
-7880: 00             NOP   
-7881: 42             LD    B,D
-7882: 00             NOP   
-7883: 40             LD    B,B
-7884: 00             NOP   
-7885: 40             LD    B,B
-7886: 00             NOP   
-7887: 40             LD    B,B
-7888: 03             INC   BC
-7889: 40             LD    B,B
-788A: 00             NOP   
-788B: 40             LD    B,B
-788C: 0E 40          LD    C,#$40
-788E: 21 40 24       LD    HL,$2440
-7891: 40             LD    B,B
-7892: 00             NOP   
-7893: 40             LD    B,B
-7894: 0E 40          LD    C,#$40
-7896: 5E             LD    E,(HL)
-7897: 40             LD    B,B
-7898: 61             LD    H,C
-7899: 40             LD    B,B
-789A: 65             LD    H,L
-789B: 40             LD    B,B
-789C: 00             NOP   
-789D: 40             LD    B,B
-789E: 0E 40          LD    C,#$40
-78A0: 75             LD    (HL),L
-78A1: 40             LD    B,B
-78A2: 81             ADD   A,C
-78A3: 40             LD    B,B
-78A4: 8B             ADC   A,E
-78A5: 40             LD    B,B
-78A6: 95             SUB   A,L
-78A7: 40             LD    B,B
-78A8: 00             NOP   
-78A9: 40             LD    B,B
-78AA: 0E 40          LD    C,#$40
-78AC: A0             AND   A,B
-78AD: 40             LD    B,B
-78AE: A4             AND   A,H
-78AF: 40             LD    B,B
-78B0: A5             AND   A,L
-78B1: 40             LD    B,B
-78B2: A6             AND   A,(HL)
-78B3: 40             LD    B,B
-78B4: 00             NOP   
-78B5: 40             LD    B,B
-78B6: 0E 40          LD    C,#$40
-78B8: AA             XOR   A,D
-78B9: 40             LD    B,B
-78BA: 00             NOP   
-78BB: 40             LD    B,B
-78BC: 0E 40          LD    C,#$40
-78BE: B1             OR    A,C
-78BF: 40             LD    B,B
-78C0: 00             NOP   
-78C1: 40             LD    B,B
-78C2: 00             NOP   
-78C3: 40             LD    B,B
-78C4: 00             NOP   
-78C5: 40             LD    B,B
-78C6: 00             NOP   
-78C7: 40             LD    B,B
-78C8: 03             INC   BC
-78C9: 40             LD    B,B
-78CA: 00             NOP   
-78CB: 40             LD    B,B
-78CC: 0D             DEC   C
-78CD: 40             LD    B,B
-78CE: 11 40 11       LD    DE,$1140
-78D1: 40             LD    B,B
-78D2: 11 40 0D       LD    DE,$0D40
-78D5: 40             LD    B,B
-78D6: 11 40 11       LD    DE,$1140
-78D9: 40             LD    B,B
-78DA: 11 40 11       LD    DE,$1140
-78DD: 40             LD    B,B
-78DE: 0D             DEC   C
-78DF: 40             LD    B,B
-78E0: 11 40 11       LD    DE,$1140
-78E3: 40             LD    B,B
-78E4: 11 40 11       LD    DE,$1140
-78E7: 40             LD    B,B
-78E8: 11 40 0D       LD    DE,$0D40
-78EB: 40             LD    B,B
-78EC: 11 40 11       LD    DE,$1140
-78EF: 40             LD    B,B
-78F0: 11 40 11       LD    DE,$1140
-78F3: 40             LD    B,B
-78F4: 11 40 0E       LD    DE,$0E40
-78F7: 40             LD    B,B
-78F8: A9             XOR   A,C
-78F9: 40             LD    B,B
-78FA: 00             NOP   
-78FB: 40             LD    B,B
-78FC: 0E 40          LD    C,#$40
-78FE: B0             OR    A,B
-78FF: 40             LD    B,B
-7900: 00             NOP   
-7901: 40             LD    B,B
-7902: 00             NOP   
-7903: 40             LD    B,B
-7904: 00             NOP   
-7905: 40             LD    B,B
-7906: 00             NOP   
-7907: 40             LD    B,B
-7908: 02             LD    (BC),A
-7909: 40             LD    B,B
-790A: 00             NOP   
-790B: 40             LD    B,B
-790C: 00             NOP   
-790D: 40             LD    B,B
-790E: 00             NOP   
-790F: 40             LD    B,B
-7910: 00             NOP   
-7911: 40             LD    B,B
-7912: 00             NOP   
-7913: 40             LD    B,B
-7914: 00             NOP   
-7915: 40             LD    B,B
-7916: 00             NOP   
-7917: 40             LD    B,B
-7918: 00             NOP   
-7919: 40             LD    B,B
-791A: 00             NOP   
-791B: 40             LD    B,B
-791C: 00             NOP   
-791D: 40             LD    B,B
-791E: 00             NOP   
-791F: 40             LD    B,B
-7920: 00             NOP   
-7921: 40             LD    B,B
-7922: 00             NOP   
-7923: 40             LD    B,B
-7924: 00             NOP   
-7925: 40             LD    B,B
-7926: 00             NOP   
-7927: 40             LD    B,B
-7928: 00             NOP   
-7929: 40             LD    B,B
-792A: 00             NOP   
-792B: 40             LD    B,B
-792C: 00             NOP   
-792D: 40             LD    B,B
-792E: 00             NOP   
-792F: 40             LD    B,B
-7930: 00             NOP   
-7931: 40             LD    B,B
-7932: 00             NOP   
-7933: 40             LD    B,B
-7934: 00             NOP   
-7935: 40             LD    B,B
-7936: 00             NOP   
-7937: 40             LD    B,B
-7938: A8             XOR   A,B
-7939: 40             LD    B,B
-793A: 00             NOP   
-793B: 40             LD    B,B
-793C: 00             NOP   
-793D: 40             LD    B,B
-793E: AF             XOR   A,A
-793F: 40             LD    B,B
-7940: 00             NOP   
-7941: 40             LD    B,B
-7942: 00             NOP   
-7943: 40             LD    B,B
-7944: 00             NOP   
-7945: 40             LD    B,B
-7946: 00             NOP   
-7947: 40             LD    B,B
-7948: 01 40 0A       LD    BC,$0A40
-794B: 40             LD    B,B
-794C: 0C             INC   C
-794D: 40             LD    B,B
-794E: 10 40          DJNZ  $7990
-
-7950: 20 40          JR    NZ,$7992
-
-7952: 23             INC   HL
-7953: 40             LD    B,B
-7954: 2F             CPL   
-7955: 40             LD    B,B
-7956: 5D             LD    E,L
-7957: 40             LD    B,B
-7958: 60             LD    H,B
-7959: 40             LD    B,B
-795A: 64             LD    H,H
-795B: 40             LD    B,B
-795C: 70             LD    (HL),B
-795D: 40             LD    B,B
-795E: 72             LD    (HL),D
-795F: 40             LD    B,B
-7960: 74             LD    (HL),H
-7961: 40             LD    B,B
-7962: 80             ADD   A,B
-7963: 40             LD    B,B
-7964: 8A             ADC   A,D
-7965: 40             LD    B,B
-7966: 94             SUB   A,H
-7967: 40             LD    B,B
-7968: 9F             SBC   A,A
-7969: 40             LD    B,B
-796A: 10 42          DJNZ  $79AE
-
-796C: 20 42          JR    NZ,$79B0
-
-796E: 23             INC   HL
-796F: 42             LD    B,D
-7970: 2F             CPL   
-7971: 42             LD    B,D
-7972: 5D             LD    E,L
-7973: 42             LD    B,D
-7974: 60             LD    H,B
-7975: 40             LD    B,B
-7976: 64             LD    H,H
-7977: 42             LD    B,D
-7978: 64             LD    H,H
-7979: 42             LD    B,D
-797A: AC             XOR   A,H
-797B: 40             LD    B,B
-797C: AB             XOR   A,E
-797D: 40             LD    B,B
-797E: AD             XOR   A,L
-797F: 40             LD    B,B
 7980: 00             NOP   
 7981: 00             NOP   
 7982: 01 C2 01       LD    BC,$01C2
@@ -21276,1932 +16928,132 @@ ORG $0000
 79FA: 00             NOP   
 79FB: 08             EX    AF,AF'
 79FC: 00             NOP   
-79FD: 38 01          JR    C,$7A00
+79FD: 38 01          JR    C,BACKGROUND_FOR_4
 
 79FF: C0             RET   NZ
 
-7A00: 89             ADC   A,C
-7A01: 41             LD    B,C
-7A02: 89             ADC   A,C
-7A03: 41             LD    B,C
-7A04: 89             ADC   A,C
-7A05: 41             LD    B,C
-7A06: 89             ADC   A,C
-7A07: 41             LD    B,C
-7A08: 8D             ADC   A,L
-7A09: 41             LD    B,C
-7A0A: 8C             ADC   A,H
-7A0B: 41             LD    B,C
-7A0C: 8D             ADC   A,L
-7A0D: 41             LD    B,C
-7A0E: 8C             ADC   A,H
-7A0F: 41             LD    B,C
-7A10: 8D             ADC   A,L
-7A11: 41             LD    B,C
-7A12: 8C             ADC   A,H
-7A13: 41             LD    B,C
-7A14: 8D             ADC   A,L
-7A15: 41             LD    B,C
-7A16: 8C             ADC   A,H
-7A17: 41             LD    B,C
-7A18: 8D             ADC   A,L
-7A19: 41             LD    B,C
-7A1A: 8C             ADC   A,H
-7A1B: 41             LD    B,C
-7A1C: 8D             ADC   A,L
-7A1D: 41             LD    B,C
-7A1E: 8C             ADC   A,H
-7A1F: 41             LD    B,C
-7A20: 8D             ADC   A,L
-7A21: 41             LD    B,C
-7A22: 8C             ADC   A,H
-7A23: 41             LD    B,C
-7A24: 8D             ADC   A,L
-7A25: 41             LD    B,C
-7A26: 8C             ADC   A,H
-7A27: 41             LD    B,C
-7A28: 8D             ADC   A,L
-7A29: 41             LD    B,C
-7A2A: 8C             ADC   A,H
-7A2B: 41             LD    B,C
-7A2C: 8D             ADC   A,L
-7A2D: 41             LD    B,C
-7A2E: 8C             ADC   A,H
-7A2F: 41             LD    B,C
-7A30: 8D             ADC   A,L
-7A31: 41             LD    B,C
-7A32: 8C             ADC   A,H
-7A33: 41             LD    B,C
-7A34: 8D             ADC   A,L
-7A35: 41             LD    B,C
-7A36: 8C             ADC   A,H
-7A37: 41             LD    B,C
-7A38: 8D             ADC   A,L
-7A39: 41             LD    B,C
-7A3A: 8C             ADC   A,H
-7A3B: 41             LD    B,C
-7A3C: 8D             ADC   A,L
-7A3D: 41             LD    B,C
-7A3E: 8C             ADC   A,H
-7A3F: 41             LD    B,C
-7A40: 89             ADC   A,C
-7A41: 41             LD    B,C
-7A42: 89             ADC   A,C
-7A43: 41             LD    B,C
-7A44: 89             ADC   A,C
-7A45: 41             LD    B,C
-7A46: 89             ADC   A,C
-7A47: 41             LD    B,C
-7A48: 8C             ADC   A,H
-7A49: 41             LD    B,C
-7A4A: 8D             ADC   A,L
-7A4B: 41             LD    B,C
-7A4C: 8C             ADC   A,H
-7A4D: 41             LD    B,C
-7A4E: 8D             ADC   A,L
-7A4F: 41             LD    B,C
-7A50: 8C             ADC   A,H
-7A51: 41             LD    B,C
-7A52: 8D             ADC   A,L
-7A53: 41             LD    B,C
-7A54: 8C             ADC   A,H
-7A55: 41             LD    B,C
-7A56: 8D             ADC   A,L
-7A57: 41             LD    B,C
-7A58: 8C             ADC   A,H
-7A59: 41             LD    B,C
-7A5A: 8D             ADC   A,L
-7A5B: 41             LD    B,C
-7A5C: 8C             ADC   A,H
-7A5D: 41             LD    B,C
-7A5E: 8D             ADC   A,L
-7A5F: 41             LD    B,C
-7A60: 8C             ADC   A,H
-7A61: 41             LD    B,C
-7A62: 8D             ADC   A,L
-7A63: 41             LD    B,C
-7A64: 8C             ADC   A,H
-7A65: 41             LD    B,C
-7A66: 8D             ADC   A,L
-7A67: 41             LD    B,C
-7A68: 8C             ADC   A,H
-7A69: 41             LD    B,C
-7A6A: 8D             ADC   A,L
-7A6B: 41             LD    B,C
-7A6C: 8C             ADC   A,H
-7A6D: 41             LD    B,C
-7A6E: 8D             ADC   A,L
-7A6F: 41             LD    B,C
-7A70: 8C             ADC   A,H
-7A71: 41             LD    B,C
-7A72: 8D             ADC   A,L
-7A73: 41             LD    B,C
-7A74: 8C             ADC   A,H
-7A75: 41             LD    B,C
-7A76: 8D             ADC   A,L
-7A77: 41             LD    B,C
-7A78: 8C             ADC   A,H
-7A79: 41             LD    B,C
-7A7A: 8D             ADC   A,L
-7A7B: 41             LD    B,C
-7A7C: 8C             ADC   A,H
-7A7D: 41             LD    B,C
-7A7E: 8D             ADC   A,L
-7A7F: 41             LD    B,C
-7A80: 89             ADC   A,C
-7A81: 41             LD    B,C
-7A82: 89             ADC   A,C
-7A83: 41             LD    B,C
-7A84: 89             ADC   A,C
-7A85: 41             LD    B,C
-7A86: 89             ADC   A,C
-7A87: 41             LD    B,C
-7A88: 8D             ADC   A,L
-7A89: 41             LD    B,C
-7A8A: 8C             ADC   A,H
-7A8B: 41             LD    B,C
-7A8C: 8D             ADC   A,L
-7A8D: 41             LD    B,C
-7A8E: 8C             ADC   A,H
-7A8F: 41             LD    B,C
-7A90: 8D             ADC   A,L
-7A91: 41             LD    B,C
-7A92: 8C             ADC   A,H
-7A93: 41             LD    B,C
-7A94: 8D             ADC   A,L
-7A95: 41             LD    B,C
-7A96: 8C             ADC   A,H
-7A97: 41             LD    B,C
-7A98: 8D             ADC   A,L
-7A99: 41             LD    B,C
-7A9A: 8C             ADC   A,H
-7A9B: 41             LD    B,C
-7A9C: 8D             ADC   A,L
-7A9D: 41             LD    B,C
-7A9E: 8C             ADC   A,H
-7A9F: 41             LD    B,C
-7AA0: 8D             ADC   A,L
-7AA1: 41             LD    B,C
-7AA2: 8C             ADC   A,H
-7AA3: 41             LD    B,C
-7AA4: 8D             ADC   A,L
-7AA5: 41             LD    B,C
-7AA6: 8C             ADC   A,H
-7AA7: 41             LD    B,C
-7AA8: 8D             ADC   A,L
-7AA9: 41             LD    B,C
-7AAA: 8C             ADC   A,H
-7AAB: 41             LD    B,C
-7AAC: 8D             ADC   A,L
-7AAD: 41             LD    B,C
-7AAE: 8C             ADC   A,H
-7AAF: 41             LD    B,C
-7AB0: 8D             ADC   A,L
-7AB1: 41             LD    B,C
-7AB2: 8C             ADC   A,H
-7AB3: 41             LD    B,C
-7AB4: 8D             ADC   A,L
-7AB5: 41             LD    B,C
-7AB6: 8C             ADC   A,H
-7AB7: 41             LD    B,C
-7AB8: 8D             ADC   A,L
-7AB9: 41             LD    B,C
-7ABA: 8C             ADC   A,H
-7ABB: 41             LD    B,C
-7ABC: 8D             ADC   A,L
-7ABD: 41             LD    B,C
-7ABE: 8C             ADC   A,H
-7ABF: 41             LD    B,C
-7AC0: 89             ADC   A,C
-7AC1: 41             LD    B,C
-7AC2: 89             ADC   A,C
-7AC3: 41             LD    B,C
-7AC4: 89             ADC   A,C
-7AC5: 41             LD    B,C
-7AC6: 89             ADC   A,C
-7AC7: 41             LD    B,C
-7AC8: 8C             ADC   A,H
-7AC9: 41             LD    B,C
-7ACA: 8D             ADC   A,L
-7ACB: 41             LD    B,C
-7ACC: 8C             ADC   A,H
-7ACD: 41             LD    B,C
-7ACE: 8D             ADC   A,L
-7ACF: 41             LD    B,C
-7AD0: 8C             ADC   A,H
-7AD1: 41             LD    B,C
-7AD2: 8D             ADC   A,L
-7AD3: 41             LD    B,C
-7AD4: 8C             ADC   A,H
-7AD5: 41             LD    B,C
-7AD6: 8D             ADC   A,L
-7AD7: 41             LD    B,C
-7AD8: 8C             ADC   A,H
-7AD9: 41             LD    B,C
-7ADA: 8D             ADC   A,L
-7ADB: 41             LD    B,C
-7ADC: 8C             ADC   A,H
-7ADD: 41             LD    B,C
-7ADE: 8D             ADC   A,L
-7ADF: 41             LD    B,C
-7AE0: 8C             ADC   A,H
-7AE1: 41             LD    B,C
-7AE2: 8D             ADC   A,L
-7AE3: 41             LD    B,C
-7AE4: 8C             ADC   A,H
-7AE5: 41             LD    B,C
-7AE6: 8D             ADC   A,L
-7AE7: 41             LD    B,C
-7AE8: 8C             ADC   A,H
-7AE9: 41             LD    B,C
-7AEA: 8D             ADC   A,L
-7AEB: 41             LD    B,C
-7AEC: 8C             ADC   A,H
-7AED: 41             LD    B,C
-7AEE: 8D             ADC   A,L
-7AEF: 41             LD    B,C
-7AF0: 8C             ADC   A,H
-7AF1: 41             LD    B,C
-7AF2: 8D             ADC   A,L
-7AF3: 41             LD    B,C
-7AF4: 8C             ADC   A,H
-7AF5: 41             LD    B,C
-7AF6: 8D             ADC   A,L
-7AF7: 41             LD    B,C
-7AF8: 8C             ADC   A,H
-7AF9: 41             LD    B,C
-7AFA: 8D             ADC   A,L
-7AFB: 41             LD    B,C
-7AFC: 8C             ADC   A,H
-7AFD: 41             LD    B,C
-7AFE: 8D             ADC   A,L
-7AFF: 41             LD    B,C
-7B00: 89             ADC   A,C
-7B01: 41             LD    B,C
-7B02: 89             ADC   A,C
-7B03: 41             LD    B,C
-7B04: 89             ADC   A,C
-7B05: 41             LD    B,C
-7B06: 89             ADC   A,C
-7B07: 41             LD    B,C
-7B08: 8D             ADC   A,L
-7B09: 41             LD    B,C
-7B0A: 8C             ADC   A,H
-7B0B: 41             LD    B,C
-7B0C: 8D             ADC   A,L
-7B0D: 41             LD    B,C
-7B0E: 8C             ADC   A,H
-7B0F: 41             LD    B,C
-7B10: 8D             ADC   A,L
-7B11: 41             LD    B,C
-7B12: 8C             ADC   A,H
-7B13: 41             LD    B,C
-7B14: 8D             ADC   A,L
-7B15: 41             LD    B,C
-7B16: 8C             ADC   A,H
-7B17: 41             LD    B,C
-7B18: 8D             ADC   A,L
-7B19: 41             LD    B,C
-7B1A: 8C             ADC   A,H
-7B1B: 41             LD    B,C
-7B1C: 8D             ADC   A,L
-7B1D: 41             LD    B,C
-7B1E: 8C             ADC   A,H
-7B1F: 41             LD    B,C
-7B20: 8D             ADC   A,L
-7B21: 41             LD    B,C
-7B22: 8C             ADC   A,H
-7B23: 41             LD    B,C
-7B24: 8D             ADC   A,L
-7B25: 41             LD    B,C
-7B26: 8C             ADC   A,H
-7B27: 41             LD    B,C
-7B28: 8D             ADC   A,L
-7B29: 41             LD    B,C
-7B2A: 8C             ADC   A,H
-7B2B: 41             LD    B,C
-7B2C: 8D             ADC   A,L
-7B2D: 41             LD    B,C
-7B2E: 8C             ADC   A,H
-7B2F: 41             LD    B,C
-7B30: 8D             ADC   A,L
-7B31: 41             LD    B,C
-7B32: 8C             ADC   A,H
-7B33: 41             LD    B,C
-7B34: 8D             ADC   A,L
-7B35: 41             LD    B,C
-7B36: 8C             ADC   A,H
-7B37: 41             LD    B,C
-7B38: 8D             ADC   A,L
-7B39: 41             LD    B,C
-7B3A: 8C             ADC   A,H
-7B3B: 41             LD    B,C
-7B3C: 8D             ADC   A,L
-7B3D: 41             LD    B,C
-7B3E: 8C             ADC   A,H
-7B3F: 41             LD    B,C
-7B40: 89             ADC   A,C
-7B41: 41             LD    B,C
-7B42: 89             ADC   A,C
-7B43: 41             LD    B,C
-7B44: 89             ADC   A,C
-7B45: 41             LD    B,C
-7B46: 89             ADC   A,C
-7B47: 41             LD    B,C
-7B48: 8C             ADC   A,H
-7B49: 41             LD    B,C
-7B4A: 8D             ADC   A,L
-7B4B: 41             LD    B,C
-7B4C: 8C             ADC   A,H
-7B4D: 41             LD    B,C
-7B4E: 8D             ADC   A,L
-7B4F: 41             LD    B,C
-7B50: 8C             ADC   A,H
-7B51: 41             LD    B,C
-7B52: 8D             ADC   A,L
-7B53: 41             LD    B,C
-7B54: 8C             ADC   A,H
-7B55: 41             LD    B,C
-7B56: 8D             ADC   A,L
-7B57: 41             LD    B,C
-7B58: 8C             ADC   A,H
-7B59: 41             LD    B,C
-7B5A: 8D             ADC   A,L
-7B5B: 41             LD    B,C
-7B5C: 8C             ADC   A,H
-7B5D: 41             LD    B,C
-7B5E: 8D             ADC   A,L
-7B5F: 41             LD    B,C
-7B60: 8C             ADC   A,H
-7B61: 41             LD    B,C
-7B62: 8D             ADC   A,L
-7B63: 41             LD    B,C
-7B64: 8C             ADC   A,H
-7B65: 41             LD    B,C
-7B66: 8D             ADC   A,L
-7B67: 41             LD    B,C
-7B68: 8C             ADC   A,H
-7B69: 41             LD    B,C
-7B6A: 8D             ADC   A,L
-7B6B: 41             LD    B,C
-7B6C: 8C             ADC   A,H
-7B6D: 41             LD    B,C
-7B6E: 8D             ADC   A,L
-7B6F: 41             LD    B,C
-7B70: 8C             ADC   A,H
-7B71: 41             LD    B,C
-7B72: 8D             ADC   A,L
-7B73: 41             LD    B,C
-7B74: 8C             ADC   A,H
-7B75: 41             LD    B,C
-7B76: 8D             ADC   A,L
-7B77: 41             LD    B,C
-7B78: 8C             ADC   A,H
-7B79: 41             LD    B,C
-7B7A: 8D             ADC   A,L
-7B7B: 41             LD    B,C
-7B7C: 8C             ADC   A,H
-7B7D: 41             LD    B,C
-7B7E: 8D             ADC   A,L
-7B7F: 41             LD    B,C
-7B80: 89             ADC   A,C
-7B81: 41             LD    B,C
-7B82: 89             ADC   A,C
-7B83: 41             LD    B,C
-7B84: 89             ADC   A,C
-7B85: 41             LD    B,C
-7B86: 89             ADC   A,C
-7B87: 41             LD    B,C
-7B88: 8D             ADC   A,L
-7B89: 41             LD    B,C
-7B8A: 8C             ADC   A,H
-7B8B: 41             LD    B,C
-7B8C: 8D             ADC   A,L
-7B8D: 41             LD    B,C
-7B8E: 8C             ADC   A,H
-7B8F: 41             LD    B,C
-7B90: 8D             ADC   A,L
-7B91: 41             LD    B,C
-7B92: 8C             ADC   A,H
-7B93: 41             LD    B,C
-7B94: 8D             ADC   A,L
-7B95: 41             LD    B,C
-7B96: 8C             ADC   A,H
-7B97: 41             LD    B,C
-7B98: 89             ADC   A,C
-7B99: 41             LD    B,C
-7B9A: 89             ADC   A,C
-7B9B: 41             LD    B,C
-7B9C: 8D             ADC   A,L
-7B9D: 41             LD    B,C
-7B9E: 8C             ADC   A,H
-7B9F: 41             LD    B,C
-7BA0: 8D             ADC   A,L
-7BA1: 41             LD    B,C
-7BA2: 8C             ADC   A,H
-7BA3: 41             LD    B,C
-7BA4: 8D             ADC   A,L
-7BA5: 41             LD    B,C
-7BA6: 8C             ADC   A,H
-7BA7: 41             LD    B,C
-7BA8: 8D             ADC   A,L
-7BA9: 41             LD    B,C
-7BAA: 8C             ADC   A,H
-7BAB: 41             LD    B,C
-7BAC: 8D             ADC   A,L
-7BAD: 41             LD    B,C
-7BAE: 8C             ADC   A,H
-7BAF: 41             LD    B,C
-7BB0: 8D             ADC   A,L
-7BB1: 41             LD    B,C
-7BB2: 8C             ADC   A,H
-7BB3: 41             LD    B,C
-7BB4: 8D             ADC   A,L
-7BB5: 41             LD    B,C
-7BB6: 8C             ADC   A,H
-7BB7: 41             LD    B,C
-7BB8: 8D             ADC   A,L
-7BB9: 41             LD    B,C
-7BBA: 8C             ADC   A,H
-7BBB: 41             LD    B,C
-7BBC: 8D             ADC   A,L
-7BBD: 41             LD    B,C
-7BBE: 8C             ADC   A,H
-7BBF: 41             LD    B,C
-7BC0: 89             ADC   A,C
-7BC1: 41             LD    B,C
-7BC2: 89             ADC   A,C
-7BC3: 41             LD    B,C
-7BC4: 89             ADC   A,C
-7BC5: 41             LD    B,C
-7BC6: 89             ADC   A,C
-7BC7: 41             LD    B,C
-7BC8: 8C             ADC   A,H
-7BC9: 41             LD    B,C
-7BCA: 8D             ADC   A,L
-7BCB: 41             LD    B,C
-7BCC: 8C             ADC   A,H
-7BCD: 41             LD    B,C
-7BCE: 8D             ADC   A,L
-7BCF: 41             LD    B,C
-7BD0: 8C             ADC   A,H
-7BD1: 41             LD    B,C
-7BD2: 8D             ADC   A,L
-7BD3: 41             LD    B,C
-7BD4: 8C             ADC   A,H
-7BD5: 41             LD    B,C
-7BD6: 89             ADC   A,C
-7BD7: 41             LD    B,C
-7BD8: 89             ADC   A,C
-7BD9: 41             LD    B,C
-7BDA: 89             ADC   A,C
-7BDB: 41             LD    B,C
-7BDC: 89             ADC   A,C
-7BDD: 41             LD    B,C
-7BDE: 8D             ADC   A,L
-7BDF: 41             LD    B,C
-7BE0: 8C             ADC   A,H
-7BE1: 41             LD    B,C
-7BE2: 8D             ADC   A,L
-7BE3: 41             LD    B,C
-7BE4: 8C             ADC   A,H
-7BE5: 41             LD    B,C
-7BE6: 8D             ADC   A,L
-7BE7: 41             LD    B,C
-7BE8: 8C             ADC   A,H
-7BE9: 41             LD    B,C
-7BEA: 8D             ADC   A,L
-7BEB: 41             LD    B,C
-7BEC: 8C             ADC   A,H
-7BED: 41             LD    B,C
-7BEE: 8D             ADC   A,L
-7BEF: 41             LD    B,C
-7BF0: 8C             ADC   A,H
-7BF1: 41             LD    B,C
-7BF2: 8D             ADC   A,L
-7BF3: 41             LD    B,C
-7BF4: 8C             ADC   A,H
-7BF5: 41             LD    B,C
-7BF6: 8D             ADC   A,L
-7BF7: 41             LD    B,C
-7BF8: 8C             ADC   A,H
-7BF9: 41             LD    B,C
-7BFA: 8D             ADC   A,L
-7BFB: 41             LD    B,C
-7BFC: 8C             ADC   A,H
-7BFD: 41             LD    B,C
-7BFE: 8D             ADC   A,L
-7BFF: 41             LD    B,C
-7C00: 89             ADC   A,C
-7C01: 41             LD    B,C
-7C02: 89             ADC   A,C
-7C03: 41             LD    B,C
-7C04: 89             ADC   A,C
-7C05: 41             LD    B,C
-7C06: 89             ADC   A,C
-7C07: 41             LD    B,C
-7C08: 8D             ADC   A,L
-7C09: 41             LD    B,C
-7C0A: 8C             ADC   A,H
-7C0B: 41             LD    B,C
-7C0C: 8D             ADC   A,L
-7C0D: 41             LD    B,C
-7C0E: 8C             ADC   A,H
-7C0F: 41             LD    B,C
-7C10: 8D             ADC   A,L
-7C11: 41             LD    B,C
-7C12: 8C             ADC   A,H
-7C13: 41             LD    B,C
-7C14: 89             ADC   A,C
-7C15: 41             LD    B,C
-7C16: 89             ADC   A,C
-7C17: 41             LD    B,C
-7C18: 89             ADC   A,C
-7C19: 41             LD    B,C
-7C1A: 89             ADC   A,C
-7C1B: 41             LD    B,C
-7C1C: 89             ADC   A,C
-7C1D: 41             LD    B,C
-7C1E: 89             ADC   A,C
-7C1F: 41             LD    B,C
-7C20: 8D             ADC   A,L
-7C21: 41             LD    B,C
-7C22: 8C             ADC   A,H
-7C23: 41             LD    B,C
-7C24: 8D             ADC   A,L
-7C25: 41             LD    B,C
-7C26: 8C             ADC   A,H
-7C27: 41             LD    B,C
-7C28: 8D             ADC   A,L
-7C29: 41             LD    B,C
-7C2A: 8C             ADC   A,H
-7C2B: 41             LD    B,C
-7C2C: 8D             ADC   A,L
-7C2D: 41             LD    B,C
-7C2E: 8C             ADC   A,H
-7C2F: 41             LD    B,C
-7C30: 8D             ADC   A,L
-7C31: 41             LD    B,C
-7C32: 8C             ADC   A,H
-7C33: 41             LD    B,C
-7C34: 8D             ADC   A,L
-7C35: 41             LD    B,C
-7C36: 8C             ADC   A,H
-7C37: 41             LD    B,C
-7C38: 8D             ADC   A,L
-7C39: 41             LD    B,C
-7C3A: 8C             ADC   A,H
-7C3B: 41             LD    B,C
-7C3C: 8D             ADC   A,L
-7C3D: 41             LD    B,C
-7C3E: 8C             ADC   A,H
-7C3F: 41             LD    B,C
-7C40: 89             ADC   A,C
-7C41: 41             LD    B,C
-7C42: 89             ADC   A,C
-7C43: 41             LD    B,C
-7C44: 89             ADC   A,C
-7C45: 41             LD    B,C
-7C46: 89             ADC   A,C
-7C47: 41             LD    B,C
-7C48: 8C             ADC   A,H
-7C49: 41             LD    B,C
-7C4A: 8D             ADC   A,L
-7C4B: 41             LD    B,C
-7C4C: 8C             ADC   A,H
-7C4D: 41             LD    B,C
-7C4E: 8D             ADC   A,L
-7C4F: 41             LD    B,C
-7C50: 92             SUB   A,D
-7C51: 45             LD    B,L
-7C52: 92             SUB   A,D
-7C53: 45             LD    B,L
-7C54: 70             LD    (HL),B
-7C55: 47             LD    B,A
-7C56: 89             ADC   A,C
-7C57: 47             LD    B,A
-7C58: 95             SUB   A,L
-7C59: 5D             LD    E,L
-7C5A: 95             SUB   A,L
-7C5B: 5F             LD    E,A
-7C5C: 89             ADC   A,C
-7C5D: 45             LD    B,L
-7C5E: 70             LD    (HL),B
-7C5F: 45             LD    B,L
-7C60: 92             SUB   A,D
-7C61: 45             LD    B,L
-7C62: 92             SUB   A,D
-7C63: 45             LD    B,L
-7C64: 8C             ADC   A,H
-7C65: 41             LD    B,C
-7C66: 8D             ADC   A,L
-7C67: 41             LD    B,C
-7C68: 8C             ADC   A,H
-7C69: 41             LD    B,C
-7C6A: 8D             ADC   A,L
-7C6B: 41             LD    B,C
-7C6C: 8C             ADC   A,H
-7C6D: 41             LD    B,C
-7C6E: 8D             ADC   A,L
-7C6F: 41             LD    B,C
-7C70: 8C             ADC   A,H
-7C71: 41             LD    B,C
-7C72: 8D             ADC   A,L
-7C73: 41             LD    B,C
-7C74: 8C             ADC   A,H
-7C75: 41             LD    B,C
-7C76: 8D             ADC   A,L
-7C77: 41             LD    B,C
-7C78: 8C             ADC   A,H
-7C79: 41             LD    B,C
-7C7A: 8D             ADC   A,L
-7C7B: 41             LD    B,C
-7C7C: 8C             ADC   A,H
-7C7D: 41             LD    B,C
-7C7E: 8D             ADC   A,L
-7C7F: 41             LD    B,C
-7C80: 89             ADC   A,C
-7C81: 41             LD    B,C
-7C82: 89             ADC   A,C
-7C83: 41             LD    B,C
-7C84: 89             ADC   A,C
-7C85: 41             LD    B,C
-7C86: 89             ADC   A,C
-7C87: 41             LD    B,C
-7C88: 8D             ADC   A,L
-7C89: 41             LD    B,C
-7C8A: 8C             ADC   A,H
-7C8B: 41             LD    B,C
-7C8C: 8D             ADC   A,L
-7C8D: 41             LD    B,C
-7C8E: 8C             ADC   A,H
-7C8F: 41             LD    B,C
-7C90: 93             SUB   A,E
-7C91: 41             LD    B,C
-7C92: 73             LD    (HL),E
-7C93: 47             LD    B,A
-7C94: 71             LD    (HL),C
-7C95: 47             LD    B,A
-7C96: 6F             LD    L,A
-7C97: 47             LD    B,A
-7C98: 96             SUB   A,(HL)
-7C99: 5D             LD    E,L
-7C9A: 96             SUB   A,(HL)
-7C9B: 5F             LD    E,A
-7C9C: 6F             LD    L,A
-7C9D: 45             LD    B,L
-7C9E: 71             LD    (HL),C
-7C9F: 45             LD    B,L
-7CA0: 73             LD    (HL),E
-7CA1: 45             LD    B,L
-7CA2: 93             SUB   A,E
-7CA3: 41             LD    B,C
-7CA4: 8D             ADC   A,L
-7CA5: 41             LD    B,C
-7CA6: 8C             ADC   A,H
-7CA7: 41             LD    B,C
-7CA8: 8D             ADC   A,L
-7CA9: 41             LD    B,C
-7CAA: 8C             ADC   A,H
-7CAB: 41             LD    B,C
-7CAC: 8D             ADC   A,L
-7CAD: 41             LD    B,C
-7CAE: 8C             ADC   A,H
-7CAF: 41             LD    B,C
-7CB0: 8D             ADC   A,L
-7CB1: 41             LD    B,C
-7CB2: 8C             ADC   A,H
-7CB3: 41             LD    B,C
-7CB4: 8D             ADC   A,L
-7CB5: 41             LD    B,C
-7CB6: 8C             ADC   A,H
-7CB7: 41             LD    B,C
-7CB8: 8D             ADC   A,L
-7CB9: 41             LD    B,C
-7CBA: 8C             ADC   A,H
-7CBB: 41             LD    B,C
-7CBC: 8D             ADC   A,L
-7CBD: 41             LD    B,C
-7CBE: 8C             ADC   A,H
-7CBF: 41             LD    B,C
-7CC0: 89             ADC   A,C
-7CC1: 41             LD    B,C
-7CC2: 89             ADC   A,C
-7CC3: 41             LD    B,C
-7CC4: 89             ADC   A,C
-7CC5: 41             LD    B,C
-7CC6: 89             ADC   A,C
-7CC7: 41             LD    B,C
-7CC8: 8C             ADC   A,H
-7CC9: 41             LD    B,C
-7CCA: 8D             ADC   A,L
-7CCB: 41             LD    B,C
-7CCC: 8C             ADC   A,H
-7CCD: 41             LD    B,C
-7CCE: 8D             ADC   A,L
-7CCF: 41             LD    B,C
-7CD0: 79             LD    A,C
-7CD1: 47             LD    B,A
-7CD2: 74             LD    (HL),H
-7CD3: 47             LD    B,A
-7CD4: 72             LD    (HL),D
-7CD5: 47             LD    B,A
-7CD6: 8E             ADC   A,(HL)
-7CD7: 47             LD    B,A
-7CD8: 89             ADC   A,C
-7CD9: 41             LD    B,C
-7CDA: 89             ADC   A,C
-7CDB: 41             LD    B,C
-7CDC: 89             ADC   A,C
-7CDD: 45             LD    B,L
-7CDE: 80             ADD   A,B
-7CDF: 47             LD    B,A
-7CE0: 74             LD    (HL),H
-7CE1: 45             LD    B,L
-7CE2: 79             LD    A,C
-7CE3: 45             LD    B,L
-7CE4: 8C             ADC   A,H
-7CE5: 41             LD    B,C
-7CE6: 8D             ADC   A,L
-7CE7: 41             LD    B,C
-7CE8: 8C             ADC   A,H
-7CE9: 41             LD    B,C
-7CEA: 8D             ADC   A,L
-7CEB: 41             LD    B,C
-7CEC: 8C             ADC   A,H
-7CED: 41             LD    B,C
-7CEE: 8D             ADC   A,L
-7CEF: 41             LD    B,C
-7CF0: 8C             ADC   A,H
-7CF1: 41             LD    B,C
-7CF2: 8D             ADC   A,L
-7CF3: 41             LD    B,C
-7CF4: 8C             ADC   A,H
-7CF5: 41             LD    B,C
-7CF6: 8D             ADC   A,L
-7CF7: 41             LD    B,C
-7CF8: 8C             ADC   A,H
-7CF9: 41             LD    B,C
-7CFA: 8D             ADC   A,L
-7CFB: 41             LD    B,C
-7CFC: 8C             ADC   A,H
-7CFD: 41             LD    B,C
-7CFE: 8D             ADC   A,L
-7CFF: 41             LD    B,C
-7D00: 89             ADC   A,C
-7D01: 41             LD    B,C
-7D02: 89             ADC   A,C
-7D03: 41             LD    B,C
-7D04: 89             ADC   A,C
-7D05: 41             LD    B,C
-7D06: 89             ADC   A,C
-7D07: 41             LD    B,C
-7D08: 8D             ADC   A,L
-7D09: 41             LD    B,C
-7D0A: 8C             ADC   A,H
-7D0B: 41             LD    B,C
-7D0C: 8D             ADC   A,L
-7D0D: 41             LD    B,C
-7D0E: 8C             ADC   A,H
-7D0F: 41             LD    B,C
-7D10: 7A             LD    A,D
-7D11: 47             LD    B,A
-7D12: 75             LD    (HL),L
-7D13: 47             LD    B,A
-7D14: 82             ADD   A,D
-7D15: 47             LD    B,A
-7D16: 83             ADD   A,E
-7D17: 47             LD    B,A
-7D18: 82             ADD   A,D
-7D19: 47             LD    B,A
-7D1A: 82             ADD   A,D
-7D1B: 47             LD    B,A
-7D1C: 81             ADD   A,C
-7D1D: 47             LD    B,A
-7D1E: 90             SUB   A,B
-7D1F: 47             LD    B,A
-7D20: 84             ADD   A,H
-7D21: 47             LD    B,A
-7D22: 7A             LD    A,D
-7D23: 45             LD    B,L
-7D24: 8D             ADC   A,L
-7D25: 41             LD    B,C
-7D26: 8C             ADC   A,H
-7D27: 41             LD    B,C
-7D28: 8D             ADC   A,L
-7D29: 41             LD    B,C
-7D2A: 8C             ADC   A,H
-7D2B: 41             LD    B,C
-7D2C: 8D             ADC   A,L
-7D2D: 41             LD    B,C
-7D2E: 8C             ADC   A,H
-7D2F: 41             LD    B,C
-7D30: 8D             ADC   A,L
-7D31: 41             LD    B,C
-7D32: 8C             ADC   A,H
-7D33: 41             LD    B,C
-7D34: 8D             ADC   A,L
-7D35: 41             LD    B,C
-7D36: 8C             ADC   A,H
-7D37: 41             LD    B,C
-7D38: 8D             ADC   A,L
-7D39: 41             LD    B,C
-7D3A: 8C             ADC   A,H
-7D3B: 41             LD    B,C
-7D3C: 8D             ADC   A,L
-7D3D: 41             LD    B,C
-7D3E: 8C             ADC   A,H
-7D3F: 41             LD    B,C
-7D40: 89             ADC   A,C
-7D41: 41             LD    B,C
-7D42: 89             ADC   A,C
-7D43: 41             LD    B,C
-7D44: 89             ADC   A,C
-7D45: 41             LD    B,C
-7D46: 89             ADC   A,C
-7D47: 41             LD    B,C
-7D48: 8C             ADC   A,H
-7D49: 41             LD    B,C
-7D4A: 8D             ADC   A,L
-7D4B: 41             LD    B,C
-7D4C: 8C             ADC   A,H
-7D4D: 41             LD    B,C
-7D4E: 8D             ADC   A,L
-7D4F: 41             LD    B,C
-7D50: 7B             LD    A,E
-7D51: 47             LD    B,A
-7D52: 76             HALT  
+BACKGROUND_FOR_4:
+7A00: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+7A10: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7A20: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7A30: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7A40: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+7A50: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7A60: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7A70: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7A80: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+7A90: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7AA0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7AB0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7AC0: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+7AD0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7AE0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7AF0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7B00: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+7B10: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7B20: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7B30: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7B40: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+7B50: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7B60: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7B70: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7B80: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+7B90: 8D 41 8C 41 8D 41 8C 41 89 41 89 41 8D 41 8C 41 
+7BA0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7BB0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7BC0: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+7BD0: 8C 41 8D 41 8C 41 89 41 89 41 89 41 89 41 8D 41 
+7BE0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7BF0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7C00: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+7C10: 8D 41 8C 41 89 41 89 41 89 41 89 41 89 41 89 41 
+7C20: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7C30: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7C40: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+7C50: 92 45 92 45 70 47 89 47 95 5D 95 5F 89 45 70 45 
+7C60: 92 45 92 45 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7C70: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7C80: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+7C90: 93 41 73 47 71 47 6F 47 96 5D 96 5F 6F 45 71 45 
+7CA0: 73 45 93 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7CB0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7CC0: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+7CD0: 79 47 74 47 72 47 8E 47 89 41 89 41 89 45 80 47 
+7CE0: 74 45 79 45 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7CF0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7D00: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+7D10: 7A 47 75 47 82 47 83 47 82 47 82 47 81 47 90 47 
+7D20: 84 47 7A 45 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7D30: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7D40: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+7D50: 7B 47 76 47 82 47 8F 5F 87 5F 7D 5F 7F 5F 89 41 
+7D60: 85 47 7B 45 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7D70: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7D80: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+7D90: 7C 47 77 47 78 47 88 5F 89 45 89 47 7E 5F 89 45 
+7DA0: 86 47 7C 45 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7DB0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7DC0: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+7DD0: 7C 43 77 43 78 43 88 5B 89 41 89 43 7E 5B 89 41 
+7DE0: 86 43 7C 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7DF0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7E00: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+7E10: 7B 43 76 43 82 43 8F 5B 87 5B 7D 5B 7F 5B 89 41 
+7E20: 85 43 7B 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7E30: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7E40: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+7E50: 7A 43 75 43 82 43 83 43 82 43 82 41 81 43 90 43 
+7E60: 84 43 7A 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7E70: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7E80: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+7E90: 79 43 74 43 72 43 8E 43 89 41 89 41 89 41 80 43 
+7EA0: 74 41 79 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7EB0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7EC0: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+7ED0: 93 41 73 43 71 43 6F 43 96 59 96 5B 6F 41 71 41 
+7EE0: 73 41 93 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7EF0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7F00: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+7F10: 92 41 92 41 70 43 89 43 95 59 95 5B 89 41 70 41 
+7F20: 92 41 92 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7F30: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7F40: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+7F50: 8C 41 8D 41 89 41 89 41 89 41 89 41 89 41 89 41 
+7F60: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7F70: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7F80: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+7F90: 8D 41 8C 41 8D 41 89 41 89 41 89 41 89 41 8C 41 
+7FA0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7FB0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+7FC0: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+7FD0: 8C 41 8D 41 8C 41 8D 41 89 41 89 41 8C 41 8D 41 
+7FE0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+7FF0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8000: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+8010: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+8020: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+8030: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+8040: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+8050: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8060: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8070: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8080: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+8090: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+80A0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+80B0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+80C0: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+80D0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+80E0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+80F0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8100: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+8110: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+8120: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+8130: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 89 41 
+8140: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+8150: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8160: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8170: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 89 41 89 41 
 
-7D53: 47             LD    B,A
-7D54: 82             ADD   A,D
-7D55: 47             LD    B,A
-7D56: 8F             ADC   A,A
-7D57: 5F             LD    E,A
-7D58: 87             ADD   A,A
-7D59: 5F             LD    E,A
-7D5A: 7D             LD    A,L
-7D5B: 5F             LD    E,A
-7D5C: 7F             LD    A,A
-7D5D: 5F             LD    E,A
-7D5E: 89             ADC   A,C
-7D5F: 41             LD    B,C
-7D60: 85             ADD   A,L
-7D61: 47             LD    B,A
-7D62: 7B             LD    A,E
-7D63: 45             LD    B,L
-7D64: 8C             ADC   A,H
-7D65: 41             LD    B,C
-7D66: 8D             ADC   A,L
-7D67: 41             LD    B,C
-7D68: 8C             ADC   A,H
-7D69: 41             LD    B,C
-7D6A: 8D             ADC   A,L
-7D6B: 41             LD    B,C
-7D6C: 8C             ADC   A,H
-7D6D: 41             LD    B,C
-7D6E: 8D             ADC   A,L
-7D6F: 41             LD    B,C
-7D70: 8C             ADC   A,H
-7D71: 41             LD    B,C
-7D72: 8D             ADC   A,L
-7D73: 41             LD    B,C
-7D74: 8C             ADC   A,H
-7D75: 41             LD    B,C
-7D76: 8D             ADC   A,L
-7D77: 41             LD    B,C
-7D78: 8C             ADC   A,H
-7D79: 41             LD    B,C
-7D7A: 8D             ADC   A,L
-7D7B: 41             LD    B,C
-7D7C: 8C             ADC   A,H
-7D7D: 41             LD    B,C
-7D7E: 8D             ADC   A,L
-7D7F: 41             LD    B,C
-7D80: 89             ADC   A,C
-7D81: 41             LD    B,C
-7D82: 89             ADC   A,C
-7D83: 41             LD    B,C
-7D84: 89             ADC   A,C
-7D85: 41             LD    B,C
-7D86: 89             ADC   A,C
-7D87: 41             LD    B,C
-7D88: 8D             ADC   A,L
-7D89: 41             LD    B,C
-7D8A: 8C             ADC   A,H
-7D8B: 41             LD    B,C
-7D8C: 8D             ADC   A,L
-7D8D: 41             LD    B,C
-7D8E: 8C             ADC   A,H
-7D8F: 41             LD    B,C
-7D90: 7C             LD    A,H
-7D91: 47             LD    B,A
-7D92: 77             LD    (HL),A
-7D93: 47             LD    B,A
-7D94: 78             LD    A,B
-7D95: 47             LD    B,A
-7D96: 88             ADC   A,B
-7D97: 5F             LD    E,A
-7D98: 89             ADC   A,C
-7D99: 45             LD    B,L
-7D9A: 89             ADC   A,C
-7D9B: 47             LD    B,A
-7D9C: 7E             LD    A,(HL)
-7D9D: 5F             LD    E,A
-7D9E: 89             ADC   A,C
-7D9F: 45             LD    B,L
-7DA0: 86             ADD   A,(HL)
-7DA1: 47             LD    B,A
-7DA2: 7C             LD    A,H
-7DA3: 45             LD    B,L
-7DA4: 8D             ADC   A,L
-7DA5: 41             LD    B,C
-7DA6: 8C             ADC   A,H
-7DA7: 41             LD    B,C
-7DA8: 8D             ADC   A,L
-7DA9: 41             LD    B,C
-7DAA: 8C             ADC   A,H
-7DAB: 41             LD    B,C
-7DAC: 8D             ADC   A,L
-7DAD: 41             LD    B,C
-7DAE: 8C             ADC   A,H
-7DAF: 41             LD    B,C
-7DB0: 8D             ADC   A,L
-7DB1: 41             LD    B,C
-7DB2: 8C             ADC   A,H
-7DB3: 41             LD    B,C
-7DB4: 8D             ADC   A,L
-7DB5: 41             LD    B,C
-7DB6: 8C             ADC   A,H
-7DB7: 41             LD    B,C
-7DB8: 8D             ADC   A,L
-7DB9: 41             LD    B,C
-7DBA: 8C             ADC   A,H
-7DBB: 41             LD    B,C
-7DBC: 8D             ADC   A,L
-7DBD: 41             LD    B,C
-7DBE: 8C             ADC   A,H
-7DBF: 41             LD    B,C
-7DC0: 89             ADC   A,C
-7DC1: 41             LD    B,C
-7DC2: 89             ADC   A,C
-7DC3: 41             LD    B,C
-7DC4: 89             ADC   A,C
-7DC5: 41             LD    B,C
-7DC6: 89             ADC   A,C
-7DC7: 41             LD    B,C
-7DC8: 8C             ADC   A,H
-7DC9: 41             LD    B,C
-7DCA: 8D             ADC   A,L
-7DCB: 41             LD    B,C
-7DCC: 8C             ADC   A,H
-7DCD: 41             LD    B,C
-7DCE: 8D             ADC   A,L
-7DCF: 41             LD    B,C
-7DD0: 7C             LD    A,H
-7DD1: 43             LD    B,E
-7DD2: 77             LD    (HL),A
-7DD3: 43             LD    B,E
-7DD4: 78             LD    A,B
-7DD5: 43             LD    B,E
-7DD6: 88             ADC   A,B
-7DD7: 5B             LD    E,E
-7DD8: 89             ADC   A,C
-7DD9: 41             LD    B,C
-7DDA: 89             ADC   A,C
-7DDB: 43             LD    B,E
-7DDC: 7E             LD    A,(HL)
-7DDD: 5B             LD    E,E
-7DDE: 89             ADC   A,C
-7DDF: 41             LD    B,C
-7DE0: 86             ADD   A,(HL)
-7DE1: 43             LD    B,E
-7DE2: 7C             LD    A,H
-7DE3: 41             LD    B,C
-7DE4: 8C             ADC   A,H
-7DE5: 41             LD    B,C
-7DE6: 8D             ADC   A,L
-7DE7: 41             LD    B,C
-7DE8: 8C             ADC   A,H
-7DE9: 41             LD    B,C
-7DEA: 8D             ADC   A,L
-7DEB: 41             LD    B,C
-7DEC: 8C             ADC   A,H
-7DED: 41             LD    B,C
-7DEE: 8D             ADC   A,L
-7DEF: 41             LD    B,C
-7DF0: 8C             ADC   A,H
-7DF1: 41             LD    B,C
-7DF2: 8D             ADC   A,L
-7DF3: 41             LD    B,C
-7DF4: 8C             ADC   A,H
-7DF5: 41             LD    B,C
-7DF6: 8D             ADC   A,L
-7DF7: 41             LD    B,C
-7DF8: 8C             ADC   A,H
-7DF9: 41             LD    B,C
-7DFA: 8D             ADC   A,L
-7DFB: 41             LD    B,C
-7DFC: 8C             ADC   A,H
-7DFD: 41             LD    B,C
-7DFE: 8D             ADC   A,L
-7DFF: 41             LD    B,C
-7E00: 89             ADC   A,C
-7E01: 41             LD    B,C
-7E02: 89             ADC   A,C
-7E03: 41             LD    B,C
-7E04: 89             ADC   A,C
-7E05: 41             LD    B,C
-7E06: 89             ADC   A,C
-7E07: 41             LD    B,C
-7E08: 8D             ADC   A,L
-7E09: 41             LD    B,C
-7E0A: 8C             ADC   A,H
-7E0B: 41             LD    B,C
-7E0C: 8D             ADC   A,L
-7E0D: 41             LD    B,C
-7E0E: 8C             ADC   A,H
-7E0F: 41             LD    B,C
-7E10: 7B             LD    A,E
-7E11: 43             LD    B,E
-7E12: 76             HALT  
-
-7E13: 43             LD    B,E
-7E14: 82             ADD   A,D
-7E15: 43             LD    B,E
-7E16: 8F             ADC   A,A
-7E17: 5B             LD    E,E
-7E18: 87             ADD   A,A
-7E19: 5B             LD    E,E
-7E1A: 7D             LD    A,L
-7E1B: 5B             LD    E,E
-7E1C: 7F             LD    A,A
-7E1D: 5B             LD    E,E
-7E1E: 89             ADC   A,C
-7E1F: 41             LD    B,C
-7E20: 85             ADD   A,L
-7E21: 43             LD    B,E
-7E22: 7B             LD    A,E
-7E23: 41             LD    B,C
-7E24: 8D             ADC   A,L
-7E25: 41             LD    B,C
-7E26: 8C             ADC   A,H
-7E27: 41             LD    B,C
-7E28: 8D             ADC   A,L
-7E29: 41             LD    B,C
-7E2A: 8C             ADC   A,H
-7E2B: 41             LD    B,C
-7E2C: 8D             ADC   A,L
-7E2D: 41             LD    B,C
-7E2E: 8C             ADC   A,H
-7E2F: 41             LD    B,C
-7E30: 8D             ADC   A,L
-7E31: 41             LD    B,C
-7E32: 8C             ADC   A,H
-7E33: 41             LD    B,C
-7E34: 8D             ADC   A,L
-7E35: 41             LD    B,C
-7E36: 8C             ADC   A,H
-7E37: 41             LD    B,C
-7E38: 8D             ADC   A,L
-7E39: 41             LD    B,C
-7E3A: 8C             ADC   A,H
-7E3B: 41             LD    B,C
-7E3C: 8D             ADC   A,L
-7E3D: 41             LD    B,C
-7E3E: 8C             ADC   A,H
-7E3F: 41             LD    B,C
-7E40: 89             ADC   A,C
-7E41: 41             LD    B,C
-7E42: 89             ADC   A,C
-7E43: 41             LD    B,C
-7E44: 89             ADC   A,C
-7E45: 41             LD    B,C
-7E46: 89             ADC   A,C
-7E47: 41             LD    B,C
-7E48: 8C             ADC   A,H
-7E49: 41             LD    B,C
-7E4A: 8D             ADC   A,L
-7E4B: 41             LD    B,C
-7E4C: 8C             ADC   A,H
-7E4D: 41             LD    B,C
-7E4E: 8D             ADC   A,L
-7E4F: 41             LD    B,C
-7E50: 7A             LD    A,D
-7E51: 43             LD    B,E
-7E52: 75             LD    (HL),L
-7E53: 43             LD    B,E
-7E54: 82             ADD   A,D
-7E55: 43             LD    B,E
-7E56: 83             ADD   A,E
-7E57: 43             LD    B,E
-7E58: 82             ADD   A,D
-7E59: 43             LD    B,E
-7E5A: 82             ADD   A,D
-7E5B: 41             LD    B,C
-7E5C: 81             ADD   A,C
-7E5D: 43             LD    B,E
-7E5E: 90             SUB   A,B
-7E5F: 43             LD    B,E
-7E60: 84             ADD   A,H
-7E61: 43             LD    B,E
-7E62: 7A             LD    A,D
-7E63: 41             LD    B,C
-7E64: 8C             ADC   A,H
-7E65: 41             LD    B,C
-7E66: 8D             ADC   A,L
-7E67: 41             LD    B,C
-7E68: 8C             ADC   A,H
-7E69: 41             LD    B,C
-7E6A: 8D             ADC   A,L
-7E6B: 41             LD    B,C
-7E6C: 8C             ADC   A,H
-7E6D: 41             LD    B,C
-7E6E: 8D             ADC   A,L
-7E6F: 41             LD    B,C
-7E70: 8C             ADC   A,H
-7E71: 41             LD    B,C
-7E72: 8D             ADC   A,L
-7E73: 41             LD    B,C
-7E74: 8C             ADC   A,H
-7E75: 41             LD    B,C
-7E76: 8D             ADC   A,L
-7E77: 41             LD    B,C
-7E78: 8C             ADC   A,H
-7E79: 41             LD    B,C
-7E7A: 8D             ADC   A,L
-7E7B: 41             LD    B,C
-7E7C: 8C             ADC   A,H
-7E7D: 41             LD    B,C
-7E7E: 8D             ADC   A,L
-7E7F: 41             LD    B,C
-7E80: 89             ADC   A,C
-7E81: 41             LD    B,C
-7E82: 89             ADC   A,C
-7E83: 41             LD    B,C
-7E84: 89             ADC   A,C
-7E85: 41             LD    B,C
-7E86: 89             ADC   A,C
-7E87: 41             LD    B,C
-7E88: 8D             ADC   A,L
-7E89: 41             LD    B,C
-7E8A: 8C             ADC   A,H
-7E8B: 41             LD    B,C
-7E8C: 8D             ADC   A,L
-7E8D: 41             LD    B,C
-7E8E: 8C             ADC   A,H
-7E8F: 41             LD    B,C
-7E90: 79             LD    A,C
-7E91: 43             LD    B,E
-7E92: 74             LD    (HL),H
-7E93: 43             LD    B,E
-7E94: 72             LD    (HL),D
-7E95: 43             LD    B,E
-7E96: 8E             ADC   A,(HL)
-7E97: 43             LD    B,E
-7E98: 89             ADC   A,C
-7E99: 41             LD    B,C
-7E9A: 89             ADC   A,C
-7E9B: 41             LD    B,C
-7E9C: 89             ADC   A,C
-7E9D: 41             LD    B,C
-7E9E: 80             ADD   A,B
-7E9F: 43             LD    B,E
-7EA0: 74             LD    (HL),H
-7EA1: 41             LD    B,C
-7EA2: 79             LD    A,C
-7EA3: 41             LD    B,C
-7EA4: 8D             ADC   A,L
-7EA5: 41             LD    B,C
-7EA6: 8C             ADC   A,H
-7EA7: 41             LD    B,C
-7EA8: 8D             ADC   A,L
-7EA9: 41             LD    B,C
-7EAA: 8C             ADC   A,H
-7EAB: 41             LD    B,C
-7EAC: 8D             ADC   A,L
-7EAD: 41             LD    B,C
-7EAE: 8C             ADC   A,H
-7EAF: 41             LD    B,C
-7EB0: 8D             ADC   A,L
-7EB1: 41             LD    B,C
-7EB2: 8C             ADC   A,H
-7EB3: 41             LD    B,C
-7EB4: 8D             ADC   A,L
-7EB5: 41             LD    B,C
-7EB6: 8C             ADC   A,H
-7EB7: 41             LD    B,C
-7EB8: 8D             ADC   A,L
-7EB9: 41             LD    B,C
-7EBA: 8C             ADC   A,H
-7EBB: 41             LD    B,C
-7EBC: 8D             ADC   A,L
-7EBD: 41             LD    B,C
-7EBE: 8C             ADC   A,H
-7EBF: 41             LD    B,C
-7EC0: 89             ADC   A,C
-7EC1: 41             LD    B,C
-7EC2: 89             ADC   A,C
-7EC3: 41             LD    B,C
-7EC4: 89             ADC   A,C
-7EC5: 41             LD    B,C
-7EC6: 89             ADC   A,C
-7EC7: 41             LD    B,C
-7EC8: 8C             ADC   A,H
-7EC9: 41             LD    B,C
-7ECA: 8D             ADC   A,L
-7ECB: 41             LD    B,C
-7ECC: 8C             ADC   A,H
-7ECD: 41             LD    B,C
-7ECE: 8D             ADC   A,L
-7ECF: 41             LD    B,C
-7ED0: 93             SUB   A,E
-7ED1: 41             LD    B,C
-7ED2: 73             LD    (HL),E
-7ED3: 43             LD    B,E
-7ED4: 71             LD    (HL),C
-7ED5: 43             LD    B,E
-7ED6: 6F             LD    L,A
-7ED7: 43             LD    B,E
-7ED8: 96             SUB   A,(HL)
-7ED9: 59             LD    E,C
-7EDA: 96             SUB   A,(HL)
-7EDB: 5B             LD    E,E
-7EDC: 6F             LD    L,A
-7EDD: 41             LD    B,C
-7EDE: 71             LD    (HL),C
-7EDF: 41             LD    B,C
-7EE0: 73             LD    (HL),E
-7EE1: 41             LD    B,C
-7EE2: 93             SUB   A,E
-7EE3: 41             LD    B,C
-7EE4: 8C             ADC   A,H
-7EE5: 41             LD    B,C
-7EE6: 8D             ADC   A,L
-7EE7: 41             LD    B,C
-7EE8: 8C             ADC   A,H
-7EE9: 41             LD    B,C
-7EEA: 8D             ADC   A,L
-7EEB: 41             LD    B,C
-7EEC: 8C             ADC   A,H
-7EED: 41             LD    B,C
-7EEE: 8D             ADC   A,L
-7EEF: 41             LD    B,C
-7EF0: 8C             ADC   A,H
-7EF1: 41             LD    B,C
-7EF2: 8D             ADC   A,L
-7EF3: 41             LD    B,C
-7EF4: 8C             ADC   A,H
-7EF5: 41             LD    B,C
-7EF6: 8D             ADC   A,L
-7EF7: 41             LD    B,C
-7EF8: 8C             ADC   A,H
-7EF9: 41             LD    B,C
-7EFA: 8D             ADC   A,L
-7EFB: 41             LD    B,C
-7EFC: 8C             ADC   A,H
-7EFD: 41             LD    B,C
-7EFE: 8D             ADC   A,L
-7EFF: 41             LD    B,C
-7F00: 89             ADC   A,C
-7F01: 41             LD    B,C
-7F02: 89             ADC   A,C
-7F03: 41             LD    B,C
-7F04: 89             ADC   A,C
-7F05: 41             LD    B,C
-7F06: 89             ADC   A,C
-7F07: 41             LD    B,C
-7F08: 8D             ADC   A,L
-7F09: 41             LD    B,C
-7F0A: 8C             ADC   A,H
-7F0B: 41             LD    B,C
-7F0C: 8D             ADC   A,L
-7F0D: 41             LD    B,C
-7F0E: 8C             ADC   A,H
-7F0F: 41             LD    B,C
-7F10: 92             SUB   A,D
-7F11: 41             LD    B,C
-7F12: 92             SUB   A,D
-7F13: 41             LD    B,C
-7F14: 70             LD    (HL),B
-7F15: 43             LD    B,E
-7F16: 89             ADC   A,C
-7F17: 43             LD    B,E
-7F18: 95             SUB   A,L
-7F19: 59             LD    E,C
-7F1A: 95             SUB   A,L
-7F1B: 5B             LD    E,E
-7F1C: 89             ADC   A,C
-7F1D: 41             LD    B,C
-7F1E: 70             LD    (HL),B
-7F1F: 41             LD    B,C
-7F20: 92             SUB   A,D
-7F21: 41             LD    B,C
-7F22: 92             SUB   A,D
-7F23: 41             LD    B,C
-7F24: 8D             ADC   A,L
-7F25: 41             LD    B,C
-7F26: 8C             ADC   A,H
-7F27: 41             LD    B,C
-7F28: 8D             ADC   A,L
-7F29: 41             LD    B,C
-7F2A: 8C             ADC   A,H
-7F2B: 41             LD    B,C
-7F2C: 8D             ADC   A,L
-7F2D: 41             LD    B,C
-7F2E: 8C             ADC   A,H
-7F2F: 41             LD    B,C
-7F30: 8D             ADC   A,L
-7F31: 41             LD    B,C
-7F32: 8C             ADC   A,H
-7F33: 41             LD    B,C
-7F34: 8D             ADC   A,L
-7F35: 41             LD    B,C
-7F36: 8C             ADC   A,H
-7F37: 41             LD    B,C
-7F38: 8D             ADC   A,L
-7F39: 41             LD    B,C
-7F3A: 8C             ADC   A,H
-7F3B: 41             LD    B,C
-7F3C: 8D             ADC   A,L
-7F3D: 41             LD    B,C
-7F3E: 8C             ADC   A,H
-7F3F: 41             LD    B,C
-7F40: 89             ADC   A,C
-7F41: 41             LD    B,C
-7F42: 89             ADC   A,C
-7F43: 41             LD    B,C
-7F44: 89             ADC   A,C
-7F45: 41             LD    B,C
-7F46: 89             ADC   A,C
-7F47: 41             LD    B,C
-7F48: 8C             ADC   A,H
-7F49: 41             LD    B,C
-7F4A: 8D             ADC   A,L
-7F4B: 41             LD    B,C
-7F4C: 8C             ADC   A,H
-7F4D: 41             LD    B,C
-7F4E: 8D             ADC   A,L
-7F4F: 41             LD    B,C
-7F50: 8C             ADC   A,H
-7F51: 41             LD    B,C
-7F52: 8D             ADC   A,L
-7F53: 41             LD    B,C
-7F54: 89             ADC   A,C
-7F55: 41             LD    B,C
-7F56: 89             ADC   A,C
-7F57: 41             LD    B,C
-7F58: 89             ADC   A,C
-7F59: 41             LD    B,C
-7F5A: 89             ADC   A,C
-7F5B: 41             LD    B,C
-7F5C: 89             ADC   A,C
-7F5D: 41             LD    B,C
-7F5E: 89             ADC   A,C
-7F5F: 41             LD    B,C
-7F60: 8C             ADC   A,H
-7F61: 41             LD    B,C
-7F62: 8D             ADC   A,L
-7F63: 41             LD    B,C
-7F64: 8C             ADC   A,H
-7F65: 41             LD    B,C
-7F66: 8D             ADC   A,L
-7F67: 41             LD    B,C
-7F68: 8C             ADC   A,H
-7F69: 41             LD    B,C
-7F6A: 8D             ADC   A,L
-7F6B: 41             LD    B,C
-7F6C: 8C             ADC   A,H
-7F6D: 41             LD    B,C
-7F6E: 8D             ADC   A,L
-7F6F: 41             LD    B,C
-7F70: 8C             ADC   A,H
-7F71: 41             LD    B,C
-7F72: 8D             ADC   A,L
-7F73: 41             LD    B,C
-7F74: 8C             ADC   A,H
-7F75: 41             LD    B,C
-7F76: 8D             ADC   A,L
-7F77: 41             LD    B,C
-7F78: 8C             ADC   A,H
-7F79: 41             LD    B,C
-7F7A: 8D             ADC   A,L
-7F7B: 41             LD    B,C
-7F7C: 8C             ADC   A,H
-7F7D: 41             LD    B,C
-7F7E: 8D             ADC   A,L
-7F7F: 41             LD    B,C
-7F80: 89             ADC   A,C
-7F81: 41             LD    B,C
-7F82: 89             ADC   A,C
-7F83: 41             LD    B,C
-7F84: 89             ADC   A,C
-7F85: 41             LD    B,C
-7F86: 89             ADC   A,C
-7F87: 41             LD    B,C
-7F88: 8D             ADC   A,L
-7F89: 41             LD    B,C
-7F8A: 8C             ADC   A,H
-7F8B: 41             LD    B,C
-7F8C: 8D             ADC   A,L
-7F8D: 41             LD    B,C
-7F8E: 8C             ADC   A,H
-7F8F: 41             LD    B,C
-7F90: 8D             ADC   A,L
-7F91: 41             LD    B,C
-7F92: 8C             ADC   A,H
-7F93: 41             LD    B,C
-7F94: 8D             ADC   A,L
-7F95: 41             LD    B,C
-7F96: 89             ADC   A,C
-7F97: 41             LD    B,C
-7F98: 89             ADC   A,C
-7F99: 41             LD    B,C
-7F9A: 89             ADC   A,C
-7F9B: 41             LD    B,C
-7F9C: 89             ADC   A,C
-7F9D: 41             LD    B,C
-7F9E: 8C             ADC   A,H
-7F9F: 41             LD    B,C
-7FA0: 8D             ADC   A,L
-7FA1: 41             LD    B,C
-7FA2: 8C             ADC   A,H
-7FA3: 41             LD    B,C
-7FA4: 8D             ADC   A,L
-7FA5: 41             LD    B,C
-7FA6: 8C             ADC   A,H
-7FA7: 41             LD    B,C
-7FA8: 8D             ADC   A,L
-7FA9: 41             LD    B,C
-7FAA: 8C             ADC   A,H
-7FAB: 41             LD    B,C
-7FAC: 8D             ADC   A,L
-7FAD: 41             LD    B,C
-7FAE: 8C             ADC   A,H
-7FAF: 41             LD    B,C
-7FB0: 8D             ADC   A,L
-7FB1: 41             LD    B,C
-7FB2: 8C             ADC   A,H
-7FB3: 41             LD    B,C
-7FB4: 8D             ADC   A,L
-7FB5: 41             LD    B,C
-7FB6: 8C             ADC   A,H
-7FB7: 41             LD    B,C
-7FB8: 8D             ADC   A,L
-7FB9: 41             LD    B,C
-7FBA: 8C             ADC   A,H
-7FBB: 41             LD    B,C
-7FBC: 8D             ADC   A,L
-7FBD: 41             LD    B,C
-7FBE: 8C             ADC   A,H
-7FBF: 41             LD    B,C
-7FC0: 89             ADC   A,C
-7FC1: 41             LD    B,C
-7FC2: 89             ADC   A,C
-7FC3: 41             LD    B,C
-7FC4: 89             ADC   A,C
-7FC5: 41             LD    B,C
-7FC6: 89             ADC   A,C
-7FC7: 41             LD    B,C
-7FC8: 8C             ADC   A,H
-7FC9: 41             LD    B,C
-7FCA: 8D             ADC   A,L
-7FCB: 41             LD    B,C
-7FCC: 8C             ADC   A,H
-7FCD: 41             LD    B,C
-7FCE: 8D             ADC   A,L
-7FCF: 41             LD    B,C
-7FD0: 8C             ADC   A,H
-7FD1: 41             LD    B,C
-7FD2: 8D             ADC   A,L
-7FD3: 41             LD    B,C
-7FD4: 8C             ADC   A,H
-7FD5: 41             LD    B,C
-7FD6: 8D             ADC   A,L
-7FD7: 41             LD    B,C
-7FD8: 89             ADC   A,C
-7FD9: 41             LD    B,C
-7FDA: 89             ADC   A,C
-7FDB: 41             LD    B,C
-7FDC: 8C             ADC   A,H
-7FDD: 41             LD    B,C
-7FDE: 8D             ADC   A,L
-7FDF: 41             LD    B,C
-7FE0: 8C             ADC   A,H
-7FE1: 41             LD    B,C
-7FE2: 8D             ADC   A,L
-7FE3: 41             LD    B,C
-7FE4: 8C             ADC   A,H
-7FE5: 41             LD    B,C
-7FE6: 8D             ADC   A,L
-7FE7: 41             LD    B,C
-7FE8: 8C             ADC   A,H
-7FE9: 41             LD    B,C
-7FEA: 8D             ADC   A,L
-7FEB: 41             LD    B,C
-7FEC: 8C             ADC   A,H
-7FED: 41             LD    B,C
-7FEE: 8D             ADC   A,L
-7FEF: 41             LD    B,C
-7FF0: 8C             ADC   A,H
-7FF1: 41             LD    B,C
-7FF2: 8D             ADC   A,L
-7FF3: 41             LD    B,C
-7FF4: 8C             ADC   A,H
-7FF5: 41             LD    B,C
-7FF6: 8D             ADC   A,L
-7FF7: 41             LD    B,C
-7FF8: 8C             ADC   A,H
-7FF9: 41             LD    B,C
-7FFA: 8D             ADC   A,L
-7FFB: 41             LD    B,C
-7FFC: 8C             ADC   A,H
-7FFD: 41             LD    B,C
-7FFE: 8D             ADC   A,L
-7FFF: 41             LD    B,C
-8000: 89             ADC   A,C
-8001: 41             LD    B,C
-8002: 89             ADC   A,C
-8003: 41             LD    B,C
-8004: 89             ADC   A,C
-8005: 41             LD    B,C
-8006: 89             ADC   A,C
-8007: 41             LD    B,C
-8008: 8D             ADC   A,L
-8009: 41             LD    B,C
-800A: 8C             ADC   A,H
-800B: 41             LD    B,C
-800C: 8D             ADC   A,L
-800D: 41             LD    B,C
-800E: 8C             ADC   A,H
-800F: 41             LD    B,C
-8010: 8D             ADC   A,L
-8011: 41             LD    B,C
-8012: 8C             ADC   A,H
-8013: 41             LD    B,C
-8014: 8D             ADC   A,L
-8015: 41             LD    B,C
-8016: 8C             ADC   A,H
-8017: 41             LD    B,C
-8018: 8D             ADC   A,L
-8019: 41             LD    B,C
-801A: 8C             ADC   A,H
-801B: 41             LD    B,C
-801C: 8D             ADC   A,L
-801D: 41             LD    B,C
-801E: 8C             ADC   A,H
-801F: 41             LD    B,C
-8020: 8D             ADC   A,L
-8021: 41             LD    B,C
-8022: 8C             ADC   A,H
-8023: 41             LD    B,C
-8024: 8D             ADC   A,L
-8025: 41             LD    B,C
-8026: 8C             ADC   A,H
-8027: 41             LD    B,C
-8028: 8D             ADC   A,L
-8029: 41             LD    B,C
-802A: 8C             ADC   A,H
-802B: 41             LD    B,C
-802C: 8D             ADC   A,L
-802D: 41             LD    B,C
-802E: 8C             ADC   A,H
-802F: 41             LD    B,C
-8030: 8D             ADC   A,L
-8031: 41             LD    B,C
-8032: 8C             ADC   A,H
-8033: 41             LD    B,C
-8034: 8D             ADC   A,L
-8035: 41             LD    B,C
-8036: 8C             ADC   A,H
-8037: 41             LD    B,C
-8038: 8D             ADC   A,L
-8039: 41             LD    B,C
-803A: 8C             ADC   A,H
-803B: 41             LD    B,C
-803C: 8D             ADC   A,L
-803D: 41             LD    B,C
-803E: 8C             ADC   A,H
-803F: 41             LD    B,C
-8040: 89             ADC   A,C
-8041: 41             LD    B,C
-8042: 89             ADC   A,C
-8043: 41             LD    B,C
-8044: 89             ADC   A,C
-8045: 41             LD    B,C
-8046: 89             ADC   A,C
-8047: 41             LD    B,C
-8048: 8C             ADC   A,H
-8049: 41             LD    B,C
-804A: 8D             ADC   A,L
-804B: 41             LD    B,C
-804C: 8C             ADC   A,H
-804D: 41             LD    B,C
-804E: 8D             ADC   A,L
-804F: 41             LD    B,C
-8050: 8C             ADC   A,H
-8051: 41             LD    B,C
-8052: 8D             ADC   A,L
-8053: 41             LD    B,C
-8054: 8C             ADC   A,H
-8055: 41             LD    B,C
-8056: 8D             ADC   A,L
-8057: 41             LD    B,C
-8058: 8C             ADC   A,H
-8059: 41             LD    B,C
-805A: 8D             ADC   A,L
-805B: 41             LD    B,C
-805C: 8C             ADC   A,H
-805D: 41             LD    B,C
-805E: 8D             ADC   A,L
-805F: 41             LD    B,C
-8060: 8C             ADC   A,H
-8061: 41             LD    B,C
-8062: 8D             ADC   A,L
-8063: 41             LD    B,C
-8064: 8C             ADC   A,H
-8065: 41             LD    B,C
-8066: 8D             ADC   A,L
-8067: 41             LD    B,C
-8068: 8C             ADC   A,H
-8069: 41             LD    B,C
-806A: 8D             ADC   A,L
-806B: 41             LD    B,C
-806C: 8C             ADC   A,H
-806D: 41             LD    B,C
-806E: 8D             ADC   A,L
-806F: 41             LD    B,C
-8070: 8C             ADC   A,H
-8071: 41             LD    B,C
-8072: 8D             ADC   A,L
-8073: 41             LD    B,C
-8074: 8C             ADC   A,H
-8075: 41             LD    B,C
-8076: 8D             ADC   A,L
-8077: 41             LD    B,C
-8078: 8C             ADC   A,H
-8079: 41             LD    B,C
-807A: 8D             ADC   A,L
-807B: 41             LD    B,C
-807C: 8C             ADC   A,H
-807D: 41             LD    B,C
-807E: 8D             ADC   A,L
-807F: 41             LD    B,C
-8080: 89             ADC   A,C
-8081: 41             LD    B,C
-8082: 89             ADC   A,C
-8083: 41             LD    B,C
-8084: 89             ADC   A,C
-8085: 41             LD    B,C
-8086: 89             ADC   A,C
-8087: 41             LD    B,C
-8088: 8D             ADC   A,L
-8089: 41             LD    B,C
-808A: 8C             ADC   A,H
-808B: 41             LD    B,C
-808C: 8D             ADC   A,L
-808D: 41             LD    B,C
-808E: 8C             ADC   A,H
-808F: 41             LD    B,C
-8090: 8D             ADC   A,L
-8091: 41             LD    B,C
-8092: 8C             ADC   A,H
-8093: 41             LD    B,C
-8094: 8D             ADC   A,L
-8095: 41             LD    B,C
-8096: 8C             ADC   A,H
-8097: 41             LD    B,C
-8098: 8D             ADC   A,L
-8099: 41             LD    B,C
-809A: 8C             ADC   A,H
-809B: 41             LD    B,C
-809C: 8D             ADC   A,L
-809D: 41             LD    B,C
-809E: 8C             ADC   A,H
-809F: 41             LD    B,C
-80A0: 8D             ADC   A,L
-80A1: 41             LD    B,C
-80A2: 8C             ADC   A,H
-80A3: 41             LD    B,C
-80A4: 8D             ADC   A,L
-80A5: 41             LD    B,C
-80A6: 8C             ADC   A,H
-80A7: 41             LD    B,C
-80A8: 8D             ADC   A,L
-80A9: 41             LD    B,C
-80AA: 8C             ADC   A,H
-80AB: 41             LD    B,C
-80AC: 8D             ADC   A,L
-80AD: 41             LD    B,C
-80AE: 8C             ADC   A,H
-80AF: 41             LD    B,C
-80B0: 8D             ADC   A,L
-80B1: 41             LD    B,C
-80B2: 8C             ADC   A,H
-80B3: 41             LD    B,C
-80B4: 8D             ADC   A,L
-80B5: 41             LD    B,C
-80B6: 8C             ADC   A,H
-80B7: 41             LD    B,C
-80B8: 8D             ADC   A,L
-80B9: 41             LD    B,C
-80BA: 8C             ADC   A,H
-80BB: 41             LD    B,C
-80BC: 8D             ADC   A,L
-80BD: 41             LD    B,C
-80BE: 8C             ADC   A,H
-80BF: 41             LD    B,C
-80C0: 89             ADC   A,C
-80C1: 41             LD    B,C
-80C2: 89             ADC   A,C
-80C3: 41             LD    B,C
-80C4: 89             ADC   A,C
-80C5: 41             LD    B,C
-80C6: 89             ADC   A,C
-80C7: 41             LD    B,C
-80C8: 8C             ADC   A,H
-80C9: 41             LD    B,C
-80CA: 8D             ADC   A,L
-80CB: 41             LD    B,C
-80CC: 8C             ADC   A,H
-80CD: 41             LD    B,C
-80CE: 8D             ADC   A,L
-80CF: 41             LD    B,C
-80D0: 8C             ADC   A,H
-80D1: 41             LD    B,C
-80D2: 8D             ADC   A,L
-80D3: 41             LD    B,C
-80D4: 8C             ADC   A,H
-80D5: 41             LD    B,C
-80D6: 8D             ADC   A,L
-80D7: 41             LD    B,C
-80D8: 8C             ADC   A,H
-80D9: 41             LD    B,C
-80DA: 8D             ADC   A,L
-80DB: 41             LD    B,C
-80DC: 8C             ADC   A,H
-80DD: 41             LD    B,C
-80DE: 8D             ADC   A,L
-80DF: 41             LD    B,C
-80E0: 8C             ADC   A,H
-80E1: 41             LD    B,C
-80E2: 8D             ADC   A,L
-80E3: 41             LD    B,C
-80E4: 8C             ADC   A,H
-80E5: 41             LD    B,C
-80E6: 8D             ADC   A,L
-80E7: 41             LD    B,C
-80E8: 8C             ADC   A,H
-80E9: 41             LD    B,C
-80EA: 8D             ADC   A,L
-80EB: 41             LD    B,C
-80EC: 8C             ADC   A,H
-80ED: 41             LD    B,C
-80EE: 8D             ADC   A,L
-80EF: 41             LD    B,C
-80F0: 8C             ADC   A,H
-80F1: 41             LD    B,C
-80F2: 8D             ADC   A,L
-80F3: 41             LD    B,C
-80F4: 8C             ADC   A,H
-80F5: 41             LD    B,C
-80F6: 8D             ADC   A,L
-80F7: 41             LD    B,C
-80F8: 8C             ADC   A,H
-80F9: 41             LD    B,C
-80FA: 8D             ADC   A,L
-80FB: 41             LD    B,C
-80FC: 8C             ADC   A,H
-80FD: 41             LD    B,C
-80FE: 8D             ADC   A,L
-80FF: 41             LD    B,C
-8100: 89             ADC   A,C
-8101: 41             LD    B,C
-8102: 89             ADC   A,C
-8103: 41             LD    B,C
-8104: 89             ADC   A,C
-8105: 41             LD    B,C
-8106: 89             ADC   A,C
-8107: 41             LD    B,C
-8108: 8D             ADC   A,L
-8109: 41             LD    B,C
-810A: 8C             ADC   A,H
-810B: 41             LD    B,C
-810C: 8D             ADC   A,L
-810D: 41             LD    B,C
-810E: 8C             ADC   A,H
-810F: 41             LD    B,C
-8110: 8D             ADC   A,L
-8111: 41             LD    B,C
-8112: 8C             ADC   A,H
-8113: 41             LD    B,C
-8114: 8D             ADC   A,L
-8115: 41             LD    B,C
-8116: 8C             ADC   A,H
-8117: 41             LD    B,C
-8118: 8D             ADC   A,L
-8119: 41             LD    B,C
-811A: 8C             ADC   A,H
-811B: 41             LD    B,C
-811C: 8D             ADC   A,L
-811D: 41             LD    B,C
-811E: 8C             ADC   A,H
-811F: 41             LD    B,C
-8120: 8D             ADC   A,L
-8121: 41             LD    B,C
-8122: 8C             ADC   A,H
-8123: 41             LD    B,C
-8124: 8D             ADC   A,L
-8125: 41             LD    B,C
-8126: 8C             ADC   A,H
-8127: 41             LD    B,C
-8128: 8D             ADC   A,L
-8129: 41             LD    B,C
-812A: 8C             ADC   A,H
-812B: 41             LD    B,C
-812C: 8D             ADC   A,L
-812D: 41             LD    B,C
-812E: 8C             ADC   A,H
-812F: 41             LD    B,C
-8130: 8D             ADC   A,L
-8131: 41             LD    B,C
-8132: 8C             ADC   A,H
-8133: 41             LD    B,C
-8134: 8D             ADC   A,L
-8135: 41             LD    B,C
-8136: 8C             ADC   A,H
-8137: 41             LD    B,C
-8138: 8D             ADC   A,L
-8139: 41             LD    B,C
-813A: 8C             ADC   A,H
-813B: 41             LD    B,C
-813C: 8D             ADC   A,L
-813D: 41             LD    B,C
-813E: 89             ADC   A,C
-813F: 41             LD    B,C
-8140: 89             ADC   A,C
-8141: 41             LD    B,C
-8142: 89             ADC   A,C
-8143: 41             LD    B,C
-8144: 89             ADC   A,C
-8145: 41             LD    B,C
-8146: 89             ADC   A,C
-8147: 41             LD    B,C
-8148: 8C             ADC   A,H
-8149: 41             LD    B,C
-814A: 8D             ADC   A,L
-814B: 41             LD    B,C
-814C: 8C             ADC   A,H
-814D: 41             LD    B,C
-814E: 8D             ADC   A,L
-814F: 41             LD    B,C
-8150: 8C             ADC   A,H
-8151: 41             LD    B,C
-8152: 8D             ADC   A,L
-8153: 41             LD    B,C
-8154: 8C             ADC   A,H
-8155: 41             LD    B,C
-8156: 8D             ADC   A,L
-8157: 41             LD    B,C
-8158: 8C             ADC   A,H
-8159: 41             LD    B,C
-815A: 8D             ADC   A,L
-815B: 41             LD    B,C
-815C: 8C             ADC   A,H
-815D: 41             LD    B,C
-815E: 8D             ADC   A,L
-815F: 41             LD    B,C
-8160: 8C             ADC   A,H
-8161: 41             LD    B,C
-8162: 8D             ADC   A,L
-8163: 41             LD    B,C
-8164: 8C             ADC   A,H
-8165: 41             LD    B,C
-8166: 8D             ADC   A,L
-8167: 41             LD    B,C
-8168: 8C             ADC   A,H
-8169: 41             LD    B,C
-816A: 8D             ADC   A,L
-816B: 41             LD    B,C
-816C: 8C             ADC   A,H
-816D: 41             LD    B,C
-816E: 8D             ADC   A,L
-816F: 41             LD    B,C
-8170: 8C             ADC   A,H
-8171: 41             LD    B,C
-8172: 8D             ADC   A,L
-8173: 41             LD    B,C
-8174: 8C             ADC   A,H
-8175: 41             LD    B,C
-8176: 8D             ADC   A,L
-8177: 41             LD    B,C
-8178: 8C             ADC   A,H
-8179: 41             LD    B,C
-817A: 8D             ADC   A,L
-817B: 41             LD    B,C
-817C: 89             ADC   A,C
-817D: 41             LD    B,C
-817E: 89             ADC   A,C
-817F: 41             LD    B,C
 8180: 89             ADC   A,C
 8181: 41             LD    B,C
 8182: 89             ADC   A,C
@@ -25122,1926 +18974,128 @@ ORG $0000
 88FD: 41             LD    B,C
 88FE: 89             ADC   A,C
 88FF: 41             LD    B,C
-8900: BE             CP    A,(HL)
-8901: 50             LD    D,B
-8902: BE             CP    A,(HL)
-8903: 50             LD    D,B
-8904: BE             CP    A,(HL)
-8905: 50             LD    D,B
-8906: BE             CP    A,(HL)
-8907: 50             LD    D,B
-8908: 62             LD    H,D
-8909: 41             LD    B,C
-890A: 62             LD    H,D
-890B: 41             LD    B,C
-890C: 62             LD    H,D
-890D: 41             LD    B,C
-890E: 62             LD    H,D
-890F: 41             LD    B,C
-8910: 62             LD    H,D
-8911: 41             LD    B,C
-8912: 62             LD    H,D
-8913: 41             LD    B,C
-8914: 62             LD    H,D
-8915: 41             LD    B,C
-8916: 62             LD    H,D
-8917: 41             LD    B,C
-8918: 62             LD    H,D
-8919: 41             LD    B,C
-891A: 62             LD    H,D
-891B: 41             LD    B,C
-891C: 62             LD    H,D
-891D: 41             LD    B,C
-891E: 62             LD    H,D
-891F: 41             LD    B,C
-8920: 62             LD    H,D
-8921: 41             LD    B,C
-8922: 62             LD    H,D
-8923: 41             LD    B,C
-8924: 62             LD    H,D
-8925: 41             LD    B,C
-8926: 62             LD    H,D
-8927: 41             LD    B,C
-8928: 62             LD    H,D
-8929: 41             LD    B,C
-892A: 62             LD    H,D
-892B: 41             LD    B,C
-892C: 62             LD    H,D
-892D: 41             LD    B,C
-892E: 62             LD    H,D
-892F: 41             LD    B,C
-8930: 62             LD    H,D
-8931: 41             LD    B,C
-8932: 62             LD    H,D
-8933: 41             LD    B,C
-8934: 62             LD    H,D
-8935: 41             LD    B,C
-8936: 62             LD    H,D
-8937: 41             LD    B,C
-8938: 62             LD    H,D
-8939: 41             LD    B,C
-893A: 62             LD    H,D
-893B: 41             LD    B,C
-893C: 62             LD    H,D
-893D: 41             LD    B,C
-893E: 62             LD    H,D
-893F: 41             LD    B,C
-8940: BE             CP    A,(HL)
-8941: 50             LD    D,B
-8942: BE             CP    A,(HL)
-8943: 50             LD    D,B
-8944: BE             CP    A,(HL)
-8945: 50             LD    D,B
-8946: BE             CP    A,(HL)
-8947: 50             LD    D,B
-8948: 62             LD    H,D
-8949: 41             LD    B,C
-894A: BB             CP    A,E
-894B: 40             LD    B,B
-894C: BB             CP    A,E
-894D: 40             LD    B,B
-894E: BD             CP    A,L
-894F: 40             LD    B,B
-8950: BB             CP    A,E
-8951: 40             LD    B,B
-8952: BB             CP    A,E
-8953: 40             LD    B,B
-8954: BD             CP    A,L
-8955: 40             LD    B,B
-8956: BB             CP    A,E
-8957: 40             LD    B,B
-8958: BB             CP    A,E
-8959: 40             LD    B,B
-895A: BD             CP    A,L
-895B: 40             LD    B,B
-895C: BB             CP    A,E
-895D: 40             LD    B,B
-895E: BB             CP    A,E
-895F: 40             LD    B,B
-8960: BD             CP    A,L
-8961: 40             LD    B,B
-8962: BB             CP    A,E
-8963: 40             LD    B,B
-8964: BB             CP    A,E
-8965: 40             LD    B,B
-8966: BD             CP    A,L
-8967: 40             LD    B,B
-8968: BB             CP    A,E
-8969: 40             LD    B,B
-896A: BB             CP    A,E
-896B: 40             LD    B,B
-896C: BD             CP    A,L
-896D: 40             LD    B,B
-896E: BB             CP    A,E
-896F: 40             LD    B,B
-8970: BB             CP    A,E
-8971: 40             LD    B,B
-8972: BD             CP    A,L
-8973: 40             LD    B,B
-8974: BB             CP    A,E
-8975: 40             LD    B,B
-8976: BB             CP    A,E
-8977: 40             LD    B,B
-8978: BD             CP    A,L
-8979: 40             LD    B,B
-897A: BB             CP    A,E
-897B: 40             LD    B,B
-897C: BB             CP    A,E
-897D: 40             LD    B,B
-897E: 62             LD    H,D
-897F: 41             LD    B,C
-8980: BE             CP    A,(HL)
-8981: 50             LD    D,B
-8982: BE             CP    A,(HL)
-8983: 50             LD    D,B
-8984: BE             CP    A,(HL)
-8985: 50             LD    D,B
-8986: BE             CP    A,(HL)
-8987: 50             LD    D,B
-8988: 62             LD    H,D
-8989: 41             LD    B,C
-898A: BE             CP    A,(HL)
-898B: 40             LD    B,B
-898C: BE             CP    A,(HL)
-898D: 40             LD    B,B
-898E: BC             CP    A,H
-898F: 40             LD    B,B
-8990: BE             CP    A,(HL)
-8991: 40             LD    B,B
-8992: BE             CP    A,(HL)
-8993: 40             LD    B,B
-8994: BC             CP    A,H
-8995: 40             LD    B,B
-8996: BE             CP    A,(HL)
-8997: 40             LD    B,B
-8998: BE             CP    A,(HL)
-8999: 40             LD    B,B
-899A: BC             CP    A,H
-899B: 40             LD    B,B
-899C: BE             CP    A,(HL)
-899D: 40             LD    B,B
-899E: BE             CP    A,(HL)
-899F: 40             LD    B,B
-89A0: BC             CP    A,H
-89A1: 40             LD    B,B
-89A2: BE             CP    A,(HL)
-89A3: 40             LD    B,B
-89A4: BE             CP    A,(HL)
-89A5: 40             LD    B,B
-89A6: BC             CP    A,H
-89A7: 40             LD    B,B
-89A8: BE             CP    A,(HL)
-89A9: 40             LD    B,B
-89AA: BE             CP    A,(HL)
-89AB: 40             LD    B,B
-89AC: BC             CP    A,H
-89AD: 40             LD    B,B
-89AE: BE             CP    A,(HL)
-89AF: 40             LD    B,B
-89B0: BE             CP    A,(HL)
-89B1: 40             LD    B,B
-89B2: BC             CP    A,H
-89B3: 40             LD    B,B
-89B4: BE             CP    A,(HL)
-89B5: 40             LD    B,B
-89B6: BE             CP    A,(HL)
-89B7: 40             LD    B,B
-89B8: BC             CP    A,H
-89B9: 40             LD    B,B
-89BA: BE             CP    A,(HL)
-89BB: 40             LD    B,B
-89BC: BE             CP    A,(HL)
-89BD: 40             LD    B,B
-89BE: 62             LD    H,D
-89BF: 41             LD    B,C
-89C0: BE             CP    A,(HL)
-89C1: 50             LD    D,B
-89C2: BE             CP    A,(HL)
-89C3: 50             LD    D,B
-89C4: BE             CP    A,(HL)
-89C5: 50             LD    D,B
-89C6: BE             CP    A,(HL)
-89C7: 50             LD    D,B
-89C8: 62             LD    H,D
-89C9: 41             LD    B,C
-89CA: BE             CP    A,(HL)
-89CB: 40             LD    B,B
-89CC: BE             CP    A,(HL)
-89CD: 40             LD    B,B
-89CE: BC             CP    A,H
-89CF: 40             LD    B,B
-89D0: BE             CP    A,(HL)
-89D1: 40             LD    B,B
-89D2: BE             CP    A,(HL)
-89D3: 40             LD    B,B
-89D4: BC             CP    A,H
-89D5: 40             LD    B,B
-89D6: BE             CP    A,(HL)
-89D7: 40             LD    B,B
-89D8: BE             CP    A,(HL)
-89D9: 40             LD    B,B
-89DA: BC             CP    A,H
-89DB: 40             LD    B,B
-89DC: BE             CP    A,(HL)
-89DD: 40             LD    B,B
-89DE: BE             CP    A,(HL)
-89DF: 40             LD    B,B
-89E0: BC             CP    A,H
-89E1: 40             LD    B,B
-89E2: BE             CP    A,(HL)
-89E3: 40             LD    B,B
-89E4: BE             CP    A,(HL)
-89E5: 40             LD    B,B
-89E6: BC             CP    A,H
-89E7: 40             LD    B,B
-89E8: BE             CP    A,(HL)
-89E9: 40             LD    B,B
-89EA: BE             CP    A,(HL)
-89EB: 40             LD    B,B
-89EC: BC             CP    A,H
-89ED: 40             LD    B,B
-89EE: BE             CP    A,(HL)
-89EF: 40             LD    B,B
-89F0: BE             CP    A,(HL)
-89F1: 40             LD    B,B
-89F2: BC             CP    A,H
-89F3: 40             LD    B,B
-89F4: BE             CP    A,(HL)
-89F5: 40             LD    B,B
-89F6: BE             CP    A,(HL)
-89F7: 40             LD    B,B
-89F8: BC             CP    A,H
-89F9: 40             LD    B,B
-89FA: BE             CP    A,(HL)
-89FB: 40             LD    B,B
-89FC: BE             CP    A,(HL)
-89FD: 40             LD    B,B
-89FE: 62             LD    H,D
-89FF: 41             LD    B,C
-8A00: BE             CP    A,(HL)
-8A01: 50             LD    D,B
-8A02: BE             CP    A,(HL)
-8A03: 50             LD    D,B
-8A04: BE             CP    A,(HL)
-8A05: 50             LD    D,B
-8A06: BE             CP    A,(HL)
-8A07: 50             LD    D,B
-8A08: 62             LD    H,D
-8A09: 41             LD    B,C
-8A0A: BB             CP    A,E
-8A0B: 40             LD    B,B
-8A0C: BB             CP    A,E
-8A0D: 40             LD    B,B
-8A0E: BD             CP    A,L
-8A0F: 40             LD    B,B
-8A10: BB             CP    A,E
-8A11: 40             LD    B,B
-8A12: BB             CP    A,E
-8A13: 40             LD    B,B
-8A14: BD             CP    A,L
-8A15: 40             LD    B,B
-8A16: BB             CP    A,E
-8A17: 40             LD    B,B
-8A18: BB             CP    A,E
-8A19: 40             LD    B,B
-8A1A: BD             CP    A,L
-8A1B: 40             LD    B,B
-8A1C: BB             CP    A,E
-8A1D: 40             LD    B,B
-8A1E: BB             CP    A,E
-8A1F: 40             LD    B,B
-8A20: BD             CP    A,L
-8A21: 40             LD    B,B
-8A22: BB             CP    A,E
-8A23: 40             LD    B,B
-8A24: BB             CP    A,E
-8A25: 40             LD    B,B
-8A26: BD             CP    A,L
-8A27: 40             LD    B,B
-8A28: BB             CP    A,E
-8A29: 40             LD    B,B
-8A2A: BB             CP    A,E
-8A2B: 40             LD    B,B
-8A2C: BD             CP    A,L
-8A2D: 40             LD    B,B
-8A2E: BB             CP    A,E
-8A2F: 40             LD    B,B
-8A30: BB             CP    A,E
-8A31: 40             LD    B,B
-8A32: BD             CP    A,L
-8A33: 40             LD    B,B
-8A34: BB             CP    A,E
-8A35: 40             LD    B,B
-8A36: BB             CP    A,E
-8A37: 40             LD    B,B
-8A38: BD             CP    A,L
-8A39: 40             LD    B,B
-8A3A: BB             CP    A,E
-8A3B: 40             LD    B,B
-8A3C: BB             CP    A,E
-8A3D: 40             LD    B,B
-8A3E: 62             LD    H,D
-8A3F: 41             LD    B,C
-8A40: BE             CP    A,(HL)
-8A41: 50             LD    D,B
-8A42: BE             CP    A,(HL)
-8A43: 50             LD    D,B
-8A44: BE             CP    A,(HL)
-8A45: 50             LD    D,B
-8A46: BE             CP    A,(HL)
-8A47: 50             LD    D,B
-8A48: 62             LD    H,D
-8A49: 41             LD    B,C
-8A4A: BE             CP    A,(HL)
-8A4B: 40             LD    B,B
-8A4C: BE             CP    A,(HL)
-8A4D: 40             LD    B,B
-8A4E: BC             CP    A,H
-8A4F: 40             LD    B,B
-8A50: BE             CP    A,(HL)
-8A51: 40             LD    B,B
-8A52: BE             CP    A,(HL)
-8A53: 40             LD    B,B
-8A54: BC             CP    A,H
-8A55: 40             LD    B,B
-8A56: BE             CP    A,(HL)
-8A57: 40             LD    B,B
-8A58: BE             CP    A,(HL)
-8A59: 40             LD    B,B
-8A5A: BC             CP    A,H
-8A5B: 40             LD    B,B
-8A5C: BE             CP    A,(HL)
-8A5D: 40             LD    B,B
-8A5E: BE             CP    A,(HL)
-8A5F: 40             LD    B,B
-8A60: BC             CP    A,H
-8A61: 40             LD    B,B
-8A62: BE             CP    A,(HL)
-8A63: 40             LD    B,B
-8A64: BE             CP    A,(HL)
-8A65: 40             LD    B,B
-8A66: BC             CP    A,H
-8A67: 40             LD    B,B
-8A68: BE             CP    A,(HL)
-8A69: 40             LD    B,B
-8A6A: BE             CP    A,(HL)
-8A6B: 40             LD    B,B
-8A6C: BC             CP    A,H
-8A6D: 40             LD    B,B
-8A6E: BE             CP    A,(HL)
-8A6F: 40             LD    B,B
-8A70: BE             CP    A,(HL)
-8A71: 40             LD    B,B
-8A72: BC             CP    A,H
-8A73: 40             LD    B,B
-8A74: BE             CP    A,(HL)
-8A75: 40             LD    B,B
-8A76: BE             CP    A,(HL)
-8A77: 40             LD    B,B
-8A78: BC             CP    A,H
-8A79: 40             LD    B,B
-8A7A: BE             CP    A,(HL)
-8A7B: 40             LD    B,B
-8A7C: BE             CP    A,(HL)
-8A7D: 40             LD    B,B
-8A7E: 62             LD    H,D
-8A7F: 41             LD    B,C
-8A80: BE             CP    A,(HL)
-8A81: 50             LD    D,B
-8A82: BE             CP    A,(HL)
-8A83: 50             LD    D,B
-8A84: BE             CP    A,(HL)
-8A85: 50             LD    D,B
-8A86: BE             CP    A,(HL)
-8A87: 50             LD    D,B
-8A88: 62             LD    H,D
-8A89: 41             LD    B,C
-8A8A: BE             CP    A,(HL)
-8A8B: 40             LD    B,B
-8A8C: BE             CP    A,(HL)
-8A8D: 40             LD    B,B
-8A8E: BC             CP    A,H
-8A8F: 40             LD    B,B
-8A90: BE             CP    A,(HL)
-8A91: 40             LD    B,B
-8A92: BE             CP    A,(HL)
-8A93: 40             LD    B,B
-8A94: BC             CP    A,H
-8A95: 40             LD    B,B
-8A96: BE             CP    A,(HL)
-8A97: 40             LD    B,B
-8A98: BE             CP    A,(HL)
-8A99: 40             LD    B,B
-8A9A: BC             CP    A,H
-8A9B: 40             LD    B,B
-8A9C: BE             CP    A,(HL)
-8A9D: 40             LD    B,B
-8A9E: BE             CP    A,(HL)
-8A9F: 40             LD    B,B
-8AA0: BC             CP    A,H
-8AA1: 40             LD    B,B
-8AA2: BE             CP    A,(HL)
-8AA3: 40             LD    B,B
-8AA4: BE             CP    A,(HL)
-8AA5: 40             LD    B,B
-8AA6: BC             CP    A,H
-8AA7: 40             LD    B,B
-8AA8: BE             CP    A,(HL)
-8AA9: 40             LD    B,B
-8AAA: BE             CP    A,(HL)
-8AAB: 40             LD    B,B
-8AAC: BC             CP    A,H
-8AAD: 40             LD    B,B
-8AAE: BE             CP    A,(HL)
-8AAF: 40             LD    B,B
-8AB0: BE             CP    A,(HL)
-8AB1: 40             LD    B,B
-8AB2: BC             CP    A,H
-8AB3: 40             LD    B,B
-8AB4: BE             CP    A,(HL)
-8AB5: 40             LD    B,B
-8AB6: BE             CP    A,(HL)
-8AB7: 40             LD    B,B
-8AB8: BC             CP    A,H
-8AB9: 40             LD    B,B
-8ABA: BE             CP    A,(HL)
-8ABB: 40             LD    B,B
-8ABC: BE             CP    A,(HL)
-8ABD: 40             LD    B,B
-8ABE: 62             LD    H,D
-8ABF: 41             LD    B,C
-8AC0: BE             CP    A,(HL)
-8AC1: 50             LD    D,B
-8AC2: BE             CP    A,(HL)
-8AC3: 50             LD    D,B
-8AC4: BE             CP    A,(HL)
-8AC5: 50             LD    D,B
-8AC6: BE             CP    A,(HL)
-8AC7: 50             LD    D,B
-8AC8: 62             LD    H,D
-8AC9: 41             LD    B,C
-8ACA: BB             CP    A,E
-8ACB: 40             LD    B,B
-8ACC: BB             CP    A,E
-8ACD: 40             LD    B,B
-8ACE: BD             CP    A,L
-8ACF: 40             LD    B,B
-8AD0: BB             CP    A,E
-8AD1: 40             LD    B,B
-8AD2: BB             CP    A,E
-8AD3: 40             LD    B,B
-8AD4: BD             CP    A,L
-8AD5: 40             LD    B,B
-8AD6: BB             CP    A,E
-8AD7: 40             LD    B,B
-8AD8: BB             CP    A,E
-8AD9: 40             LD    B,B
-8ADA: BD             CP    A,L
-8ADB: 40             LD    B,B
-8ADC: BB             CP    A,E
-8ADD: 40             LD    B,B
-8ADE: BB             CP    A,E
-8ADF: 40             LD    B,B
-8AE0: BD             CP    A,L
-8AE1: 40             LD    B,B
-8AE2: BB             CP    A,E
-8AE3: 40             LD    B,B
-8AE4: BB             CP    A,E
-8AE5: 40             LD    B,B
-8AE6: BD             CP    A,L
-8AE7: 40             LD    B,B
-8AE8: BB             CP    A,E
-8AE9: 40             LD    B,B
-8AEA: BB             CP    A,E
-8AEB: 40             LD    B,B
-8AEC: BD             CP    A,L
-8AED: 40             LD    B,B
-8AEE: BB             CP    A,E
-8AEF: 40             LD    B,B
-8AF0: BB             CP    A,E
-8AF1: 40             LD    B,B
-8AF2: BD             CP    A,L
-8AF3: 40             LD    B,B
-8AF4: BB             CP    A,E
-8AF5: 40             LD    B,B
-8AF6: BB             CP    A,E
-8AF7: 40             LD    B,B
-8AF8: BD             CP    A,L
-8AF9: 40             LD    B,B
-8AFA: BB             CP    A,E
-8AFB: 40             LD    B,B
-8AFC: BB             CP    A,E
-8AFD: 40             LD    B,B
-8AFE: 62             LD    H,D
-8AFF: 41             LD    B,C
-8B00: BE             CP    A,(HL)
-8B01: 50             LD    D,B
-8B02: BE             CP    A,(HL)
-8B03: 50             LD    D,B
-8B04: BE             CP    A,(HL)
-8B05: 50             LD    D,B
-8B06: BE             CP    A,(HL)
-8B07: 50             LD    D,B
-8B08: 62             LD    H,D
-8B09: 41             LD    B,C
-8B0A: BE             CP    A,(HL)
-8B0B: 40             LD    B,B
-8B0C: BE             CP    A,(HL)
-8B0D: 40             LD    B,B
-8B0E: BC             CP    A,H
-8B0F: 40             LD    B,B
-8B10: BE             CP    A,(HL)
-8B11: 40             LD    B,B
-8B12: BE             CP    A,(HL)
-8B13: 40             LD    B,B
-8B14: BC             CP    A,H
-8B15: 40             LD    B,B
-8B16: BE             CP    A,(HL)
-8B17: 40             LD    B,B
-8B18: BE             CP    A,(HL)
-8B19: 40             LD    B,B
-8B1A: BC             CP    A,H
-8B1B: 40             LD    B,B
-8B1C: BE             CP    A,(HL)
-8B1D: 40             LD    B,B
-8B1E: BE             CP    A,(HL)
-8B1F: 40             LD    B,B
-8B20: BC             CP    A,H
-8B21: 40             LD    B,B
-8B22: BE             CP    A,(HL)
-8B23: 40             LD    B,B
-8B24: BE             CP    A,(HL)
-8B25: 40             LD    B,B
-8B26: BC             CP    A,H
-8B27: 40             LD    B,B
-8B28: BE             CP    A,(HL)
-8B29: 40             LD    B,B
-8B2A: BE             CP    A,(HL)
-8B2B: 40             LD    B,B
-8B2C: BC             CP    A,H
-8B2D: 40             LD    B,B
-8B2E: BE             CP    A,(HL)
-8B2F: 40             LD    B,B
-8B30: BE             CP    A,(HL)
-8B31: 40             LD    B,B
-8B32: BC             CP    A,H
-8B33: 40             LD    B,B
-8B34: BE             CP    A,(HL)
-8B35: 40             LD    B,B
-8B36: BE             CP    A,(HL)
-8B37: 40             LD    B,B
-8B38: BC             CP    A,H
-8B39: 40             LD    B,B
-8B3A: BE             CP    A,(HL)
-8B3B: 40             LD    B,B
-8B3C: BE             CP    A,(HL)
-8B3D: 40             LD    B,B
-8B3E: 62             LD    H,D
-8B3F: 41             LD    B,C
-8B40: BE             CP    A,(HL)
-8B41: 50             LD    D,B
-8B42: BE             CP    A,(HL)
-8B43: 50             LD    D,B
-8B44: BE             CP    A,(HL)
-8B45: 50             LD    D,B
-8B46: BE             CP    A,(HL)
-8B47: 50             LD    D,B
-8B48: 62             LD    H,D
-8B49: 41             LD    B,C
-8B4A: BE             CP    A,(HL)
-8B4B: 40             LD    B,B
-8B4C: BE             CP    A,(HL)
-8B4D: 40             LD    B,B
-8B4E: BC             CP    A,H
-8B4F: 40             LD    B,B
-8B50: BE             CP    A,(HL)
-8B51: 40             LD    B,B
-8B52: BE             CP    A,(HL)
-8B53: 40             LD    B,B
-8B54: BC             CP    A,H
-8B55: 40             LD    B,B
-8B56: BE             CP    A,(HL)
-8B57: 40             LD    B,B
-8B58: BE             CP    A,(HL)
-8B59: 40             LD    B,B
-8B5A: BC             CP    A,H
-8B5B: 40             LD    B,B
-8B5C: BE             CP    A,(HL)
-8B5D: 40             LD    B,B
-8B5E: BE             CP    A,(HL)
-8B5F: 40             LD    B,B
-8B60: BC             CP    A,H
-8B61: 40             LD    B,B
-8B62: BE             CP    A,(HL)
-8B63: 40             LD    B,B
-8B64: BE             CP    A,(HL)
-8B65: 40             LD    B,B
-8B66: BC             CP    A,H
-8B67: 40             LD    B,B
-8B68: BE             CP    A,(HL)
-8B69: 40             LD    B,B
-8B6A: BE             CP    A,(HL)
-8B6B: 40             LD    B,B
-8B6C: BC             CP    A,H
-8B6D: 40             LD    B,B
-8B6E: BE             CP    A,(HL)
-8B6F: 40             LD    B,B
-8B70: BE             CP    A,(HL)
-8B71: 40             LD    B,B
-8B72: BC             CP    A,H
-8B73: 40             LD    B,B
-8B74: BE             CP    A,(HL)
-8B75: 40             LD    B,B
-8B76: BE             CP    A,(HL)
-8B77: 40             LD    B,B
-8B78: BC             CP    A,H
-8B79: 40             LD    B,B
-8B7A: BE             CP    A,(HL)
-8B7B: 40             LD    B,B
-8B7C: BE             CP    A,(HL)
-8B7D: 40             LD    B,B
-8B7E: 62             LD    H,D
-8B7F: 41             LD    B,C
-8B80: BE             CP    A,(HL)
-8B81: 50             LD    D,B
-8B82: BE             CP    A,(HL)
-8B83: 50             LD    D,B
-8B84: BE             CP    A,(HL)
-8B85: 50             LD    D,B
-8B86: BE             CP    A,(HL)
-8B87: 50             LD    D,B
-8B88: 62             LD    H,D
-8B89: 41             LD    B,C
-8B8A: BB             CP    A,E
-8B8B: 40             LD    B,B
-8B8C: BB             CP    A,E
-8B8D: 40             LD    B,B
-8B8E: BD             CP    A,L
-8B8F: 40             LD    B,B
-8B90: BB             CP    A,E
-8B91: 40             LD    B,B
-8B92: BB             CP    A,E
-8B93: 40             LD    B,B
-8B94: BD             CP    A,L
-8B95: 40             LD    B,B
-8B96: BB             CP    A,E
-8B97: 40             LD    B,B
-8B98: BB             CP    A,E
-8B99: 40             LD    B,B
-8B9A: BD             CP    A,L
-8B9B: 40             LD    B,B
-8B9C: BB             CP    A,E
-8B9D: 40             LD    B,B
-8B9E: BB             CP    A,E
-8B9F: 40             LD    B,B
-8BA0: BD             CP    A,L
-8BA1: 40             LD    B,B
-8BA2: BB             CP    A,E
-8BA3: 40             LD    B,B
-8BA4: BB             CP    A,E
-8BA5: 40             LD    B,B
-8BA6: BD             CP    A,L
-8BA7: 40             LD    B,B
-8BA8: BB             CP    A,E
-8BA9: 40             LD    B,B
-8BAA: BB             CP    A,E
-8BAB: 40             LD    B,B
-8BAC: BD             CP    A,L
-8BAD: 40             LD    B,B
-8BAE: BB             CP    A,E
-8BAF: 40             LD    B,B
-8BB0: BB             CP    A,E
-8BB1: 40             LD    B,B
-8BB2: BD             CP    A,L
-8BB3: 40             LD    B,B
-8BB4: BB             CP    A,E
-8BB5: 40             LD    B,B
-8BB6: BB             CP    A,E
-8BB7: 40             LD    B,B
-8BB8: BD             CP    A,L
-8BB9: 40             LD    B,B
-8BBA: BB             CP    A,E
-8BBB: 40             LD    B,B
-8BBC: BB             CP    A,E
-8BBD: 40             LD    B,B
-8BBE: 62             LD    H,D
-8BBF: 41             LD    B,C
-8BC0: BE             CP    A,(HL)
-8BC1: 50             LD    D,B
-8BC2: BE             CP    A,(HL)
-8BC3: 50             LD    D,B
-8BC4: BE             CP    A,(HL)
-8BC5: 50             LD    D,B
-8BC6: BE             CP    A,(HL)
-8BC7: 50             LD    D,B
-8BC8: 62             LD    H,D
-8BC9: 41             LD    B,C
-8BCA: BE             CP    A,(HL)
-8BCB: 40             LD    B,B
-8BCC: BE             CP    A,(HL)
-8BCD: 40             LD    B,B
-8BCE: BC             CP    A,H
-8BCF: 40             LD    B,B
-8BD0: BE             CP    A,(HL)
-8BD1: 40             LD    B,B
-8BD2: BE             CP    A,(HL)
-8BD3: 40             LD    B,B
-8BD4: BC             CP    A,H
-8BD5: 40             LD    B,B
-8BD6: BE             CP    A,(HL)
-8BD7: 40             LD    B,B
-8BD8: BE             CP    A,(HL)
-8BD9: 40             LD    B,B
-8BDA: BC             CP    A,H
-8BDB: 40             LD    B,B
-8BDC: BE             CP    A,(HL)
-8BDD: 40             LD    B,B
-8BDE: BE             CP    A,(HL)
-8BDF: 40             LD    B,B
-8BE0: BC             CP    A,H
-8BE1: 40             LD    B,B
-8BE2: BE             CP    A,(HL)
-8BE3: 40             LD    B,B
-8BE4: BE             CP    A,(HL)
-8BE5: 40             LD    B,B
-8BE6: BC             CP    A,H
-8BE7: 40             LD    B,B
-8BE8: BE             CP    A,(HL)
-8BE9: 40             LD    B,B
-8BEA: BE             CP    A,(HL)
-8BEB: 40             LD    B,B
-8BEC: BC             CP    A,H
-8BED: 40             LD    B,B
-8BEE: BE             CP    A,(HL)
-8BEF: 40             LD    B,B
-8BF0: BE             CP    A,(HL)
-8BF1: 40             LD    B,B
-8BF2: BC             CP    A,H
-8BF3: 40             LD    B,B
-8BF4: BE             CP    A,(HL)
-8BF5: 40             LD    B,B
-8BF6: BE             CP    A,(HL)
-8BF7: 40             LD    B,B
-8BF8: BC             CP    A,H
-8BF9: 40             LD    B,B
-8BFA: BE             CP    A,(HL)
-8BFB: 40             LD    B,B
-8BFC: BE             CP    A,(HL)
-8BFD: 40             LD    B,B
-8BFE: 62             LD    H,D
-8BFF: 41             LD    B,C
-8C00: BE             CP    A,(HL)
-8C01: 50             LD    D,B
-8C02: BE             CP    A,(HL)
-8C03: 50             LD    D,B
-8C04: BE             CP    A,(HL)
-8C05: 50             LD    D,B
-8C06: BE             CP    A,(HL)
-8C07: 50             LD    D,B
-8C08: 62             LD    H,D
-8C09: 41             LD    B,C
-8C0A: BE             CP    A,(HL)
-8C0B: 40             LD    B,B
-8C0C: BE             CP    A,(HL)
-8C0D: 40             LD    B,B
-8C0E: BC             CP    A,H
-8C0F: 40             LD    B,B
-8C10: BE             CP    A,(HL)
-8C11: 40             LD    B,B
-8C12: BE             CP    A,(HL)
-8C13: 40             LD    B,B
-8C14: BC             CP    A,H
-8C15: 40             LD    B,B
-8C16: BE             CP    A,(HL)
-8C17: 40             LD    B,B
-8C18: BE             CP    A,(HL)
-8C19: 40             LD    B,B
-8C1A: BC             CP    A,H
-8C1B: 40             LD    B,B
-8C1C: BE             CP    A,(HL)
-8C1D: 40             LD    B,B
-8C1E: BE             CP    A,(HL)
-8C1F: 40             LD    B,B
-8C20: BC             CP    A,H
-8C21: 40             LD    B,B
-8C22: BE             CP    A,(HL)
-8C23: 40             LD    B,B
-8C24: BE             CP    A,(HL)
-8C25: 40             LD    B,B
-8C26: BC             CP    A,H
-8C27: 40             LD    B,B
-8C28: BE             CP    A,(HL)
-8C29: 40             LD    B,B
-8C2A: BE             CP    A,(HL)
-8C2B: 40             LD    B,B
-8C2C: BC             CP    A,H
-8C2D: 40             LD    B,B
-8C2E: BE             CP    A,(HL)
-8C2F: 40             LD    B,B
-8C30: BE             CP    A,(HL)
-8C31: 40             LD    B,B
-8C32: BC             CP    A,H
-8C33: 40             LD    B,B
-8C34: BE             CP    A,(HL)
-8C35: 40             LD    B,B
-8C36: BE             CP    A,(HL)
-8C37: 40             LD    B,B
-8C38: BC             CP    A,H
-8C39: 40             LD    B,B
-8C3A: BE             CP    A,(HL)
-8C3B: 40             LD    B,B
-8C3C: BE             CP    A,(HL)
-8C3D: 40             LD    B,B
-8C3E: 62             LD    H,D
-8C3F: 41             LD    B,C
-8C40: BE             CP    A,(HL)
-8C41: 50             LD    D,B
-8C42: BE             CP    A,(HL)
-8C43: 50             LD    D,B
-8C44: BE             CP    A,(HL)
-8C45: 50             LD    D,B
-8C46: BE             CP    A,(HL)
-8C47: 50             LD    D,B
-8C48: 62             LD    H,D
-8C49: 41             LD    B,C
-8C4A: BB             CP    A,E
-8C4B: 40             LD    B,B
-8C4C: BB             CP    A,E
-8C4D: 40             LD    B,B
-8C4E: BD             CP    A,L
-8C4F: 40             LD    B,B
-8C50: BB             CP    A,E
-8C51: 40             LD    B,B
-8C52: BB             CP    A,E
-8C53: 40             LD    B,B
-8C54: BD             CP    A,L
-8C55: 40             LD    B,B
-8C56: BB             CP    A,E
-8C57: 40             LD    B,B
-8C58: BB             CP    A,E
-8C59: 40             LD    B,B
-8C5A: BD             CP    A,L
-8C5B: 40             LD    B,B
-8C5C: BB             CP    A,E
-8C5D: 40             LD    B,B
-8C5E: BB             CP    A,E
-8C5F: 40             LD    B,B
-8C60: BD             CP    A,L
-8C61: 40             LD    B,B
-8C62: BB             CP    A,E
-8C63: 40             LD    B,B
-8C64: BB             CP    A,E
-8C65: 40             LD    B,B
-8C66: BD             CP    A,L
-8C67: 40             LD    B,B
-8C68: BB             CP    A,E
-8C69: 40             LD    B,B
-8C6A: BB             CP    A,E
-8C6B: 40             LD    B,B
-8C6C: BD             CP    A,L
-8C6D: 40             LD    B,B
-8C6E: BB             CP    A,E
-8C6F: 40             LD    B,B
-8C70: BB             CP    A,E
-8C71: 40             LD    B,B
-8C72: BD             CP    A,L
-8C73: 40             LD    B,B
-8C74: BB             CP    A,E
-8C75: 40             LD    B,B
-8C76: BB             CP    A,E
-8C77: 40             LD    B,B
-8C78: BD             CP    A,L
-8C79: 40             LD    B,B
-8C7A: BB             CP    A,E
-8C7B: 40             LD    B,B
-8C7C: BB             CP    A,E
-8C7D: 40             LD    B,B
-8C7E: 62             LD    H,D
-8C7F: 41             LD    B,C
-8C80: BE             CP    A,(HL)
-8C81: 50             LD    D,B
-8C82: BE             CP    A,(HL)
-8C83: 50             LD    D,B
-8C84: BE             CP    A,(HL)
-8C85: 50             LD    D,B
-8C86: BE             CP    A,(HL)
-8C87: 50             LD    D,B
-8C88: 62             LD    H,D
-8C89: 41             LD    B,C
-8C8A: BE             CP    A,(HL)
-8C8B: 40             LD    B,B
-8C8C: BE             CP    A,(HL)
-8C8D: 40             LD    B,B
-8C8E: BC             CP    A,H
-8C8F: 40             LD    B,B
-8C90: BE             CP    A,(HL)
-8C91: 40             LD    B,B
-8C92: BE             CP    A,(HL)
-8C93: 40             LD    B,B
-8C94: BC             CP    A,H
-8C95: 40             LD    B,B
-8C96: BE             CP    A,(HL)
-8C97: 40             LD    B,B
-8C98: BE             CP    A,(HL)
-8C99: 40             LD    B,B
-8C9A: BC             CP    A,H
-8C9B: 40             LD    B,B
-8C9C: BE             CP    A,(HL)
-8C9D: 40             LD    B,B
-8C9E: BE             CP    A,(HL)
-8C9F: 40             LD    B,B
-8CA0: BC             CP    A,H
-8CA1: 40             LD    B,B
-8CA2: BE             CP    A,(HL)
-8CA3: 40             LD    B,B
-8CA4: BE             CP    A,(HL)
-8CA5: 40             LD    B,B
-8CA6: BC             CP    A,H
-8CA7: 40             LD    B,B
-8CA8: BE             CP    A,(HL)
-8CA9: 40             LD    B,B
-8CAA: BE             CP    A,(HL)
-8CAB: 40             LD    B,B
-8CAC: BC             CP    A,H
-8CAD: 40             LD    B,B
-8CAE: BE             CP    A,(HL)
-8CAF: 40             LD    B,B
-8CB0: BE             CP    A,(HL)
-8CB1: 40             LD    B,B
-8CB2: BC             CP    A,H
-8CB3: 40             LD    B,B
-8CB4: BE             CP    A,(HL)
-8CB5: 40             LD    B,B
-8CB6: BE             CP    A,(HL)
-8CB7: 40             LD    B,B
-8CB8: BC             CP    A,H
-8CB9: 40             LD    B,B
-8CBA: BE             CP    A,(HL)
-8CBB: 40             LD    B,B
-8CBC: BE             CP    A,(HL)
-8CBD: 40             LD    B,B
-8CBE: 62             LD    H,D
-8CBF: 41             LD    B,C
-8CC0: BE             CP    A,(HL)
-8CC1: 50             LD    D,B
-8CC2: BE             CP    A,(HL)
-8CC3: 50             LD    D,B
-8CC4: BE             CP    A,(HL)
-8CC5: 50             LD    D,B
-8CC6: BE             CP    A,(HL)
-8CC7: 50             LD    D,B
-8CC8: 62             LD    H,D
-8CC9: 41             LD    B,C
-8CCA: BE             CP    A,(HL)
-8CCB: 40             LD    B,B
-8CCC: BE             CP    A,(HL)
-8CCD: 40             LD    B,B
-8CCE: BC             CP    A,H
-8CCF: 40             LD    B,B
-8CD0: BE             CP    A,(HL)
-8CD1: 40             LD    B,B
-8CD2: BE             CP    A,(HL)
-8CD3: 40             LD    B,B
-8CD4: BC             CP    A,H
-8CD5: 40             LD    B,B
-8CD6: BE             CP    A,(HL)
-8CD7: 40             LD    B,B
-8CD8: BE             CP    A,(HL)
-8CD9: 40             LD    B,B
-8CDA: BC             CP    A,H
-8CDB: 40             LD    B,B
-8CDC: BE             CP    A,(HL)
-8CDD: 40             LD    B,B
-8CDE: BE             CP    A,(HL)
-8CDF: 40             LD    B,B
-8CE0: BC             CP    A,H
-8CE1: 40             LD    B,B
-8CE2: BE             CP    A,(HL)
-8CE3: 40             LD    B,B
-8CE4: BE             CP    A,(HL)
-8CE5: 40             LD    B,B
-8CE6: BC             CP    A,H
-8CE7: 40             LD    B,B
-8CE8: BE             CP    A,(HL)
-8CE9: 40             LD    B,B
-8CEA: BE             CP    A,(HL)
-8CEB: 40             LD    B,B
-8CEC: BC             CP    A,H
-8CED: 40             LD    B,B
-8CEE: BE             CP    A,(HL)
-8CEF: 40             LD    B,B
-8CF0: BE             CP    A,(HL)
-8CF1: 40             LD    B,B
-8CF2: BC             CP    A,H
-8CF3: 40             LD    B,B
-8CF4: BE             CP    A,(HL)
-8CF5: 40             LD    B,B
-8CF6: BE             CP    A,(HL)
-8CF7: 40             LD    B,B
-8CF8: BC             CP    A,H
-8CF9: 40             LD    B,B
-8CFA: BE             CP    A,(HL)
-8CFB: 40             LD    B,B
-8CFC: BE             CP    A,(HL)
-8CFD: 40             LD    B,B
-8CFE: 62             LD    H,D
-8CFF: 41             LD    B,C
-8D00: BE             CP    A,(HL)
-8D01: 50             LD    D,B
-8D02: BE             CP    A,(HL)
-8D03: 50             LD    D,B
-8D04: BE             CP    A,(HL)
-8D05: 50             LD    D,B
-8D06: BE             CP    A,(HL)
-8D07: 50             LD    D,B
-8D08: 62             LD    H,D
-8D09: 41             LD    B,C
-8D0A: BB             CP    A,E
-8D0B: 40             LD    B,B
-8D0C: BB             CP    A,E
-8D0D: 40             LD    B,B
-8D0E: BD             CP    A,L
-8D0F: 40             LD    B,B
-8D10: BB             CP    A,E
-8D11: 40             LD    B,B
-8D12: BB             CP    A,E
-8D13: 40             LD    B,B
-8D14: BD             CP    A,L
-8D15: 40             LD    B,B
-8D16: BB             CP    A,E
-8D17: 40             LD    B,B
-8D18: BB             CP    A,E
-8D19: 40             LD    B,B
-8D1A: BD             CP    A,L
-8D1B: 40             LD    B,B
-8D1C: BB             CP    A,E
-8D1D: 40             LD    B,B
-8D1E: BB             CP    A,E
-8D1F: 40             LD    B,B
-8D20: BD             CP    A,L
-8D21: 40             LD    B,B
-8D22: BB             CP    A,E
-8D23: 40             LD    B,B
-8D24: BB             CP    A,E
-8D25: 40             LD    B,B
-8D26: BD             CP    A,L
-8D27: 40             LD    B,B
-8D28: BB             CP    A,E
-8D29: 40             LD    B,B
-8D2A: BB             CP    A,E
-8D2B: 40             LD    B,B
-8D2C: BD             CP    A,L
-8D2D: 40             LD    B,B
-8D2E: BB             CP    A,E
-8D2F: 40             LD    B,B
-8D30: BB             CP    A,E
-8D31: 40             LD    B,B
-8D32: BD             CP    A,L
-8D33: 40             LD    B,B
-8D34: BB             CP    A,E
-8D35: 40             LD    B,B
-8D36: BB             CP    A,E
-8D37: 40             LD    B,B
-8D38: BD             CP    A,L
-8D39: 40             LD    B,B
-8D3A: BB             CP    A,E
-8D3B: 40             LD    B,B
-8D3C: BB             CP    A,E
-8D3D: 40             LD    B,B
-8D3E: 62             LD    H,D
-8D3F: 41             LD    B,C
-8D40: BE             CP    A,(HL)
-8D41: 50             LD    D,B
-8D42: BE             CP    A,(HL)
-8D43: 50             LD    D,B
-8D44: BE             CP    A,(HL)
-8D45: 50             LD    D,B
-8D46: BE             CP    A,(HL)
-8D47: 50             LD    D,B
-8D48: 62             LD    H,D
-8D49: 41             LD    B,C
-8D4A: BE             CP    A,(HL)
-8D4B: 40             LD    B,B
-8D4C: BE             CP    A,(HL)
-8D4D: 40             LD    B,B
-8D4E: BC             CP    A,H
-8D4F: 40             LD    B,B
-8D50: BE             CP    A,(HL)
-8D51: 40             LD    B,B
-8D52: BE             CP    A,(HL)
-8D53: 40             LD    B,B
-8D54: BC             CP    A,H
-8D55: 40             LD    B,B
-8D56: BE             CP    A,(HL)
-8D57: 40             LD    B,B
-8D58: BE             CP    A,(HL)
-8D59: 40             LD    B,B
-8D5A: BC             CP    A,H
-8D5B: 40             LD    B,B
-8D5C: BE             CP    A,(HL)
-8D5D: 40             LD    B,B
-8D5E: BE             CP    A,(HL)
-8D5F: 40             LD    B,B
-8D60: BC             CP    A,H
-8D61: 40             LD    B,B
-8D62: BE             CP    A,(HL)
-8D63: 40             LD    B,B
-8D64: BE             CP    A,(HL)
-8D65: 40             LD    B,B
-8D66: BC             CP    A,H
-8D67: 40             LD    B,B
-8D68: BE             CP    A,(HL)
-8D69: 40             LD    B,B
-8D6A: BE             CP    A,(HL)
-8D6B: 40             LD    B,B
-8D6C: BC             CP    A,H
-8D6D: 40             LD    B,B
-8D6E: BE             CP    A,(HL)
-8D6F: 40             LD    B,B
-8D70: BE             CP    A,(HL)
-8D71: 40             LD    B,B
-8D72: BC             CP    A,H
-8D73: 40             LD    B,B
-8D74: BE             CP    A,(HL)
-8D75: 40             LD    B,B
-8D76: BE             CP    A,(HL)
-8D77: 40             LD    B,B
-8D78: BC             CP    A,H
-8D79: 40             LD    B,B
-8D7A: BE             CP    A,(HL)
-8D7B: 40             LD    B,B
-8D7C: BE             CP    A,(HL)
-8D7D: 40             LD    B,B
-8D7E: 62             LD    H,D
-8D7F: 41             LD    B,C
-8D80: BE             CP    A,(HL)
-8D81: 50             LD    D,B
-8D82: BE             CP    A,(HL)
-8D83: 50             LD    D,B
-8D84: BE             CP    A,(HL)
-8D85: 50             LD    D,B
-8D86: BE             CP    A,(HL)
-8D87: 50             LD    D,B
-8D88: 62             LD    H,D
-8D89: 41             LD    B,C
-8D8A: BE             CP    A,(HL)
-8D8B: 40             LD    B,B
-8D8C: BE             CP    A,(HL)
-8D8D: 40             LD    B,B
-8D8E: BC             CP    A,H
-8D8F: 40             LD    B,B
-8D90: BE             CP    A,(HL)
-8D91: 40             LD    B,B
-8D92: BE             CP    A,(HL)
-8D93: 40             LD    B,B
-8D94: BC             CP    A,H
-8D95: 40             LD    B,B
-8D96: BE             CP    A,(HL)
-8D97: 40             LD    B,B
-8D98: BE             CP    A,(HL)
-8D99: 40             LD    B,B
-8D9A: BC             CP    A,H
-8D9B: 40             LD    B,B
-8D9C: BE             CP    A,(HL)
-8D9D: 40             LD    B,B
-8D9E: BE             CP    A,(HL)
-8D9F: 40             LD    B,B
-8DA0: BC             CP    A,H
-8DA1: 40             LD    B,B
-8DA2: BE             CP    A,(HL)
-8DA3: 40             LD    B,B
-8DA4: BE             CP    A,(HL)
-8DA5: 40             LD    B,B
-8DA6: BC             CP    A,H
-8DA7: 40             LD    B,B
-8DA8: BE             CP    A,(HL)
-8DA9: 40             LD    B,B
-8DAA: BE             CP    A,(HL)
-8DAB: 40             LD    B,B
-8DAC: BC             CP    A,H
-8DAD: 40             LD    B,B
-8DAE: BE             CP    A,(HL)
-8DAF: 40             LD    B,B
-8DB0: BE             CP    A,(HL)
-8DB1: 40             LD    B,B
-8DB2: BC             CP    A,H
-8DB3: 40             LD    B,B
-8DB4: BE             CP    A,(HL)
-8DB5: 40             LD    B,B
-8DB6: BE             CP    A,(HL)
-8DB7: 40             LD    B,B
-8DB8: BC             CP    A,H
-8DB9: 40             LD    B,B
-8DBA: BE             CP    A,(HL)
-8DBB: 40             LD    B,B
-8DBC: BE             CP    A,(HL)
-8DBD: 40             LD    B,B
-8DBE: 62             LD    H,D
-8DBF: 41             LD    B,C
-8DC0: BE             CP    A,(HL)
-8DC1: 50             LD    D,B
-8DC2: BE             CP    A,(HL)
-8DC3: 50             LD    D,B
-8DC4: BE             CP    A,(HL)
-8DC5: 50             LD    D,B
-8DC6: BE             CP    A,(HL)
-8DC7: 50             LD    D,B
-8DC8: 62             LD    H,D
-8DC9: 41             LD    B,C
-8DCA: BB             CP    A,E
-8DCB: 40             LD    B,B
-8DCC: BB             CP    A,E
-8DCD: 40             LD    B,B
-8DCE: BD             CP    A,L
-8DCF: 40             LD    B,B
-8DD0: BB             CP    A,E
-8DD1: 40             LD    B,B
-8DD2: BB             CP    A,E
-8DD3: 40             LD    B,B
-8DD4: BD             CP    A,L
-8DD5: 40             LD    B,B
-8DD6: BB             CP    A,E
-8DD7: 40             LD    B,B
-8DD8: BB             CP    A,E
-8DD9: 40             LD    B,B
-8DDA: BD             CP    A,L
-8DDB: 40             LD    B,B
-8DDC: BB             CP    A,E
-8DDD: 40             LD    B,B
-8DDE: BB             CP    A,E
-8DDF: 40             LD    B,B
-8DE0: BD             CP    A,L
-8DE1: 40             LD    B,B
-8DE2: BB             CP    A,E
-8DE3: 40             LD    B,B
-8DE4: BB             CP    A,E
-8DE5: 40             LD    B,B
-8DE6: BD             CP    A,L
-8DE7: 40             LD    B,B
-8DE8: BB             CP    A,E
-8DE9: 40             LD    B,B
-8DEA: BB             CP    A,E
-8DEB: 40             LD    B,B
-8DEC: BD             CP    A,L
-8DED: 40             LD    B,B
-8DEE: BB             CP    A,E
-8DEF: 40             LD    B,B
-8DF0: BB             CP    A,E
-8DF1: 40             LD    B,B
-8DF2: BD             CP    A,L
-8DF3: 40             LD    B,B
-8DF4: BB             CP    A,E
-8DF5: 40             LD    B,B
-8DF6: BB             CP    A,E
-8DF7: 40             LD    B,B
-8DF8: BD             CP    A,L
-8DF9: 40             LD    B,B
-8DFA: BB             CP    A,E
-8DFB: 40             LD    B,B
-8DFC: BB             CP    A,E
-8DFD: 40             LD    B,B
-8DFE: 62             LD    H,D
-8DFF: 41             LD    B,C
-8E00: BE             CP    A,(HL)
-8E01: 50             LD    D,B
-8E02: BE             CP    A,(HL)
-8E03: 50             LD    D,B
-8E04: BE             CP    A,(HL)
-8E05: 50             LD    D,B
-8E06: BE             CP    A,(HL)
-8E07: 50             LD    D,B
-8E08: 62             LD    H,D
-8E09: 41             LD    B,C
-8E0A: BE             CP    A,(HL)
-8E0B: 40             LD    B,B
-8E0C: BE             CP    A,(HL)
-8E0D: 40             LD    B,B
-8E0E: BC             CP    A,H
-8E0F: 40             LD    B,B
-8E10: BE             CP    A,(HL)
-8E11: 40             LD    B,B
-8E12: BE             CP    A,(HL)
-8E13: 40             LD    B,B
-8E14: BC             CP    A,H
-8E15: 40             LD    B,B
-8E16: BE             CP    A,(HL)
-8E17: 40             LD    B,B
-8E18: BE             CP    A,(HL)
-8E19: 40             LD    B,B
-8E1A: BC             CP    A,H
-8E1B: 40             LD    B,B
-8E1C: BE             CP    A,(HL)
-8E1D: 40             LD    B,B
-8E1E: BE             CP    A,(HL)
-8E1F: 40             LD    B,B
-8E20: BC             CP    A,H
-8E21: 40             LD    B,B
-8E22: BE             CP    A,(HL)
-8E23: 40             LD    B,B
-8E24: BE             CP    A,(HL)
-8E25: 40             LD    B,B
-8E26: BC             CP    A,H
-8E27: 40             LD    B,B
-8E28: BE             CP    A,(HL)
-8E29: 40             LD    B,B
-8E2A: BE             CP    A,(HL)
-8E2B: 40             LD    B,B
-8E2C: BC             CP    A,H
-8E2D: 40             LD    B,B
-8E2E: BE             CP    A,(HL)
-8E2F: 40             LD    B,B
-8E30: BE             CP    A,(HL)
-8E31: 40             LD    B,B
-8E32: BC             CP    A,H
-8E33: 40             LD    B,B
-8E34: BE             CP    A,(HL)
-8E35: 40             LD    B,B
-8E36: BE             CP    A,(HL)
-8E37: 40             LD    B,B
-8E38: BC             CP    A,H
-8E39: 40             LD    B,B
-8E3A: BE             CP    A,(HL)
-8E3B: 40             LD    B,B
-8E3C: BE             CP    A,(HL)
-8E3D: 40             LD    B,B
-8E3E: 62             LD    H,D
-8E3F: 41             LD    B,C
-8E40: BE             CP    A,(HL)
-8E41: 50             LD    D,B
-8E42: BE             CP    A,(HL)
-8E43: 50             LD    D,B
-8E44: BE             CP    A,(HL)
-8E45: 50             LD    D,B
-8E46: BE             CP    A,(HL)
-8E47: 50             LD    D,B
-8E48: 62             LD    H,D
-8E49: 41             LD    B,C
-8E4A: BE             CP    A,(HL)
-8E4B: 40             LD    B,B
-8E4C: BE             CP    A,(HL)
-8E4D: 40             LD    B,B
-8E4E: BC             CP    A,H
-8E4F: 40             LD    B,B
-8E50: BE             CP    A,(HL)
-8E51: 40             LD    B,B
-8E52: BE             CP    A,(HL)
-8E53: 40             LD    B,B
-8E54: BC             CP    A,H
-8E55: 40             LD    B,B
-8E56: BE             CP    A,(HL)
-8E57: 40             LD    B,B
-8E58: BE             CP    A,(HL)
-8E59: 40             LD    B,B
-8E5A: BC             CP    A,H
-8E5B: 40             LD    B,B
-8E5C: BE             CP    A,(HL)
-8E5D: 40             LD    B,B
-8E5E: BE             CP    A,(HL)
-8E5F: 40             LD    B,B
-8E60: BC             CP    A,H
-8E61: 40             LD    B,B
-8E62: BE             CP    A,(HL)
-8E63: 40             LD    B,B
-8E64: BE             CP    A,(HL)
-8E65: 40             LD    B,B
-8E66: BC             CP    A,H
-8E67: 40             LD    B,B
-8E68: BE             CP    A,(HL)
-8E69: 40             LD    B,B
-8E6A: BE             CP    A,(HL)
-8E6B: 40             LD    B,B
-8E6C: BC             CP    A,H
-8E6D: 40             LD    B,B
-8E6E: BE             CP    A,(HL)
-8E6F: 40             LD    B,B
-8E70: BE             CP    A,(HL)
-8E71: 40             LD    B,B
-8E72: BC             CP    A,H
-8E73: 40             LD    B,B
-8E74: BE             CP    A,(HL)
-8E75: 40             LD    B,B
-8E76: BE             CP    A,(HL)
-8E77: 40             LD    B,B
-8E78: BC             CP    A,H
-8E79: 40             LD    B,B
-8E7A: BE             CP    A,(HL)
-8E7B: 40             LD    B,B
-8E7C: BE             CP    A,(HL)
-8E7D: 40             LD    B,B
-8E7E: 62             LD    H,D
-8E7F: 41             LD    B,C
-8E80: BE             CP    A,(HL)
-8E81: 50             LD    D,B
-8E82: BE             CP    A,(HL)
-8E83: 50             LD    D,B
-8E84: BE             CP    A,(HL)
-8E85: 50             LD    D,B
-8E86: BE             CP    A,(HL)
-8E87: 50             LD    D,B
-8E88: 62             LD    H,D
-8E89: 41             LD    B,C
-8E8A: BB             CP    A,E
-8E8B: 40             LD    B,B
-8E8C: BB             CP    A,E
-8E8D: 40             LD    B,B
-8E8E: BD             CP    A,L
-8E8F: 40             LD    B,B
-8E90: BB             CP    A,E
-8E91: 40             LD    B,B
-8E92: BB             CP    A,E
-8E93: 40             LD    B,B
-8E94: BD             CP    A,L
-8E95: 40             LD    B,B
-8E96: BB             CP    A,E
-8E97: 40             LD    B,B
-8E98: BB             CP    A,E
-8E99: 40             LD    B,B
-8E9A: BD             CP    A,L
-8E9B: 40             LD    B,B
-8E9C: BB             CP    A,E
-8E9D: 40             LD    B,B
-8E9E: BB             CP    A,E
-8E9F: 40             LD    B,B
-8EA0: BD             CP    A,L
-8EA1: 40             LD    B,B
-8EA2: BB             CP    A,E
-8EA3: 40             LD    B,B
-8EA4: BB             CP    A,E
-8EA5: 40             LD    B,B
-8EA6: BD             CP    A,L
-8EA7: 40             LD    B,B
-8EA8: BB             CP    A,E
-8EA9: 40             LD    B,B
-8EAA: BB             CP    A,E
-8EAB: 40             LD    B,B
-8EAC: BD             CP    A,L
-8EAD: 40             LD    B,B
-8EAE: BB             CP    A,E
-8EAF: 40             LD    B,B
-8EB0: BB             CP    A,E
-8EB1: 40             LD    B,B
-8EB2: BD             CP    A,L
-8EB3: 40             LD    B,B
-8EB4: BB             CP    A,E
-8EB5: 40             LD    B,B
-8EB6: BB             CP    A,E
-8EB7: 40             LD    B,B
-8EB8: BD             CP    A,L
-8EB9: 40             LD    B,B
-8EBA: BB             CP    A,E
-8EBB: 40             LD    B,B
-8EBC: BB             CP    A,E
-8EBD: 40             LD    B,B
-8EBE: 62             LD    H,D
-8EBF: 41             LD    B,C
-8EC0: BE             CP    A,(HL)
-8EC1: 50             LD    D,B
-8EC2: BE             CP    A,(HL)
-8EC3: 50             LD    D,B
-8EC4: BE             CP    A,(HL)
-8EC5: 50             LD    D,B
-8EC6: BE             CP    A,(HL)
-8EC7: 50             LD    D,B
-8EC8: 62             LD    H,D
-8EC9: 41             LD    B,C
-8ECA: BE             CP    A,(HL)
-8ECB: 40             LD    B,B
-8ECC: BE             CP    A,(HL)
-8ECD: 40             LD    B,B
-8ECE: BC             CP    A,H
-8ECF: 40             LD    B,B
-8ED0: BE             CP    A,(HL)
-8ED1: 40             LD    B,B
-8ED2: BE             CP    A,(HL)
-8ED3: 40             LD    B,B
-8ED4: BC             CP    A,H
-8ED5: 40             LD    B,B
-8ED6: BE             CP    A,(HL)
-8ED7: 40             LD    B,B
-8ED8: BE             CP    A,(HL)
-8ED9: 40             LD    B,B
-8EDA: BC             CP    A,H
-8EDB: 40             LD    B,B
-8EDC: BE             CP    A,(HL)
-8EDD: 40             LD    B,B
-8EDE: BE             CP    A,(HL)
-8EDF: 40             LD    B,B
-8EE0: BC             CP    A,H
-8EE1: 40             LD    B,B
-8EE2: BE             CP    A,(HL)
-8EE3: 40             LD    B,B
-8EE4: BE             CP    A,(HL)
-8EE5: 40             LD    B,B
-8EE6: BC             CP    A,H
-8EE7: 40             LD    B,B
-8EE8: BE             CP    A,(HL)
-8EE9: 40             LD    B,B
-8EEA: BE             CP    A,(HL)
-8EEB: 40             LD    B,B
-8EEC: BC             CP    A,H
-8EED: 40             LD    B,B
-8EEE: BE             CP    A,(HL)
-8EEF: 40             LD    B,B
-8EF0: BE             CP    A,(HL)
-8EF1: 40             LD    B,B
-8EF2: BC             CP    A,H
-8EF3: 40             LD    B,B
-8EF4: BE             CP    A,(HL)
-8EF5: 40             LD    B,B
-8EF6: BE             CP    A,(HL)
-8EF7: 40             LD    B,B
-8EF8: BC             CP    A,H
-8EF9: 40             LD    B,B
-8EFA: BE             CP    A,(HL)
-8EFB: 40             LD    B,B
-8EFC: BE             CP    A,(HL)
-8EFD: 40             LD    B,B
-8EFE: 62             LD    H,D
-8EFF: 41             LD    B,C
-8F00: BE             CP    A,(HL)
-8F01: 50             LD    D,B
-8F02: BE             CP    A,(HL)
-8F03: 50             LD    D,B
-8F04: BE             CP    A,(HL)
-8F05: 50             LD    D,B
-8F06: BE             CP    A,(HL)
-8F07: 50             LD    D,B
-8F08: 62             LD    H,D
-8F09: 41             LD    B,C
-8F0A: BE             CP    A,(HL)
-8F0B: 40             LD    B,B
-8F0C: BE             CP    A,(HL)
-8F0D: 40             LD    B,B
-8F0E: BC             CP    A,H
-8F0F: 40             LD    B,B
-8F10: BE             CP    A,(HL)
-8F11: 40             LD    B,B
-8F12: BE             CP    A,(HL)
-8F13: 40             LD    B,B
-8F14: BC             CP    A,H
-8F15: 40             LD    B,B
-8F16: BE             CP    A,(HL)
-8F17: 40             LD    B,B
-8F18: BE             CP    A,(HL)
-8F19: 40             LD    B,B
-8F1A: BC             CP    A,H
-8F1B: 40             LD    B,B
-8F1C: BE             CP    A,(HL)
-8F1D: 40             LD    B,B
-8F1E: BE             CP    A,(HL)
-8F1F: 40             LD    B,B
-8F20: BC             CP    A,H
-8F21: 40             LD    B,B
-8F22: BE             CP    A,(HL)
-8F23: 40             LD    B,B
-8F24: BE             CP    A,(HL)
-8F25: 40             LD    B,B
-8F26: BC             CP    A,H
-8F27: 40             LD    B,B
-8F28: BE             CP    A,(HL)
-8F29: 40             LD    B,B
-8F2A: BE             CP    A,(HL)
-8F2B: 40             LD    B,B
-8F2C: BC             CP    A,H
-8F2D: 40             LD    B,B
-8F2E: BE             CP    A,(HL)
-8F2F: 40             LD    B,B
-8F30: BE             CP    A,(HL)
-8F31: 40             LD    B,B
-8F32: BC             CP    A,H
-8F33: 40             LD    B,B
-8F34: BE             CP    A,(HL)
-8F35: 40             LD    B,B
-8F36: BE             CP    A,(HL)
-8F37: 40             LD    B,B
-8F38: BC             CP    A,H
-8F39: 40             LD    B,B
-8F3A: BE             CP    A,(HL)
-8F3B: 40             LD    B,B
-8F3C: BE             CP    A,(HL)
-8F3D: 40             LD    B,B
-8F3E: 62             LD    H,D
-8F3F: 41             LD    B,C
-8F40: BE             CP    A,(HL)
-8F41: 50             LD    D,B
-8F42: BE             CP    A,(HL)
-8F43: 50             LD    D,B
-8F44: BE             CP    A,(HL)
-8F45: 50             LD    D,B
-8F46: BE             CP    A,(HL)
-8F47: 50             LD    D,B
-8F48: 62             LD    H,D
-8F49: 41             LD    B,C
-8F4A: BB             CP    A,E
-8F4B: 40             LD    B,B
-8F4C: BB             CP    A,E
-8F4D: 40             LD    B,B
-8F4E: BD             CP    A,L
-8F4F: 40             LD    B,B
-8F50: BB             CP    A,E
-8F51: 40             LD    B,B
-8F52: BB             CP    A,E
-8F53: 40             LD    B,B
-8F54: BD             CP    A,L
-8F55: 40             LD    B,B
-8F56: BB             CP    A,E
-8F57: 40             LD    B,B
-8F58: BB             CP    A,E
-8F59: 40             LD    B,B
-8F5A: BD             CP    A,L
-8F5B: 40             LD    B,B
-8F5C: BB             CP    A,E
-8F5D: 40             LD    B,B
-8F5E: BB             CP    A,E
-8F5F: 40             LD    B,B
-8F60: BD             CP    A,L
-8F61: 40             LD    B,B
-8F62: BB             CP    A,E
-8F63: 40             LD    B,B
-8F64: BB             CP    A,E
-8F65: 40             LD    B,B
-8F66: BD             CP    A,L
-8F67: 40             LD    B,B
-8F68: BB             CP    A,E
-8F69: 40             LD    B,B
-8F6A: BB             CP    A,E
-8F6B: 40             LD    B,B
-8F6C: BD             CP    A,L
-8F6D: 40             LD    B,B
-8F6E: BB             CP    A,E
-8F6F: 40             LD    B,B
-8F70: BB             CP    A,E
-8F71: 40             LD    B,B
-8F72: BD             CP    A,L
-8F73: 40             LD    B,B
-8F74: BB             CP    A,E
-8F75: 40             LD    B,B
-8F76: BB             CP    A,E
-8F77: 40             LD    B,B
-8F78: BD             CP    A,L
-8F79: 40             LD    B,B
-8F7A: BB             CP    A,E
-8F7B: 40             LD    B,B
-8F7C: BB             CP    A,E
-8F7D: 40             LD    B,B
-8F7E: 62             LD    H,D
-8F7F: 41             LD    B,C
-8F80: BE             CP    A,(HL)
-8F81: 50             LD    D,B
-8F82: BE             CP    A,(HL)
-8F83: 50             LD    D,B
-8F84: BE             CP    A,(HL)
-8F85: 50             LD    D,B
-8F86: BE             CP    A,(HL)
-8F87: 50             LD    D,B
-8F88: 62             LD    H,D
-8F89: 41             LD    B,C
-8F8A: BE             CP    A,(HL)
-8F8B: 40             LD    B,B
-8F8C: BE             CP    A,(HL)
-8F8D: 40             LD    B,B
-8F8E: BC             CP    A,H
-8F8F: 40             LD    B,B
-8F90: BE             CP    A,(HL)
-8F91: 40             LD    B,B
-8F92: BE             CP    A,(HL)
-8F93: 40             LD    B,B
-8F94: BC             CP    A,H
-8F95: 40             LD    B,B
-8F96: BE             CP    A,(HL)
-8F97: 40             LD    B,B
-8F98: BE             CP    A,(HL)
-8F99: 40             LD    B,B
-8F9A: BC             CP    A,H
-8F9B: 40             LD    B,B
-8F9C: BE             CP    A,(HL)
-8F9D: 40             LD    B,B
-8F9E: BE             CP    A,(HL)
-8F9F: 40             LD    B,B
-8FA0: BC             CP    A,H
-8FA1: 40             LD    B,B
-8FA2: BE             CP    A,(HL)
-8FA3: 40             LD    B,B
-8FA4: BE             CP    A,(HL)
-8FA5: 40             LD    B,B
-8FA6: BC             CP    A,H
-8FA7: 40             LD    B,B
-8FA8: BE             CP    A,(HL)
-8FA9: 40             LD    B,B
-8FAA: BE             CP    A,(HL)
-8FAB: 40             LD    B,B
-8FAC: BC             CP    A,H
-8FAD: 40             LD    B,B
-8FAE: BE             CP    A,(HL)
-8FAF: 40             LD    B,B
-8FB0: BE             CP    A,(HL)
-8FB1: 40             LD    B,B
-8FB2: BC             CP    A,H
-8FB3: 40             LD    B,B
-8FB4: BE             CP    A,(HL)
-8FB5: 40             LD    B,B
-8FB6: BE             CP    A,(HL)
-8FB7: 40             LD    B,B
-8FB8: BC             CP    A,H
-8FB9: 40             LD    B,B
-8FBA: BE             CP    A,(HL)
-8FBB: 40             LD    B,B
-8FBC: BE             CP    A,(HL)
-8FBD: 40             LD    B,B
-8FBE: 62             LD    H,D
-8FBF: 41             LD    B,C
-8FC0: BE             CP    A,(HL)
-8FC1: 50             LD    D,B
-8FC2: BE             CP    A,(HL)
-8FC3: 50             LD    D,B
-8FC4: BE             CP    A,(HL)
-8FC5: 50             LD    D,B
-8FC6: BE             CP    A,(HL)
-8FC7: 50             LD    D,B
-8FC8: 62             LD    H,D
-8FC9: 41             LD    B,C
-8FCA: BE             CP    A,(HL)
-8FCB: 40             LD    B,B
-8FCC: BE             CP    A,(HL)
-8FCD: 40             LD    B,B
-8FCE: BC             CP    A,H
-8FCF: 40             LD    B,B
-8FD0: BE             CP    A,(HL)
-8FD1: 40             LD    B,B
-8FD2: BE             CP    A,(HL)
-8FD3: 40             LD    B,B
-8FD4: BC             CP    A,H
-8FD5: 40             LD    B,B
-8FD6: BE             CP    A,(HL)
-8FD7: 40             LD    B,B
-8FD8: BE             CP    A,(HL)
-8FD9: 40             LD    B,B
-8FDA: BC             CP    A,H
-8FDB: 40             LD    B,B
-8FDC: BE             CP    A,(HL)
-8FDD: 40             LD    B,B
-8FDE: BE             CP    A,(HL)
-8FDF: 40             LD    B,B
-8FE0: BC             CP    A,H
-8FE1: 40             LD    B,B
-8FE2: BE             CP    A,(HL)
-8FE3: 40             LD    B,B
-8FE4: BE             CP    A,(HL)
-8FE5: 40             LD    B,B
-8FE6: BC             CP    A,H
-8FE7: 40             LD    B,B
-8FE8: BE             CP    A,(HL)
-8FE9: 40             LD    B,B
-8FEA: BE             CP    A,(HL)
-8FEB: 40             LD    B,B
-8FEC: BC             CP    A,H
-8FED: 40             LD    B,B
-8FEE: BE             CP    A,(HL)
-8FEF: 40             LD    B,B
-8FF0: BE             CP    A,(HL)
-8FF1: 40             LD    B,B
-8FF2: BC             CP    A,H
-8FF3: 40             LD    B,B
-8FF4: BE             CP    A,(HL)
-8FF5: 40             LD    B,B
-8FF6: BE             CP    A,(HL)
-8FF7: 40             LD    B,B
-8FF8: BC             CP    A,H
-8FF9: 40             LD    B,B
-8FFA: BE             CP    A,(HL)
-8FFB: 40             LD    B,B
-8FFC: BE             CP    A,(HL)
-8FFD: 40             LD    B,B
-8FFE: 62             LD    H,D
-8FFF: 41             LD    B,C
-9000: BE             CP    A,(HL)
-9001: 50             LD    D,B
-9002: BE             CP    A,(HL)
-9003: 50             LD    D,B
-9004: BE             CP    A,(HL)
-9005: 50             LD    D,B
-9006: BE             CP    A,(HL)
-9007: 50             LD    D,B
-9008: 62             LD    H,D
-9009: 41             LD    B,C
-900A: BB             CP    A,E
-900B: 40             LD    B,B
-900C: BB             CP    A,E
-900D: 40             LD    B,B
-900E: BD             CP    A,L
-900F: 40             LD    B,B
-9010: BB             CP    A,E
-9011: 40             LD    B,B
-9012: BB             CP    A,E
-9013: 40             LD    B,B
-9014: BD             CP    A,L
-9015: 40             LD    B,B
-9016: BB             CP    A,E
-9017: 40             LD    B,B
-9018: BB             CP    A,E
-9019: 40             LD    B,B
-901A: BD             CP    A,L
-901B: 40             LD    B,B
-901C: BB             CP    A,E
-901D: 40             LD    B,B
-901E: BB             CP    A,E
-901F: 40             LD    B,B
-9020: BD             CP    A,L
-9021: 40             LD    B,B
-9022: BB             CP    A,E
-9023: 40             LD    B,B
-9024: BB             CP    A,E
-9025: 40             LD    B,B
-9026: BD             CP    A,L
-9027: 40             LD    B,B
-9028: BB             CP    A,E
-9029: 40             LD    B,B
-902A: BB             CP    A,E
-902B: 40             LD    B,B
-902C: BD             CP    A,L
-902D: 40             LD    B,B
-902E: BB             CP    A,E
-902F: 40             LD    B,B
-9030: BB             CP    A,E
-9031: 40             LD    B,B
-9032: BD             CP    A,L
-9033: 40             LD    B,B
-9034: BB             CP    A,E
-9035: 40             LD    B,B
-9036: BB             CP    A,E
-9037: 40             LD    B,B
-9038: BD             CP    A,L
-9039: 40             LD    B,B
-903A: BB             CP    A,E
-903B: 40             LD    B,B
-903C: BB             CP    A,E
-903D: 40             LD    B,B
-903E: 62             LD    H,D
-903F: 41             LD    B,C
-9040: BE             CP    A,(HL)
-9041: 50             LD    D,B
-9042: BE             CP    A,(HL)
-9043: 50             LD    D,B
-9044: BE             CP    A,(HL)
-9045: 50             LD    D,B
-9046: BE             CP    A,(HL)
-9047: 50             LD    D,B
-9048: 62             LD    H,D
-9049: 41             LD    B,C
-904A: 62             LD    H,D
-904B: 41             LD    B,C
-904C: 62             LD    H,D
-904D: 41             LD    B,C
-904E: 62             LD    H,D
-904F: 41             LD    B,C
-9050: 62             LD    H,D
-9051: 41             LD    B,C
-9052: 62             LD    H,D
-9053: 41             LD    B,C
-9054: 62             LD    H,D
-9055: 41             LD    B,C
-9056: 62             LD    H,D
-9057: 41             LD    B,C
-9058: 62             LD    H,D
-9059: 41             LD    B,C
-905A: 62             LD    H,D
-905B: 41             LD    B,C
-905C: 62             LD    H,D
-905D: 41             LD    B,C
-905E: 62             LD    H,D
-905F: 41             LD    B,C
-9060: 62             LD    H,D
-9061: 41             LD    B,C
-9062: 62             LD    H,D
-9063: 41             LD    B,C
-9064: 62             LD    H,D
-9065: 41             LD    B,C
-9066: 62             LD    H,D
-9067: 41             LD    B,C
-9068: 62             LD    H,D
-9069: 41             LD    B,C
-906A: 62             LD    H,D
-906B: 41             LD    B,C
-906C: 62             LD    H,D
-906D: 41             LD    B,C
-906E: 62             LD    H,D
-906F: 41             LD    B,C
-9070: 62             LD    H,D
-9071: 41             LD    B,C
-9072: 62             LD    H,D
-9073: 41             LD    B,C
-9074: 62             LD    H,D
-9075: 41             LD    B,C
-9076: 62             LD    H,D
-9077: 41             LD    B,C
-9078: 62             LD    H,D
-9079: 41             LD    B,C
-907A: 62             LD    H,D
-907B: 41             LD    B,C
-907C: 62             LD    H,D
-907D: 41             LD    B,C
-907E: 62             LD    H,D
-907F: 41             LD    B,C
+BACKGROUND_FOR_2:
+8900: BE 50 BE 50 BE 50 BE 50 62 41 62 41 62 41 62 41 
+8910: 62 41 62 41 62 41 62 41 62 41 62 41 62 41 62 41 
+8920: 62 41 62 41 62 41 62 41 62 41 62 41 62 41 62 41 
+8930: 62 41 62 41 62 41 62 41 62 41 62 41 62 41 62 41 
+8940: BE 50 BE 50 BE 50 BE 50 62 41 BB 40 BB 40 BD 40 
+8950: BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 
+8960: BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 
+8970: BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 62 41 
+8980: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+8990: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+89A0: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+89B0: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+89C0: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+89D0: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+89E0: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+89F0: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+8A00: BE 50 BE 50 BE 50 BE 50 62 41 BB 40 BB 40 BD 40 
+8A10: BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 
+8A20: BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 
+8A30: BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 62 41 
+8A40: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+8A50: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+8A60: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+8A70: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+8A80: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+8A90: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+8AA0: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+8AB0: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+8AC0: BE 50 BE 50 BE 50 BE 50 62 41 BB 40 BB 40 BD 40 
+8AD0: BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 
+8AE0: BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 
+8AF0: BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 62 41 
+8B00: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+8B10: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+8B20: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+8B30: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+8B40: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+8B50: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+8B60: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+8B70: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+8B80: BE 50 BE 50 BE 50 BE 50 62 41 BB 40 BB 40 BD 40 
+8B90: BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 
+8BA0: BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 
+8BB0: BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 62 41 
+8BC0: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+8BD0: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+8BE0: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+8BF0: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+8C00: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+8C10: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+8C20: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+8C30: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+8C40: BE 50 BE 50 BE 50 BE 50 62 41 BB 40 BB 40 BD 40 
+8C50: BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 
+8C60: BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 
+8C70: BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 62 41 
+8C80: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+8C90: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+8CA0: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+8CB0: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+8CC0: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+8CD0: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+8CE0: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+8CF0: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+8D00: BE 50 BE 50 BE 50 BE 50 62 41 BB 40 BB 40 BD 40 
+8D10: BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 
+8D20: BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 
+8D30: BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 62 41 
+8D40: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+8D50: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+8D60: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+8D70: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+8D80: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+8D90: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+8DA0: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+8DB0: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+8DC0: BE 50 BE 50 BE 50 BE 50 62 41 BB 40 BB 40 BD 40 
+8DD0: BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 
+8DE0: BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 
+8DF0: BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 62 41 
+8E00: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+8E10: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+8E20: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+8E30: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+8E40: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+8E50: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+8E60: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+8E70: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+8E80: BE 50 BE 50 BE 50 BE 50 62 41 BB 40 BB 40 BD 40 
+8E90: BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 
+8EA0: BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 
+8EB0: BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 62 41 
+8EC0: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+8ED0: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+8EE0: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+8EF0: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+8F00: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+8F10: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+8F20: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+8F30: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+8F40: BE 50 BE 50 BE 50 BE 50 62 41 BB 40 BB 40 BD 40 
+8F50: BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 
+8F60: BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 
+8F70: BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 62 41 
+8F80: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+8F90: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+8FA0: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+8FB0: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+8FC0: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+8FD0: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+8FE0: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+8FF0: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+9000: BE 50 BE 50 BE 50 BE 50 62 41 BB 40 BB 40 BD 40 
+9010: BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 
+9020: BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 
+9030: BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 62 41 
+9040: BE 50 BE 50 BE 50 BE 50 62 41 62 41 62 41 62 41 
+9050: 62 41 62 41 62 41 62 41 62 41 62 41 62 41 62 41 
+9060: 62 41 62 41 62 41 62 41 62 41 62 41 62 41 62 41 
+9070: 62 41 62 41 62 41 62 41 62 41 62 41 62 41 62 41 
+
 9080: 00             NOP   
 9081: 00             NOP   
 9082: 01 C6 01       LD    BC,$01C6
@@ -27135,1920 +19189,130 @@ ORG $0000
 90F9: 00             NOP   
 90FA: 00             NOP   
 90FB: 08             EX    AF,AF'
-90FC: 00             NOP   
-90FD: 28 00          JR    Z,$90FF
+90FC: 00 28 00 38 
 
-90FF: 38 BE          JR    C,$90BF
+BACKGROUND_FOR_3:
+9100: BE 50 BE 50 BE 50 BE 50 62 41 62 41 62 41 62 41 
+9110: 62 41 62 41 62 41 62 41 62 41 62 41 62 41 62 41 
+9120: 62 41 62 41 62 41 62 41 62 41 62 41 62 41 62 41 
+9130: 62 41 62 41 62 41 62 41 62 41 62 41 62 41 62 41 
+9140: BE 50 BE 50 BE 50 BE 50 62 41 BB 40 BB 40 BD 40 
+9150: BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 
+9160: BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 
+9170: BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 62 41 
+9180: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+9190: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+91A0: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+91B0: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+91C0: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+91D0: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+91E0: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+91F0: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+9200: BE 50 BE 50 BE 50 BE 50 62 41 BB 40 BB 40 BD 40 
+9210: BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 
+9220: BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 
+9230: BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 62 41 
+9240: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+9250: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+9260: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+9270: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+9280: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+9290: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+92A0: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+92B0: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+92C0: BE 50 BE 50 BE 50 BE 50 62 41 BB 40 BB 40 BD 40 
+92D0: BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 
+92E0: BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 
+92F0: BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 62 41 
+9300: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+9310: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+9320: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+9330: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+9340: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+9350: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+9360: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+9370: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+9380: BE 50 BE 50 BE 50 BE 50 62 41 BB 40 BB 40 BD 40 
+9390: BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 
+93A0: BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 
+93B0: BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 62 41 
+93C0: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+93D0: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+93E0: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+93F0: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+9400: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+9410: BE 40 BE 40 BC 40 F3 40 F1 40 EE 40 EB 40 E8 40 
+9420: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+9430: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+9440: BE 50 BE 50 BE 50 BE 50 62 41 BB 40 BB 40 BD 40 
+9450: BB 40 BB 40 F6 40 F2 40 F0 40 ED 40 EA 40 E7 40 
+9460: BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 
+9470: BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 62 41 
+9480: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+9490: BE 40 F9 40 F5 40 ED 40 EF 40 EC 40 E9 40 E6 40 
+94A0: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+94B0: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+94C0: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+94D0: BE 40 F8 40 ED 40 FD 40 BE 40 BC 40 BE 40 BE 40 
+94E0: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+94F0: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+9500: BE 50 BE 50 BE 50 BE 50 62 41 BB 40 BB 40 BD 40 
+9510: BB 40 F7 40 F4 40 FC 40 BB 40 BD 40 BB 40 BB 40 
+9520: BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 
+9530: BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 62 41 
+9540: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+9550: BE 40 BE 40 FA 40 FB 40 BE 40 BC 40 BE 40 BE 40 
+9560: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+9570: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+9580: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+9590: BE 40 BE 40 BC 40 96 41 96 43 BC 40 BE 40 BE 40 
+95A0: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+95B0: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+95C0: BE 50 BE 50 BE 50 BE 50 62 41 BB 40 BB 40 BD 40 
+95D0: BB 40 BB 40 BD 40 95 41 95 43 BD 40 BB 40 BB 40 
+95E0: BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 
+95F0: BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 62 41 
+9600: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+9610: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+9620: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+9630: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+9640: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+9650: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+9660: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+9670: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+9680: BE 50 BE 50 BE 50 BE 50 62 41 BB 40 BB 40 BD 40 
+9690: BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 
+96A0: BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 
+96B0: BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 62 41 
+96C0: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+96D0: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+96E0: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+96F0: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+9700: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+9710: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+9720: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+9730: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+9740: BE 50 BE 50 BE 50 BE 50 62 41 BB 40 BB 40 BD 40 
+9750: BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 
+9760: BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 
+9770: BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 62 41 
+9780: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+9790: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+97A0: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+97B0: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+97C0: BE 50 BE 50 BE 50 BE 50 62 41 BE 40 BE 40 BC 40 
+97D0: BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 
+97E0: BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 
+97F0: BE 40 BC 40 BE 40 BE 40 BC 40 BE 40 BE 40 62 41 
+9800: BE 50 BE 50 BE 50 BE 50 62 41 BB 40 BB 40 BD 40 
+9810: BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 
+9820: BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 
+9830: BB 40 BD 40 BB 40 BB 40 BD 40 BB 40 BB 40 62 41 
+9840: BE 50 BE 50 BE 50 BE 50 62 41 62 41 62 41 62 41 
+9850: 62 41 62 41 62 41 62 41 62 41 62 41 62 41 62 41 
+9860: 62 41 62 41 62 41 62 41 62 41 62 41 62 41 62 41 
+9870: 62 41 62 41 62 41 62 41 62 41 62 41 62 41 62 41 
 
-9101: 50             LD    D,B
-9102: BE             CP    A,(HL)
-9103: 50             LD    D,B
-9104: BE             CP    A,(HL)
-9105: 50             LD    D,B
-9106: BE             CP    A,(HL)
-9107: 50             LD    D,B
-9108: 62             LD    H,D
-9109: 41             LD    B,C
-910A: 62             LD    H,D
-910B: 41             LD    B,C
-910C: 62             LD    H,D
-910D: 41             LD    B,C
-910E: 62             LD    H,D
-910F: 41             LD    B,C
-9110: 62             LD    H,D
-9111: 41             LD    B,C
-9112: 62             LD    H,D
-9113: 41             LD    B,C
-9114: 62             LD    H,D
-9115: 41             LD    B,C
-9116: 62             LD    H,D
-9117: 41             LD    B,C
-9118: 62             LD    H,D
-9119: 41             LD    B,C
-911A: 62             LD    H,D
-911B: 41             LD    B,C
-911C: 62             LD    H,D
-911D: 41             LD    B,C
-911E: 62             LD    H,D
-911F: 41             LD    B,C
-9120: 62             LD    H,D
-9121: 41             LD    B,C
-9122: 62             LD    H,D
-9123: 41             LD    B,C
-9124: 62             LD    H,D
-9125: 41             LD    B,C
-9126: 62             LD    H,D
-9127: 41             LD    B,C
-9128: 62             LD    H,D
-9129: 41             LD    B,C
-912A: 62             LD    H,D
-912B: 41             LD    B,C
-912C: 62             LD    H,D
-912D: 41             LD    B,C
-912E: 62             LD    H,D
-912F: 41             LD    B,C
-9130: 62             LD    H,D
-9131: 41             LD    B,C
-9132: 62             LD    H,D
-9133: 41             LD    B,C
-9134: 62             LD    H,D
-9135: 41             LD    B,C
-9136: 62             LD    H,D
-9137: 41             LD    B,C
-9138: 62             LD    H,D
-9139: 41             LD    B,C
-913A: 62             LD    H,D
-913B: 41             LD    B,C
-913C: 62             LD    H,D
-913D: 41             LD    B,C
-913E: 62             LD    H,D
-913F: 41             LD    B,C
-9140: BE             CP    A,(HL)
-9141: 50             LD    D,B
-9142: BE             CP    A,(HL)
-9143: 50             LD    D,B
-9144: BE             CP    A,(HL)
-9145: 50             LD    D,B
-9146: BE             CP    A,(HL)
-9147: 50             LD    D,B
-9148: 62             LD    H,D
-9149: 41             LD    B,C
-914A: BB             CP    A,E
-914B: 40             LD    B,B
-914C: BB             CP    A,E
-914D: 40             LD    B,B
-914E: BD             CP    A,L
-914F: 40             LD    B,B
-9150: BB             CP    A,E
-9151: 40             LD    B,B
-9152: BB             CP    A,E
-9153: 40             LD    B,B
-9154: BD             CP    A,L
-9155: 40             LD    B,B
-9156: BB             CP    A,E
-9157: 40             LD    B,B
-9158: BB             CP    A,E
-9159: 40             LD    B,B
-915A: BD             CP    A,L
-915B: 40             LD    B,B
-915C: BB             CP    A,E
-915D: 40             LD    B,B
-915E: BB             CP    A,E
-915F: 40             LD    B,B
-9160: BD             CP    A,L
-9161: 40             LD    B,B
-9162: BB             CP    A,E
-9163: 40             LD    B,B
-9164: BB             CP    A,E
-9165: 40             LD    B,B
-9166: BD             CP    A,L
-9167: 40             LD    B,B
-9168: BB             CP    A,E
-9169: 40             LD    B,B
-916A: BB             CP    A,E
-916B: 40             LD    B,B
-916C: BD             CP    A,L
-916D: 40             LD    B,B
-916E: BB             CP    A,E
-916F: 40             LD    B,B
-9170: BB             CP    A,E
-9171: 40             LD    B,B
-9172: BD             CP    A,L
-9173: 40             LD    B,B
-9174: BB             CP    A,E
-9175: 40             LD    B,B
-9176: BB             CP    A,E
-9177: 40             LD    B,B
-9178: BD             CP    A,L
-9179: 40             LD    B,B
-917A: BB             CP    A,E
-917B: 40             LD    B,B
-917C: BB             CP    A,E
-917D: 40             LD    B,B
-917E: 62             LD    H,D
-917F: 41             LD    B,C
-9180: BE             CP    A,(HL)
-9181: 50             LD    D,B
-9182: BE             CP    A,(HL)
-9183: 50             LD    D,B
-9184: BE             CP    A,(HL)
-9185: 50             LD    D,B
-9186: BE             CP    A,(HL)
-9187: 50             LD    D,B
-9188: 62             LD    H,D
-9189: 41             LD    B,C
-918A: BE             CP    A,(HL)
-918B: 40             LD    B,B
-918C: BE             CP    A,(HL)
-918D: 40             LD    B,B
-918E: BC             CP    A,H
-918F: 40             LD    B,B
-9190: BE             CP    A,(HL)
-9191: 40             LD    B,B
-9192: BE             CP    A,(HL)
-9193: 40             LD    B,B
-9194: BC             CP    A,H
-9195: 40             LD    B,B
-9196: BE             CP    A,(HL)
-9197: 40             LD    B,B
-9198: BE             CP    A,(HL)
-9199: 40             LD    B,B
-919A: BC             CP    A,H
-919B: 40             LD    B,B
-919C: BE             CP    A,(HL)
-919D: 40             LD    B,B
-919E: BE             CP    A,(HL)
-919F: 40             LD    B,B
-91A0: BC             CP    A,H
-91A1: 40             LD    B,B
-91A2: BE             CP    A,(HL)
-91A3: 40             LD    B,B
-91A4: BE             CP    A,(HL)
-91A5: 40             LD    B,B
-91A6: BC             CP    A,H
-91A7: 40             LD    B,B
-91A8: BE             CP    A,(HL)
-91A9: 40             LD    B,B
-91AA: BE             CP    A,(HL)
-91AB: 40             LD    B,B
-91AC: BC             CP    A,H
-91AD: 40             LD    B,B
-91AE: BE             CP    A,(HL)
-91AF: 40             LD    B,B
-91B0: BE             CP    A,(HL)
-91B1: 40             LD    B,B
-91B2: BC             CP    A,H
-91B3: 40             LD    B,B
-91B4: BE             CP    A,(HL)
-91B5: 40             LD    B,B
-91B6: BE             CP    A,(HL)
-91B7: 40             LD    B,B
-91B8: BC             CP    A,H
-91B9: 40             LD    B,B
-91BA: BE             CP    A,(HL)
-91BB: 40             LD    B,B
-91BC: BE             CP    A,(HL)
-91BD: 40             LD    B,B
-91BE: 62             LD    H,D
-91BF: 41             LD    B,C
-91C0: BE             CP    A,(HL)
-91C1: 50             LD    D,B
-91C2: BE             CP    A,(HL)
-91C3: 50             LD    D,B
-91C4: BE             CP    A,(HL)
-91C5: 50             LD    D,B
-91C6: BE             CP    A,(HL)
-91C7: 50             LD    D,B
-91C8: 62             LD    H,D
-91C9: 41             LD    B,C
-91CA: BE             CP    A,(HL)
-91CB: 40             LD    B,B
-91CC: BE             CP    A,(HL)
-91CD: 40             LD    B,B
-91CE: BC             CP    A,H
-91CF: 40             LD    B,B
-91D0: BE             CP    A,(HL)
-91D1: 40             LD    B,B
-91D2: BE             CP    A,(HL)
-91D3: 40             LD    B,B
-91D4: BC             CP    A,H
-91D5: 40             LD    B,B
-91D6: BE             CP    A,(HL)
-91D7: 40             LD    B,B
-91D8: BE             CP    A,(HL)
-91D9: 40             LD    B,B
-91DA: BC             CP    A,H
-91DB: 40             LD    B,B
-91DC: BE             CP    A,(HL)
-91DD: 40             LD    B,B
-91DE: BE             CP    A,(HL)
-91DF: 40             LD    B,B
-91E0: BC             CP    A,H
-91E1: 40             LD    B,B
-91E2: BE             CP    A,(HL)
-91E3: 40             LD    B,B
-91E4: BE             CP    A,(HL)
-91E5: 40             LD    B,B
-91E6: BC             CP    A,H
-91E7: 40             LD    B,B
-91E8: BE             CP    A,(HL)
-91E9: 40             LD    B,B
-91EA: BE             CP    A,(HL)
-91EB: 40             LD    B,B
-91EC: BC             CP    A,H
-91ED: 40             LD    B,B
-91EE: BE             CP    A,(HL)
-91EF: 40             LD    B,B
-91F0: BE             CP    A,(HL)
-91F1: 40             LD    B,B
-91F2: BC             CP    A,H
-91F3: 40             LD    B,B
-91F4: BE             CP    A,(HL)
-91F5: 40             LD    B,B
-91F6: BE             CP    A,(HL)
-91F7: 40             LD    B,B
-91F8: BC             CP    A,H
-91F9: 40             LD    B,B
-91FA: BE             CP    A,(HL)
-91FB: 40             LD    B,B
-91FC: BE             CP    A,(HL)
-91FD: 40             LD    B,B
-91FE: 62             LD    H,D
-91FF: 41             LD    B,C
-9200: BE             CP    A,(HL)
-9201: 50             LD    D,B
-9202: BE             CP    A,(HL)
-9203: 50             LD    D,B
-9204: BE             CP    A,(HL)
-9205: 50             LD    D,B
-9206: BE             CP    A,(HL)
-9207: 50             LD    D,B
-9208: 62             LD    H,D
-9209: 41             LD    B,C
-920A: BB             CP    A,E
-920B: 40             LD    B,B
-920C: BB             CP    A,E
-920D: 40             LD    B,B
-920E: BD             CP    A,L
-920F: 40             LD    B,B
-9210: BB             CP    A,E
-9211: 40             LD    B,B
-9212: BB             CP    A,E
-9213: 40             LD    B,B
-9214: BD             CP    A,L
-9215: 40             LD    B,B
-9216: BB             CP    A,E
-9217: 40             LD    B,B
-9218: BB             CP    A,E
-9219: 40             LD    B,B
-921A: BD             CP    A,L
-921B: 40             LD    B,B
-921C: BB             CP    A,E
-921D: 40             LD    B,B
-921E: BB             CP    A,E
-921F: 40             LD    B,B
-9220: BD             CP    A,L
-9221: 40             LD    B,B
-9222: BB             CP    A,E
-9223: 40             LD    B,B
-9224: BB             CP    A,E
-9225: 40             LD    B,B
-9226: BD             CP    A,L
-9227: 40             LD    B,B
-9228: BB             CP    A,E
-9229: 40             LD    B,B
-922A: BB             CP    A,E
-922B: 40             LD    B,B
-922C: BD             CP    A,L
-922D: 40             LD    B,B
-922E: BB             CP    A,E
-922F: 40             LD    B,B
-9230: BB             CP    A,E
-9231: 40             LD    B,B
-9232: BD             CP    A,L
-9233: 40             LD    B,B
-9234: BB             CP    A,E
-9235: 40             LD    B,B
-9236: BB             CP    A,E
-9237: 40             LD    B,B
-9238: BD             CP    A,L
-9239: 40             LD    B,B
-923A: BB             CP    A,E
-923B: 40             LD    B,B
-923C: BB             CP    A,E
-923D: 40             LD    B,B
-923E: 62             LD    H,D
-923F: 41             LD    B,C
-9240: BE             CP    A,(HL)
-9241: 50             LD    D,B
-9242: BE             CP    A,(HL)
-9243: 50             LD    D,B
-9244: BE             CP    A,(HL)
-9245: 50             LD    D,B
-9246: BE             CP    A,(HL)
-9247: 50             LD    D,B
-9248: 62             LD    H,D
-9249: 41             LD    B,C
-924A: BE             CP    A,(HL)
-924B: 40             LD    B,B
-924C: BE             CP    A,(HL)
-924D: 40             LD    B,B
-924E: BC             CP    A,H
-924F: 40             LD    B,B
-9250: BE             CP    A,(HL)
-9251: 40             LD    B,B
-9252: BE             CP    A,(HL)
-9253: 40             LD    B,B
-9254: BC             CP    A,H
-9255: 40             LD    B,B
-9256: BE             CP    A,(HL)
-9257: 40             LD    B,B
-9258: BE             CP    A,(HL)
-9259: 40             LD    B,B
-925A: BC             CP    A,H
-925B: 40             LD    B,B
-925C: BE             CP    A,(HL)
-925D: 40             LD    B,B
-925E: BE             CP    A,(HL)
-925F: 40             LD    B,B
-9260: BC             CP    A,H
-9261: 40             LD    B,B
-9262: BE             CP    A,(HL)
-9263: 40             LD    B,B
-9264: BE             CP    A,(HL)
-9265: 40             LD    B,B
-9266: BC             CP    A,H
-9267: 40             LD    B,B
-9268: BE             CP    A,(HL)
-9269: 40             LD    B,B
-926A: BE             CP    A,(HL)
-926B: 40             LD    B,B
-926C: BC             CP    A,H
-926D: 40             LD    B,B
-926E: BE             CP    A,(HL)
-926F: 40             LD    B,B
-9270: BE             CP    A,(HL)
-9271: 40             LD    B,B
-9272: BC             CP    A,H
-9273: 40             LD    B,B
-9274: BE             CP    A,(HL)
-9275: 40             LD    B,B
-9276: BE             CP    A,(HL)
-9277: 40             LD    B,B
-9278: BC             CP    A,H
-9279: 40             LD    B,B
-927A: BE             CP    A,(HL)
-927B: 40             LD    B,B
-927C: BE             CP    A,(HL)
-927D: 40             LD    B,B
-927E: 62             LD    H,D
-927F: 41             LD    B,C
-9280: BE             CP    A,(HL)
-9281: 50             LD    D,B
-9282: BE             CP    A,(HL)
-9283: 50             LD    D,B
-9284: BE             CP    A,(HL)
-9285: 50             LD    D,B
-9286: BE             CP    A,(HL)
-9287: 50             LD    D,B
-9288: 62             LD    H,D
-9289: 41             LD    B,C
-928A: BE             CP    A,(HL)
-928B: 40             LD    B,B
-928C: BE             CP    A,(HL)
-928D: 40             LD    B,B
-928E: BC             CP    A,H
-928F: 40             LD    B,B
-9290: BE             CP    A,(HL)
-9291: 40             LD    B,B
-9292: BE             CP    A,(HL)
-9293: 40             LD    B,B
-9294: BC             CP    A,H
-9295: 40             LD    B,B
-9296: BE             CP    A,(HL)
-9297: 40             LD    B,B
-9298: BE             CP    A,(HL)
-9299: 40             LD    B,B
-929A: BC             CP    A,H
-929B: 40             LD    B,B
-929C: BE             CP    A,(HL)
-929D: 40             LD    B,B
-929E: BE             CP    A,(HL)
-929F: 40             LD    B,B
-92A0: BC             CP    A,H
-92A1: 40             LD    B,B
-92A2: BE             CP    A,(HL)
-92A3: 40             LD    B,B
-92A4: BE             CP    A,(HL)
-92A5: 40             LD    B,B
-92A6: BC             CP    A,H
-92A7: 40             LD    B,B
-92A8: BE             CP    A,(HL)
-92A9: 40             LD    B,B
-92AA: BE             CP    A,(HL)
-92AB: 40             LD    B,B
-92AC: BC             CP    A,H
-92AD: 40             LD    B,B
-92AE: BE             CP    A,(HL)
-92AF: 40             LD    B,B
-92B0: BE             CP    A,(HL)
-92B1: 40             LD    B,B
-92B2: BC             CP    A,H
-92B3: 40             LD    B,B
-92B4: BE             CP    A,(HL)
-92B5: 40             LD    B,B
-92B6: BE             CP    A,(HL)
-92B7: 40             LD    B,B
-92B8: BC             CP    A,H
-92B9: 40             LD    B,B
-92BA: BE             CP    A,(HL)
-92BB: 40             LD    B,B
-92BC: BE             CP    A,(HL)
-92BD: 40             LD    B,B
-92BE: 62             LD    H,D
-92BF: 41             LD    B,C
-92C0: BE             CP    A,(HL)
-92C1: 50             LD    D,B
-92C2: BE             CP    A,(HL)
-92C3: 50             LD    D,B
-92C4: BE             CP    A,(HL)
-92C5: 50             LD    D,B
-92C6: BE             CP    A,(HL)
-92C7: 50             LD    D,B
-92C8: 62             LD    H,D
-92C9: 41             LD    B,C
-92CA: BB             CP    A,E
-92CB: 40             LD    B,B
-92CC: BB             CP    A,E
-92CD: 40             LD    B,B
-92CE: BD             CP    A,L
-92CF: 40             LD    B,B
-92D0: BB             CP    A,E
-92D1: 40             LD    B,B
-92D2: BB             CP    A,E
-92D3: 40             LD    B,B
-92D4: BD             CP    A,L
-92D5: 40             LD    B,B
-92D6: BB             CP    A,E
-92D7: 40             LD    B,B
-92D8: BB             CP    A,E
-92D9: 40             LD    B,B
-92DA: BD             CP    A,L
-92DB: 40             LD    B,B
-92DC: BB             CP    A,E
-92DD: 40             LD    B,B
-92DE: BB             CP    A,E
-92DF: 40             LD    B,B
-92E0: BD             CP    A,L
-92E1: 40             LD    B,B
-92E2: BB             CP    A,E
-92E3: 40             LD    B,B
-92E4: BB             CP    A,E
-92E5: 40             LD    B,B
-92E6: BD             CP    A,L
-92E7: 40             LD    B,B
-92E8: BB             CP    A,E
-92E9: 40             LD    B,B
-92EA: BB             CP    A,E
-92EB: 40             LD    B,B
-92EC: BD             CP    A,L
-92ED: 40             LD    B,B
-92EE: BB             CP    A,E
-92EF: 40             LD    B,B
-92F0: BB             CP    A,E
-92F1: 40             LD    B,B
-92F2: BD             CP    A,L
-92F3: 40             LD    B,B
-92F4: BB             CP    A,E
-92F5: 40             LD    B,B
-92F6: BB             CP    A,E
-92F7: 40             LD    B,B
-92F8: BD             CP    A,L
-92F9: 40             LD    B,B
-92FA: BB             CP    A,E
-92FB: 40             LD    B,B
-92FC: BB             CP    A,E
-92FD: 40             LD    B,B
-92FE: 62             LD    H,D
-92FF: 41             LD    B,C
-9300: BE             CP    A,(HL)
-9301: 50             LD    D,B
-9302: BE             CP    A,(HL)
-9303: 50             LD    D,B
-9304: BE             CP    A,(HL)
-9305: 50             LD    D,B
-9306: BE             CP    A,(HL)
-9307: 50             LD    D,B
-9308: 62             LD    H,D
-9309: 41             LD    B,C
-930A: BE             CP    A,(HL)
-930B: 40             LD    B,B
-930C: BE             CP    A,(HL)
-930D: 40             LD    B,B
-930E: BC             CP    A,H
-930F: 40             LD    B,B
-9310: BE             CP    A,(HL)
-9311: 40             LD    B,B
-9312: BE             CP    A,(HL)
-9313: 40             LD    B,B
-9314: BC             CP    A,H
-9315: 40             LD    B,B
-9316: BE             CP    A,(HL)
-9317: 40             LD    B,B
-9318: BE             CP    A,(HL)
-9319: 40             LD    B,B
-931A: BC             CP    A,H
-931B: 40             LD    B,B
-931C: BE             CP    A,(HL)
-931D: 40             LD    B,B
-931E: BE             CP    A,(HL)
-931F: 40             LD    B,B
-9320: BC             CP    A,H
-9321: 40             LD    B,B
-9322: BE             CP    A,(HL)
-9323: 40             LD    B,B
-9324: BE             CP    A,(HL)
-9325: 40             LD    B,B
-9326: BC             CP    A,H
-9327: 40             LD    B,B
-9328: BE             CP    A,(HL)
-9329: 40             LD    B,B
-932A: BE             CP    A,(HL)
-932B: 40             LD    B,B
-932C: BC             CP    A,H
-932D: 40             LD    B,B
-932E: BE             CP    A,(HL)
-932F: 40             LD    B,B
-9330: BE             CP    A,(HL)
-9331: 40             LD    B,B
-9332: BC             CP    A,H
-9333: 40             LD    B,B
-9334: BE             CP    A,(HL)
-9335: 40             LD    B,B
-9336: BE             CP    A,(HL)
-9337: 40             LD    B,B
-9338: BC             CP    A,H
-9339: 40             LD    B,B
-933A: BE             CP    A,(HL)
-933B: 40             LD    B,B
-933C: BE             CP    A,(HL)
-933D: 40             LD    B,B
-933E: 62             LD    H,D
-933F: 41             LD    B,C
-9340: BE             CP    A,(HL)
-9341: 50             LD    D,B
-9342: BE             CP    A,(HL)
-9343: 50             LD    D,B
-9344: BE             CP    A,(HL)
-9345: 50             LD    D,B
-9346: BE             CP    A,(HL)
-9347: 50             LD    D,B
-9348: 62             LD    H,D
-9349: 41             LD    B,C
-934A: BE             CP    A,(HL)
-934B: 40             LD    B,B
-934C: BE             CP    A,(HL)
-934D: 40             LD    B,B
-934E: BC             CP    A,H
-934F: 40             LD    B,B
-9350: BE             CP    A,(HL)
-9351: 40             LD    B,B
-9352: BE             CP    A,(HL)
-9353: 40             LD    B,B
-9354: BC             CP    A,H
-9355: 40             LD    B,B
-9356: BE             CP    A,(HL)
-9357: 40             LD    B,B
-9358: BE             CP    A,(HL)
-9359: 40             LD    B,B
-935A: BC             CP    A,H
-935B: 40             LD    B,B
-935C: BE             CP    A,(HL)
-935D: 40             LD    B,B
-935E: BE             CP    A,(HL)
-935F: 40             LD    B,B
-9360: BC             CP    A,H
-9361: 40             LD    B,B
-9362: BE             CP    A,(HL)
-9363: 40             LD    B,B
-9364: BE             CP    A,(HL)
-9365: 40             LD    B,B
-9366: BC             CP    A,H
-9367: 40             LD    B,B
-9368: BE             CP    A,(HL)
-9369: 40             LD    B,B
-936A: BE             CP    A,(HL)
-936B: 40             LD    B,B
-936C: BC             CP    A,H
-936D: 40             LD    B,B
-936E: BE             CP    A,(HL)
-936F: 40             LD    B,B
-9370: BE             CP    A,(HL)
-9371: 40             LD    B,B
-9372: BC             CP    A,H
-9373: 40             LD    B,B
-9374: BE             CP    A,(HL)
-9375: 40             LD    B,B
-9376: BE             CP    A,(HL)
-9377: 40             LD    B,B
-9378: BC             CP    A,H
-9379: 40             LD    B,B
-937A: BE             CP    A,(HL)
-937B: 40             LD    B,B
-937C: BE             CP    A,(HL)
-937D: 40             LD    B,B
-937E: 62             LD    H,D
-937F: 41             LD    B,C
-9380: BE             CP    A,(HL)
-9381: 50             LD    D,B
-9382: BE             CP    A,(HL)
-9383: 50             LD    D,B
-9384: BE             CP    A,(HL)
-9385: 50             LD    D,B
-9386: BE             CP    A,(HL)
-9387: 50             LD    D,B
-9388: 62             LD    H,D
-9389: 41             LD    B,C
-938A: BB             CP    A,E
-938B: 40             LD    B,B
-938C: BB             CP    A,E
-938D: 40             LD    B,B
-938E: BD             CP    A,L
-938F: 40             LD    B,B
-9390: BB             CP    A,E
-9391: 40             LD    B,B
-9392: BB             CP    A,E
-9393: 40             LD    B,B
-9394: BD             CP    A,L
-9395: 40             LD    B,B
-9396: BB             CP    A,E
-9397: 40             LD    B,B
-9398: BB             CP    A,E
-9399: 40             LD    B,B
-939A: BD             CP    A,L
-939B: 40             LD    B,B
-939C: BB             CP    A,E
-939D: 40             LD    B,B
-939E: BB             CP    A,E
-939F: 40             LD    B,B
-93A0: BD             CP    A,L
-93A1: 40             LD    B,B
-93A2: BB             CP    A,E
-93A3: 40             LD    B,B
-93A4: BB             CP    A,E
-93A5: 40             LD    B,B
-93A6: BD             CP    A,L
-93A7: 40             LD    B,B
-93A8: BB             CP    A,E
-93A9: 40             LD    B,B
-93AA: BB             CP    A,E
-93AB: 40             LD    B,B
-93AC: BD             CP    A,L
-93AD: 40             LD    B,B
-93AE: BB             CP    A,E
-93AF: 40             LD    B,B
-93B0: BB             CP    A,E
-93B1: 40             LD    B,B
-93B2: BD             CP    A,L
-93B3: 40             LD    B,B
-93B4: BB             CP    A,E
-93B5: 40             LD    B,B
-93B6: BB             CP    A,E
-93B7: 40             LD    B,B
-93B8: BD             CP    A,L
-93B9: 40             LD    B,B
-93BA: BB             CP    A,E
-93BB: 40             LD    B,B
-93BC: BB             CP    A,E
-93BD: 40             LD    B,B
-93BE: 62             LD    H,D
-93BF: 41             LD    B,C
-93C0: BE             CP    A,(HL)
-93C1: 50             LD    D,B
-93C2: BE             CP    A,(HL)
-93C3: 50             LD    D,B
-93C4: BE             CP    A,(HL)
-93C5: 50             LD    D,B
-93C6: BE             CP    A,(HL)
-93C7: 50             LD    D,B
-93C8: 62             LD    H,D
-93C9: 41             LD    B,C
-93CA: BE             CP    A,(HL)
-93CB: 40             LD    B,B
-93CC: BE             CP    A,(HL)
-93CD: 40             LD    B,B
-93CE: BC             CP    A,H
-93CF: 40             LD    B,B
-93D0: BE             CP    A,(HL)
-93D1: 40             LD    B,B
-93D2: BE             CP    A,(HL)
-93D3: 40             LD    B,B
-93D4: BC             CP    A,H
-93D5: 40             LD    B,B
-93D6: BE             CP    A,(HL)
-93D7: 40             LD    B,B
-93D8: BE             CP    A,(HL)
-93D9: 40             LD    B,B
-93DA: BC             CP    A,H
-93DB: 40             LD    B,B
-93DC: BE             CP    A,(HL)
-93DD: 40             LD    B,B
-93DE: BE             CP    A,(HL)
-93DF: 40             LD    B,B
-93E0: BC             CP    A,H
-93E1: 40             LD    B,B
-93E2: BE             CP    A,(HL)
-93E3: 40             LD    B,B
-93E4: BE             CP    A,(HL)
-93E5: 40             LD    B,B
-93E6: BC             CP    A,H
-93E7: 40             LD    B,B
-93E8: BE             CP    A,(HL)
-93E9: 40             LD    B,B
-93EA: BE             CP    A,(HL)
-93EB: 40             LD    B,B
-93EC: BC             CP    A,H
-93ED: 40             LD    B,B
-93EE: BE             CP    A,(HL)
-93EF: 40             LD    B,B
-93F0: BE             CP    A,(HL)
-93F1: 40             LD    B,B
-93F2: BC             CP    A,H
-93F3: 40             LD    B,B
-93F4: BE             CP    A,(HL)
-93F5: 40             LD    B,B
-93F6: BE             CP    A,(HL)
-93F7: 40             LD    B,B
-93F8: BC             CP    A,H
-93F9: 40             LD    B,B
-93FA: BE             CP    A,(HL)
-93FB: 40             LD    B,B
-93FC: BE             CP    A,(HL)
-93FD: 40             LD    B,B
-93FE: 62             LD    H,D
-93FF: 41             LD    B,C
-9400: BE             CP    A,(HL)
-9401: 50             LD    D,B
-9402: BE             CP    A,(HL)
-9403: 50             LD    D,B
-9404: BE             CP    A,(HL)
-9405: 50             LD    D,B
-9406: BE             CP    A,(HL)
-9407: 50             LD    D,B
-9408: 62             LD    H,D
-9409: 41             LD    B,C
-940A: BE             CP    A,(HL)
-940B: 40             LD    B,B
-940C: BE             CP    A,(HL)
-940D: 40             LD    B,B
-940E: BC             CP    A,H
-940F: 40             LD    B,B
-9410: BE             CP    A,(HL)
-9411: 40             LD    B,B
-9412: BE             CP    A,(HL)
-9413: 40             LD    B,B
-9414: BC             CP    A,H
-9415: 40             LD    B,B
-9416: F3             DI    
-9417: 40             LD    B,B
-9418: F1             POP   AF
-9419: 40             LD    B,B
-941A: EE 40          XOR   A,#$40
-941C: EB             EX    DE,HL
-941D: 40             LD    B,B
-941E: E8             RET   PE
-
-941F: 40             LD    B,B
-9420: BC             CP    A,H
-9421: 40             LD    B,B
-9422: BE             CP    A,(HL)
-9423: 40             LD    B,B
-9424: BE             CP    A,(HL)
-9425: 40             LD    B,B
-9426: BC             CP    A,H
-9427: 40             LD    B,B
-9428: BE             CP    A,(HL)
-9429: 40             LD    B,B
-942A: BE             CP    A,(HL)
-942B: 40             LD    B,B
-942C: BC             CP    A,H
-942D: 40             LD    B,B
-942E: BE             CP    A,(HL)
-942F: 40             LD    B,B
-9430: BE             CP    A,(HL)
-9431: 40             LD    B,B
-9432: BC             CP    A,H
-9433: 40             LD    B,B
-9434: BE             CP    A,(HL)
-9435: 40             LD    B,B
-9436: BE             CP    A,(HL)
-9437: 40             LD    B,B
-9438: BC             CP    A,H
-9439: 40             LD    B,B
-943A: BE             CP    A,(HL)
-943B: 40             LD    B,B
-943C: BE             CP    A,(HL)
-943D: 40             LD    B,B
-943E: 62             LD    H,D
-943F: 41             LD    B,C
-9440: BE             CP    A,(HL)
-9441: 50             LD    D,B
-9442: BE             CP    A,(HL)
-9443: 50             LD    D,B
-9444: BE             CP    A,(HL)
-9445: 50             LD    D,B
-9446: BE             CP    A,(HL)
-9447: 50             LD    D,B
-9448: 62             LD    H,D
-9449: 41             LD    B,C
-944A: BB             CP    A,E
-944B: 40             LD    B,B
-944C: BB             CP    A,E
-944D: 40             LD    B,B
-944E: BD             CP    A,L
-944F: 40             LD    B,B
-9450: BB             CP    A,E
-9451: 40             LD    B,B
-9452: BB             CP    A,E
-9453: 40             LD    B,B
-9454: F6 40          OR    A,#$40
-9456: F2 40 F0       JP    P,$F040
-
-9459: 40             LD    B,B
-945A: ED 40          IN    B,(C)
-945C: EA 40 E7       JP    PE,$E740
-
-945F: 40             LD    B,B
-9460: BD             CP    A,L
-9461: 40             LD    B,B
-9462: BB             CP    A,E
-9463: 40             LD    B,B
-9464: BB             CP    A,E
-9465: 40             LD    B,B
-9466: BD             CP    A,L
-9467: 40             LD    B,B
-9468: BB             CP    A,E
-9469: 40             LD    B,B
-946A: BB             CP    A,E
-946B: 40             LD    B,B
-946C: BD             CP    A,L
-946D: 40             LD    B,B
-946E: BB             CP    A,E
-946F: 40             LD    B,B
-9470: BB             CP    A,E
-9471: 40             LD    B,B
-9472: BD             CP    A,L
-9473: 40             LD    B,B
-9474: BB             CP    A,E
-9475: 40             LD    B,B
-9476: BB             CP    A,E
-9477: 40             LD    B,B
-9478: BD             CP    A,L
-9479: 40             LD    B,B
-947A: BB             CP    A,E
-947B: 40             LD    B,B
-947C: BB             CP    A,E
-947D: 40             LD    B,B
-947E: 62             LD    H,D
-947F: 41             LD    B,C
-9480: BE             CP    A,(HL)
-9481: 50             LD    D,B
-9482: BE             CP    A,(HL)
-9483: 50             LD    D,B
-9484: BE             CP    A,(HL)
-9485: 50             LD    D,B
-9486: BE             CP    A,(HL)
-9487: 50             LD    D,B
-9488: 62             LD    H,D
-9489: 41             LD    B,C
-948A: BE             CP    A,(HL)
-948B: 40             LD    B,B
-948C: BE             CP    A,(HL)
-948D: 40             LD    B,B
-948E: BC             CP    A,H
-948F: 40             LD    B,B
-9490: BE             CP    A,(HL)
-9491: 40             LD    B,B
-9492: F9             LD    SP,HL
-9493: 40             LD    B,B
-9494: F5             PUSH  AF
-9495: 40             LD    B,B
-9496: ED 40          IN    B,(C)
-9498: EF             RST   $28
-
-9499: 40             LD    B,B
-949A: EC 40 E9       CALL  PE,$E940
-949D: 40             LD    B,B
-949E: E6 40          AND   A,#$40
-94A0: BC             CP    A,H
-94A1: 40             LD    B,B
-94A2: BE             CP    A,(HL)
-94A3: 40             LD    B,B
-94A4: BE             CP    A,(HL)
-94A5: 40             LD    B,B
-94A6: BC             CP    A,H
-94A7: 40             LD    B,B
-94A8: BE             CP    A,(HL)
-94A9: 40             LD    B,B
-94AA: BE             CP    A,(HL)
-94AB: 40             LD    B,B
-94AC: BC             CP    A,H
-94AD: 40             LD    B,B
-94AE: BE             CP    A,(HL)
-94AF: 40             LD    B,B
-94B0: BE             CP    A,(HL)
-94B1: 40             LD    B,B
-94B2: BC             CP    A,H
-94B3: 40             LD    B,B
-94B4: BE             CP    A,(HL)
-94B5: 40             LD    B,B
-94B6: BE             CP    A,(HL)
-94B7: 40             LD    B,B
-94B8: BC             CP    A,H
-94B9: 40             LD    B,B
-94BA: BE             CP    A,(HL)
-94BB: 40             LD    B,B
-94BC: BE             CP    A,(HL)
-94BD: 40             LD    B,B
-94BE: 62             LD    H,D
-94BF: 41             LD    B,C
-94C0: BE             CP    A,(HL)
-94C1: 50             LD    D,B
-94C2: BE             CP    A,(HL)
-94C3: 50             LD    D,B
-94C4: BE             CP    A,(HL)
-94C5: 50             LD    D,B
-94C6: BE             CP    A,(HL)
-94C7: 50             LD    D,B
-94C8: 62             LD    H,D
-94C9: 41             LD    B,C
-94CA: BE             CP    A,(HL)
-94CB: 40             LD    B,B
-94CC: BE             CP    A,(HL)
-94CD: 40             LD    B,B
-94CE: BC             CP    A,H
-94CF: 40             LD    B,B
-94D0: BE             CP    A,(HL)
-94D1: 40             LD    B,B
-94D2: F8             RET   M
-
-94D3: 40             LD    B,B
-94D4: ED 40          IN    B,(C)
-94D6: FD 40          Illegal Opcode
-94D8: BE             CP    A,(HL)
-94D9: 40             LD    B,B
-94DA: BC             CP    A,H
-94DB: 40             LD    B,B
-94DC: BE             CP    A,(HL)
-94DD: 40             LD    B,B
-94DE: BE             CP    A,(HL)
-94DF: 40             LD    B,B
-94E0: BC             CP    A,H
-94E1: 40             LD    B,B
-94E2: BE             CP    A,(HL)
-94E3: 40             LD    B,B
-94E4: BE             CP    A,(HL)
-94E5: 40             LD    B,B
-94E6: BC             CP    A,H
-94E7: 40             LD    B,B
-94E8: BE             CP    A,(HL)
-94E9: 40             LD    B,B
-94EA: BE             CP    A,(HL)
-94EB: 40             LD    B,B
-94EC: BC             CP    A,H
-94ED: 40             LD    B,B
-94EE: BE             CP    A,(HL)
-94EF: 40             LD    B,B
-94F0: BE             CP    A,(HL)
-94F1: 40             LD    B,B
-94F2: BC             CP    A,H
-94F3: 40             LD    B,B
-94F4: BE             CP    A,(HL)
-94F5: 40             LD    B,B
-94F6: BE             CP    A,(HL)
-94F7: 40             LD    B,B
-94F8: BC             CP    A,H
-94F9: 40             LD    B,B
-94FA: BE             CP    A,(HL)
-94FB: 40             LD    B,B
-94FC: BE             CP    A,(HL)
-94FD: 40             LD    B,B
-94FE: 62             LD    H,D
-94FF: 41             LD    B,C
-9500: BE             CP    A,(HL)
-9501: 50             LD    D,B
-9502: BE             CP    A,(HL)
-9503: 50             LD    D,B
-9504: BE             CP    A,(HL)
-9505: 50             LD    D,B
-9506: BE             CP    A,(HL)
-9507: 50             LD    D,B
-9508: 62             LD    H,D
-9509: 41             LD    B,C
-950A: BB             CP    A,E
-950B: 40             LD    B,B
-950C: BB             CP    A,E
-950D: 40             LD    B,B
-950E: BD             CP    A,L
-950F: 40             LD    B,B
-9510: BB             CP    A,E
-9511: 40             LD    B,B
-9512: F7             RST   $30
-
-9513: 40             LD    B,B
-9514: F4 40 FC       CALL  P,$FC40
-9517: 40             LD    B,B
-9518: BB             CP    A,E
-9519: 40             LD    B,B
-951A: BD             CP    A,L
-951B: 40             LD    B,B
-951C: BB             CP    A,E
-951D: 40             LD    B,B
-951E: BB             CP    A,E
-951F: 40             LD    B,B
-9520: BD             CP    A,L
-9521: 40             LD    B,B
-9522: BB             CP    A,E
-9523: 40             LD    B,B
-9524: BB             CP    A,E
-9525: 40             LD    B,B
-9526: BD             CP    A,L
-9527: 40             LD    B,B
-9528: BB             CP    A,E
-9529: 40             LD    B,B
-952A: BB             CP    A,E
-952B: 40             LD    B,B
-952C: BD             CP    A,L
-952D: 40             LD    B,B
-952E: BB             CP    A,E
-952F: 40             LD    B,B
-9530: BB             CP    A,E
-9531: 40             LD    B,B
-9532: BD             CP    A,L
-9533: 40             LD    B,B
-9534: BB             CP    A,E
-9535: 40             LD    B,B
-9536: BB             CP    A,E
-9537: 40             LD    B,B
-9538: BD             CP    A,L
-9539: 40             LD    B,B
-953A: BB             CP    A,E
-953B: 40             LD    B,B
-953C: BB             CP    A,E
-953D: 40             LD    B,B
-953E: 62             LD    H,D
-953F: 41             LD    B,C
-9540: BE             CP    A,(HL)
-9541: 50             LD    D,B
-9542: BE             CP    A,(HL)
-9543: 50             LD    D,B
-9544: BE             CP    A,(HL)
-9545: 50             LD    D,B
-9546: BE             CP    A,(HL)
-9547: 50             LD    D,B
-9548: 62             LD    H,D
-9549: 41             LD    B,C
-954A: BE             CP    A,(HL)
-954B: 40             LD    B,B
-954C: BE             CP    A,(HL)
-954D: 40             LD    B,B
-954E: BC             CP    A,H
-954F: 40             LD    B,B
-9550: BE             CP    A,(HL)
-9551: 40             LD    B,B
-9552: BE             CP    A,(HL)
-9553: 40             LD    B,B
-9554: FA 40 FB       JP    M,$FB40
-
-9557: 40             LD    B,B
-9558: BE             CP    A,(HL)
-9559: 40             LD    B,B
-955A: BC             CP    A,H
-955B: 40             LD    B,B
-955C: BE             CP    A,(HL)
-955D: 40             LD    B,B
-955E: BE             CP    A,(HL)
-955F: 40             LD    B,B
-9560: BC             CP    A,H
-9561: 40             LD    B,B
-9562: BE             CP    A,(HL)
-9563: 40             LD    B,B
-9564: BE             CP    A,(HL)
-9565: 40             LD    B,B
-9566: BC             CP    A,H
-9567: 40             LD    B,B
-9568: BE             CP    A,(HL)
-9569: 40             LD    B,B
-956A: BE             CP    A,(HL)
-956B: 40             LD    B,B
-956C: BC             CP    A,H
-956D: 40             LD    B,B
-956E: BE             CP    A,(HL)
-956F: 40             LD    B,B
-9570: BE             CP    A,(HL)
-9571: 40             LD    B,B
-9572: BC             CP    A,H
-9573: 40             LD    B,B
-9574: BE             CP    A,(HL)
-9575: 40             LD    B,B
-9576: BE             CP    A,(HL)
-9577: 40             LD    B,B
-9578: BC             CP    A,H
-9579: 40             LD    B,B
-957A: BE             CP    A,(HL)
-957B: 40             LD    B,B
-957C: BE             CP    A,(HL)
-957D: 40             LD    B,B
-957E: 62             LD    H,D
-957F: 41             LD    B,C
-9580: BE             CP    A,(HL)
-9581: 50             LD    D,B
-9582: BE             CP    A,(HL)
-9583: 50             LD    D,B
-9584: BE             CP    A,(HL)
-9585: 50             LD    D,B
-9586: BE             CP    A,(HL)
-9587: 50             LD    D,B
-9588: 62             LD    H,D
-9589: 41             LD    B,C
-958A: BE             CP    A,(HL)
-958B: 40             LD    B,B
-958C: BE             CP    A,(HL)
-958D: 40             LD    B,B
-958E: BC             CP    A,H
-958F: 40             LD    B,B
-9590: BE             CP    A,(HL)
-9591: 40             LD    B,B
-9592: BE             CP    A,(HL)
-9593: 40             LD    B,B
-9594: BC             CP    A,H
-9595: 40             LD    B,B
-9596: 96             SUB   A,(HL)
-9597: 41             LD    B,C
-9598: 96             SUB   A,(HL)
-9599: 43             LD    B,E
-959A: BC             CP    A,H
-959B: 40             LD    B,B
-959C: BE             CP    A,(HL)
-959D: 40             LD    B,B
-959E: BE             CP    A,(HL)
-959F: 40             LD    B,B
-95A0: BC             CP    A,H
-95A1: 40             LD    B,B
-95A2: BE             CP    A,(HL)
-95A3: 40             LD    B,B
-95A4: BE             CP    A,(HL)
-95A5: 40             LD    B,B
-95A6: BC             CP    A,H
-95A7: 40             LD    B,B
-95A8: BE             CP    A,(HL)
-95A9: 40             LD    B,B
-95AA: BE             CP    A,(HL)
-95AB: 40             LD    B,B
-95AC: BC             CP    A,H
-95AD: 40             LD    B,B
-95AE: BE             CP    A,(HL)
-95AF: 40             LD    B,B
-95B0: BE             CP    A,(HL)
-95B1: 40             LD    B,B
-95B2: BC             CP    A,H
-95B3: 40             LD    B,B
-95B4: BE             CP    A,(HL)
-95B5: 40             LD    B,B
-95B6: BE             CP    A,(HL)
-95B7: 40             LD    B,B
-95B8: BC             CP    A,H
-95B9: 40             LD    B,B
-95BA: BE             CP    A,(HL)
-95BB: 40             LD    B,B
-95BC: BE             CP    A,(HL)
-95BD: 40             LD    B,B
-95BE: 62             LD    H,D
-95BF: 41             LD    B,C
-95C0: BE             CP    A,(HL)
-95C1: 50             LD    D,B
-95C2: BE             CP    A,(HL)
-95C3: 50             LD    D,B
-95C4: BE             CP    A,(HL)
-95C5: 50             LD    D,B
-95C6: BE             CP    A,(HL)
-95C7: 50             LD    D,B
-95C8: 62             LD    H,D
-95C9: 41             LD    B,C
-95CA: BB             CP    A,E
-95CB: 40             LD    B,B
-95CC: BB             CP    A,E
-95CD: 40             LD    B,B
-95CE: BD             CP    A,L
-95CF: 40             LD    B,B
-95D0: BB             CP    A,E
-95D1: 40             LD    B,B
-95D2: BB             CP    A,E
-95D3: 40             LD    B,B
-95D4: BD             CP    A,L
-95D5: 40             LD    B,B
-95D6: 95             SUB   A,L
-95D7: 41             LD    B,C
-95D8: 95             SUB   A,L
-95D9: 43             LD    B,E
-95DA: BD             CP    A,L
-95DB: 40             LD    B,B
-95DC: BB             CP    A,E
-95DD: 40             LD    B,B
-95DE: BB             CP    A,E
-95DF: 40             LD    B,B
-95E0: BD             CP    A,L
-95E1: 40             LD    B,B
-95E2: BB             CP    A,E
-95E3: 40             LD    B,B
-95E4: BB             CP    A,E
-95E5: 40             LD    B,B
-95E6: BD             CP    A,L
-95E7: 40             LD    B,B
-95E8: BB             CP    A,E
-95E9: 40             LD    B,B
-95EA: BB             CP    A,E
-95EB: 40             LD    B,B
-95EC: BD             CP    A,L
-95ED: 40             LD    B,B
-95EE: BB             CP    A,E
-95EF: 40             LD    B,B
-95F0: BB             CP    A,E
-95F1: 40             LD    B,B
-95F2: BD             CP    A,L
-95F3: 40             LD    B,B
-95F4: BB             CP    A,E
-95F5: 40             LD    B,B
-95F6: BB             CP    A,E
-95F7: 40             LD    B,B
-95F8: BD             CP    A,L
-95F9: 40             LD    B,B
-95FA: BB             CP    A,E
-95FB: 40             LD    B,B
-95FC: BB             CP    A,E
-95FD: 40             LD    B,B
-95FE: 62             LD    H,D
-95FF: 41             LD    B,C
-9600: BE             CP    A,(HL)
-9601: 50             LD    D,B
-9602: BE             CP    A,(HL)
-9603: 50             LD    D,B
-9604: BE             CP    A,(HL)
-9605: 50             LD    D,B
-9606: BE             CP    A,(HL)
-9607: 50             LD    D,B
-9608: 62             LD    H,D
-9609: 41             LD    B,C
-960A: BE             CP    A,(HL)
-960B: 40             LD    B,B
-960C: BE             CP    A,(HL)
-960D: 40             LD    B,B
-960E: BC             CP    A,H
-960F: 40             LD    B,B
-9610: BE             CP    A,(HL)
-9611: 40             LD    B,B
-9612: BE             CP    A,(HL)
-9613: 40             LD    B,B
-9614: BC             CP    A,H
-9615: 40             LD    B,B
-9616: BE             CP    A,(HL)
-9617: 40             LD    B,B
-9618: BE             CP    A,(HL)
-9619: 40             LD    B,B
-961A: BC             CP    A,H
-961B: 40             LD    B,B
-961C: BE             CP    A,(HL)
-961D: 40             LD    B,B
-961E: BE             CP    A,(HL)
-961F: 40             LD    B,B
-9620: BC             CP    A,H
-9621: 40             LD    B,B
-9622: BE             CP    A,(HL)
-9623: 40             LD    B,B
-9624: BE             CP    A,(HL)
-9625: 40             LD    B,B
-9626: BC             CP    A,H
-9627: 40             LD    B,B
-9628: BE             CP    A,(HL)
-9629: 40             LD    B,B
-962A: BE             CP    A,(HL)
-962B: 40             LD    B,B
-962C: BC             CP    A,H
-962D: 40             LD    B,B
-962E: BE             CP    A,(HL)
-962F: 40             LD    B,B
-9630: BE             CP    A,(HL)
-9631: 40             LD    B,B
-9632: BC             CP    A,H
-9633: 40             LD    B,B
-9634: BE             CP    A,(HL)
-9635: 40             LD    B,B
-9636: BE             CP    A,(HL)
-9637: 40             LD    B,B
-9638: BC             CP    A,H
-9639: 40             LD    B,B
-963A: BE             CP    A,(HL)
-963B: 40             LD    B,B
-963C: BE             CP    A,(HL)
-963D: 40             LD    B,B
-963E: 62             LD    H,D
-963F: 41             LD    B,C
-9640: BE             CP    A,(HL)
-9641: 50             LD    D,B
-9642: BE             CP    A,(HL)
-9643: 50             LD    D,B
-9644: BE             CP    A,(HL)
-9645: 50             LD    D,B
-9646: BE             CP    A,(HL)
-9647: 50             LD    D,B
-9648: 62             LD    H,D
-9649: 41             LD    B,C
-964A: BE             CP    A,(HL)
-964B: 40             LD    B,B
-964C: BE             CP    A,(HL)
-964D: 40             LD    B,B
-964E: BC             CP    A,H
-964F: 40             LD    B,B
-9650: BE             CP    A,(HL)
-9651: 40             LD    B,B
-9652: BE             CP    A,(HL)
-9653: 40             LD    B,B
-9654: BC             CP    A,H
-9655: 40             LD    B,B
-9656: BE             CP    A,(HL)
-9657: 40             LD    B,B
-9658: BE             CP    A,(HL)
-9659: 40             LD    B,B
-965A: BC             CP    A,H
-965B: 40             LD    B,B
-965C: BE             CP    A,(HL)
-965D: 40             LD    B,B
-965E: BE             CP    A,(HL)
-965F: 40             LD    B,B
-9660: BC             CP    A,H
-9661: 40             LD    B,B
-9662: BE             CP    A,(HL)
-9663: 40             LD    B,B
-9664: BE             CP    A,(HL)
-9665: 40             LD    B,B
-9666: BC             CP    A,H
-9667: 40             LD    B,B
-9668: BE             CP    A,(HL)
-9669: 40             LD    B,B
-966A: BE             CP    A,(HL)
-966B: 40             LD    B,B
-966C: BC             CP    A,H
-966D: 40             LD    B,B
-966E: BE             CP    A,(HL)
-966F: 40             LD    B,B
-9670: BE             CP    A,(HL)
-9671: 40             LD    B,B
-9672: BC             CP    A,H
-9673: 40             LD    B,B
-9674: BE             CP    A,(HL)
-9675: 40             LD    B,B
-9676: BE             CP    A,(HL)
-9677: 40             LD    B,B
-9678: BC             CP    A,H
-9679: 40             LD    B,B
-967A: BE             CP    A,(HL)
-967B: 40             LD    B,B
-967C: BE             CP    A,(HL)
-967D: 40             LD    B,B
-967E: 62             LD    H,D
-967F: 41             LD    B,C
-9680: BE             CP    A,(HL)
-9681: 50             LD    D,B
-9682: BE             CP    A,(HL)
-9683: 50             LD    D,B
-9684: BE             CP    A,(HL)
-9685: 50             LD    D,B
-9686: BE             CP    A,(HL)
-9687: 50             LD    D,B
-9688: 62             LD    H,D
-9689: 41             LD    B,C
-968A: BB             CP    A,E
-968B: 40             LD    B,B
-968C: BB             CP    A,E
-968D: 40             LD    B,B
-968E: BD             CP    A,L
-968F: 40             LD    B,B
-9690: BB             CP    A,E
-9691: 40             LD    B,B
-9692: BB             CP    A,E
-9693: 40             LD    B,B
-9694: BD             CP    A,L
-9695: 40             LD    B,B
-9696: BB             CP    A,E
-9697: 40             LD    B,B
-9698: BB             CP    A,E
-9699: 40             LD    B,B
-969A: BD             CP    A,L
-969B: 40             LD    B,B
-969C: BB             CP    A,E
-969D: 40             LD    B,B
-969E: BB             CP    A,E
-969F: 40             LD    B,B
-96A0: BD             CP    A,L
-96A1: 40             LD    B,B
-96A2: BB             CP    A,E
-96A3: 40             LD    B,B
-96A4: BB             CP    A,E
-96A5: 40             LD    B,B
-96A6: BD             CP    A,L
-96A7: 40             LD    B,B
-96A8: BB             CP    A,E
-96A9: 40             LD    B,B
-96AA: BB             CP    A,E
-96AB: 40             LD    B,B
-96AC: BD             CP    A,L
-96AD: 40             LD    B,B
-96AE: BB             CP    A,E
-96AF: 40             LD    B,B
-96B0: BB             CP    A,E
-96B1: 40             LD    B,B
-96B2: BD             CP    A,L
-96B3: 40             LD    B,B
-96B4: BB             CP    A,E
-96B5: 40             LD    B,B
-96B6: BB             CP    A,E
-96B7: 40             LD    B,B
-96B8: BD             CP    A,L
-96B9: 40             LD    B,B
-96BA: BB             CP    A,E
-96BB: 40             LD    B,B
-96BC: BB             CP    A,E
-96BD: 40             LD    B,B
-96BE: 62             LD    H,D
-96BF: 41             LD    B,C
-96C0: BE             CP    A,(HL)
-96C1: 50             LD    D,B
-96C2: BE             CP    A,(HL)
-96C3: 50             LD    D,B
-96C4: BE             CP    A,(HL)
-96C5: 50             LD    D,B
-96C6: BE             CP    A,(HL)
-96C7: 50             LD    D,B
-96C8: 62             LD    H,D
-96C9: 41             LD    B,C
-96CA: BE             CP    A,(HL)
-96CB: 40             LD    B,B
-96CC: BE             CP    A,(HL)
-96CD: 40             LD    B,B
-96CE: BC             CP    A,H
-96CF: 40             LD    B,B
-96D0: BE             CP    A,(HL)
-96D1: 40             LD    B,B
-96D2: BE             CP    A,(HL)
-96D3: 40             LD    B,B
-96D4: BC             CP    A,H
-96D5: 40             LD    B,B
-96D6: BE             CP    A,(HL)
-96D7: 40             LD    B,B
-96D8: BE             CP    A,(HL)
-96D9: 40             LD    B,B
-96DA: BC             CP    A,H
-96DB: 40             LD    B,B
-96DC: BE             CP    A,(HL)
-96DD: 40             LD    B,B
-96DE: BE             CP    A,(HL)
-96DF: 40             LD    B,B
-96E0: BC             CP    A,H
-96E1: 40             LD    B,B
-96E2: BE             CP    A,(HL)
-96E3: 40             LD    B,B
-96E4: BE             CP    A,(HL)
-96E5: 40             LD    B,B
-96E6: BC             CP    A,H
-96E7: 40             LD    B,B
-96E8: BE             CP    A,(HL)
-96E9: 40             LD    B,B
-96EA: BE             CP    A,(HL)
-96EB: 40             LD    B,B
-96EC: BC             CP    A,H
-96ED: 40             LD    B,B
-96EE: BE             CP    A,(HL)
-96EF: 40             LD    B,B
-96F0: BE             CP    A,(HL)
-96F1: 40             LD    B,B
-96F2: BC             CP    A,H
-96F3: 40             LD    B,B
-96F4: BE             CP    A,(HL)
-96F5: 40             LD    B,B
-96F6: BE             CP    A,(HL)
-96F7: 40             LD    B,B
-96F8: BC             CP    A,H
-96F9: 40             LD    B,B
-96FA: BE             CP    A,(HL)
-96FB: 40             LD    B,B
-96FC: BE             CP    A,(HL)
-96FD: 40             LD    B,B
-96FE: 62             LD    H,D
-96FF: 41             LD    B,C
-9700: BE             CP    A,(HL)
-9701: 50             LD    D,B
-9702: BE             CP    A,(HL)
-9703: 50             LD    D,B
-9704: BE             CP    A,(HL)
-9705: 50             LD    D,B
-9706: BE             CP    A,(HL)
-9707: 50             LD    D,B
-9708: 62             LD    H,D
-9709: 41             LD    B,C
-970A: BE             CP    A,(HL)
-970B: 40             LD    B,B
-970C: BE             CP    A,(HL)
-970D: 40             LD    B,B
-970E: BC             CP    A,H
-970F: 40             LD    B,B
-9710: BE             CP    A,(HL)
-9711: 40             LD    B,B
-9712: BE             CP    A,(HL)
-9713: 40             LD    B,B
-9714: BC             CP    A,H
-9715: 40             LD    B,B
-9716: BE             CP    A,(HL)
-9717: 40             LD    B,B
-9718: BE             CP    A,(HL)
-9719: 40             LD    B,B
-971A: BC             CP    A,H
-971B: 40             LD    B,B
-971C: BE             CP    A,(HL)
-971D: 40             LD    B,B
-971E: BE             CP    A,(HL)
-971F: 40             LD    B,B
-9720: BC             CP    A,H
-9721: 40             LD    B,B
-9722: BE             CP    A,(HL)
-9723: 40             LD    B,B
-9724: BE             CP    A,(HL)
-9725: 40             LD    B,B
-9726: BC             CP    A,H
-9727: 40             LD    B,B
-9728: BE             CP    A,(HL)
-9729: 40             LD    B,B
-972A: BE             CP    A,(HL)
-972B: 40             LD    B,B
-972C: BC             CP    A,H
-972D: 40             LD    B,B
-972E: BE             CP    A,(HL)
-972F: 40             LD    B,B
-9730: BE             CP    A,(HL)
-9731: 40             LD    B,B
-9732: BC             CP    A,H
-9733: 40             LD    B,B
-9734: BE             CP    A,(HL)
-9735: 40             LD    B,B
-9736: BE             CP    A,(HL)
-9737: 40             LD    B,B
-9738: BC             CP    A,H
-9739: 40             LD    B,B
-973A: BE             CP    A,(HL)
-973B: 40             LD    B,B
-973C: BE             CP    A,(HL)
-973D: 40             LD    B,B
-973E: 62             LD    H,D
-973F: 41             LD    B,C
-9740: BE             CP    A,(HL)
-9741: 50             LD    D,B
-9742: BE             CP    A,(HL)
-9743: 50             LD    D,B
-9744: BE             CP    A,(HL)
-9745: 50             LD    D,B
-9746: BE             CP    A,(HL)
-9747: 50             LD    D,B
-9748: 62             LD    H,D
-9749: 41             LD    B,C
-974A: BB             CP    A,E
-974B: 40             LD    B,B
-974C: BB             CP    A,E
-974D: 40             LD    B,B
-974E: BD             CP    A,L
-974F: 40             LD    B,B
-9750: BB             CP    A,E
-9751: 40             LD    B,B
-9752: BB             CP    A,E
-9753: 40             LD    B,B
-9754: BD             CP    A,L
-9755: 40             LD    B,B
-9756: BB             CP    A,E
-9757: 40             LD    B,B
-9758: BB             CP    A,E
-9759: 40             LD    B,B
-975A: BD             CP    A,L
-975B: 40             LD    B,B
-975C: BB             CP    A,E
-975D: 40             LD    B,B
-975E: BB             CP    A,E
-975F: 40             LD    B,B
-9760: BD             CP    A,L
-9761: 40             LD    B,B
-9762: BB             CP    A,E
-9763: 40             LD    B,B
-9764: BB             CP    A,E
-9765: 40             LD    B,B
-9766: BD             CP    A,L
-9767: 40             LD    B,B
-9768: BB             CP    A,E
-9769: 40             LD    B,B
-976A: BB             CP    A,E
-976B: 40             LD    B,B
-976C: BD             CP    A,L
-976D: 40             LD    B,B
-976E: BB             CP    A,E
-976F: 40             LD    B,B
-9770: BB             CP    A,E
-9771: 40             LD    B,B
-9772: BD             CP    A,L
-9773: 40             LD    B,B
-9774: BB             CP    A,E
-9775: 40             LD    B,B
-9776: BB             CP    A,E
-9777: 40             LD    B,B
-9778: BD             CP    A,L
-9779: 40             LD    B,B
-977A: BB             CP    A,E
-977B: 40             LD    B,B
-977C: BB             CP    A,E
-977D: 40             LD    B,B
-977E: 62             LD    H,D
-977F: 41             LD    B,C
-9780: BE             CP    A,(HL)
-9781: 50             LD    D,B
-9782: BE             CP    A,(HL)
-9783: 50             LD    D,B
-9784: BE             CP    A,(HL)
-9785: 50             LD    D,B
-9786: BE             CP    A,(HL)
-9787: 50             LD    D,B
-9788: 62             LD    H,D
-9789: 41             LD    B,C
-978A: BE             CP    A,(HL)
-978B: 40             LD    B,B
-978C: BE             CP    A,(HL)
-978D: 40             LD    B,B
-978E: BC             CP    A,H
-978F: 40             LD    B,B
-9790: BE             CP    A,(HL)
-9791: 40             LD    B,B
-9792: BE             CP    A,(HL)
-9793: 40             LD    B,B
-9794: BC             CP    A,H
-9795: 40             LD    B,B
-9796: BE             CP    A,(HL)
-9797: 40             LD    B,B
-9798: BE             CP    A,(HL)
-9799: 40             LD    B,B
-979A: BC             CP    A,H
-979B: 40             LD    B,B
-979C: BE             CP    A,(HL)
-979D: 40             LD    B,B
-979E: BE             CP    A,(HL)
-979F: 40             LD    B,B
-97A0: BC             CP    A,H
-97A1: 40             LD    B,B
-97A2: BE             CP    A,(HL)
-97A3: 40             LD    B,B
-97A4: BE             CP    A,(HL)
-97A5: 40             LD    B,B
-97A6: BC             CP    A,H
-97A7: 40             LD    B,B
-97A8: BE             CP    A,(HL)
-97A9: 40             LD    B,B
-97AA: BE             CP    A,(HL)
-97AB: 40             LD    B,B
-97AC: BC             CP    A,H
-97AD: 40             LD    B,B
-97AE: BE             CP    A,(HL)
-97AF: 40             LD    B,B
-97B0: BE             CP    A,(HL)
-97B1: 40             LD    B,B
-97B2: BC             CP    A,H
-97B3: 40             LD    B,B
-97B4: BE             CP    A,(HL)
-97B5: 40             LD    B,B
-97B6: BE             CP    A,(HL)
-97B7: 40             LD    B,B
-97B8: BC             CP    A,H
-97B9: 40             LD    B,B
-97BA: BE             CP    A,(HL)
-97BB: 40             LD    B,B
-97BC: BE             CP    A,(HL)
-97BD: 40             LD    B,B
-97BE: 62             LD    H,D
-97BF: 41             LD    B,C
-97C0: BE             CP    A,(HL)
-97C1: 50             LD    D,B
-97C2: BE             CP    A,(HL)
-97C3: 50             LD    D,B
-97C4: BE             CP    A,(HL)
-97C5: 50             LD    D,B
-97C6: BE             CP    A,(HL)
-97C7: 50             LD    D,B
-97C8: 62             LD    H,D
-97C9: 41             LD    B,C
-97CA: BE             CP    A,(HL)
-97CB: 40             LD    B,B
-97CC: BE             CP    A,(HL)
-97CD: 40             LD    B,B
-97CE: BC             CP    A,H
-97CF: 40             LD    B,B
-97D0: BE             CP    A,(HL)
-97D1: 40             LD    B,B
-97D2: BE             CP    A,(HL)
-97D3: 40             LD    B,B
-97D4: BC             CP    A,H
-97D5: 40             LD    B,B
-97D6: BE             CP    A,(HL)
-97D7: 40             LD    B,B
-97D8: BE             CP    A,(HL)
-97D9: 40             LD    B,B
-97DA: BC             CP    A,H
-97DB: 40             LD    B,B
-97DC: BE             CP    A,(HL)
-97DD: 40             LD    B,B
-97DE: BE             CP    A,(HL)
-97DF: 40             LD    B,B
-97E0: BC             CP    A,H
-97E1: 40             LD    B,B
-97E2: BE             CP    A,(HL)
-97E3: 40             LD    B,B
-97E4: BE             CP    A,(HL)
-97E5: 40             LD    B,B
-97E6: BC             CP    A,H
-97E7: 40             LD    B,B
-97E8: BE             CP    A,(HL)
-97E9: 40             LD    B,B
-97EA: BE             CP    A,(HL)
-97EB: 40             LD    B,B
-97EC: BC             CP    A,H
-97ED: 40             LD    B,B
-97EE: BE             CP    A,(HL)
-97EF: 40             LD    B,B
-97F0: BE             CP    A,(HL)
-97F1: 40             LD    B,B
-97F2: BC             CP    A,H
-97F3: 40             LD    B,B
-97F4: BE             CP    A,(HL)
-97F5: 40             LD    B,B
-97F6: BE             CP    A,(HL)
-97F7: 40             LD    B,B
-97F8: BC             CP    A,H
-97F9: 40             LD    B,B
-97FA: BE             CP    A,(HL)
-97FB: 40             LD    B,B
-97FC: BE             CP    A,(HL)
-97FD: 40             LD    B,B
-97FE: 62             LD    H,D
-97FF: 41             LD    B,C
-9800: BE             CP    A,(HL)
-9801: 50             LD    D,B
-9802: BE             CP    A,(HL)
-9803: 50             LD    D,B
-9804: BE             CP    A,(HL)
-9805: 50             LD    D,B
-9806: BE             CP    A,(HL)
-9807: 50             LD    D,B
-9808: 62             LD    H,D
-9809: 41             LD    B,C
-980A: BB             CP    A,E
-980B: 40             LD    B,B
-980C: BB             CP    A,E
-980D: 40             LD    B,B
-980E: BD             CP    A,L
-980F: 40             LD    B,B
-9810: BB             CP    A,E
-9811: 40             LD    B,B
-9812: BB             CP    A,E
-9813: 40             LD    B,B
-9814: BD             CP    A,L
-9815: 40             LD    B,B
-9816: BB             CP    A,E
-9817: 40             LD    B,B
-9818: BB             CP    A,E
-9819: 40             LD    B,B
-981A: BD             CP    A,L
-981B: 40             LD    B,B
-981C: BB             CP    A,E
-981D: 40             LD    B,B
-981E: BB             CP    A,E
-981F: 40             LD    B,B
-9820: BD             CP    A,L
-9821: 40             LD    B,B
-9822: BB             CP    A,E
-9823: 40             LD    B,B
-9824: BB             CP    A,E
-9825: 40             LD    B,B
-9826: BD             CP    A,L
-9827: 40             LD    B,B
-9828: BB             CP    A,E
-9829: 40             LD    B,B
-982A: BB             CP    A,E
-982B: 40             LD    B,B
-982C: BD             CP    A,L
-982D: 40             LD    B,B
-982E: BB             CP    A,E
-982F: 40             LD    B,B
-9830: BB             CP    A,E
-9831: 40             LD    B,B
-9832: BD             CP    A,L
-9833: 40             LD    B,B
-9834: BB             CP    A,E
-9835: 40             LD    B,B
-9836: BB             CP    A,E
-9837: 40             LD    B,B
-9838: BD             CP    A,L
-9839: 40             LD    B,B
-983A: BB             CP    A,E
-983B: 40             LD    B,B
-983C: BB             CP    A,E
-983D: 40             LD    B,B
-983E: 62             LD    H,D
-983F: 41             LD    B,C
-9840: BE             CP    A,(HL)
-9841: 50             LD    D,B
-9842: BE             CP    A,(HL)
-9843: 50             LD    D,B
-9844: BE             CP    A,(HL)
-9845: 50             LD    D,B
-9846: BE             CP    A,(HL)
-9847: 50             LD    D,B
-9848: 62             LD    H,D
-9849: 41             LD    B,C
-984A: 62             LD    H,D
-984B: 41             LD    B,C
-984C: 62             LD    H,D
-984D: 41             LD    B,C
-984E: 62             LD    H,D
-984F: 41             LD    B,C
-9850: 62             LD    H,D
-9851: 41             LD    B,C
-9852: 62             LD    H,D
-9853: 41             LD    B,C
-9854: 62             LD    H,D
-9855: 41             LD    B,C
-9856: 62             LD    H,D
-9857: 41             LD    B,C
-9858: 62             LD    H,D
-9859: 41             LD    B,C
-985A: 62             LD    H,D
-985B: 41             LD    B,C
-985C: 62             LD    H,D
-985D: 41             LD    B,C
-985E: 62             LD    H,D
-985F: 41             LD    B,C
-9860: 62             LD    H,D
-9861: 41             LD    B,C
-9862: 62             LD    H,D
-9863: 41             LD    B,C
-9864: 62             LD    H,D
-9865: 41             LD    B,C
-9866: 62             LD    H,D
-9867: 41             LD    B,C
-9868: 62             LD    H,D
-9869: 41             LD    B,C
-986A: 62             LD    H,D
-986B: 41             LD    B,C
-986C: 62             LD    H,D
-986D: 41             LD    B,C
-986E: 62             LD    H,D
-986F: 41             LD    B,C
-9870: 62             LD    H,D
-9871: 41             LD    B,C
-9872: 62             LD    H,D
-9873: 41             LD    B,C
-9874: 62             LD    H,D
-9875: 41             LD    B,C
-9876: 62             LD    H,D
-9877: 41             LD    B,C
-9878: 62             LD    H,D
-9879: 41             LD    B,C
-987A: 62             LD    H,D
-987B: 41             LD    B,C
-987C: 62             LD    H,D
-987D: 41             LD    B,C
-987E: 62             LD    H,D
-987F: 41             LD    B,C
 9880: 64             LD    H,H
 9881: DC 40 80       CALL  C,$8040
 9884: 4A             LD    C,D
@@ -29153,7 +19417,7 @@ ORG $0000
 9903: 3E 78          LD    A,#$78
 9905: 32 6E C4       LD    ($C46E),A
 9908: 21 06 9A       LD    HL,$9A06
-990B: 22 00 C0       LD    ($C000),HL
+990B: 22 00 C0       LD    (NVRAM),HL
 990E: 3E 18          LD    A,#$18
 9910: 32 02 C0       LD    ($C002),A
 9913: AF             XOR   A,A
@@ -29168,7 +19432,7 @@ ORG $0000
 9927: CD B8 6F       CALL  $6FB8
 992A: CD C7 6F       CALL  $6FC7
 992D: CD A4 99       CALL  $99A4
-9930: DD 2A 00 C0    LD    IX,($C000)
+9930: DD 2A 00 C0    LD    IX,(NVRAM)
 9934: DD 7E 07       LD    A,(IX+$07)
 9937: 32 05 F0       LD    ($F005),A
 993A: CD CA 99       CALL  $99CA
@@ -29192,7 +19456,7 @@ ORG $0000
 
 995D: 36 18          LD    (HL),#$18
 995F: 21 03 C0       LD    HL,$C003
-9962: DD 2A 00 C0    LD    IX,($C000)
+9962: DD 2A 00 C0    LD    IX,(NVRAM)
 9966: DB 02          IN    A,($02)
 9968: 2F             CPL   
 9969: E6 04          AND   A,#$04
@@ -29244,7 +19508,7 @@ ORG $0000
 99A1: F6 01          OR    A,#$01
 99A3: C9             RET   
 
-99A4: DD 2A 00 C0    LD    IX,($C000)
+99A4: DD 2A 00 C0    LD    IX,(NVRAM)
 99A8: DD 6E 00       LD    L,(IX+$00)
 99AB: DD 66 01       LD    H,(IX+$01)
 99AE: E5             PUSH  HL
@@ -29262,7 +19526,7 @@ ORG $0000
 99C6: DD 19          ADD   IX,DE
 99C8: 18 E7          JR    $99B1
 
-99CA: DD 2A 00 C0    LD    IX,($C000)
+99CA: DD 2A 00 C0    LD    IX,(NVRAM)
 99CE: DD 6E 02       LD    L,(IX+$02)
 99D1: DD 66 03       LD    H,(IX+$03)
 99D4: 16 00          LD    D,#$00
@@ -29278,7 +19542,7 @@ ORG $0000
 99E6: DD 77 02       LD    (IX+$02),A
 99E9: C9             RET   
 
-99EA: DD 2A 00 C0    LD    IX,($C000)
+99EA: DD 2A 00 C0    LD    IX,(NVRAM)
 99EE: DD 6E 04       LD    L,(IX+$04)
 99F1: DD 66 05       LD    H,(IX+$05)
 99F4: 16 00          LD    D,#$00
@@ -29364,206 +19628,32 @@ ORG $0000
 9A5D: 9B             SBC   A,E
 9A5E: 00             NOP   
 9A5F: 00             NOP   
-9A60: 53             LD    D,E
-9A61: 45             LD    B,L
-9A62: 4C             LD    C,H
-9A63: 45             LD    B,L
-9A64: 43             LD    B,E
-9A65: 54             LD    D,H
-9A66: 20 44          JR    NZ,$9AAC
+9A60: SELECT DESIRED TEST
 
-9A68: 45             LD    B,L
-9A69: 53             LD    D,E
-9A6A: 49             LD    C,C
-9A6B: 52             LD    D,D
-9A6C: 45             LD    B,L
-9A6D: 44             LD    B,H
-9A6E: 20 54          JR    NZ,$9AC4
+9A74: 1 SELF DIAGNOSTICS
 
-9A70: 45             LD    B,L
-9A71: 53             LD    D,E
-9A72: 54             LD    D,H
-9A73: 00             NOP   
-9A74: 31 20 53       LD    SP,$5320
-9A77: 45             LD    B,L
-9A78: 4C             LD    C,H
-9A79: 46             LD    B,(HL)
-9A7A: 20 44          JR    NZ,$9AC0
+9A87: 2 SOUNDS
 
-9A7C: 49             LD    C,C
-9A7D: 41             LD    B,C
-9A7E: 47             LD    B,A
-9A7F: 4E             LD    C,(HL)
-9A80: 4F             LD    C,A
-9A81: 53             LD    D,E
-9A82: 54             LD    D,H
-9A83: 49             LD    C,C
-9A84: 43             LD    B,E
-9A85: 53             LD    D,E
-9A86: 00             NOP   
-9A87: 32 20 53       LD    ($5320),A
-9A8A: 4F             LD    C,A
-9A8B: 55             LD    D,L
-9A8C: 4E             LD    C,(HL)
-9A8D: 44             LD    B,H
-9A8E: 53             LD    D,E
-9A8F: 00             NOP   
-9A90: 33             INC   SP
-9A91: 20 50          JR    NZ,$9AE3
+9A90: 3 PLAYER INPUT
 
-9A93: 4C             LD    C,H
-9A94: 41             LD    B,C
-9A95: 59             LD    E,C
-9A96: 45             LD    B,L
-9A97: 52             LD    D,D
-9A98: 20 49          JR    NZ,$9AE3
+9A9F: 4 BOOKKEEPING
 
-9A9A: 4E             LD    C,(HL)
-9A9B: 50             LD    D,B
-9A9C: 55             LD    D,L
-9A9D: 54             LD    D,H
-9A9E: 00             NOP   
-9A9F: 34             INC   (HL)
-9AA0: 20 42          JR    NZ,$9AE4
+9AAD: 5 MACHINE SETUP
 
-9AA2: 4F             LD    C,A
-9AA3: 4F             LD    C,A
-9AA4: 4B             LD    C,E
-9AA5: 4B             LD    C,E
-9AA6: 45             LD    B,L
-9AA7: 45             LD    B,L
-9AA8: 50             LD    D,B
-9AA9: 49             LD    C,C
-9AAA: 4E             LD    C,(HL)
-9AAB: 47             LD    B,A
-9AAC: 00             NOP   
-9AAD: 35             DEC   (HL)
-9AAE: 20 4D          JR    NZ,$9AFD
+9ABD: 6 CHANNEL TEST
 
-9AB0: 41             LD    B,C
-9AB1: 43             LD    B,E
-9AB2: 48             LD    C,B
-9AB3: 49             LD    C,C
-9AB4: 4E             LD    C,(HL)
-9AB5: 45             LD    B,L
-9AB6: 20 53          JR    NZ,$9B0B
+9ACC: 7 PRESET
 
-9AB8: 45             LD    B,L
-9AB9: 54             LD    D,H
-9ABA: 55             LD    D,L
-9ABB: 50             LD    D,B
-9ABC: 00             NOP   
-9ABD: 36 20          LD    (HL),#$20
-9ABF: 43             LD    B,E
-9AC0: 48             LD    C,B
-9AC1: 41             LD    B,C
-9AC2: 4E             LD    C,(HL)
-9AC3: 4E             LD    C,(HL)
-9AC4: 45             LD    B,L
-9AC5: 4C             LD    C,H
-9AC6: 20 54          JR    NZ,$9B1C
+9AD5: 8 GRID DISPLAY
 
-9AC8: 45             LD    B,L
-9AC9: 53             LD    D,E
-9ACA: 54             LD    D,H
-9ACB: 00             NOP   
-9ACC: 37             SCF   
-9ACD: 20 50          JR    NZ,$9B1F
+9AE4: POSITION CURSOR BY USING
 
-9ACF: 52             LD    D,D
-9AD0: 45             LD    B,L
-9AD1: 53             LD    D,E
-9AD2: 45             LD    B,L
-9AD3: 54             LD    D,H
-9AD4: 00             NOP   
-9AD5: 38 20          JR    C,$9AF7
+9AFD: JOYSTICK UP AND DOWN
 
-9AD7: 47             LD    B,A
-9AD8: 52             LD    D,D
-9AD9: 49             LD    C,C
-9ADA: 44             LD    B,H
-9ADB: 20 44          JR    NZ,$9B21
+9B12: HIT FIRE BUTTON FOR TEST
 
-9ADD: 49             LD    C,C
-9ADE: 53             LD    D,E
-9ADF: 50             LD    D,B
-9AE0: 4C             LD    C,H
-9AE1: 41             LD    B,C
-9AE2: 59             LD    E,C
-9AE3: 00             NOP   
-9AE4: 50             LD    D,B
-9AE5: 4F             LD    C,A
-9AE6: 53             LD    D,E
-9AE7: 49             LD    C,C
-9AE8: 54             LD    D,H
-9AE9: 49             LD    C,C
-9AEA: 4F             LD    C,A
-9AEB: 4E             LD    C,(HL)
-9AEC: 20 43          JR    NZ,$9B31
-
-9AEE: 55             LD    D,L
-9AEF: 52             LD    D,D
-9AF0: 53             LD    D,E
-9AF1: 4F             LD    C,A
-9AF2: 52             LD    D,D
-9AF3: 20 42          JR    NZ,$9B37
-
-9AF5: 59             LD    E,C
-9AF6: 20 55          JR    NZ,$9B4D
-
-9AF8: 53             LD    D,E
-9AF9: 49             LD    C,C
-9AFA: 4E             LD    C,(HL)
-9AFB: 47             LD    B,A
-9AFC: 00             NOP   
-9AFD: 4A             LD    C,D
-9AFE: 4F             LD    C,A
-9AFF: 59             LD    E,C
-9B00: 53             LD    D,E
-9B01: 54             LD    D,H
-9B02: 49             LD    C,C
-9B03: 43             LD    B,E
-9B04: 4B             LD    C,E
-9B05: 20 55          JR    NZ,$9B5C
-
-9B07: 50             LD    D,B
-9B08: 20 41          JR    NZ,$9B4B
-
-9B0A: 4E             LD    C,(HL)
-9B0B: 44             LD    B,H
-9B0C: 20 44          JR    NZ,$9B52
-
-9B0E: 4F             LD    C,A
-9B0F: 57             LD    D,A
-9B10: 4E             LD    C,(HL)
-9B11: 00             NOP   
-9B12: 48             LD    C,B
-9B13: 49             LD    C,C
-9B14: 54             LD    D,H
-9B15: 20 46          JR    NZ,$9B5D
-
-9B17: 49             LD    C,C
-9B18: 52             LD    D,D
-9B19: 45             LD    B,L
-9B1A: 20 42          JR    NZ,$9B5E
-
-9B1C: 55             LD    D,L
-9B1D: 54             LD    D,H
-9B1E: 54             LD    D,H
-9B1F: 4F             LD    C,A
-9B20: 4E             LD    C,(HL)
-9B21: 20 46          JR    NZ,$9B69
-
-9B23: 4F             LD    C,A
-9B24: 52             LD    D,D
-9B25: 20 54          JR    NZ,$9B7B
-
-9B27: 45             LD    B,L
-9B28: 53             LD    D,E
-9B29: 54             LD    D,H
-9B2A: 00             NOP   
 9B2B: 21 D8 9B       LD    HL,$9BD8
-9B2E: 22 00 C0       LD    ($C000),HL
+9B2E: 22 00 C0       LD    (NVRAM),HL
 9B31: 21 50 9E       LD    HL,$9E50
 9B34: 22 06 C0       LD    ($C006),HL
 9B37: 3E 18          LD    A,#$18
@@ -29575,7 +19665,7 @@ ORG $0000
 9B46: 0E 02          LD    C,#$02
 9B48: CD B8 6F       CALL  $6FB8
 9B4B: CD A4 99       CALL  $99A4
-9B4E: DD 2A 00 C0    LD    IX,($C000)
+9B4E: DD 2A 00 C0    LD    IX,(NVRAM)
 9B52: DD 7E 07       LD    A,(IX+$07)
 9B55: 32 05 F0       LD    ($F005),A
 9B58: 3A 05 C0       LD    A,($C005)
@@ -29631,7 +19721,7 @@ ORG $0000
 9BA9: 3E 02          LD    A,#$02
 9BAB: 32 03 C0       LD    ($C003),A
 9BAE: 3A 03 C0       LD    A,($C003)
-9BB1: DD 2A 00 C0    LD    IX,($C000)
+9BB1: DD 2A 00 C0    LD    IX,(NVRAM)
 9BB5: DD BE 06       CP    A,(IX+$06)
 9BB8: 30 13          JR    NC,$9BCD
 
@@ -29803,365 +19893,60 @@ ORG $0000
 9C8B: 9B             SBC   A,E
 9C8C: 00             NOP   
 9C8D: 00             NOP   
-9C8E: 53             LD    D,E
-9C8F: 45             LD    B,L
-9C90: 4C             LD    C,H
-9C91: 45             LD    B,L
-9C92: 43             LD    B,E
-9C93: 54             LD    D,H
-9C94: 20 41          JR    NZ,$9CD7
+9C8E: SELECT A SOUND
 
-9C96: 20 53          JR    NZ,$9CEB
+9C9D: 1  ALL SOUNDS
 
-9C98: 4F             LD    C,A
-9C99: 55             LD    D,L
-9C9A: 4E             LD    C,(HL)
-9C9B: 44             LD    B,H
-9C9C: 00             NOP   
-9C9D: 31 20 20       LD    SP,$2020
-9CA0: 41             LD    B,C
-9CA1: 4C             LD    C,H
-9CA2: 4C             LD    C,H
-9CA3: 20 53          JR    NZ,$9CF8
+9CAB: 2  EXIT
 
-9CA5: 4F             LD    C,A
-9CA6: 55             LD    D,L
-9CA7: 4E             LD    C,(HL)
-9CA8: 44             LD    B,H
-9CA9: 53             LD    D,E
-9CAA: 00             NOP   
-9CAB: 32 20 20       LD    ($2020),A
-9CAE: 45             LD    B,L
-9CAF: 58             LD    E,B
-9CB0: 49             LD    C,C
-9CB1: 54             LD    D,H
-9CB2: 00             NOP   
-9CB3: 33             INC   SP
-9CB4: 20 20          JR    NZ,$9CD6
+9CB3: 3  THROW DISK
 
-9CB6: 54             LD    D,H
-9CB7: 48             LD    C,B
-9CB8: 52             LD    D,D
-9CB9: 4F             LD    C,A
-9CBA: 57             LD    D,A
-9CBB: 20 44          JR    NZ,$9D01
+9CC1: 4  HI GEAR HORZ
 
-9CBD: 49             LD    C,C
-9CBE: 53             LD    D,E
-9CBF: 4B             LD    C,E
-9CC0: 00             NOP   
-9CC1: 34             INC   (HL)
-9CC2: 20 20          JR    NZ,$9CE4
+9CD1: 5  LOW GEAR HORZ
 
-9CC4: 48             LD    C,B
-9CC5: 49             LD    C,C
-9CC6: 20 47          JR    NZ,$9D0F
+9CE2: 6  HI GEAR VERT
 
-9CC8: 45             LD    B,L
-9CC9: 41             LD    B,C
-9CCA: 52             LD    D,D
-9CCB: 20 48          JR    NZ,$9D15
+9CF2: 7  LOW GEAR VERT
 
-9CCD: 4F             LD    C,A
-9CCE: 52             LD    D,D
-9CCF: 5A             LD    E,D
-9CD0: 00             NOP   
-9CD1: 35             DEC   (HL)
-9CD2: 20 20          JR    NZ,$9CF4
+9D03: 8  MISSILE FIRE
 
-9CD4: 4C             LD    C,H
-9CD5: 4F             LD    C,A
-9CD6: 57             LD    D,A
-9CD7: 20 47          JR    NZ,$9D20
+9D13: 9  BONUS BASE
 
-9CD9: 45             LD    B,L
-9CDA: 41             LD    B,C
-9CDB: 52             LD    D,D
-9CDC: 20 48          JR    NZ,$9D26
+9D21: 10  TILT
 
-9CDE: 4F             LD    C,A
-9CDF: 52             LD    D,D
-9CE0: 5A             LD    E,D
-9CE1: 00             NOP   
-9CE2: 36 20          LD    (HL),#$20
-9CE4: 20 48          JR    NZ,$9D2E
+9D2A: 11  ALL MCP BLOCKS HIT
 
-9CE6: 49             LD    C,C
-9CE7: 20 47          JR    NZ,$9D30
+9D41: 12  IO TOWER MUSIC
 
-9CE9: 45             LD    B,L
-9CEA: 41             LD    B,C
-9CEB: 52             LD    D,D
-9CEC: 20 56          JR    NZ,$9D44
+9D54: 13  COIN
 
-9CEE: 45             LD    B,L
-9CEF: 52             LD    D,D
-9CF0: 54             LD    D,H
-9CF1: 00             NOP   
-9CF2: 37             SCF   
-9CF3: 20 20          JR    NZ,$9D15
+9D5D: 14  SUCCESS MUSIC
 
-9CF5: 4C             LD    C,H
-9CF6: 4F             LD    C,A
-9CF7: 57             LD    D,A
-9CF8: 20 47          JR    NZ,$9D41
+9D6F: 15  FAIL MUSIC
 
-9CFA: 45             LD    B,L
-9CFB: 41             LD    B,C
-9CFC: 52             LD    D,D
-9CFD: 20 56          JR    NZ,$9D55
+9D7E: 16  ATTACK SOUND
 
-9CFF: 45             LD    B,L
-9D00: 52             LD    D,D
-9D01: 54             LD    D,H
-9D02: 00             NOP   
-9D03: 38 20          JR    C,$9D25
+9D8F: 17  TANK HORZ
 
-9D05: 20 4D          JR    NZ,$9D54
+9D9D: 18  TANK VERT
 
-9D07: 49             LD    C,C
-9D08: 53             LD    D,E
-9D09: 53             LD    D,E
-9D0A: 49             LD    C,C
-9D0B: 4C             LD    C,H
-9D0C: 45             LD    B,L
-9D0D: 20 46          JR    NZ,$9D55
+9DAB: 19  TANK FIRE
 
-9D0F: 49             LD    C,C
-9D10: 52             LD    D,D
-9D11: 45             LD    B,L
-9D12: 00             NOP   
-9D13: 39             ADD   HL,SP
-9D14: 20 20          JR    NZ,$9D36
+9DB9: 20  TANK BLIP
 
-9D16: 42             LD    B,D
-9D17: 4F             LD    C,A
-9D18: 4E             LD    C,(HL)
-9D19: 55             LD    D,L
-9D1A: 53             LD    D,E
-9D1B: 20 42          JR    NZ,$9D5F
+9DC7: 21  DEREZ
 
-9D1D: 41             LD    B,C
-9D1E: 53             LD    D,E
-9D1F: 45             LD    B,L
-9D20: 00             NOP   
-9D21: 31 30 20       LD    SP,$2030
-9D24: 20 54          JR    NZ,$9D7A
+9DD1: 22  MCP BLIP
 
-9D26: 49             LD    C,C
-9D27: 4C             LD    C,H
-9D28: 54             LD    D,H
-9D29: 00             NOP   
-9D2A: 31 31 20       LD    SP,$2031
-9D2D: 20 41          JR    NZ,$9D70
+9DDE: 23  RELOCATE
 
-9D2F: 4C             LD    C,H
-9D30: 4C             LD    C,H
-9D31: 20 4D          JR    NZ,$9D80
+9DEB: 24  TTY CLATTER
 
-9D33: 43             LD    B,E
-9D34: 50             LD    D,B
-9D35: 20 42          JR    NZ,$9D79
+9DFB: 25  TOWER BEAM
 
-9D37: 4C             LD    C,H
-9D38: 4F             LD    C,A
-9D39: 43             LD    B,E
-9D3A: 4B             LD    C,E
-9D3B: 53             LD    D,E
-9D3C: 20 48          JR    NZ,$9D86
+9E0A: 26  TIMER WARNING
 
-9D3E: 49             LD    C,C
-9D3F: 54             LD    D,H
-9D40: 00             NOP   
-9D41: 31 32 20       LD    SP,$2032
-9D44: 20 49          JR    NZ,$9D8F
-
-9D46: 4F             LD    C,A
-9D47: 20 54          JR    NZ,$9D9D
-
-9D49: 4F             LD    C,A
-9D4A: 57             LD    D,A
-9D4B: 45             LD    B,L
-9D4C: 52             LD    D,D
-9D4D: 20 4D          JR    NZ,$9D9C
-
-9D4F: 55             LD    D,L
-9D50: 53             LD    D,E
-9D51: 49             LD    C,C
-9D52: 43             LD    B,E
-9D53: 00             NOP   
-9D54: 31 33 20       LD    SP,$2033
-9D57: 20 43          JR    NZ,$9D9C
-
-9D59: 4F             LD    C,A
-9D5A: 49             LD    C,C
-9D5B: 4E             LD    C,(HL)
-9D5C: 00             NOP   
-9D5D: 31 34 20       LD    SP,$2034
-9D60: 20 53          JR    NZ,$9DB5
-
-9D62: 55             LD    D,L
-9D63: 43             LD    B,E
-9D64: 43             LD    B,E
-9D65: 45             LD    B,L
-9D66: 53             LD    D,E
-9D67: 53             LD    D,E
-9D68: 20 4D          JR    NZ,$9DB7
-
-9D6A: 55             LD    D,L
-9D6B: 53             LD    D,E
-9D6C: 49             LD    C,C
-9D6D: 43             LD    B,E
-9D6E: 00             NOP   
-9D6F: 31 35 20       LD    SP,$2035
-9D72: 20 46          JR    NZ,$9DBA
-
-9D74: 41             LD    B,C
-9D75: 49             LD    C,C
-9D76: 4C             LD    C,H
-9D77: 20 4D          JR    NZ,$9DC6
-
-9D79: 55             LD    D,L
-9D7A: 53             LD    D,E
-9D7B: 49             LD    C,C
-9D7C: 43             LD    B,E
-9D7D: 00             NOP   
-9D7E: 31 36 20       LD    SP,$2036
-9D81: 20 41          JR    NZ,$9DC4
-
-9D83: 54             LD    D,H
-9D84: 54             LD    D,H
-9D85: 41             LD    B,C
-9D86: 43             LD    B,E
-9D87: 4B             LD    C,E
-9D88: 20 53          JR    NZ,$9DDD
-
-9D8A: 4F             LD    C,A
-9D8B: 55             LD    D,L
-9D8C: 4E             LD    C,(HL)
-9D8D: 44             LD    B,H
-9D8E: 00             NOP   
-9D8F: 31 37 20       LD    SP,$2037
-9D92: 20 54          JR    NZ,$9DE8
-
-9D94: 41             LD    B,C
-9D95: 4E             LD    C,(HL)
-9D96: 4B             LD    C,E
-9D97: 20 48          JR    NZ,$9DE1
-
-9D99: 4F             LD    C,A
-9D9A: 52             LD    D,D
-9D9B: 5A             LD    E,D
-9D9C: 00             NOP   
-9D9D: 31 38 20       LD    SP,$2038
-9DA0: 20 54          JR    NZ,$9DF6
-
-9DA2: 41             LD    B,C
-9DA3: 4E             LD    C,(HL)
-9DA4: 4B             LD    C,E
-9DA5: 20 56          JR    NZ,$9DFD
-
-9DA7: 45             LD    B,L
-9DA8: 52             LD    D,D
-9DA9: 54             LD    D,H
-9DAA: 00             NOP   
-9DAB: 31 39 20       LD    SP,$2039
-9DAE: 20 54          JR    NZ,$9E04
-
-9DB0: 41             LD    B,C
-9DB1: 4E             LD    C,(HL)
-9DB2: 4B             LD    C,E
-9DB3: 20 46          JR    NZ,$9DFB
-
-9DB5: 49             LD    C,C
-9DB6: 52             LD    D,D
-9DB7: 45             LD    B,L
-9DB8: 00             NOP   
-9DB9: 32 30 20       LD    ($2030),A
-9DBC: 20 54          JR    NZ,$9E12
-
-9DBE: 41             LD    B,C
-9DBF: 4E             LD    C,(HL)
-9DC0: 4B             LD    C,E
-9DC1: 20 42          JR    NZ,$9E05
-
-9DC3: 4C             LD    C,H
-9DC4: 49             LD    C,C
-9DC5: 50             LD    D,B
-9DC6: 00             NOP   
-9DC7: 32 31 20       LD    ($2031),A
-9DCA: 20 44          JR    NZ,$9E10
-
-9DCC: 45             LD    B,L
-9DCD: 52             LD    D,D
-9DCE: 45             LD    B,L
-9DCF: 5A             LD    E,D
-9DD0: 00             NOP   
-9DD1: 32 32 20       LD    ($2032),A
-9DD4: 20 4D          JR    NZ,$9E23
-
-9DD6: 43             LD    B,E
-9DD7: 50             LD    D,B
-9DD8: 20 42          JR    NZ,$9E1C
-
-9DDA: 4C             LD    C,H
-9DDB: 49             LD    C,C
-9DDC: 50             LD    D,B
-9DDD: 00             NOP   
-9DDE: 32 33 20       LD    ($2033),A
-9DE1: 20 52          JR    NZ,$9E35
-
-9DE3: 45             LD    B,L
-9DE4: 4C             LD    C,H
-9DE5: 4F             LD    C,A
-9DE6: 43             LD    B,E
-9DE7: 41             LD    B,C
-9DE8: 54             LD    D,H
-9DE9: 45             LD    B,L
-9DEA: 00             NOP   
-9DEB: 32 34 20       LD    ($2034),A
-9DEE: 20 54          JR    NZ,$9E44
-
-9DF0: 54             LD    D,H
-9DF1: 59             LD    E,C
-9DF2: 20 43          JR    NZ,$9E37
-
-9DF4: 4C             LD    C,H
-9DF5: 41             LD    B,C
-9DF6: 54             LD    D,H
-9DF7: 54             LD    D,H
-9DF8: 45             LD    B,L
-9DF9: 52             LD    D,D
-9DFA: 00             NOP   
-9DFB: 32 35 20       LD    ($2035),A
-9DFE: 20 54          JR    NZ,$9E54
-
-9E00: 4F             LD    C,A
-9E01: 57             LD    D,A
-9E02: 45             LD    B,L
-9E03: 52             LD    D,D
-9E04: 20 42          JR    NZ,$9E48
-
-9E06: 45             LD    B,L
-9E07: 41             LD    B,C
-9E08: 4D             LD    C,L
-9E09: 00             NOP   
-9E0A: 32 36 20       LD    ($2036),A
-9E0D: 20 54          JR    NZ,$9E63
-
-9E0F: 49             LD    C,C
-9E10: 4D             LD    C,L
-9E11: 45             LD    B,L
-9E12: 52             LD    D,D
-9E13: 20 57          JR    NZ,$9E6C
-
-9E15: 41             LD    B,C
-9E16: 52             LD    D,D
-9E17: 4E             LD    C,(HL)
-9E18: 49             LD    C,C
-9E19: 4E             LD    C,(HL)
-9E1A: 47             LD    B,A
-9E1B: 00             NOP   
 9E1C: A9             XOR   A,C
 9E1D: 9B             SBC   A,E
 9E1E: D2 9B 76       JP    NC,$769B
@@ -30296,7 +20081,7 @@ ORG $0000
 9E96: 14             INC   D
 9E97: 40             LD    B,B
 9E98: 21 E0 9E       LD    HL,$9EE0
-9E9B: 22 00 C0       LD    ($C000),HL
+9E9B: 22 00 C0       LD    (NVRAM),HL
 9E9E: 3E 18          LD    A,#$18
 9EA0: AF             XOR   A,A
 9EA1: 32 03 C0       LD    ($C003),A
@@ -30306,7 +20091,7 @@ ORG $0000
 9EAD: 0E 02          LD    C,#$02
 9EAF: CD B8 6F       CALL  $6FB8
 9EB2: CD A4 99       CALL  $99A4
-9EB5: DD 2A 00 C0    LD    IX,($C000)
+9EB5: DD 2A 00 C0    LD    IX,(NVRAM)
 9EB9: DD 7E 07       LD    A,(IX+$07)
 9EBC: 32 05 F0       LD    ($F005),A
 9EBF: CD BF 9F       CALL  $9FBF
@@ -30384,147 +20169,28 @@ ORG $0000
 9F25: 9B             SBC   A,E
 9F26: 00             NOP   
 9F27: 00             NOP   
-9F28: 53             LD    D,E
-9F29: 45             LD    B,L
-9F2A: 4C             LD    C,H
-9F2B: 45             LD    B,L
-9F2C: 43             LD    B,E
-9F2D: 54             LD    D,H
-9F2E: 20 41          JR    NZ,$9F71
+9F28: SELECT A REPORT OR EXIT
 
-9F30: 20 52          JR    NZ,$9F84
+9F40: CHUTE  1 COINS
 
-9F32: 45             LD    B,L
-9F33: 50             LD    D,B
-9F34: 4F             LD    C,A
-9F35: 52             LD    D,D
-9F36: 54             LD    D,H
-9F37: 20 4F          JR    NZ,$9F88
+9F4F: CHUTE  2 COINS
 
-9F39: 52             LD    D,D
-9F3A: 20 45          JR    NZ,$9F81
+9F5E: LONGEST GAME
 
-9F3C: 58             LD    E,B
-9F3D: 49             LD    C,C
-9F3E: 54             LD    D,H
-9F3F: 00             NOP   
-9F40: 43             LD    B,E
-9F41: 48             LD    C,B
-9F42: 55             LD    D,L
-9F43: 54             LD    D,H
-9F44: 45             LD    B,L
-9F45: 20 20          JR    NZ,$9F67
+9F6B: SHORTEST GAME
 
-9F47: 31 20 43       LD    SP,$4320
-9F4A: 4F             LD    C,A
-9F4B: 49             LD    C,C
-9F4C: 4E             LD    C,(HL)
-9F4D: 53             LD    D,E
-9F4E: 00             NOP   
-9F4F: 43             LD    B,E
-9F50: 48             LD    C,B
-9F51: 55             LD    D,L
-9F52: 54             LD    D,H
-9F53: 45             LD    B,L
-9F54: 20 20          JR    NZ,$9F76
+9F79: HIGHEST SCORE
 
-9F56: 32 20 43       LD    ($4320),A
-9F59: 4F             LD    C,A
-9F5A: 49             LD    C,C
-9F5B: 4E             LD    C,(HL)
-9F5C: 53             LD    D,E
-9F5D: 00             NOP   
-9F5E: 4C             LD    C,H
-9F5F: 4F             LD    C,A
-9F60: 4E             LD    C,(HL)
-9F61: 47             LD    B,A
-9F62: 45             LD    B,L
-9F63: 53             LD    D,E
-9F64: 54             LD    D,H
-9F65: 20 47          JR    NZ,$9FAE
+9F87: LOWEST SCORE
 
-9F67: 41             LD    B,C
-9F68: 4D             LD    C,L
-9F69: 45             LD    B,L
-9F6A: 00             NOP   
-9F6B: 53             LD    D,E
-9F6C: 48             LD    C,B
-9F6D: 4F             LD    C,A
-9F6E: 52             LD    D,D
-9F6F: 54             LD    D,H
-9F70: 45             LD    B,L
-9F71: 53             LD    D,E
-9F72: 54             LD    D,H
-9F73: 20 47          JR    NZ,$9FBC
+9F94: BUY IN
 
-9F75: 41             LD    B,C
-9F76: 4D             LD    C,L
-9F77: 45             LD    B,L
-9F78: 00             NOP   
-9F79: 48             LD    C,B
-9F7A: 49             LD    C,C
-9F7B: 47             LD    B,A
-9F7C: 48             LD    C,B
-9F7D: 45             LD    B,L
-9F7E: 53             LD    D,E
-9F7F: 54             LD    D,H
-9F80: 20 53          JR    NZ,$9FD5
+9F9B: TIME REPORT
 
-9F82: 43             LD    B,E
-9F83: 4F             LD    C,A
-9F84: 52             LD    D,D
-9F85: 45             LD    B,L
-9F86: 00             NOP   
-9F87: 4C             LD    C,H
-9F88: 4F             LD    C,A
-9F89: 57             LD    D,A
-9F8A: 45             LD    B,L
-9F8B: 53             LD    D,E
-9F8C: 54             LD    D,H
-9F8D: 20 53          JR    NZ,$9FE2
+9FA7: SCORE REPORT
 
-9F8F: 43             LD    B,E
-9F90: 4F             LD    C,A
-9F91: 52             LD    D,D
-9F92: 45             LD    B,L
-9F93: 00             NOP   
-9F94: 42             LD    B,D
-9F95: 55             LD    D,L
-9F96: 59             LD    E,C
-9F97: 20 49          JR    NZ,$9FE2
+9FB4: EXIT
 
-9F99: 4E             LD    C,(HL)
-9F9A: 00             NOP   
-9F9B: 54             LD    D,H
-9F9C: 49             LD    C,C
-9F9D: 4D             LD    C,L
-9F9E: 45             LD    B,L
-9F9F: 20 52          JR    NZ,$9FF3
-
-9FA1: 45             LD    B,L
-9FA2: 50             LD    D,B
-9FA3: 4F             LD    C,A
-9FA4: 52             LD    D,D
-9FA5: 54             LD    D,H
-9FA6: 00             NOP   
-9FA7: 53             LD    D,E
-9FA8: 43             LD    B,E
-9FA9: 4F             LD    C,A
-9FAA: 52             LD    D,D
-9FAB: 45             LD    B,L
-9FAC: 20 52          JR    NZ,$A000
-
-9FAE: 45             LD    B,L
-9FAF: 50             LD    D,B
-9FB0: 4F             LD    C,A
-9FB1: 52             LD    D,D
-9FB2: 54             LD    D,H
-9FB3: 00             NOP   
-9FB4: 45             LD    B,L
-9FB5: 58             LD    E,B
-9FB6: 49             LD    C,C
-9FB7: 54             LD    D,H
-9FB8: 00             NOP   
 9FB9: CD A0 08       CALL  $08A0
 9FBC: A2             AND   A,D
 9FBD: D2 9B 2A       JP    NC,$2A9B
@@ -30741,161 +20407,30 @@ A14C: F2 FE DC       JP    P,$DCFE
 A14F: A1             AND   A,C
 A150: 00             NOP   
 A151: 00             NOP   
-A152: 54             LD    D,H
-A153: 49             LD    C,C
-A154: 4D             LD    C,L
-A155: 45             LD    B,L
-A156: 20 52          JR    NZ,$A1AA
+A152: TIME REPORT
 
-A158: 45             LD    B,L
-A159: 50             LD    D,B
-A15A: 4F             LD    C,A
-A15B: 52             LD    D,D
-A15C: 54             LD    D,H
-A15D: 00             NOP   
-A15E: 30 20          JR    NC,$A180
+A15E: 0 TO 30 SEC
 
-A160: 54             LD    D,H
-A161: 4F             LD    C,A
-A162: 20 33          JR    NZ,$A197
+A16A: 30 TO 60 SEC
 
-A164: 30 20          JR    NC,$A186
+A177: 60 TO 90 SEC
 
-A166: 53             LD    D,E
-A167: 45             LD    B,L
-A168: 43             LD    B,E
-A169: 00             NOP   
-A16A: 33             INC   SP
-A16B: 30 20          JR    NC,$A18D
+A184: 90 TO 120 SEC
 
-A16D: 54             LD    D,H
-A16E: 4F             LD    C,A
-A16F: 20 36          JR    NZ,$A1A7
+A192: 120 TO 150 SEC
 
-A171: 30 20          JR    NC,$A193
+A1A1: 150 TO 180 SEC
 
-A173: 53             LD    D,E
-A174: 45             LD    B,L
-A175: 43             LD    B,E
-A176: 00             NOP   
-A177: 36 30          LD    (HL),#$30
-A179: 20 54          JR    NZ,$A1CF
+A1B0: 3 TO 4 MIN
 
-A17B: 4F             LD    C,A
-A17C: 20 39          JR    NZ,$A1B7
+A1BB: 4 TO 5 MIN
 
-A17E: 30 20          JR    NC,$A1A0
+A1C6: 5 TO 6 MIN
 
-A180: 53             LD    D,E
-A181: 45             LD    B,L
-A182: 43             LD    B,E
-A183: 00             NOP   
-A184: 39             ADD   HL,SP
-A185: 30 20          JR    NC,$A1A7
+A1D1: OVER 6 MIN
 
-A187: 54             LD    D,H
-A188: 4F             LD    C,A
-A189: 20 31          JR    NZ,$A1BC
+A1DC: HIT FIRE BUTTON TO EXIT
 
-A18B: 32 30 20       LD    ($2030),A
-A18E: 53             LD    D,E
-A18F: 45             LD    B,L
-A190: 43             LD    B,E
-A191: 00             NOP   
-A192: 31 32 30       LD    SP,$3032
-A195: 20 54          JR    NZ,$A1EB
-
-A197: 4F             LD    C,A
-A198: 20 31          JR    NZ,$A1CB
-
-A19A: 35             DEC   (HL)
-A19B: 30 20          JR    NC,$A1BD
-
-A19D: 53             LD    D,E
-A19E: 45             LD    B,L
-A19F: 43             LD    B,E
-A1A0: 00             NOP   
-A1A1: 31 35 30       LD    SP,$3035
-A1A4: 20 54          JR    NZ,$A1FA
-
-A1A6: 4F             LD    C,A
-A1A7: 20 31          JR    NZ,$A1DA
-
-A1A9: 38 30          JR    C,$A1DB
-
-A1AB: 20 53          JR    NZ,$A200
-
-A1AD: 45             LD    B,L
-A1AE: 43             LD    B,E
-A1AF: 00             NOP   
-A1B0: 33             INC   SP
-A1B1: 20 54          JR    NZ,$A207
-
-A1B3: 4F             LD    C,A
-A1B4: 20 34          JR    NZ,$A1EA
-
-A1B6: 20 4D          JR    NZ,$A205
-
-A1B8: 49             LD    C,C
-A1B9: 4E             LD    C,(HL)
-A1BA: 00             NOP   
-A1BB: 34             INC   (HL)
-A1BC: 20 54          JR    NZ,$A212
-
-A1BE: 4F             LD    C,A
-A1BF: 20 35          JR    NZ,$A1F6
-
-A1C1: 20 4D          JR    NZ,$A210
-
-A1C3: 49             LD    C,C
-A1C4: 4E             LD    C,(HL)
-A1C5: 00             NOP   
-A1C6: 35             DEC   (HL)
-A1C7: 20 54          JR    NZ,$A21D
-
-A1C9: 4F             LD    C,A
-A1CA: 20 36          JR    NZ,$A202
-
-A1CC: 20 4D          JR    NZ,$A21B
-
-A1CE: 49             LD    C,C
-A1CF: 4E             LD    C,(HL)
-A1D0: 00             NOP   
-A1D1: 4F             LD    C,A
-A1D2: 56             LD    D,(HL)
-A1D3: 45             LD    B,L
-A1D4: 52             LD    D,D
-A1D5: 20 36          JR    NZ,$A20D
-
-A1D7: 20 4D          JR    NZ,$A226
-
-A1D9: 49             LD    C,C
-A1DA: 4E             LD    C,(HL)
-A1DB: 00             NOP   
-A1DC: 48             LD    C,B
-A1DD: 49             LD    C,C
-A1DE: 54             LD    D,H
-A1DF: 20 46          JR    NZ,$A227
-
-A1E1: 49             LD    C,C
-A1E2: 52             LD    D,D
-A1E3: 45             LD    B,L
-A1E4: 20 42          JR    NZ,$A228
-
-A1E6: 55             LD    D,L
-A1E7: 54             LD    D,H
-A1E8: 54             LD    D,H
-A1E9: 4F             LD    C,A
-A1EA: 4E             LD    C,(HL)
-A1EB: 20 54          JR    NZ,$A241
-
-A1ED: 4F             LD    C,A
-A1EE: 20 45          JR    NZ,$A235
-
-A1F0: 58             LD    E,B
-A1F1: 49             LD    C,C
-A1F2: 54             LD    D,H
-A1F3: 00             NOP   
 A1F4: C6 F9          ADD   A,#$F9
 A1F6: CA F9 CE       JP    Z,$CEF9
 
@@ -30993,197 +20528,28 @@ A286: FE DC          CP    A,#$DC
 A288: A1             AND   A,C
 A289: 00             NOP   
 A28A: 00             NOP   
-A28B: 53             LD    D,E
-A28C: 43             LD    B,E
-A28D: 4F             LD    C,A
-A28E: 52             LD    D,D
-A28F: 45             LD    B,L
-A290: 20 52          JR    NZ,$A2E4
+A28B: SCORE REPORT
 
-A292: 45             LD    B,L
-A293: 50             LD    D,B
-A294: 4F             LD    C,A
-A295: 52             LD    D,D
-A296: 54             LD    D,H
-A297: 00             NOP   
-A298: 30 20          JR    NC,$A2BA
+A298: 0 TO 5000 PTS
 
-A29A: 54             LD    D,H
-A29B: 4F             LD    C,A
-A29C: 20 35          JR    NZ,$A2D3
+A2A6: 5000 TO 10000 PTS
 
-A29E: 30 30          JR    NC,$A2D0
+A2B8: 10000 TO 20000 PTS
 
-A2A0: 30 20          JR    NC,$A2C2
+A2CB: 20000 TO 30000 PTS
 
-A2A2: 50             LD    D,B
-A2A3: 54             LD    D,H
-A2A4: 53             LD    D,E
-A2A5: 00             NOP   
-A2A6: 35             DEC   (HL)
-A2A7: 30 30          JR    NC,$A2D9
+A2DE: 30000 TO 40000 PTS
 
-A2A9: 30 20          JR    NC,$A2CB
+A2F1: 40000 TO 50000 PTS
 
-A2AB: 54             LD    D,H
-A2AC: 4F             LD    C,A
-A2AD: 20 31          JR    NZ,$A2E0
+A304: 50000 TO 75000 PTS
 
-A2AF: 30 30          JR    NC,$A2E1
+A317: 75000 TO 100000 PTS
 
-A2B1: 30 30          JR    NC,$A2E3
+A32B: 100000 TO 150000 PTS
 
-A2B3: 20 50          JR    NZ,$A305
+A340: OVER 150000 PTS
 
-A2B5: 54             LD    D,H
-A2B6: 53             LD    D,E
-A2B7: 00             NOP   
-A2B8: 31 30 30       LD    SP,$3030
-A2BB: 30 30          JR    NC,$A2ED
-
-A2BD: 20 54          JR    NZ,$A313
-
-A2BF: 4F             LD    C,A
-A2C0: 20 32          JR    NZ,$A2F4
-
-A2C2: 30 30          JR    NC,$A2F4
-
-A2C4: 30 30          JR    NC,$A2F6
-
-A2C6: 20 50          JR    NZ,$A318
-
-A2C8: 54             LD    D,H
-A2C9: 53             LD    D,E
-A2CA: 00             NOP   
-A2CB: 32 30 30       LD    ($3030),A
-A2CE: 30 30          JR    NC,$A300
-
-A2D0: 20 54          JR    NZ,$A326
-
-A2D2: 4F             LD    C,A
-A2D3: 20 33          JR    NZ,$A308
-
-A2D5: 30 30          JR    NC,$A307
-
-A2D7: 30 30          JR    NC,$A309
-
-A2D9: 20 50          JR    NZ,$A32B
-
-A2DB: 54             LD    D,H
-A2DC: 53             LD    D,E
-A2DD: 00             NOP   
-A2DE: 33             INC   SP
-A2DF: 30 30          JR    NC,$A311
-
-A2E1: 30 30          JR    NC,$A313
-
-A2E3: 20 54          JR    NZ,$A339
-
-A2E5: 4F             LD    C,A
-A2E6: 20 34          JR    NZ,$A31C
-
-A2E8: 30 30          JR    NC,$A31A
-
-A2EA: 30 30          JR    NC,$A31C
-
-A2EC: 20 50          JR    NZ,$A33E
-
-A2EE: 54             LD    D,H
-A2EF: 53             LD    D,E
-A2F0: 00             NOP   
-A2F1: 34             INC   (HL)
-A2F2: 30 30          JR    NC,$A324
-
-A2F4: 30 30          JR    NC,$A326
-
-A2F6: 20 54          JR    NZ,$A34C
-
-A2F8: 4F             LD    C,A
-A2F9: 20 35          JR    NZ,$A330
-
-A2FB: 30 30          JR    NC,$A32D
-
-A2FD: 30 30          JR    NC,$A32F
-
-A2FF: 20 50          JR    NZ,$A351
-
-A301: 54             LD    D,H
-A302: 53             LD    D,E
-A303: 00             NOP   
-A304: 35             DEC   (HL)
-A305: 30 30          JR    NC,$A337
-
-A307: 30 30          JR    NC,$A339
-
-A309: 20 54          JR    NZ,$A35F
-
-A30B: 4F             LD    C,A
-A30C: 20 37          JR    NZ,$A345
-
-A30E: 35             DEC   (HL)
-A30F: 30 30          JR    NC,$A341
-
-A311: 30 20          JR    NC,$A333
-
-A313: 50             LD    D,B
-A314: 54             LD    D,H
-A315: 53             LD    D,E
-A316: 00             NOP   
-A317: 37             SCF   
-A318: 35             DEC   (HL)
-A319: 30 30          JR    NC,$A34B
-
-A31B: 30 20          JR    NC,$A33D
-
-A31D: 54             LD    D,H
-A31E: 4F             LD    C,A
-A31F: 20 31          JR    NZ,$A352
-
-A321: 30 30          JR    NC,$A353
-
-A323: 30 30          JR    NC,$A355
-
-A325: 30 20          JR    NC,$A347
-
-A327: 50             LD    D,B
-A328: 54             LD    D,H
-A329: 53             LD    D,E
-A32A: 00             NOP   
-A32B: 31 30 30       LD    SP,$3030
-A32E: 30 30          JR    NC,$A360
-
-A330: 30 20          JR    NC,$A352
-
-A332: 54             LD    D,H
-A333: 4F             LD    C,A
-A334: 20 31          JR    NZ,$A367
-
-A336: 35             DEC   (HL)
-A337: 30 30          JR    NC,$A369
-
-A339: 30 30          JR    NC,$A36B
-
-A33B: 20 50          JR    NZ,$A38D
-
-A33D: 54             LD    D,H
-A33E: 53             LD    D,E
-A33F: 00             NOP   
-A340: 4F             LD    C,A
-A341: 56             LD    D,(HL)
-A342: 45             LD    B,L
-A343: 52             LD    D,D
-A344: 20 31          JR    NZ,$A377
-
-A346: 35             DEC   (HL)
-A347: 30 30          JR    NC,$A379
-
-A349: 30 30          JR    NC,$A37B
-
-A34B: 20 50          JR    NZ,$A39D
-
-A34D: 54             LD    D,H
-A34E: 53             LD    D,E
-A34F: 00             NOP   
 A350: C6 F9          ADD   A,#$F9
 A352: CA F9 CE       JP    Z,$CEF9
 
@@ -31206,11 +20572,11 @@ A367: CD 49 70       CALL  $7049
 A36A: 0E 02          LD    C,#$02
 A36C: CD B8 6F       CALL  $6FB8
 A36F: 21 AD A3       LD    HL,$A3AD
-A372: 22 00 C0       LD    ($C000),HL
+A372: 22 00 C0       LD    (NVRAM),HL
 A375: AF             XOR   A,A
 A376: 32 03 C0       LD    ($C003),A
 A379: CD A4 99       CALL  $99A4
-A37C: DD 2A 00 C0    LD    IX,($C000)
+A37C: DD 2A 00 C0    LD    IX,(NVRAM)
 A380: DD 7E 07       LD    A,(IX+$07)
 A383: 32 05 F0       LD    ($F005),A
 A386: 0E 1A          LD    C,#$1A
@@ -31280,79 +20646,20 @@ A3DE: FE DC          CP    A,#$DC
 A3E0: A1             AND   A,C
 A3E1: 00             NOP   
 A3E2: 00             NOP   
-A3E3: 43             LD    B,E
-A3E4: 48             LD    C,B
-A3E5: 41             LD    B,C
-A3E6: 4E             LD    C,(HL)
-A3E7: 4E             LD    C,(HL)
-A3E8: 45             LD    B,L
-A3E9: 4C             LD    C,H
-A3EA: 20 54          JR    NZ,$A440
+A3E3: CHANNEL TEST
 
-A3EC: 45             LD    B,L
-A3ED: 53             LD    D,E
-A3EE: 54             LD    D,H
-A3EF: 00             NOP   
-A3F0: 43             LD    B,E
-A3F1: 48             LD    C,B
-A3F2: 41             LD    B,C
-A3F3: 4E             LD    C,(HL)
-A3F4: 4E             LD    C,(HL)
-A3F5: 45             LD    B,L
-A3F6: 4C             LD    C,H
-A3F7: 20 31          JR    NZ,$A42A
+A3F0: CHANNEL 1
 
-A3F9: 00             NOP   
-A3FA: 43             LD    B,E
-A3FB: 48             LD    C,B
-A3FC: 41             LD    B,C
-A3FD: 4E             LD    C,(HL)
-A3FE: 4E             LD    C,(HL)
-A3FF: 45             LD    B,L
-A400: 4C             LD    C,H
-A401: 20 32          JR    NZ,$A435
+A3FA: CHANNEL 2
 
-A403: 00             NOP   
-A404: 43             LD    B,E
-A405: 48             LD    C,B
-A406: 41             LD    B,C
-A407: 4E             LD    C,(HL)
-A408: 4E             LD    C,(HL)
-A409: 45             LD    B,L
-A40A: 4C             LD    C,H
-A40B: 20 33          JR    NZ,$A440
+A404: CHANNEL 3
 
-A40D: 00             NOP   
-A40E: 43             LD    B,E
-A40F: 48             LD    C,B
-A410: 41             LD    B,C
-A411: 4E             LD    C,(HL)
-A412: 4E             LD    C,(HL)
-A413: 45             LD    B,L
-A414: 4C             LD    C,H
-A415: 20 34          JR    NZ,$A44B
+A40E: CHANNEL 4
 
-A417: 00             NOP   
-A418: 43             LD    B,E
-A419: 48             LD    C,B
-A41A: 41             LD    B,C
-A41B: 4E             LD    C,(HL)
-A41C: 4E             LD    C,(HL)
-A41D: 45             LD    B,L
-A41E: 4C             LD    C,H
-A41F: 20 35          JR    NZ,$A456
+A418: CHANNEL 5
 
-A421: 00             NOP   
-A422: 43             LD    B,E
-A423: 48             LD    C,B
-A424: 41             LD    B,C
-A425: 4E             LD    C,(HL)
-A426: 4E             LD    C,(HL)
-A427: 45             LD    B,L
-A428: 4C             LD    C,H
-A429: 20 36          JR    NZ,$A461
+A422: CHANNEL 6
 
-A42B: 00             NOP   
 A42C: CD C7 6F       CALL  $6FC7
 A42F: CD 49 70       CALL  $7049
 A432: 0E 02          LD    C,#$02
@@ -31385,84 +20692,14 @@ A45E: 9F             SBC   A,A
 A45F: A4             AND   A,H
 A460: 00             NOP   
 A461: 00             NOP   
-A462: 50             LD    D,B
-A463: 4C             LD    C,H
-A464: 41             LD    B,C
-A465: 59             LD    E,C
-A466: 45             LD    B,L
-A467: 52             LD    D,D
-A468: 20 49          JR    NZ,$A4B3
+A462: PLAYER INPUTS
 
-A46A: 4E             LD    C,(HL)
-A46B: 50             LD    D,B
-A46C: 55             LD    D,L
-A46D: 54             LD    D,H
-A46E: 53             LD    D,E
-A46F: 00             NOP   
-A470: 41             LD    B,C
-A471: 43             LD    B,E
-A472: 54             LD    D,H
-A473: 49             LD    C,C
-A474: 56             LD    D,(HL)
-A475: 41             LD    B,C
-A476: 54             LD    D,H
-A477: 45             LD    B,L
-A478: 20 41          JR    NZ,$A4BB
+A470: ACTIVATE ALL PLAYER INPUT
 
-A47A: 4C             LD    C,H
-A47B: 4C             LD    C,H
-A47C: 20 50          JR    NZ,$A4CE
+A48A: SWITCHES AND DEVICES
 
-A47E: 4C             LD    C,H
-A47F: 41             LD    B,C
-A480: 59             LD    E,C
-A481: 45             LD    B,L
-A482: 52             LD    D,D
-A483: 20 49          JR    NZ,$A4CE
+A49F: HIT TILT TO EXIT
 
-A485: 4E             LD    C,(HL)
-A486: 50             LD    D,B
-A487: 55             LD    D,L
-A488: 54             LD    D,H
-A489: 00             NOP   
-A48A: 53             LD    D,E
-A48B: 57             LD    D,A
-A48C: 49             LD    C,C
-A48D: 54             LD    D,H
-A48E: 43             LD    B,E
-A48F: 48             LD    C,B
-A490: 45             LD    B,L
-A491: 53             LD    D,E
-A492: 20 41          JR    NZ,$A4D5
-
-A494: 4E             LD    C,(HL)
-A495: 44             LD    B,H
-A496: 20 44          JR    NZ,$A4DC
-
-A498: 45             LD    B,L
-A499: 56             LD    D,(HL)
-A49A: 49             LD    C,C
-A49B: 43             LD    B,E
-A49C: 45             LD    B,L
-A49D: 53             LD    D,E
-A49E: 00             NOP   
-A49F: 48             LD    C,B
-A4A0: 49             LD    C,C
-A4A1: 54             LD    D,H
-A4A2: 20 54          JR    NZ,$A4F8
-
-A4A4: 49             LD    C,C
-A4A5: 4C             LD    C,H
-A4A6: 54             LD    D,H
-A4A7: 20 54          JR    NZ,$A4FD
-
-A4A9: 4F             LD    C,A
-A4AA: 20 45          JR    NZ,$A4F1
-
-A4AC: 58             LD    E,B
-A4AD: 49             LD    C,C
-A4AE: 54             LD    D,H
-A4AF: 00             NOP   
 A4B0: DD 21 56 A5    LD    IX,$A556
 A4B4: FD 21 09 C0    LD    IY,$C009
 A4B8: DD 7E 00       LD    A,(IX+$00)
@@ -31684,285 +20921,88 @@ A5F5: A6             AND   A,(HL)
 A5F6: FF             RST   $38
 
 A5F7: C6 FD          ADD   A,#$FD
-A5F9: 43             LD    B,E
-A5FA: 4F             LD    C,A
-A5FB: 49             LD    C,C
-A5FC: 4E             LD    C,(HL)
-A5FD: 20 43          JR    NZ,$A642
+A5F9: COIN CHUTE 1
 
-A5FF: 48             LD    C,B
-A600: 55             LD    D,L
-A601: 54             LD    D,H
-A602: 45             LD    B,L
-A603: 20 31          JR    NZ,$A636
-
-A605: 00             NOP   
 A606: C8             RET   Z
 
 A607: FD 43          Illegal Opcode
-A609: 4F             LD    C,A
-A60A: 49             LD    C,C
-A60B: 4E             LD    C,(HL)
-A60C: 20 43          JR    NZ,$A651
+A609: OIN CHUTE 2
 
-A60E: 48             LD    C,B
-A60F: 55             LD    D,L
-A610: 54             LD    D,H
-A611: 45             LD    B,L
-A612: 20 32          JR    NZ,$A646
-
-A614: 00             NOP   
 A615: CA FD 53       JP    Z,$53FD
 
-A618: 45             LD    B,L
-A619: 52             LD    D,D
-A61A: 56             LD    D,(HL)
-A61B: 49             LD    C,C
-A61C: 43             LD    B,E
-A61D: 45             LD    B,L
-A61E: 20 42          JR    NZ,$A662
+A618: ERVICE BUTTON
 
-A620: 55             LD    D,L
-A621: 54             LD    D,H
-A622: 54             LD    D,H
-A623: 4F             LD    C,A
-A624: 4E             LD    C,(HL)
-A625: 00             NOP   
 A626: CC FD 31       CALL  Z,$31FD
-A629: 20 50          JR    NZ,$A67B
+A629:  PLAYER
 
-A62B: 4C             LD    C,H
-A62C: 41             LD    B,C
-A62D: 59             LD    E,C
-A62E: 45             LD    B,L
-A62F: 52             LD    D,D
-A630: 00             NOP   
 A631: CE FD          ADC   A,#$FD
-A633: 32 20 50       LD    ($5020),A
-A636: 4C             LD    C,H
-A637: 41             LD    B,C
-A638: 59             LD    E,C
-A639: 45             LD    B,L
-A63A: 52             LD    D,D
-A63B: 00             NOP   
+A633: 2 PLAYER
+
 A63C: D0             RET   NC
 
 A63D: FD 50          Illegal Opcode
-A63F: 4C             LD    C,H
-A640: 31 20 46       LD    SP,$4620
-A643: 49             LD    C,C
-A644: 52             LD    D,D
-A645: 45             LD    B,L
-A646: 00             NOP   
+A63F: L1 FIRE
+
 A647: D2 FD 50       JP    NC,$50FD
 
-A64A: 4C             LD    C,H
-A64B: 31 20 52       LD    SP,$5220
-A64E: 49             LD    C,C
-A64F: 47             LD    B,A
-A650: 48             LD    C,B
-A651: 54             LD    D,H
-A652: 00             NOP   
+A64A: L1 RIGHT
+
 A653: D4 FD 50       CALL  NC,$50FD
-A656: 4C             LD    C,H
-A657: 31 20 4C       LD    SP,$4C20
-A65A: 45             LD    B,L
-A65B: 46             LD    B,(HL)
-A65C: 54             LD    D,H
-A65D: 00             NOP   
+A656: L1 LEFT
+
 A65E: D6 FD          SUB   A,#$FD
-A660: 50             LD    D,B
-A661: 4C             LD    C,H
-A662: 31 20 55       LD    SP,$5520
-A665: 50             LD    D,B
-A666: 00             NOP   
+A660: PL1 UP
+
 A667: D8             RET   C
 
 A668: FD 50          Illegal Opcode
-A66A: 4C             LD    C,H
-A66B: 31 20 44       LD    SP,$4420
-A66E: 4F             LD    C,A
-A66F: 57             LD    D,A
-A670: 4E             LD    C,(HL)
-A671: 00             NOP   
+A66A: L1 DOWN
+
 A672: DA FD 42       JP    C,$42FD
 
-A675: 55             LD    D,L
-A676: 59             LD    E,C
-A677: 20 49          JR    NZ,$A6C2
+A675: UY IN ALLOWED
 
-A679: 4E             LD    C,(HL)
-A67A: 20 41          JR    NZ,$A6BD
-
-A67C: 4C             LD    C,H
-A67D: 4C             LD    C,H
-A67E: 4F             LD    C,A
-A67F: 57             LD    D,A
-A680: 45             LD    B,L
-A681: 44             LD    B,H
-A682: 00             NOP   
-A683: 4E             LD    C,(HL)
-A684: 4F             LD    C,A
-A685: 20 42          JR    NZ,$A6C9
-
-A687: 55             LD    D,L
-A688: 59             LD    E,C
-A689: 20 49          JR    NZ,$A6D4
-
-A68B: 4E             LD    C,(HL)
-A68C: 20 20          JR    NZ,$A6AE
-
-A68E: 20 20          JR    NZ,$A6B0
-
-A690: 20 00          JR    NZ,$A692
+A683: NO BUY IN     
 
 A692: DC FD 52       CALL  C,$52FD
-A695: 4F             LD    C,A
-A696: 54             LD    D,H
-A697: 41             LD    B,C
-A698: 54             LD    D,H
-A699: 45             LD    B,L
-A69A: 20 56          JR    NZ,$A6F2
+A695: OTATE VALUE PL 1
 
-A69C: 41             LD    B,C
-A69D: 4C             LD    C,H
-A69E: 55             LD    D,L
-A69F: 45             LD    B,L
-A6A0: 20 50          JR    NZ,$A6F2
-
-A6A2: 4C             LD    C,H
-A6A3: 20 31          JR    NZ,$A6D6
-
-A6A5: 00             NOP   
 A6A6: DE FD          SBC   A,#$FD
-A6A8: 52             LD    D,D
-A6A9: 4F             LD    C,A
-A6AA: 54             LD    D,H
-A6AB: 41             LD    B,C
-A6AC: 54             LD    D,H
-A6AD: 45             LD    B,L
-A6AE: 20 56          JR    NZ,$A706
+A6A8: ROTATE VALUE PL 2
 
-A6B0: 41             LD    B,C
-A6B1: 4C             LD    C,H
-A6B2: 55             LD    D,L
-A6B3: 45             LD    B,L
-A6B4: 20 50          JR    NZ,$A706
+A6BA:                 
 
-A6B6: 4C             LD    C,H
-A6B7: 20 32          JR    NZ,$A6EB
-
-A6B9: 00             NOP   
-A6BA: 20 20          JR    NZ,$A6DC
-
-A6BC: 20 20          JR    NZ,$A6DE
-
-A6BE: 20 20          JR    NZ,$A6E0
-
-A6C0: 20 20          JR    NZ,$A6E2
-
-A6C2: 20 20          JR    NZ,$A6E4
-
-A6C4: 20 20          JR    NZ,$A6E6
-
-A6C6: 20 20          JR    NZ,$A6E8
-
-A6C8: 20 20          JR    NZ,$A6EA
-
-A6CA: 00             NOP   
 A6CB: E0             RET   PO
 
 A6CC: FD 4D          Illegal Opcode
-A6CE: 49             LD    C,C
-A6CF: 4E             LD    C,(HL)
-A6D0: 49             LD    C,C
-A6D1: 20 55          JR    NZ,$A728
+A6CE: INI UPRIGHT
 
-A6D3: 50             LD    D,B
-A6D4: 52             LD    D,D
-A6D5: 49             LD    C,C
-A6D6: 47             LD    B,A
-A6D7: 48             LD    C,B
-A6D8: 54             LD    D,H
-A6D9: 00             NOP   
-A6DA: 43             LD    B,E
-A6DB: 4F             LD    C,A
-A6DC: 43             LD    B,E
-A6DD: 4B             LD    C,E
-A6DE: 54             LD    D,H
-A6DF: 41             LD    B,C
-A6E0: 49             LD    C,C
-A6E1: 4C             LD    C,H
-A6E2: 20 20          JR    NZ,$A704
+A6DA: COCKTAIL    
 
-A6E4: 20 20          JR    NZ,$A706
-
-A6E6: 00             NOP   
 A6E7: E2 FD 32       JP    PO,$32FD
 
-A6EA: 20 43          JR    NZ,$A72F
+A6EA:  COIN METERS
 
-A6EC: 4F             LD    C,A
-A6ED: 49             LD    C,C
-A6EE: 4E             LD    C,(HL)
-A6EF: 20 4D          JR    NZ,$A73E
-
-A6F1: 45             LD    B,L
-A6F2: 54             LD    D,H
-A6F3: 45             LD    B,L
-A6F4: 52             LD    D,D
-A6F5: 53             LD    D,E
-A6F6: 00             NOP   
-A6F7: 31 20 43       LD    SP,$4320
-A6FA: 4F             LD    C,A
-A6FB: 49             LD    C,C
-A6FC: 4E             LD    C,(HL)
-A6FD: 20 4D          JR    NZ,$A74C
-
-A6FF: 45             LD    B,L
-A700: 54             LD    D,H
-A701: 45             LD    B,L
-A702: 52             LD    D,D
-A703: 20 00          JR    NZ,$A705
+A6F7: 1 COIN METER 
 
 A705: E4 FD 50       CALL  PO,$50FD
-A708: 4C             LD    C,H
-A709: 32 20 46       LD    ($4620),A
-A70C: 49             LD    C,C
-A70D: 52             LD    D,D
-A70E: 45             LD    B,L
-A70F: 00             NOP   
+A708: L2 FIRE
+
 A710: E6 FD          AND   A,#$FD
-A712: 50             LD    D,B
-A713: 4C             LD    C,H
-A714: 32 20 52       LD    ($5220),A
-A717: 49             LD    C,C
-A718: 47             LD    B,A
-A719: 48             LD    C,B
-A71A: 54             LD    D,H
-A71B: 00             NOP   
+A712: PL2 RIGHT
+
 A71C: E8             RET   PE
 
 A71D: FD 50          Illegal Opcode
-A71F: 4C             LD    C,H
-A720: 32 20 4C       LD    ($4C20),A
-A723: 45             LD    B,L
-A724: 46             LD    B,(HL)
-A725: 54             LD    D,H
-A726: 00             NOP   
+A71F: L2 LEFT
+
 A727: EA FD 50       JP    PE,$50FD
 
-A72A: 4C             LD    C,H
-A72B: 32 20 55       LD    ($5520),A
-A72E: 50             LD    D,B
-A72F: 00             NOP   
+A72A: L2 UP
+
 A730: EC FD 50       CALL  PE,$50FD
-A733: 4C             LD    C,H
-A734: 32 20 44       LD    ($4420),A
-A737: 4F             LD    C,A
-A738: 57             LD    D,A
-A739: 4E             LD    C,(HL)
-A73A: 00             NOP   
+A733: L2 DOWN
+
 A73B: CD C7 6F       CALL  $6FC7
 A73E: CD 49 70       CALL  $7049
 A741: DD 21 73 A8    LD    IX,$A873
@@ -32195,219 +21235,38 @@ A8B8: FE 7B          CP    A,#$7B
 A8BA: A9             XOR   A,C
 A8BB: 00             NOP   
 A8BC: 00             NOP   
-A8BD: 53             LD    D,E
-A8BE: 45             LD    B,L
-A8BF: 54             LD    D,H
-A8C0: 55             LD    D,L
-A8C1: 50             LD    D,B
-A8C2: 20 4F          JR    NZ,$A913
+A8BD: SETUP OPTIONS
 
-A8C4: 50             LD    D,B
-A8C5: 54             LD    D,H
-A8C6: 49             LD    C,C
-A8C7: 4F             LD    C,A
-A8C8: 4E             LD    C,(HL)
-A8C9: 53             LD    D,E
-A8CA: 00             NOP   
-A8CB: 43             LD    B,E
-A8CC: 4F             LD    C,A
-A8CD: 49             LD    C,C
-A8CE: 4E             LD    C,(HL)
-A8CF: 20 43          JR    NZ,$A914
+A8CB: COIN CHUTE 1
 
-A8D1: 48             LD    C,B
-A8D2: 55             LD    D,L
-A8D3: 54             LD    D,H
-A8D4: 45             LD    B,L
-A8D5: 20 31          JR    NZ,$A908
+A8D8: COINS FOR
 
-A8D7: 00             NOP   
-A8D8: 43             LD    B,E
-A8D9: 4F             LD    C,A
-A8DA: 49             LD    C,C
-A8DB: 4E             LD    C,(HL)
-A8DC: 53             LD    D,E
-A8DD: 20 46          JR    NZ,$A925
+A8E2: CREDITS
 
-A8DF: 4F             LD    C,A
-A8E0: 52             LD    D,D
-A8E1: 00             NOP   
-A8E2: 43             LD    B,E
-A8E3: 52             LD    D,D
-A8E4: 45             LD    B,L
-A8E5: 44             LD    B,H
-A8E6: 49             LD    C,C
-A8E7: 54             LD    D,H
-A8E8: 53             LD    D,E
-A8E9: 00             NOP   
-A8EA: 43             LD    B,E
-A8EB: 4F             LD    C,A
-A8EC: 49             LD    C,C
-A8ED: 4E             LD    C,(HL)
-A8EE: 20 43          JR    NZ,$A933
+A8EA: COIN CHUTE 2
 
-A8F0: 48             LD    C,B
-A8F1: 55             LD    D,L
-A8F2: 54             LD    D,H
-A8F3: 45             LD    B,L
-A8F4: 20 32          JR    NZ,$A928
+A8F7: CREDITS FOR
 
-A8F6: 00             NOP   
-A8F7: 43             LD    B,E
-A8F8: 52             LD    D,D
-A8F9: 45             LD    B,L
-A8FA: 44             LD    B,H
-A8FB: 49             LD    C,C
-A8FC: 54             LD    D,H
-A8FD: 53             LD    D,E
-A8FE: 20 46          JR    NZ,$A946
+A903: BASES
 
-A900: 4F             LD    C,A
-A901: 52             LD    D,D
-A902: 00             NOP   
-A903: 42             LD    B,D
-A904: 41             LD    B,C
-A905: 53             LD    D,E
-A906: 45             LD    B,L
-A907: 53             LD    D,E
-A908: 00             NOP   
-A909: 31 53 54       LD    SP,$5453
-A90C: 20 45          JR    NZ,$A953
+A909: 1ST EXTRA BASE AT
 
-A90E: 58             LD    E,B
-A90F: 54             LD    D,H
-A910: 52             LD    D,D
-A911: 41             LD    B,C
-A912: 20 42          JR    NZ,$A956
+A91B: 000 POINTS
 
-A914: 41             LD    B,C
-A915: 53             LD    D,E
-A916: 45             LD    B,L
-A917: 20 41          JR    NZ,$A95A
+A926: EXIT
 
-A919: 54             LD    D,H
-A91A: 00             NOP   
-A91B: 30 30          JR    NC,$A94D
+A92B: USE JOYSTICK UP AND
 
-A91D: 30 20          JR    NC,$A93F
+A93F: DOWN TO POSITION CURSOR
 
-A91F: 50             LD    D,B
-A920: 4F             LD    C,A
-A921: 49             LD    C,C
-A922: 4E             LD    C,(HL)
-A923: 54             LD    D,H
-A924: 53             LD    D,E
-A925: 00             NOP   
-A926: 45             LD    B,L
-A927: 58             LD    E,B
-A928: 49             LD    C,C
-A929: 54             LD    D,H
-A92A: 00             NOP   
-A92B: 55             LD    D,L
-A92C: 53             LD    D,E
-A92D: 45             LD    B,L
-A92E: 20 4A          JR    NZ,$A97A
+A957: USE 1 AND 2 PLAYER
 
-A930: 4F             LD    C,A
-A931: 59             LD    E,C
-A932: 53             LD    D,E
-A933: 54             LD    D,H
-A934: 49             LD    C,C
-A935: 43             LD    B,E
-A936: 4B             LD    C,E
-A937: 20 55          JR    NZ,$A98E
+A96A: BUTTONS TO ALTER
 
-A939: 50             LD    D,B
-A93A: 20 41          JR    NZ,$A97D
+A97B: OPTIONS
 
-A93C: 4E             LD    C,(HL)
-A93D: 44             LD    B,H
-A93E: 00             NOP   
-A93F: 44             LD    B,H
-A940: 4F             LD    C,A
-A941: 57             LD    D,A
-A942: 4E             LD    C,(HL)
-A943: 20 54          JR    NZ,$A999
+A983: DIFFICULTY LEVEL
 
-A945: 4F             LD    C,A
-A946: 20 50          JR    NZ,$A998
-
-A948: 4F             LD    C,A
-A949: 53             LD    D,E
-A94A: 49             LD    C,C
-A94B: 54             LD    D,H
-A94C: 49             LD    C,C
-A94D: 4F             LD    C,A
-A94E: 4E             LD    C,(HL)
-A94F: 20 43          JR    NZ,$A994
-
-A951: 55             LD    D,L
-A952: 52             LD    D,D
-A953: 53             LD    D,E
-A954: 4F             LD    C,A
-A955: 52             LD    D,D
-A956: 00             NOP   
-A957: 55             LD    D,L
-A958: 53             LD    D,E
-A959: 45             LD    B,L
-A95A: 20 31          JR    NZ,$A98D
-
-A95C: 20 41          JR    NZ,$A99F
-
-A95E: 4E             LD    C,(HL)
-A95F: 44             LD    B,H
-A960: 20 32          JR    NZ,$A994
-
-A962: 20 50          JR    NZ,$A9B4
-
-A964: 4C             LD    C,H
-A965: 41             LD    B,C
-A966: 59             LD    E,C
-A967: 45             LD    B,L
-A968: 52             LD    D,D
-A969: 00             NOP   
-A96A: 42             LD    B,D
-A96B: 55             LD    D,L
-A96C: 54             LD    D,H
-A96D: 54             LD    D,H
-A96E: 4F             LD    C,A
-A96F: 4E             LD    C,(HL)
-A970: 53             LD    D,E
-A971: 20 54          JR    NZ,$A9C7
-
-A973: 4F             LD    C,A
-A974: 20 41          JR    NZ,$A9B7
-
-A976: 4C             LD    C,H
-A977: 54             LD    D,H
-A978: 45             LD    B,L
-A979: 52             LD    D,D
-A97A: 00             NOP   
-A97B: 4F             LD    C,A
-A97C: 50             LD    D,B
-A97D: 54             LD    D,H
-A97E: 49             LD    C,C
-A97F: 4F             LD    C,A
-A980: 4E             LD    C,(HL)
-A981: 53             LD    D,E
-A982: 00             NOP   
-A983: 44             LD    B,H
-A984: 49             LD    C,C
-A985: 46             LD    B,(HL)
-A986: 46             LD    B,(HL)
-A987: 49             LD    C,C
-A988: 43             LD    B,E
-A989: 55             LD    D,L
-A98A: 4C             LD    C,H
-A98B: 54             LD    D,H
-A98C: 59             LD    E,C
-A98D: 20 4C          JR    NZ,$A9DB
-
-A98F: 45             LD    B,L
-A990: 56             LD    D,(HL)
-A991: 45             LD    B,L
-A992: 4C             LD    C,H
-A993: 00             NOP   
 A994: 20 01          JR    NZ,$A997
 
 A996: F0             RET   P
@@ -32574,58 +21433,14 @@ AAAA: 20 F0          JR    NZ,$AA9C
 AAAC: CD C7 6F       CALL  $6FC7
 AAAF: C3 00 AA       JP    $AA00
 
-AAB2: 48             LD    C,B
-AAB3: 49             LD    C,C
-AAB4: 54             LD    D,H
-AAB5: 20 46          JR    NZ,$AAFD
+AAB2: HIT FIRE BUTTON
 
-AAB7: 49             LD    C,C
-AAB8: 52             LD    D,D
-AAB9: 45             LD    B,L
-AABA: 20 42          JR    NZ,$AAFE
+AAC2: TO CONTINUE
 
-AABC: 55             LD    D,L
-AABD: 54             LD    D,H
-AABE: 54             LD    D,H
-AABF: 4F             LD    C,A
-AAC0: 4E             LD    C,(HL)
-AAC1: 00             NOP   
-AAC2: 54             LD    D,H
-AAC3: 4F             LD    C,A
-AAC4: 20 43          JR    NZ,$AB09
+AACE: HIT FIRE BUTTON
 
-AAC6: 4F             LD    C,A
-AAC7: 4E             LD    C,(HL)
-AAC8: 54             LD    D,H
-AAC9: 49             LD    C,C
-AACA: 4E             LD    C,(HL)
-AACB: 55             LD    D,L
-AACC: 45             LD    B,L
-AACD: 00             NOP   
-AACE: 48             LD    C,B
-AACF: 49             LD    C,C
-AAD0: 54             LD    D,H
-AAD1: 20 46          JR    NZ,$AB19
+AADE: TO EXIT
 
-AAD3: 49             LD    C,C
-AAD4: 52             LD    D,D
-AAD5: 45             LD    B,L
-AAD6: 20 42          JR    NZ,$AB1A
-
-AAD8: 55             LD    D,L
-AAD9: 54             LD    D,H
-AADA: 54             LD    D,H
-AADB: 4F             LD    C,A
-AADC: 4E             LD    C,(HL)
-AADD: 00             NOP   
-AADE: 54             LD    D,H
-AADF: 4F             LD    C,A
-AAE0: 20 45          JR    NZ,$AB27
-
-AAE2: 58             LD    E,B
-AAE3: 49             LD    C,C
-AAE4: 54             LD    D,H
-AAE5: 00             NOP   
 AAE6: CD 49 70       CALL  $7049
 AAE9: CD 49 70       CALL  $7049
 AAEC: DD 21 70 AC    LD    IX,$AC70
@@ -32660,24 +21475,15 @@ AB22: FD 31          Illegal Opcode
 AB24: AB             XOR   A,E
 AB25: 35             DEC   (HL)
 AB26: AB             XOR   A,E
-AB27: 52             LD    D,D
-AB28: 41             LD    B,C
-AB29: 4D             LD    C,L
-AB2A: 20 45          JR    NZ,$AB71
+AB27: RAM ERROR
 
-AB2C: 52             LD    D,D
-AB2D: 52             LD    D,D
-AB2E: 4F             LD    C,A
-AB2F: 52             LD    D,D
-AB30: 00             NOP   
-AB31: 42             LD    B,D
-AB32: 32 20 00       LD    ($0020),A
-AB35: 46             LD    B,(HL)
-AB36: 36 20          LD    (HL),#$20
-AB38: 00             NOP   
+AB31: B2 
+
+AB35: F6 
+
 AB39: 1E 01          LD    E,#$01
 AB3B: FD 21 80 FF    LD    IY,$FF80
-AB3F: 21 00 F8       LD    HL,$F800
+AB3F: 21 00 F8       LD    HL,VIDEO_RAM_M1
 AB42: FD 22 0B C4    LD    ($C40B),IY
 AB46: 16 5D          LD    D,#$5D
 AB48: 01 E0 01       LD    BC,$01E0
@@ -32746,7 +21552,7 @@ ABAB: 01 C0 00       LD    BC,$00C0
 ABAE: 38 00          JR    C,$ABB0
 
 ABB0: 07             RLCA  
-ABB1: 21 00 F8       LD    HL,$F800
+ABB1: 21 00 F8       LD    HL,VIDEO_RAM_M1
 ABB4: 01 C0 03       LD    BC,$03C0
 ABB7: 36 5E          LD    (HL),#$5E
 ABB9: 23             INC   HL
@@ -32879,7 +21685,7 @@ AC85: C2 01 03       JP    NZ,$0301
 
 AC88: 00             NOP   
 AC89: C6 FF          ADD   A,#$FF
-AC8B: 01 00 C0       LD    BC,$C000
+AC8B: 01 00 C0       LD    BC,NVRAM
 AC8E: 01 04 00       LD    BC,$0004
 AC91: F8             RET   M
 
@@ -33014,36 +21820,19 @@ AD4A: 68             LD    L,B
 AD4B: AD             XOR   A,L
 AD4C: 6C             LD    L,H
 AD4D: AD             XOR   A,L
-AD4E: 52             LD    D,D
-AD4F: 4F             LD    C,A
-AD50: 4D             LD    C,L
-AD51: 20 45          JR    NZ,$AD98
+AD4E: ROM ERROR
 
-AD53: 52             LD    D,D
-AD54: 52             LD    D,D
-AD55: 4F             LD    C,A
-AD56: 52             LD    D,D
-AD57: 00             NOP   
-AD58: 44             LD    B,H
-AD59: 32 20 00       LD    ($0020),A
-AD5C: 44             LD    B,H
-AD5D: 33             INC   SP
-AD5E: 20 00          JR    NZ,$AD60
+AD58: D2 
 
-AD60: 44             LD    B,H
-AD61: 34             INC   (HL)
-AD62: 20 00          JR    NZ,$AD64
+AD5C: D3 
 
-AD64: 44             LD    B,H
-AD65: 35             DEC   (HL)
-AD66: 20 00          JR    NZ,$AD68
+AD60: D4 
 
-AD68: 44             LD    B,H
-AD69: 36 20          LD    (HL),#$20
-AD6B: 00             NOP   
-AD6C: 44             LD    B,H
-AD6D: 37             SCF   
-AD6E: 20 00          JR    NZ,$AD70
+AD64: D5 
+
+AD68: D6 
+
+AD6C: D7 
 
 AD70: 0A             LD    A,(BC)
 AD71: B7             OR    A,A
@@ -33152,48 +21941,12 @@ AE2B: FF             RST   $38
 
 AE2C: 55             LD    D,L
 AE2D: AA             XOR   A,D
-AE2E: 49             LD    C,C
-AE2F: 4E             LD    C,(HL)
-AE30: 54             LD    D,H
-AE31: 45             LD    B,L
-AE32: 52             LD    D,D
-AE33: 46             LD    B,(HL)
-AE34: 41             LD    B,C
-AE35: 43             LD    B,E
-AE36: 45             LD    B,L
-AE37: 20 45          JR    NZ,$AE7E
+AE2E: INTERFACE ERROR
 
-AE39: 52             LD    D,D
-AE3A: 52             LD    D,D
-AE3B: 4F             LD    C,A
-AE3C: 52             LD    D,D
-AE3D: 00             NOP   
-AE3E: 42             LD    B,D
-AE3F: 4F             LD    C,A
-AE40: 41             LD    B,C
-AE41: 52             LD    D,D
-AE42: 44             LD    B,H
-AE43: 20 54          JR    NZ,$AE99
+AE3E: BOARD TIMEOUT
 
-AE45: 49             LD    C,C
-AE46: 4D             LD    C,L
-AE47: 45             LD    B,L
-AE48: 4F             LD    C,A
-AE49: 55             LD    D,L
-AE4A: 54             LD    D,H
-AE4B: 00             NOP   
-AE4C: 53             LD    D,E
-AE4D: 4F             LD    C,A
-AE4E: 55             LD    D,L
-AE4F: 4E             LD    C,(HL)
-AE50: 44             LD    B,H
-AE51: 20 42          JR    NZ,$AE95
+AE4C: SOUND BOARD
 
-AE53: 4F             LD    C,A
-AE54: 41             LD    B,C
-AE55: 52             LD    D,D
-AE56: 44             LD    B,H
-AE57: 00             NOP   
 AE58: 4C             LD    C,H
 AE59: AE             XOR   A,(HL)
 AE5A: EA FD EC       JP    PE,$ECFD
@@ -33208,28 +21961,21 @@ AE64: 74             LD    (HL),H
 AE65: AE             XOR   A,(HL)
 AE66: 79             LD    A,C
 AE67: AE             XOR   A,(HL)
-AE68: 41             LD    B,C
-AE69: 37             SCF   
-AE6A: 20 00          JR    NZ,$AE6C
+AE68: A7 
 
-AE6C: 41             LD    B,C
-AE6D: 38 20          JR    C,$AE8F
+AE6C: A8 
 
-AE6F: 00             NOP   
-AE70: 41             LD    B,C
-AE71: 39             ADD   HL,SP
-AE72: 20 00          JR    NZ,$AE74
+AE70: A9 
 
-AE74: 41             LD    B,C
-AE75: 31 30 20       LD    SP,$2030
-AE78: 00             NOP   
-AE79: 41             LD    B,C
-AE7A: 36 00          LD    (HL),#$00
+AE74: A10 
+
+AE79: A6
+
 AE7C: AF             XOR   A,A
 AE7D: 32 9A FF       LD    ($FF9A),A
 AE80: 3D             DEC   A
 AE81: 32 9F FF       LD    ($FF9F),A
-AE84: 11 00 F8       LD    DE,$F800
+AE84: 11 00 F8       LD    DE,VIDEO_RAM_M1
 AE87: 3E 0F          LD    A,#$0F
 AE89: 21 95 AE       LD    HL,$AE95
 AE8C: 01 80 00       LD    BC,$0080
@@ -33557,294 +22303,56 @@ AFFC: D0             RET   NC
 AFFD: 20 26          JR    NZ,$B025
 
 AFFF: A6             AND   A,(HL)
-B000: 31 53 54       LD    SP,$5453
-B003: 00             NOP   
-B004: 32 4E 44       LD    ($444E),A
-B007: 00             NOP   
-B008: 50             LD    D,B
-B009: 4C             LD    C,H
-B00A: 41             LD    B,C
-B00B: 59             LD    E,C
-B00C: 45             LD    B,L
-B00D: 52             LD    D,D
-B00E: 20 31          JR    NZ,$B041
+B000: 1ST
 
-B010: 20 55          JR    NZ,$B067
+B004: 2ND
 
-B012: 50             LD    D,B
-B013: 00             NOP   
-B014: 50             LD    D,B
-B015: 4C             LD    C,H
-B016: 41             LD    B,C
-B017: 59             LD    E,C
-B018: 45             LD    B,L
-B019: 52             LD    D,D
-B01A: 20 32          JR    NZ,$B04E
+B008: PLAYER 1 UP
 
-B01C: 20 55          JR    NZ,$B073
+B014: PLAYER 2 UP
 
-B01E: 50             LD    D,B
-B01F: 00             NOP   
-B020: 50             LD    D,B
-B021: 4C             LD    C,H
-B022: 41             LD    B,C
-B023: 59             LD    E,C
-B024: 45             LD    B,L
-B025: 52             LD    D,D
-B026: 20 31          JR    NZ,$B059
+B020: PLAYER 1
 
-B028: 00             NOP   
-B029: 20 20          JR    NZ,$B04B
+B029:    
 
-B02B: 20 00          JR    NZ,$B02D
+B02D: HISCORE
 
-B02D: 48             LD    C,B
-B02E: 49             LD    C,C
-B02F: 53             LD    D,E
-B030: 43             LD    B,E
-B031: 4F             LD    C,A
-B032: 52             LD    D,D
-B033: 45             LD    B,L
-B034: 00             NOP   
-B035: 54             LD    D,H
-B036: 4F             LD    C,A
-B037: 20 53          JR    NZ,$B08C
+B035: TO START GAME
 
-B039: 54             LD    D,H
-B03A: 41             LD    B,C
-B03B: 52             LD    D,D
-B03C: 54             LD    D,H
-B03D: 20 47          JR    NZ,$B086
+B043: TO CONTINUE GAME
 
-B03F: 41             LD    B,C
-B040: 4D             LD    C,L
-B041: 45             LD    B,L
-B042: 00             NOP   
-B043: 54             LD    D,H
-B044: 4F             LD    C,A
-B045: 20 43          JR    NZ,$B08A
+B054: PUSH 1 PLAYER
 
-B047: 4F             LD    C,A
-B048: 4E             LD    C,(HL)
-B049: 54             LD    D,H
-B04A: 49             LD    C,C
-B04B: 4E             LD    C,(HL)
-B04C: 55             LD    D,L
-B04D: 45             LD    B,L
-B04E: 20 47          JR    NZ,$B097
+B062: OR DEPOSIT
 
-B050: 41             LD    B,C
-B051: 4D             LD    C,L
-B052: 45             LD    B,L
-B053: 00             NOP   
-B054: 50             LD    D,B
-B055: 55             LD    D,L
-B056: 53             LD    D,E
-B057: 48             LD    C,B
-B058: 20 31          JR    NZ,$B08B
+B06D: INSERT 1 COIN
 
-B05A: 20 50          JR    NZ,$B0AC
+B07B: MORE COINS FOR
 
-B05C: 4C             LD    C,H
-B05D: 41             LD    B,C
-B05E: 59             LD    E,C
-B05F: 45             LD    B,L
-B060: 52             LD    D,D
-B061: 00             NOP   
-B062: 4F             LD    C,A
-B063: 52             LD    D,D
-B064: 20 44          JR    NZ,$B0AA
+B08A: MORE COINS
 
-B066: 45             LD    B,L
-B067: 50             LD    D,B
-B068: 4F             LD    C,A
-B069: 53             LD    D,E
-B06A: 49             LD    C,C
-B06B: 54             LD    D,H
-B06C: 00             NOP   
-B06D: 49             LD    C,C
-B06E: 4E             LD    C,(HL)
-B06F: 53             LD    D,E
-B070: 45             LD    B,L
-B071: 52             LD    D,D
-B072: 54             LD    D,H
-B073: 20 31          JR    NZ,$B0A6
+B095:  CREDITS PER PLAYER
 
-B075: 20 43          JR    NZ,$B0BA
+B0A9: OR PUSH
 
-B077: 4F             LD    C,A
-B078: 49             LD    C,C
-B079: 4E             LD    C,(HL)
-B07A: 00             NOP   
-B07B: 4D             LD    C,L
-B07C: 4F             LD    C,A
-B07D: 52             LD    D,D
-B07E: 45             LD    B,L
-B07F: 20 43          JR    NZ,$B0C4
+B0B1: 2 PLAYERS
 
-B081: 4F             LD    C,A
-B082: 49             LD    C,C
-B083: 4E             LD    C,(HL)
-B084: 53             LD    D,E
-B085: 20 46          JR    NZ,$B0CD
+B0BB: GAME OVER
 
-B087: 4F             LD    C,A
-B088: 52             LD    D,D
-B089: 00             NOP   
-B08A: 4D             LD    C,L
-B08B: 4F             LD    C,A
-B08C: 52             LD    D,D
-B08D: 45             LD    B,L
-B08E: 20 43          JR    NZ,$B0D3
+B0C5:          
 
-B090: 4F             LD    C,A
-B091: 49             LD    C,C
-B092: 4E             LD    C,(HL)
-B093: 53             LD    D,E
-B094: 00             NOP   
-B095: 20 43          JR    NZ,$B0DA
+B0CF: BONUS BASES AWARDED
 
-B097: 52             LD    D,D
-B098: 45             LD    B,L
-B099: 44             LD    B,H
-B09A: 49             LD    C,C
-B09B: 54             LD    D,H
-B09C: 53             LD    D,E
-B09D: 20 50          JR    NZ,$B0EF
+B0E3: AT 10000 POINTS
 
-B09F: 45             LD    B,L
-B0A0: 52             LD    D,D
-B0A1: 20 50          JR    NZ,$B0F3
+B0F3: PRESS FIRE BUTTON
 
-B0A3: 4C             LD    C,H
-B0A4: 41             LD    B,C
-B0A5: 59             LD    E,C
-B0A6: 45             LD    B,L
-B0A7: 52             LD    D,D
-B0A8: 00             NOP   
-B0A9: 4F             LD    C,A
-B0AA: 52             LD    D,D
-B0AB: 20 50          JR    NZ,$B0FD
+B105: FOR DIRECTIONS
 
-B0AD: 55             LD    D,L
-B0AE: 53             LD    D,E
-B0AF: 48             LD    C,B
-B0B0: 00             NOP   
-B0B1: 32 20 50       LD    ($5020),A
-B0B4: 4C             LD    C,H
-B0B5: 41             LD    B,C
-B0B6: 59             LD    E,C
-B0B7: 45             LD    B,L
-B0B8: 52             LD    D,D
-B0B9: 53             LD    D,E
-B0BA: 00             NOP   
-B0BB: 47             LD    B,A
-B0BC: 41             LD    B,C
-B0BD: 4D             LD    C,L
-B0BE: 45             LD    B,L
-B0BF: 20 4F          JR    NZ,$B110
+B114: PLAYER 1
 
-B0C1: 56             LD    D,(HL)
-B0C2: 45             LD    B,L
-B0C3: 52             LD    D,D
-B0C4: 00             NOP   
-B0C5: 20 20          JR    NZ,$B0E7
+B11D: PLAYER 2
 
-B0C7: 20 20          JR    NZ,$B0E9
-
-B0C9: 20 20          JR    NZ,$B0EB
-
-B0CB: 20 20          JR    NZ,$B0ED
-
-B0CD: 20 00          JR    NZ,$B0CF
-
-B0CF: 42             LD    B,D
-B0D0: 4F             LD    C,A
-B0D1: 4E             LD    C,(HL)
-B0D2: 55             LD    D,L
-B0D3: 53             LD    D,E
-B0D4: 20 42          JR    NZ,$B118
-
-B0D6: 41             LD    B,C
-B0D7: 53             LD    D,E
-B0D8: 45             LD    B,L
-B0D9: 53             LD    D,E
-B0DA: 20 41          JR    NZ,$B11D
-
-B0DC: 57             LD    D,A
-B0DD: 41             LD    B,C
-B0DE: 52             LD    D,D
-B0DF: 44             LD    B,H
-B0E0: 45             LD    B,L
-B0E1: 44             LD    B,H
-B0E2: 00             NOP   
-B0E3: 41             LD    B,C
-B0E4: 54             LD    D,H
-B0E5: 20 31          JR    NZ,$B118
-
-B0E7: 30 30          JR    NC,$B119
-
-B0E9: 30 30          JR    NC,$B11B
-
-B0EB: 20 50          JR    NZ,$B13D
-
-B0ED: 4F             LD    C,A
-B0EE: 49             LD    C,C
-B0EF: 4E             LD    C,(HL)
-B0F0: 54             LD    D,H
-B0F1: 53             LD    D,E
-B0F2: 00             NOP   
-B0F3: 50             LD    D,B
-B0F4: 52             LD    D,D
-B0F5: 45             LD    B,L
-B0F6: 53             LD    D,E
-B0F7: 53             LD    D,E
-B0F8: 20 46          JR    NZ,$B140
-
-B0FA: 49             LD    C,C
-B0FB: 52             LD    D,D
-B0FC: 45             LD    B,L
-B0FD: 20 42          JR    NZ,$B141
-
-B0FF: 55             LD    D,L
-B100: 54             LD    D,H
-B101: 54             LD    D,H
-B102: 4F             LD    C,A
-B103: 4E             LD    C,(HL)
-B104: 00             NOP   
-B105: 46             LD    B,(HL)
-B106: 4F             LD    C,A
-B107: 52             LD    D,D
-B108: 20 44          JR    NZ,$B14E
-
-B10A: 49             LD    C,C
-B10B: 52             LD    D,D
-B10C: 45             LD    B,L
-B10D: 43             LD    B,E
-B10E: 54             LD    D,H
-B10F: 49             LD    C,C
-B110: 4F             LD    C,A
-B111: 4E             LD    C,(HL)
-B112: 53             LD    D,E
-B113: 00             NOP   
-B114: 50             LD    D,B
-B115: 4C             LD    C,H
-B116: 41             LD    B,C
-B117: 59             LD    E,C
-B118: 45             LD    B,L
-B119: 52             LD    D,D
-B11A: 20 31          JR    NZ,$B14D
-
-B11C: 00             NOP   
-B11D: 50             LD    D,B
-B11E: 4C             LD    C,H
-B11F: 41             LD    B,C
-B120: 59             LD    E,C
-B121: 45             LD    B,L
-B122: 52             LD    D,D
-B123: 20 32          JR    NZ,$B157
-
-B125: 00             NOP   
 B126: 3E B1          LD    A,#$B1
 B128: 42             LD    B,D
 B129: B1             OR    A,C
@@ -33868,73 +22376,30 @@ B13A: 7A             LD    A,D
 B13B: B1             OR    A,C
 B13C: 7E             LD    A,(HL)
 B13D: B1             OR    A,C
-B13E: 52             LD    D,D
-B13F: 50             LD    D,B
-B140: 47             LD    B,A
-B141: 00             NOP   
-B142: 43             LD    B,E
-B143: 4F             LD    C,A
-B144: 42             LD    B,D
-B145: 4F             LD    C,A
-B146: 4C             LD    C,H
-B147: 00             NOP   
-B148: 42             LD    B,D
-B149: 41             LD    B,C
-B14A: 53             LD    D,E
-B14B: 49             LD    C,C
-B14C: 43             LD    B,E
-B14D: 00             NOP   
-B14E: 46             LD    B,(HL)
-B14F: 4F             LD    C,A
-B150: 52             LD    D,D
-B151: 54             LD    D,H
-B152: 52             LD    D,D
-B153: 41             LD    B,C
-B154: 4E             LD    C,(HL)
-B155: 00             NOP   
-B156: 53             LD    D,E
-B157: 4E             LD    C,(HL)
-B158: 4F             LD    C,A
-B159: 42             LD    B,D
-B15A: 4F             LD    C,A
-B15B: 4C             LD    C,H
-B15C: 00             NOP   
-B15D: 50             LD    D,B
-B15E: 4C             LD    C,H
-B15F: 31 00 50       LD    SP,$5000
-B162: 41             LD    B,C
-B163: 53             LD    D,E
-B164: 43             LD    B,E
-B165: 41             LD    B,C
-B166: 4C             LD    C,H
-B167: 00             NOP   
-B168: 41             LD    B,C
-B169: 4C             LD    C,H
-B16A: 47             LD    B,A
-B16B: 4F             LD    C,A
-B16C: 4C             LD    C,H
-B16D: 00             NOP   
-B16E: 41             LD    B,C
-B16F: 53             LD    D,E
-B170: 53             LD    D,E
-B171: 45             LD    B,L
-B172: 4D             LD    C,L
-B173: 42             LD    B,D
-B174: 4C             LD    C,H
-B175: 59             LD    E,C
-B176: 00             NOP   
-B177: 4F             LD    C,A
-B178: 53             LD    D,E
-B179: 00             NOP   
-B17A: 4A             LD    C,D
-B17B: 43             LD    B,E
-B17C: 4C             LD    C,H
-B17D: 00             NOP   
-B17E: 55             LD    D,L
-B17F: 53             LD    D,E
-B180: 45             LD    B,L
-B181: 52             LD    D,D
-B182: 00             NOP   
+B13E: RPG
+
+B142: COBOL
+
+B148: BASIC
+
+B14E: FORTRAN
+
+B156: SNOBOL
+
+B15D: PL1
+
+B161: PASCAL
+
+B168: ALGOL
+
+B16E: ASSEMBLY
+
+B177: OS
+
+B17A: JCL
+
+B17E: USER
+
 B183: 95             SUB   A,L
 B184: F6 3E          OR    A,#$3E
 B186: FB             EI    
