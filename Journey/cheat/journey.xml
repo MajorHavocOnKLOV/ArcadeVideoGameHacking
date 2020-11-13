@@ -1,0 +1,54 @@
+<mamecheat version="1">
+
+  <cheat desc="Infinite Lives">
+    <script state="run">
+      <action>maincpu.pb@C213=06</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility">
+    <script state="on">
+      <action>temp0 =maincpu.mb@1BEB</action>
+      <action>temp1 =maincpu.mb@305B</action>
+      <action>temp2 =maincpu.mb@3D28</action>
+      <action>temp3 =maincpu.mb@40A1</action>
+      <action>temp4 =maincpu.mb@4723</action>
+      <action>temp5 =maincpu.mb@515A</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mb@1BEB=C9</action>
+      <action>maincpu.mb@305B=C3</action> <!-- 1st = Neal Schon Stage , 2nd = Steve Smith Stage -->
+      <action>maincpu.mb@3D28=18</action> <!-- Ross Valory Stage -->
+      <action>maincpu.mb@40A1=18</action> <!-- Jonathan Cain Stage (Going) -->
+      <action>maincpu.mb@4723=C9</action> <!-- Jonathan Cain Stage (Return) -->
+      <action>maincpu.mb@515A=C9</action> <!-- Steve Perry Stage -->
+    </script>
+    <script state="off">
+      <action>maincpu.mb@1BEB=temp0 </action>
+      <action>maincpu.mb@305B=temp1 </action>
+      <action>maincpu.mb@3D28=temp2 </action>
+      <action>maincpu.mb@40A1=temp3 </action>
+      <action>maincpu.mb@4723=temp4 </action>
+      <action>maincpu.mb@515A=temp5 </action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Skip RAM/ROM Check">
+    <script state="on">
+      <action>temp0 =maincpu.mb@9223</action>
+      <action>temp1 =maincpu.mb@92F7</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mb@9223=00</action>
+      <action>maincpu.mb@92F7=C9</action> <!-- 1st = RAM Check, 2nd = ROM Check -->
+    </script>
+    <script state="off">
+      <action>maincpu.mb@9223=temp0 </action>
+      <action>maincpu.mb@92F7=temp1 </action>
+    </script>
+  </cheat>
+
+</mamecheat>
+<!-- Cheat file downloaded from http://www.mamecheat.co.uk, see cheat.txt for list of contributors. -->
