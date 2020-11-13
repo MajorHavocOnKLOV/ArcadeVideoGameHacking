@@ -1,99 +1,377 @@
-;/* The optional data file contains 6 types of lines: */
-;/* o Remarks - these are lines beginning with a semi-colon (;) */
-;/*   they are completely ignored. */
-;/* o 1 ORG line - gives the origin of the code; this is the starting */
-;/*   address to be used for the disassembly. */
-;/* o COMMENT lines - used to add comments to the end of lines of the */
-;/*   disassembly. */
-;/* o COMMENTLINE lines - provide full-line comments to be included before */
-;/*   a given address in the disassembly. */
-;/* o DATA lines - mark sections as data.  These sections will not be */
-;/*   disassembled, but dumped as hex data instead. */
-;/* o ASCII lines - mark sections as text.  These sections will not be */
-;/*   disassembled, but printed as text instead. */
-;
-;/* current limitations: */
-;/* o number of LABEL, DATA/ASCII, COMMENT and COMMENTLINE lines determined */
-;/*   at compile-time - see MAXLABEL, MAXDATA, MAXCOMMENT and MAXCOMMLINE */
-;/* o all DATA/ASCII lines in data file must be sorted in ascending */
-;/*   address order */
-;/* o ditto for COMMENT and COMMENTLINE lines */
-;/* o if a DATA/ASCII area is preceded by what Z80dasm thinks is code */
-;/*   that continues into the DATA/ASCII area, the data will not be marked */
-;/*   as such, and an error will be printed.  If this is the case, mark the */
-;/*   line before the data as data also. */
+; Bally Midway Tron data file for z80dasm
+; Tron 8/9 ROMs used by MAME (labelled as tron)
+; please send additions/changes to Franklin <at> FranklinBowen <dot> net
+; look for newest files at http://www.FranklinBowen.net
 
-commentline 0000 Tron 8/9 in MAME
+; date 2020-11-11
+
+; o Remarks - these are lines beginning with a semi-colon (;) they are completely ignored.
+; o 1 ORG line - gives the origin of the code; this is the startingaddress to be used for the disassembly.
+; o COMMENT lines - used to add comments to the end of lines of the disassembly.
+; o COMMENTLINE lines - provide full-line comments to be included before a given address in the disassembly.
+; o DATA lines - mark sections as data.  These sections will not be disassembled, but dumped as hex data instead.
+; o ASCII lines - mark sections as text.  These sections will not be disassembled, but printed as text instead.
+;
+; current limitations:
+; o number of LABEL, DATA/ASCII, COMMENT and COMMENTLINE lines determined at compile-time - see MAXLABEL, MAXDATA, MAXCOMMENT and MAXCOMMLINE
+; o all DATA/ASCII lines in data file must be sorted in ascending address order
+; o ditto for COMMENT and COMMENTLINE lines
+; o if a DATA/ASCII area is preceded by what Z80dasm thinks is code that continues into the DATA/ASCII area, the data will not be marked
+;   as such, and an error will be printed.  If this is the case, mark the line before the data as data also.
+
+label 234A BACKGROUND_FOR_1
+label 7200 BACKGROUND_FOR_TANK_GAME
+label 8900 BACKGROUND_FOR_2
+label 9100 BACKGROUND_FOR_3
+label 7a00 BACKGROUND_FOR_4
+
+; map(0xc000, 0xc7ff).mirror(0x1800)
+label C000 NVRAM
+label C800 NVRAM_M1
+label D000 NVRAM_M2
+label D800 NVRAM_M3
+; map(0xe000, 0xe1ff).mirror(0x1600)
+label E000 SPRITE_RAM
+label E200 SPRITE_RAM_M1
+label E400 SPRITE_RAM_M2
+label E600 SPRITE_RAM_M3
+
+; map(0xe800, 0xefff).mirror(0x1000)
+label e800 VIDEO_RAM
+
+label F000 SPRITE_RAM_M4
+label F200 SPRITE_RAM_M5
+label F400 SPRITE_RAM_M6
+label F600 SPRITE_RAM_M7
+
+label f800 VIDEO_RAM_M1
+
+
+org 0000
+commentline 0000 Dissasembly of the Tron 8/9 ROMs used by MAME (labelled as tron)
+
 ascii 006b-008c
+
 commentline 04b0 Default high score initials
-ascii 04b0-04cd
+
+ascii 04b0-04b2
+ascii 04b3-04b5
+ascii 04b6-04b8
+ascii 04b9-04bb
+ascii 04bc-04be
+ascii 04bf-04c1
+ascii 04c2-04c4
+ascii 04c5-04c7
+ascii 04c8-04ca
+ascii 04cb-04cd
 ascii 0513-051a
-data  0b57-0b57
-ascii 0b58-0b82
-data  0b86-0b86
-ascii 0b87-0bc2
-ascii 120c-123b
+ascii 0b58-0b6a
+ascii 0b6b-0b82
+ascii 0b87-0b9a
+ascii 0b9b-0bae
+ascii 0baf-0bc2
+ascii 0dfe-0e00
+ascii 101b-1021
+ascii 1022-1027
+ascii 1028-102c
+ascii 102d-1035
+ascii 1036-103b
+ascii 103c-103f
+ascii 10ed-10f4
+ascii 10f5-10fa
+ascii 120c-1216
+ascii 1217-1221
+ascii 1222-1230
+ascii 1231-123b
+ascii 134e-1350
+ascii 1433-1435
+ascii 15e0-15e2
+ascii 1605-1607
 ascii 1653-165b
-ascii 1d0e-1e10
-commentline C000 RAM
+ascii 16ab-16b7
+ascii 16d7-16d9
+ascii 16e7-16f5
+ascii 16f6-1704
+ascii 1705-1713
+ascii 1714-1722
+ascii 1723-1731
+ascii 17ba-17ca
+ascii 17cb-17d8
+ascii 17d9-17ec
+ascii 17ed-17ff
+ascii 1800-1812
+ascii 1813-182b
+ascii 182c-183d
+ascii 183e-184f
+ascii 1850-1868
+ascii 1869-1883
+ascii 1884-189b
+ascii 189c-18b4
+ascii 18b5-18c3
+ascii 18c4-18de
+ascii 18df-18f7
+ascii 18f8-1911
+ascii 1912-192b
+ascii 192c-1935
+ascii 1971-197a
+ascii 197b-198d
+ascii 198e-19a2
+ascii 19a3-19b7
+ascii 19b8-19cb
+ascii 19cc-19e3
+ascii 19e4-19f6
+ascii 19f7-1a08
+ascii 1a09-1a12
+ascii 1a13-1a27
+ascii 1a28-1a3c
+ascii 1a3d-1a51
+ascii 1a89-1a93
+ascii 1a94-1aa8
+ascii 1aa9-1abe
+ascii 1abf-1ad6
+ascii 1ad7-1ae9
+ascii 1aea-1b02
+ascii 1b03-1b19
+ascii 1b1a-1b2a
+ascii 1b2b-1b41
+ascii 1b42-1b5b
+ascii 1b5c-1b68
+ascii 1bc2-1bcf
+ascii 1bd0-1bdd
+ascii 1bde-1bf2
+ascii 1bf3-1c07
+ascii 1c08-1c1b
+ascii 1c1c-1c2e
+ascii 1c2f-1c3f
+ascii 1c40-1c47
+ascii 1c48-1c5b
+ascii 1c5c-1c6b
+ascii 1c6c-1c71
+ascii 1c72-1c84
+ascii 1c85-1c97
+ascii 1c98-1ca7
+ascii 1ca8-1cb8
+ascii 1d0e-1d16
+ascii 1d17-1d25
+ascii 1d26-1d3a
+ascii 1d3b-1d4f
+ascii 1d50-1d63
+ascii 1d64-1d7c
+ascii 1d7d-1d91
+ascii 1d92-1da2
+ascii 1da3-1dbc
+ascii 1dbd-1dca
+ascii 1dcb-1de2
+ascii 1de3-1deb
+ascii 1dec-1e05
+ascii 1e06-1e10
 
+; hack to get label at 234A to print
+data 2346-2349
+data 234A-2AC9
 
-;Williams Robotron data file for 6809dasm
-;yellow label ROMs w/orange stripe
-;please send additions/changes to seanriddle <at> airosurf <dot> com
-;look for newest files at http://www.seanriddle.com
+ascii 2c4d-2c66
+ascii 2c67-2c7d
+ascii 2cf8-2d04
+ascii 2d05-2d11
+ascii 3d35-3d40
+ascii 3d41-3d4c
+ascii 5167-5174
+ascii 5175-5181
+ascii 5182-518b
+ascii 518c-519b
+ascii 519c-51a9
+ascii 5e8c-5e9a
+ascii 5e9b-5ea8
+ascii 5ea9-5eb6
 
-;date 10/9/95
+data 7200-797F
+data 7a00-817F
+data 8900-907F
+; hack to get label at 9100 to print
+data 90fc-90ff
+data 9100-987F
 
-;label c000 COLOR_REGISTERS
-;label c804 WIDGET_PIA_DATAA
-;label c805 WIDGET_PIA_CTRLA
-;label c806 WIDGET_PIA_DATAB
-;label c807 WIDGET_PIA_CTRLB
-;label c80c ROM_PIA_DATAA
-;label c80d ROM_PIA_CTRLA
-;label c80e ROM_PIA_DATAB
-;label c80f ROM_PIA_CTRLB
-;label C900 ROM_ENABLE_SCR_CTRL
-;label CA00 START_BLITTER
-;label CA01 BLITTER_MASK
-;label CA02 BLITTER_SOURCE
-;label CA04 BLITTER_DEST
-;label CA06 BLITTER_W_H
-;label cbff WATCHDOG
-;
-;commentline 0 Robotron Yellow Label w/ Orange Stripe
-;commentline 9000 RAM
-;ascii 28da-28fd
-;ascii 41e5-420d
-;ascii 4cf1-4d0f
-;ascii 5cf9-5d47
-;ascii 6f65-6f95
-;ascii 7f50-7fa2
-;ascii 8870-88be
-;data 8e0f-8fff
-;data 9000-bfff
-;commentline C000 I/O space
-;data c000-cfff
-;ascii d4a8-d4fb
-;ascii de8a-dedd
-;data dede-df3f
-;ascii e194-e1e2
-;ascii ffcb-ffee
-;data ffef
-;data fff0-fff1
-;commentline fff2 CPU vectors
-;data fff2-fff3
-;comment fff2 SWI3 vector
-;data fff4-fff5
-;comment fff4 SWI2 vector
-;data fff6-fff7
-;comment fff6 FIRQ vector
-;data fff8-fff9
-;comment fff8 IRQ vector
-;data fffa-fffb
-;comment fffA SWI vector
-;data fffc-fffd
-;comment fffc NMI vector
-;data fffe-ffff
-;comment fffe RESET vector
+ascii 9a60-9a73
+ascii 9a74-9a86
+ascii 9a87-9a8f
+ascii 9a90-9a9e
+ascii 9a9f-9aac
+ascii 9aad-9abc
+ascii 9abd-9acb
+ascii 9acc-9ad4
+ascii 9ad5-9ae3
+ascii 9ae4-9afc
+ascii 9afd-9b11
+ascii 9b12-9b2a
+ascii 9c8e-9c9c
+ascii 9c9d-9caa
+ascii 9cab-9cb2
+ascii 9cb3-9cc0
+ascii 9cc1-9cd0
+ascii 9cd1-9ce1
+ascii 9ce2-9cf1
+ascii 9cf2-9d02
+ascii 9d03-9d12
+ascii 9d13-9d20
+ascii 9d21-9d29
+ascii 9d2a-9d40
+ascii 9d41-9d53
+ascii 9d54-9d5c
+ascii 9d5d-9d6e
+ascii 9d6f-9d7d
+ascii 9d7e-9d8e
+ascii 9d8f-9d9c
+ascii 9d9d-9daa
+ascii 9dab-9db8
+ascii 9db9-9dc6
+ascii 9dc7-9dd0
+ascii 9dd1-9ddd
+ascii 9dde-9dea
+ascii 9deb-9dfa
+ascii 9dfb-9e09
+ascii 9e0a-9e1b
+ascii 9f28-9f3f
+ascii 9f40-9f4e
+ascii 9f4f-9f5d
+ascii 9f5e-9f6a
+ascii 9f6b-9f78
+ascii 9f79-9f86
+ascii 9f87-9f93
+ascii 9f94-9f9a
+ascii 9f9b-9fa6
+ascii 9fa7-9fb3
+ascii 9fb4-9fb8
+ascii a152-a15d
+ascii a15e-a169
+ascii a16a-a176
+ascii a177-a183
+ascii a184-a191
+ascii a192-a1a0
+ascii a1a1-a1af
+ascii a1b0-a1ba
+ascii a1bb-a1c5
+ascii a1c6-a1d0
+ascii a1d1-a1db
+ascii a1dc-a1f3
+ascii a28b-a297
+ascii a298-a2a5
+ascii a2a6-a2b7
+ascii a2b8-a2ca
+ascii a2cb-a2dd
+ascii a2de-a2f0
+ascii a2f1-a303
+ascii a304-a316
+ascii a317-a32a
+ascii a32b-a33f
+ascii a340-a34f
+ascii a3e3-a3ef
+ascii a3f0-a3f9
+ascii a3fa-a403
+ascii a404-a40d
+ascii a40e-a417
+ascii a418-a421
+ascii a422-a42b
+ascii a462-a46f
+ascii a470-a489
+ascii a48a-a49e
+ascii a49f-a4af
+ascii a5f9-a605
+ascii a608-a614
+ascii a617-a625
+ascii a628-a630
+ascii a633-a63b
+ascii a63e-a646
+ascii a649-a652
+ascii a655-a65d
+ascii a660-a666
+ascii a669-a671
+ascii a674-a682
+ascii a683-a691
+ascii a694-a6a5
+ascii a6a8-a6b9
+ascii a6ba-a6ca
+ascii a6cd-a6d9
+ascii a6da-a6e6
+ascii a6e9-a6f6
+ascii a6f7-a704
+ascii a707-a70f
+ascii a712-a71b
+ascii a71e-a726
+ascii a729-a72f
+ascii a732-a73a
+ascii a8bd-a8ca
+ascii a8cb-a8d7
+ascii a8d8-a8e1
+ascii a8e2-a8e9
+ascii a8ea-a8f6
+ascii a8f7-a902
+ascii a903-a908
+ascii a909-a91a
+ascii a91b-a925
+ascii a926-a92a
+ascii a92b-a93e
+ascii a93f-a956
+ascii a957-a969
+ascii a96a-a97a
+ascii a97b-a982
+ascii a983-a993
+ascii aab2-aac1
+ascii aac2-aacd
+ascii aace-aadd
+ascii aade-aae5
+ascii ab27-ab30
+ascii ab31-ab34
+ascii ab35-ab38
+ascii ad4e-ad57
+ascii ad58-ad5b
+ascii ad5c-ad5f
+ascii ad60-ad63
+ascii ad64-ad67
+ascii ad68-ad6b
+ascii ad6c-ad6f
+ascii ae2e-ae3d
+ascii ae3e-ae4b
+ascii ae4c-ae57
+ascii ae68-ae6b
+ascii ae6c-ae6f
+ascii ae70-ae73
+ascii ae74-ae78
+ascii ae79-ae7b
+ascii b000-b003
+ascii b004-b007
+ascii b008-b013
+ascii b014-b01f
+ascii b020-b028
+ascii b029-b02c
+ascii b02d-b034
+ascii b035-b042
+ascii b043-b053
+ascii b054-b061
+ascii b062-b06c
+ascii b06d-b07a
+ascii b07b-b089
+ascii b08a-b094
+ascii b095-b0a8
+ascii b0a9-b0b0
+ascii b0b1-b0ba
+ascii b0bb-b0c4
+ascii b0c5-b0ce
+ascii b0cf-b0e2
+ascii b0e3-b0f2
+ascii b0f3-b104
+ascii b105-b113
+ascii b114-b11c
+ascii b11d-b125
+ascii b13e-b141
+ascii b142-b147
+ascii b148-b14d
+ascii b14e-b155
+ascii b156-b15c
+ascii b15d-b160
+ascii b161-b167
+ascii b168-b16d
+ascii b16e-b176
+ascii b177-b179
+ascii b17a-b17d
+ascii b17e-b182
