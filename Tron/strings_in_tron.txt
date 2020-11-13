@@ -1,4 +1,4 @@
-Decimal     Hex    String
+Decimal      Hex   String
     107      006B  COPYRIGHT 1982 BALLY MIDWAY MFG CO
    1200      04B0  JP
    1203      04B3  BA
