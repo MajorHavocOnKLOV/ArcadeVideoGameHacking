@@ -19,11 +19,11 @@
 ; o if a DATA/ASCII area is preceded by what Z80dasm thinks is code that continues into the DATA/ASCII area, the data will not be marked
 ;   as such, and an error will be printed.  If this is the case, mark the line before the data as data also.
 
-label 234A BACKGROUND_FOR_1
-label 7200 BACKGROUND_FOR_TANK_GAME
-label 8900 BACKGROUND_FOR_2
-label 9100 BACKGROUND_FOR_3
-label 7a00 BACKGROUND_FOR_4
+label 234A BACKGROUND_PICK_A_GAME
+label 7200 BACKGROUND_TANK_GAME
+label 8900 BACKGROUND_LIGHT_CYCLE
+label 9100 BACKGROUND_TRAINING_FOR_LIGHT_CYCLE
+label 7a00 BACKGROUND_CIRCLE_GAME
 
 ; map(0xc000, 0xc7ff).mirror(0x1800)
 label C000 NVRAM
