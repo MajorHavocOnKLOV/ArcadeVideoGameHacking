@@ -33,6 +33,7 @@ Journey
 - Look at memory map here: https://github.com/mamedev/mame/blob/master/src/mame/drivers/mcr.cpp
 - It turns out the Z80 is not memory mapped but IO mapped!  It has separate instructions (in, out) for reading from and writing to the IO ports.
 - The Z80 starts running at address 0000.  Disassemble Z80: https://clrhome.org/table/
+- MCR games set the Z80 in Interrupt Mode 2.  This combines the I register (upper) with 7? bits on the address bus (lower) to create interrupt vector.
 - Poke around in MAME to find where the control panel input is read.  MAME has seperate address spaces for the program (maincpu program space memory) and IO (maincpu io space memory).
 - Look at the player controls in MAME (press tab and select "Input (this machine)" which are set for:
    P1: Arrow keys and Ctrl
@@ -55,8 +56,8 @@ find 0,65535,"JOYSTICK" (note: I typed it lower case the first time around.  For
 wpset 4036,1,r
 44AE Write the joystick up message
 
-0346-0370 Print message to the screen
 031D-0345 output ($c0a9) messages from c0aa
+0346-0370 Print message to the screen
 
 5713-57D8? Handle input for SP (while going up?).  Once it processes a direction, skips the rest of them.
   573D-5757 Up
@@ -71,8 +72,6 @@ C0A7 = holds next spot in message array (starts at C0AA)
 C0A9 = number of messages (max is 0C, or 12)
 C0AA-C0F2 is an array of 6 bytes, 12 times.  
 
-- MCR games set the Z80 in Interrupt Mode 2.  This combines the I register (upper) with 7? bits on the address bus (lower) to create interrupt vector.
-
 C214 - Level/Round of sets of minigames.  0-4?  5 crashed MAME
 C2C1 - row of JC.  0 is top, 3 is bottom.
 - these two variables are used to ensure that the "PUSH JOYSTICK UP TO JUMP" message only displays in the first level/round and only in the top half of the screen!
@@ -86,27 +85,3 @@ C2C1 - row of JC.  0 is top, 3 is bottom.
 - Processed in the following order: UDRL ($01,$04,$02,$08)
 
 - it has no checks about invalid inputs like DU at the same time.
-
-9226-931E Check RAM & ROM?  Reads BALLY/MIDWAY COPYRIGHT near the beginning of ROM space
-
-931F - ROM check table starts here.  Size:word, Start location:word, checksum:byte, ?:byte
-
-ROM checksum
-9304 Bad ROM starts here
-
-00D8-0145 Interrupt service
-
-C1BE - some data for P1?
-C1C1 - some data for P2?
-
-3DFF - frame updates?
-
-0609 - loop for RV?
-060A-068C loop for ?
-
-Checks for P1 or P2:
-0110
-08F5
-093A
-098C
-140D

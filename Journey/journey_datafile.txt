@@ -19,49 +19,63 @@
 ; o if a DATA/ASCII area is preceded by what Z80dasm thinks is code that continues into the DATA/ASCII area, the data will not be marked
 ;   as such, and an error will be printed.  If this is the case, mark the line before the data as data also.
 
+label 00d8 INTERRUPT_SERVICE_TO_0145
 
-;label 234A BACKGROUND_FOR_1
-;label 7200 BACKGROUND_FOR_TANK_GAME
-;label 8900 BACKGROUND_FOR_2
-;label 9100 BACKGROUND_FOR_3
-;label 7a00 BACKGROUND_FOR_4
-;
-;; map(0xc000, 0xc7ff).mirror(0x1800)
-;label C000 NVRAM
-;label C800 NVRAM_M1
-;label D000 NVRAM_M2
-;label D800 NVRAM_M3
-;; map(0xe000, 0xe1ff).mirror(0x1600)
-;label E000 SPRITE_RAM
-;label E200 SPRITE_RAM_M1
-;label E400 SPRITE_RAM_M2
-;label E600 SPRITE_RAM_M3
-;
-;; map(0xe800, 0xefff).mirror(0x1000)
-;label e800 VIDEO_RAM
-;
-;label F000 SPRITE_RAM_M4
-;label F200 SPRITE_RAM_M5
-;label F400 SPRITE_RAM_M6
-;label F600 SPRITE_RAM_M7
-;
-;label f800 VIDEO_RAM_M1
+label 6b7b CLEAR_SCREEN
+
+label 931F ROM_CHECKSUM_TABLE
+
+label c1be PLAYER_1_DATA?
+label c1c1 PLAYER_2_DATA?
+
+; map(0xc000, 0xc7ff).mirror(0x1800)
+label C000 NVRAM
+label C800 NVRAM_M1
+label D000 NVRAM_M2
+label D800 NVRAM_M3
+; map(0xe000, 0xe1ff).mirror(0x1600)
+label E000 SPRITE_RAM
+label E200 SPRITE_RAM_M1
+label E400 SPRITE_RAM_M2
+label E600 SPRITE_RAM_M3
+
+; map(0xe800, 0xefff).mirror(0x1000)
+label e800 VIDEO_RAM
+
+label F000 SPRITE_RAM_M4
+label F200 SPRITE_RAM_M5
+label F400 SPRITE_RAM_M6
+label F600 SPRITE_RAM_M7
+
+label f800 VIDEO_RAM_M1
 
 
 org 0000
-;commentline 0000 Dissasembly of the Tron 8/9 ROMs used by MAME (labelled as tron)
+commentline 0000 Dissasembly of the Journey ROMs used by MAME
 
-;ascii 006b-008c
 
-;commentline 04b0 Default high score initials
+
+
 
 ascii 006b-0089
+
+commentline 0110 Checks for Player 1 or Player 2
+
 ascii 047a-0480
 ascii 0481-0494
 ascii 0495-04a3
 ascii 04a4-04af
+
+commentline 0609 loop for RV?
+commentline 060A loop for ? through 068C
+
 ascii 08d2-08e2
 ascii 08e3-08f3
+
+commentline 08F5 Checks for Player 1 or Player 2
+commentline 093A Checks for Player 1 or Player 2
+commentline 098C Checks for Player 1 or Player 2
+
 ascii 0b27-0b3a
 ascii 0b3b-0b58
 ascii 0b59-0b74
@@ -103,6 +117,7 @@ ascii 0f8d-0f98
 ascii 0f99-0fa5
 ascii 0fa6-0fb6
 ascii 0fb7-0fc4
+
 ascii 107e-1083
 ascii 1084-1089
 ascii 108a-108f
@@ -122,6 +137,9 @@ ascii 10ee-10fc
 ascii 10fd-1110
 ascii 119f-11a8
 ascii 11c1-11cc
+
+commentline 140D Checks for Player 1 or Player 2
+
 ascii 186d-1872
 ascii 1873-1878
 ascii 1879-187e
@@ -137,8 +155,10 @@ ascii 1a7e-1a88
 ascii 1a89-1a94
 ascii 1a95-1aa0
 ascii 1aab-1ac1
+
 ascii 23bc-23c7
 ascii 26ef-26ff
+
 ascii 31cf-31e3
 ascii 31e4-31f8
 ascii 31f9-320a
@@ -147,16 +167,24 @@ ascii 338a-3395
 ascii 3396-33b0
 ascii 33b1-33cb
 ascii 33cc-33e6
+
+commentline 3dff frame updates?
+
 ascii 4028-4035
 ascii 4036-404e
 ascii 404f-4067
 ascii 4aa0-4aab
 ascii 4aac-4ac0
 ascii 4ac1-4ad5
+
 ascii 5b1a-5b21
+
 ascii 6363-6371
 ascii 6b14-6b1e
 ascii 6b1f-6b29
+
+commentline 6b7b clear screen (00 and 08)
+
 ascii 8b15-8b24
 ascii 8b25-8b32
 ascii 8b33-8b40
@@ -186,6 +214,7 @@ ascii 8f7e-8f8c
 ascii 8f8d-8f9c
 ascii 8f9d-8fb8
 ascii 8fb9-8fd4
+
 ascii 90e6-90ec
 ascii 90ef-90f5
 ascii 90f8-9106
@@ -205,6 +234,13 @@ ascii 91bf-91cb
 ascii 91cc-91d8
 ascii 91db-91e8
 ascii 91e9-91f6
+
+commentline 9226 Check RAM & ROM?  Reads BALLY/MIDWAY COPYRIGHT at front of ROM space (931E)
+commentline 9304 Bad ROM starts here
+
+commentline 931F ROM checksum table.  Size:word, Start location:word, checksum:byte, ?:byte
+data 931f-9343
+
 ascii 9350-9359
 ascii 935a-935d
 ascii 935e-9361
@@ -306,3 +342,5 @@ ascii 9e25-9e33
 ascii 9e34-9e48
 ascii 9e49-9e4b
 ascii 9e4c-9e4e
+
+commentline f000 Sprite RAM 4x128?  X J K Y J=xxXYxxCC K=<picture number> CC=color palette?
