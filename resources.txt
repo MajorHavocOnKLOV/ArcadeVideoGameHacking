@@ -1,11 +1,24 @@
 MAME:
+http://www.mamecheat.co.uk/forums/viewforum.php?f=19
+https://vadosnaprimer.github.io/debughelp.html#memdump
+https://docs.mamedev.org/debugger/registerpoints.html
+https://wiki.mamedev.org/index.php/Address_Maps
 
 z80:
 https://clrhome.org/table/
 http://www.z80.info/z80sflag.htm
 https://www.seanriddle.com/midway.html
 
+MCR:
+https://github.com/mamedev/mame/blob/master/src/mame/drivers/mcr.cpp
+
 Other:
-https://docs.microsoft.com/en-us/sysinternals/downloads/strings
 https://github.com/MajorHavocOnKLOV/
+
+Strings executable for Windows:
+https://docs.microsoft.com/en-us/sysinternals/downloads/strings
+
+Copy and concatenate binary files in Windows:
+copy /b source1+source2+sourceX destination
+https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/copy
 
