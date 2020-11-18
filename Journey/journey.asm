@@ -1,5 +1,27 @@
+INTERRUPT_SERVICE_TO_0145 EQU $00D8
+CLEAR_SCREEN EQU $6B7B
+ROM_CHECKSUM_TABLE EQU $931F
+PLAYER_1_DATA? EQU $C1BE
+PLAYER_2_DATA? EQU $C1C1
+NVRAM EQU $C000
+NVRAM_M1 EQU $C800
+NVRAM_M2 EQU $D000
+NVRAM_M3 EQU $D800
+SPRITE_RAM EQU $E000
+SPRITE_RAM_M1 EQU $E200
+SPRITE_RAM_M2 EQU $E400
+SPRITE_RAM_M3 EQU $E600
+VIDEO_RAM EQU $E800
+SPRITE_RAM_M4 EQU $F000
+SPRITE_RAM_M5 EQU $F200
+SPRITE_RAM_M6 EQU $F400
+SPRITE_RAM_M7 EQU $F600
+VIDEO_RAM_M1 EQU $F800
+
 ORG $0000
-0000: 31 00 C8       LD    SP,$C800
+
+*** Dissasembly of the Journey ROMs used by MAME
+0000: 31 00 C8       LD    SP,NVRAM_M1
 0003: F3             DI    
 0004: 21 32 00       LD    HL,$0032
 0007: 2B             DEC   HL
@@ -103,7 +125,8 @@ ORG $0000
 00D0: 46             LD    B,(HL)
 00D1: 01 5A 01       LD    BC,$015A
 00D4: AE             XOR   A,(HL)
-00D5: 01 D8 00       LD    BC,$00D8
+00D5: 01 D8 00       LD    BC,INTERRUPT_SERVICE_TO_0145
+INTERRUPT_SERVICE_TO_0145:
 00D8: 08             EX    AF,AF'
 00D9: D9             EXX   
 00DA: DD E5          PUSH  IX
@@ -133,12 +156,14 @@ ORG $0000
 010A: B7             OR    A,A
 010B: 20 28          JR    NZ,$0135
 
-010D: 21 BE C1       LD    HL,$C1BE
+010D: 21 BE C1       LD    HL,PLAYER_1_DATA?
+
+*** Checks for Player 1 or Player 2
 0110: 3A AD C1       LD    A,($C1AD)
 0113: B7             OR    A,A
 0114: 28 03          JR    Z,$0119
 
-0116: 21 C1 C1       LD    HL,$C1C1
+0116: 21 C1 C1       LD    HL,PLAYER_2_DATA?
 0119: 7E             LD    A,(HL)
 011A: C6 01          ADD   A,#$01
 011C: 27             DAA   
@@ -323,7 +348,7 @@ ORG $0000
 023C: 34             INC   (HL)
 023D: 3A 12 C0       LD    A,($C012)
 0240: 3C             INC   A
-0241: 21 00 C0       LD    HL,$C000
+0241: 21 00 C0       LD    HL,NVRAM
 0244: BE             CP    A,(HL)
 0245: 38 09          JR    C,$0250
 
@@ -676,7 +701,7 @@ ORG $0000
 
 04A4: INSERT COIN<NUL>
 
-04B0: 21 00 C0       LD    HL,$C000
+04B0: 21 00 C0       LD    HL,NVRAM
 04B3: 06 07          LD    B,#$07
 04B5: 7E             LD    A,(HL)
 04B6: B7             OR    A,A
@@ -701,7 +726,7 @@ ORG $0000
 04CC: FE 21          CP    A,#$21
 04CE: 30 5B          JR    NC,$052B
 
-04D0: 3A 00 C0       LD    A,($C000)
+04D0: 3A 00 C0       LD    A,(NVRAM)
 04D3: BE             CP    A,(HL)
 04D4: 38 55          JR    C,$052B
 
@@ -774,7 +799,7 @@ ORG $0000
 052B: 21 00 00       LD    HL,$0000
 052E: 22 8A C0       LD    ($C08A),HL
 0531: 22 8C C0       LD    ($C08C),HL
-0534: 11 00 C0       LD    DE,$C000
+0534: 11 00 C0       LD    DE,NVRAM
 0537: 21 4C 05       LD    HL,$054C
 053A: 01 5E 00       LD    BC,$005E
 053D: ED B0          LDIR  
@@ -936,6 +961,9 @@ ORG $0000
 0604: 3A 68 C1       LD    A,($C168)
 0607: C3 F7 6C       JP    $6CF7
 
+Error: missed a comment line at 609, line=60B
+
+*** loop for ? through 068C
 060A: CD 24 07       CALL  $0724
 060D: 18 E9          JR    $05F8
 
@@ -970,7 +998,7 @@ ORG $0000
 0643: CD C4 15       CALL  $15C4
 0646: 18 B0          JR    $05F8
 
-0648: 31 00 C8       LD    SP,$C800
+0648: 31 00 C8       LD    SP,NVRAM_M1
 064B: CD E8 11       CALL  $11E8
 064E: 18 A8          JR    $05F8
 
@@ -1258,7 +1286,7 @@ ORG $0000
 0844: CD 8B 6A       CALL  $6A8B
 0847: 21 67 6F       LD    HL,$6F67
 084A: 22 66 C1       LD    ($C166),HL
-084D: 21 00 F8       LD    HL,$F800
+084D: 21 00 F8       LD    HL,VIDEO_RAM_M1
 0850: 22 C4 C1       LD    ($C1C4),HL
 0853: DD 21 A1 08    LD    IX,$08A1
 0857: CD 69 6A       CALL  $6A69
@@ -1341,6 +1369,8 @@ ORG $0000
 08E3: THEN EVERY   000<NUL>
 
 08F4: C5             PUSH  BC
+
+*** Checks for Player 1 or Player 2
 08F5: 3A AD C1       LD    A,($C1AD)
 08F8: B7             OR    A,A
 08F9: 28 0F          JR    Z,$090A
@@ -1391,6 +1421,8 @@ ORG $0000
 0932: 3E 02          LD    A,#$02
 0934: 32 80 C1       LD    ($C180),A
 0937: 21 B0 C1       LD    HL,$C1B0
+
+*** Checks for Player 1 or Player 2
 093A: 3A AD C1       LD    A,($C1AD)
 093D: B7             OR    A,A
 093E: 28 03          JR    Z,$0943
@@ -1430,6 +1462,8 @@ ORG $0000
 0987: 2B             DEC   HL
 0988: 73             LD    (HL),E
 0989: 21 BC C1       LD    HL,$C1BC
+
+*** Checks for Player 1 or Player 2
 098C: 3A AD C1       LD    A,($C1AD)
 098F: B7             OR    A,A
 0990: 28 03          JR    Z,$0995
@@ -1678,7 +1712,7 @@ ORG $0000
 
 0B8A: 3E FF          LD    A,#$FF
 0B8C: D3 04          OUT   ($04),A
-0B8E: CD 7B 6B       CALL  $6B7B
+0B8E: CD 7B 6B       CALL  CLEAR_SCREEN
 0B91: 21 01 8A       LD    HL,$8A01
 0B94: 22 66 C1       LD    ($C166),HL
 0B97: 21 08 F9       LD    HL,$F908
@@ -1867,7 +1901,7 @@ ORG $0000
 0EAE: 32 5F C1       LD    ($C15F),A
 0EB1: 21 E1 0E       LD    HL,$0EE1
 0EB4: 22 43 C1       LD    ($C143),HL
-0EB7: CD 7B 6B       CALL  $6B7B
+0EB7: CD 7B 6B       CALL  CLEAR_SCREEN
 0EBA: CD 97 8E       CALL  $8E97
 0EBD: DD 21 15 0F    LD    IX,$0F15
 0EC1: CD 69 6A       CALL  $6A69
@@ -2177,7 +2211,7 @@ ORG $0000
 1163: CB B6          RES   6,(HL)
 1165: 7E             LD    A,(HL)
 1166: D3 01          OUT   ($01),A
-1168: CD 7B 6B       CALL  $6B7B
+1168: CD 7B 6B       CALL  CLEAR_SCREEN
 116B: CD D5 69       CALL  $69D5
 116E: CD 8B 6A       CALL  $6A8B
 1171: 11 9D C0       LD    DE,$C09D
@@ -2239,7 +2273,7 @@ ORG $0000
 1200: CD 87 68       CALL  $6887
 1203: AF             XOR   A,A
 1204: 32 80 C1       LD    ($C180),A
-1207: 32 00 F0       LD    ($F000),A
+1207: 32 00 F0       LD    (SPRITE_RAM_M4),A
 120A: D3 04          OUT   ($04),A
 120C: 3A 06 C0       LD    A,($C006)
 120F: 32 15 C2       LD    ($C215),A
@@ -2357,17 +2391,17 @@ ORG $0000
 12E1: CD D5 69       CALL  $69D5
 12E4: CD 8D 6B       CALL  $6B8D
 12E7: CD 8B 6A       CALL  $6A8B
-12EA: CD 7B 6B       CALL  $6B7B
+12EA: CD 7B 6B       CALL  CLEAR_SCREEN
 12ED: AF             XOR   A,A
 12EE: 32 EC C0       LD    ($C0EC),A
-12F1: 32 00 F0       LD    ($F000),A
+12F1: 32 00 F0       LD    (SPRITE_RAM_M4),A
 12F4: 3E 01          LD    A,#$01
 12F6: 32 80 C1       LD    ($C180),A
 12F9: 3E 01          LD    A,#$01
 12FB: 32 68 C1       LD    ($C168),A
 12FE: 21 67 6F       LD    HL,$6F67
 1301: 22 66 C1       LD    ($C166),HL
-1304: 21 00 F8       LD    HL,$F800
+1304: 21 00 F8       LD    HL,VIDEO_RAM_M1
 1307: 22 C4 C1       LD    ($C1C4),HL
 130A: CD 07 6E       CALL  $6E07
 130D: CD 07 6E       CALL  $6E07
@@ -2519,6 +2553,8 @@ ORG $0000
 140A: B6             OR    A,(HL)
 140B: 28 23          JR    Z,$1430
 
+
+*** Checks for Player 1 or Player 2
 140D: 3A AD C1       LD    A,($C1AD)
 1410: B7             OR    A,A
 1411: 20 07          JR    NZ,$141A
@@ -2899,7 +2935,7 @@ ORG $0000
 16A1: 21 1F C2       LD    HL,$C21F
 16A4: 01 2E 04       LD    BC,$042E
 16A7: CD 87 68       CALL  $6887
-16AA: CD 7B 6B       CALL  $6B7B
+16AA: CD 7B 6B       CALL  CLEAR_SCREEN
 16AD: CD 8B 6A       CALL  $6A8B
 16B0: CD D5 69       CALL  $69D5
 16B3: 21 89 6E       LD    HL,$6E89
@@ -2945,7 +2981,7 @@ ORG $0000
 16F7: AF             XOR   A,A
 16F8: 32 A0 FF       LD    ($FFA0),A
 16FB: 32 C0 FF       LD    ($FFC0),A
-16FE: CD 7B 6B       CALL  $6B7B
+16FE: CD 7B 6B       CALL  CLEAR_SCREEN
 1701: 21 AC C1       LD    HL,$C1AC
 1704: 0E 0F          LD    C,#$0F
 1706: 7E             LD    A,(HL)
@@ -3014,7 +3050,7 @@ ORG $0000
 179D: 01 00 00       LD    BC,$0000
 17A0: 01 00 40       LD    BC,$4000
 17A3: 01 00 80       LD    BC,$8000
-17A6: 01 00 C0       LD    BC,$C000
+17A6: 01 00 C0       LD    BC,NVRAM
 17A9: 01 01 00       LD    BC,$0001
 17AC: 01 01 40       LD    BC,$4001
 17AF: 01 01 80       LD    BC,$8001
@@ -3246,7 +3282,7 @@ ORG $0000
 
 1943: 21 33 75       LD    HL,$7533
 1946: 22 66 C1       LD    ($C166),HL
-1949: 21 00 F8       LD    HL,$F800
+1949: 21 00 F8       LD    HL,VIDEO_RAM_M1
 194C: 22 C4 C1       LD    ($C1C4),HL
 194F: 11 02 00       LD    DE,$0002
 1952: CD CC 06       CALL  $06CC
@@ -4145,7 +4181,7 @@ ORG $0000
 
 1ED4: C6 C5          ADD   A,#$C5
 1ED6: C4 C3 C3       CALL  NZ,$C3C3
-1ED9: C2 C1 C1       JP    NZ,$C1C1
+1ED9: C2 C1 C1       JP    NZ,PLAYER_2_DATA?
 
 1EDC: C0             RET   NZ
 
@@ -8527,6 +8563,8 @@ ORG $0000
 3DFC: 03             INC   BC
 3DFD: 33             INC   SP
 3DFE: 13             INC   DE
+
+*** frame updates?
 3DFF: 3A C4 C2       LD    A,($C2C4)
 3E02: B7             OR    A,A
 3E03: 20 0A          JR    NZ,$3E0F
@@ -10765,7 +10803,7 @@ ORG $0000
 4DB6: 00             NOP   
 4DB7: 08             EX    AF,AF'
 4DB8: 08             EX    AF,AF'
-4DB9: 01 D8 00       LD    BC,$00D8
+4DB9: 01 D8 00       LD    BC,INTERRUPT_SERVICE_TO_0145
 4DBC: 00             NOP   
 4DBD: 08             EX    AF,AF'
 4DBE: 08             EX    AF,AF'
@@ -12630,7 +12668,7 @@ ORG $0000
 5A75: 32 B2 FF       LD    ($FFB2),A
 5A78: 21 1F 7D       LD    HL,$7D1F
 5A7B: 22 66 C1       LD    ($C166),HL
-5A7E: 21 00 F8       LD    HL,$F800
+5A7E: 21 00 F8       LD    HL,VIDEO_RAM_M1
 5A81: 22 C4 C1       LD    ($C1C4),HL
 5A84: CD 07 6E       CALL  $6E07
 5A87: CD 59 6C       CALL  $6C59
@@ -14221,7 +14259,7 @@ ORG $0000
 6640: 21 1F C2       LD    HL,$C21F
 6643: 01 2E 04       LD    BC,$042E
 6646: CD 87 68       CALL  $6887
-6649: CD 7B 6B       CALL  $6B7B
+6649: CD 7B 6B       CALL  CLEAR_SCREEN
 664C: CD 8B 6A       CALL  $6A8B
 664F: CD D5 69       CALL  $69D5
 6652: 21 89 6E       LD    HL,$6E89
@@ -14647,7 +14685,7 @@ ORG $0000
 
 68BA: 21 89 6E       LD    HL,$6E89
 68BD: CD 8D 6B       CALL  $6B8D
-68C0: CD 7B 6B       CALL  $6B7B
+68C0: CD 7B 6B       CALL  CLEAR_SCREEN
 68C3: CD 8B 6A       CALL  $6A8B
 68C6: 01 0C FE       LD    BC,$FE0C
 68C9: ED 43 9A C1    LD    ($C19A),BC
@@ -15029,7 +15067,7 @@ ORG $0000
 6B07: D3 00          OUT   ($00),A
 6B09: 32 98 C0       LD    ($C098),A
 6B0C: 78             LD    A,B
-6B0D: 32 00 F0       LD    ($F000),A
+6B0D: 32 00 F0       LD    (SPRITE_RAM_M4),A
 6B10: CD 07 6E       CALL  $6E07
 6B13: C9             RET   
 
@@ -15081,7 +15119,10 @@ ORG $0000
 6B76: FD 22 78 C1    LD    ($C178),IY
 6B7A: C9             RET   
 
-6B7B: 21 00 F8       LD    HL,$F800
+
+*** clear screen (00 and 08)
+CLEAR_SCREEN:
+6B7B: 21 00 F8       LD    HL,VIDEO_RAM_M1
 6B7E: 01 C0 03       LD    BC,$03C0
 6B81: 36 00          LD    (HL),#$00
 6B83: 23             INC   HL
@@ -22472,7 +22513,7 @@ ORG $0000
 8C3D: C1             POP   BC
 8C3E: C9             RET   
 
-8C3F: 21 00 F8       LD    HL,$F800
+8C3F: 21 00 F8       LD    HL,VIDEO_RAM_M1
 8C42: 3E 1E          LD    A,#$1E
 8C44: DD 21 91 8C    LD    IX,$8C91
 8C48: 06 10          LD    B,#$10
@@ -22609,7 +22650,7 @@ ORG $0000
 8D2C: DD 21 B4 92    LD    IX,$92B4
 8D30: CD 18 92       CALL  $9218
 8D33: F5             PUSH  AF
-8D34: CD 7B 6B       CALL  $6B7B
+8D34: CD 7B 6B       CALL  CLEAR_SCREEN
 8D37: F1             POP   AF
 8D38: B7             OR    A,A
 8D39: 28 0D          JR    Z,$8D48
@@ -22799,7 +22840,7 @@ ORG $0000
 8E83: E1             POP   HL
 8E84: C9             RET   
 
-8E85: 21 00 F8       LD    HL,$F800
+8E85: 21 00 F8       LD    HL,VIDEO_RAM_M1
 8E88: 01 C0 03       LD    BC,$03C0
 8E8B: 36 E6          LD    (HL),#$E6
 8E8D: 23             INC   HL
@@ -22955,7 +22996,7 @@ ORG $0000
 8FED: AF             XOR   A,A
 8FEE: 32 47 C1       LD    ($C147),A
 8FF1: 32 D5 C1       LD    ($C1D5),A
-8FF4: 32 00 F0       LD    ($F000),A
+8FF4: 32 00 F0       LD    (SPRITE_RAM_M4),A
 8FF7: 3E 02          LD    A,#$02
 8FF9: 32 80 C1       LD    ($C180),A
 8FFC: 3E 08          LD    A,#$08
@@ -22966,7 +23007,7 @@ ORG $0000
 9008: CD 8B 6A       CALL  $6A8B
 900B: 0E 02          LD    C,#$02
 900D: CD B9 6C       CALL  $6CB9
-9010: CD 7B 6B       CALL  $6B7B
+9010: CD 7B 6B       CALL  CLEAR_SCREEN
 9013: D3 E0          OUT   ($E0),A
 9015: CD 97 8E       CALL  $8E97
 9018: DD 2A 43 C1    LD    IX,($C143)
@@ -23180,6 +23221,8 @@ ORG $0000
 9224: F1             POP   AF
 9225: C9             RET   
 
+
+*** Check RAM & ROM?  Reads BALLY/MIDWAY COPYRIGHT at front of ROM space (931E)
 9226: DD 5E 04       LD    E,(IX+$04)
 9229: DD 56 05       LD    D,(IX+$05)
 922C: DD 4E 02       LD    C,(IX+$02)
@@ -23298,7 +23341,7 @@ ORG $0000
 92DC: C2 20 00       JP    NZ,$0020
 
 92DF: 00             NOP   
-92E0: DD 21 1F 93    LD    IX,$931F
+92E0: DD 21 1F 93    LD    IX,ROM_CHECKSUM_TABLE
 92E4: 16 00          LD    D,#$00
 92E6: DD 6E 02       LD    L,(IX+$02)
 92E9: DD 66 03       LD    H,(IX+$03)
@@ -23320,6 +23363,8 @@ ORG $0000
 92FF: DD BE 04       CP    A,(IX+$04)
 9302: 28 05          JR    Z,$9309
 
+
+*** Bad ROM starts here
 9304: 7A             LD    A,D
 9305: DD B6 05       OR    A,(IX+$05)
 9308: 57             LD    D,A
@@ -23337,41 +23382,13 @@ ORG $0000
 931C: F6 01          OR    A,#$01
 931E: C9             RET   
 
-931F: 00             NOP   
-9320: 20 00          JR    NZ,$9322
 
-9322: 00             NOP   
-9323: DC 01 00       CALL  C,$0001
-9326: 20 00          JR    NZ,$9328
+*** ROM checksum table.  Size:word, Start location:word, checksum:byte, ?:byte
+ROM_CHECKSUM_TABLE:
+931F: 00 20 00 00 DC 01 00 20 00 20 61 02 00 20 00 40 
+932F: 4B 04 00 20 00 60 37 08 00 20 00 80 0B 10 00 00 
+933F: F5 50 93 04 07 
 
-9328: 20 61          JR    NZ,$938B
-
-932A: 02             LD    (BC),A
-932B: 00             NOP   
-932C: 20 00          JR    NZ,$932E
-
-932E: 40             LD    B,B
-932F: 4B             LD    C,E
-9330: 04             INC   B
-9331: 00             NOP   
-9332: 20 00          JR    NZ,$9334
-
-9334: 60             LD    H,B
-9335: 37             SCF   
-9336: 08             EX    AF,AF'
-9337: 00             NOP   
-9338: 20 00          JR    NZ,$933A
-
-933A: 80             ADD   A,B
-933B: 0B             DEC   BC
-933C: 10 00          DJNZ  $933E
-
-933E: 00             NOP   
-933F: F5             PUSH  AF
-9340: 50             LD    D,B
-9341: 93             SUB   A,E
-9342: 04             INC   B
-9343: 07             RLCA  
 9344: 06 09          LD    B,#$09
 9346: 5A             LD    E,D
 9347: 93             SUB   A,E
@@ -23395,7 +23412,7 @@ ORG $0000
 
 936A: D6<NUL>
 
-936D: CD 7B 6B       CALL  $6B7B
+936D: CD 7B 6B       CALL  CLEAR_SCREEN
 9370: CD 8B 6A       CALL  $6A8B
 9373: 21 B3 93       LD    HL,$93B3
 9376: CD A1 8E       CALL  $8EA1
@@ -24093,7 +24110,7 @@ ORG $0000
 9937: 32 46 C1       LD    ($C146),A
 993A: 3C             INC   A
 993B: 32 48 C1       LD    ($C148),A
-993E: CD 7B 6B       CALL  $6B7B
+993E: CD 7B 6B       CALL  CLEAR_SCREEN
 9941: CD 8B 6A       CALL  $6A8B
 9944: CD 97 8E       CALL  $8E97
 9947: DD 2A 43 C1    LD    IX,($C143)
@@ -24110,7 +24127,7 @@ ORG $0000
 
 9964: 21 AE 99       LD    HL,$99AE
 9967: 22 43 C1       LD    ($C143),HL
-996A: CD 7B 6B       CALL  $6B7B
+996A: CD 7B 6B       CALL  CLEAR_SCREEN
 996D: CD 8B 6A       CALL  $6A8B
 9970: CD 97 8E       CALL  $8E97
 9973: 21 47 C1       LD    HL,$C147
@@ -24185,7 +24202,7 @@ ORG $0000
 9A20: 22 43 C1       LD    ($C143),HL
 9A23: AF             XOR   A,A
 9A24: 32 47 C1       LD    ($C147),A
-9A27: CD 7B 6B       CALL  $6B7B
+9A27: CD 7B 6B       CALL  CLEAR_SCREEN
 9A2A: CD 8B 6A       CALL  $6A8B
 9A2D: CD 97 8E       CALL  $8E97
 9A30: DD 2A 43 C1    LD    IX,($C143)
@@ -24251,7 +24268,7 @@ ORG $0000
 9AAB: D3 E0          OUT   ($E0),A
 9AAD: 18 F2          JR    $9AA1
 
-9AAF: CD 7B 6B       CALL  $6B7B
+9AAF: CD 7B 6B       CALL  CLEAR_SCREEN
 9AB2: CD 04 95       CALL  $9504
 9AB5: F5             PUSH  AF
 9AB6: 0E 02          LD    C,#$02
@@ -24279,7 +24296,7 @@ ORG $0000
 9AE5: D3 E0          OUT   ($E0),A
 9AE7: 18 F2          JR    $9ADB
 
-9AE9: CD 7B 6B       CALL  $6B7B
+9AE9: CD 7B 6B       CALL  CLEAR_SCREEN
 9AEC: 21 04 08       LD    HL,$0804
 9AEF: 01 36 9B       LD    BC,$9B36
 9AF2: CD 69 8D       CALL  $8D69
@@ -24300,7 +24317,7 @@ ORG $0000
 9B0E: B3             OR    A,E
 9B0F: 20 F0          JR    NZ,$9B01
 
-9B11: CD 7B 6B       CALL  $6B7B
+9B11: CD 7B 6B       CALL  CLEAR_SCREEN
 9B14: C3 71 9A       JP    $9A71
 
 9B17: PRESS BLAST BUTTON<NUL>
@@ -24311,7 +24328,7 @@ ORG $0000
 
 9B49: TO EXIT<NUL>
 
-9B51: CD 7B 6B       CALL  $6B7B
+9B51: CD 7B 6B       CALL  CLEAR_SCREEN
 9B54: CD 8B 6A       CALL  $6A8B
 9B57: 0E 02          LD    C,#$02
 9B59: CD B9 6C       CALL  $6CB9
@@ -24339,7 +24356,7 @@ ORG $0000
 
 9B8B: HIT TILT TO EXIT<NUL>
 
-9B9C: CD 7B 6B       CALL  $6B7B
+9B9C: CD 7B 6B       CALL  CLEAR_SCREEN
 9B9F: CD 8B 6A       CALL  $6A8B
 9BA2: 21 16 9D       LD    HL,$9D16
 9BA5: CD A1 8E       CALL  $8EA1
@@ -24713,7 +24730,7 @@ ORG $0000
 9E95: 22 49 C1       LD    ($C149),HL
 9E98: AF             XOR   A,A
 9E99: 32 47 C1       LD    ($C147),A
-9E9C: CD 7B 6B       CALL  $6B7B
+9E9C: CD 7B 6B       CALL  CLEAR_SCREEN
 9E9F: CD 8B 6A       CALL  $6A8B
 9EA2: 0E 02          LD    C,#$02
 9EA4: CD B9 6C       CALL  $6CB9
