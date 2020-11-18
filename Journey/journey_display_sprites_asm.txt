@@ -1,0 +1,50 @@
+0000                             ; Journey display sprites
+C000                          .ORG   0xc000   
+C000   CD 7B CB               CALL   $cb7b   
+C003                             ; initialize variables
+C003   21 00 F0               LD   hl,$f000   
+C006   06 0E                  LD   b,14   
+C008   0E 03                  LD   c,03   
+C00A   16 00                  LD   d,00   
+C00C   1E 0F                  LD   e,15   
+C00E                             ; fill sprite RAM
+C00E                SET_A_SPRITE:      
+C00E   70                     LD   (hl),b   
+C00F   23                     INC   hl   
+C010   71                     LD   (hl),c   
+C011   23                     INC   hl   
+C012   72                     LD   (hl),d   
+C013   23                     INC   hl   
+C014   73                     LD   (hl),e   
+C015   23                     INC   hl   
+C016                             ; set up next element in row
+C016   14                     INC   d   
+C017   47                     LD   b,a   
+C018   C6 14                  ADD   a,20   
+C01A   78                     LD   a,b   
+C01B   30 F1                  JR   nc,SET_A_SPRITE   
+C01D                             ; if at end of row, newline and return
+C01D   06 0E                  LD   b,14   
+C01F   7B                     LD   a,e   
+C020   C6 0A                  ADD   a,10   
+C022   7B                     LD   a,e   
+C023   FE F5                  CP   $f5   
+C025   20 E7                  JR   nz,SET_A_SPRITE   
+C027                             ; at end of screen
+C027   3E 00                  LD   a,0   
+C029                RESET_WATCHDOG:      
+C029   D3 E0                  OUT   ($e0),a   
+C02B   18 FC                  JR   RESET_WATCHDOG   
+
+
+SET_A_SPRITE:       C00E DEFINED AT LINE 13
+                    > USED AT LINE 27
+                    > USED AT LINE 34
+RESET_WATCHDOG:     C029 DEFINED AT LINE 37
+                    > USED AT LINE 39
+					
+					
+:10C00000CD7BCB2100F0060E0E0316001E0F702311
+:10C010007123722373231447C6147830F1060E7B04
+:0DC02000C60A7BFEF520E73E00D3E018FCC9
+:00000001FF					
