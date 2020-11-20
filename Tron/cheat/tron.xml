@@ -39,7 +39,7 @@
     </script>
   </cheat>
 
-  <cheat desc="Invincibility Circle Game">
+  <cheat desc="Invincibility I/O Tower Game">
     <script state="on">
       <action>temp0 =maincpu.mb@68C1</action>
     </script>
@@ -88,6 +88,30 @@
 
   <cheat desc=" "/>
 
+  <cheat desc="Skip Game Instructions"> <!-- By Franklin Bowen, Maryland, USA -->
+    <script state="on">
+      <action>temp0 =maincpu.mb@1FC0</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mb@1FC0=18</action>
+    </script>
+    <script state="off">
+      <action>maincpu.mb@1FC0=temp0 </action>
+    </script>
+  </cheat>
+
+  <cheat desc="Show Games"> <!-- By Franklin Bowen, Maryland, USA -->
+    <script state="on">
+      <action>temp0 =maincpu.mb@2162</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mb@2162=00</action>
+    </script>
+    <script state="off">
+      <action>maincpu.mb@2162=temp0 </action>
+    </script>
+  </cheat>
+
   <cheat desc="Skip RAM/ROM Check">
     <script state="on">
       <action>temp0 =maincpu.mb@ABC3</action>
@@ -100,18 +124,6 @@
     <script state="off">
       <action>maincpu.mb@ABC3=temp0 </action>
       <action>maincpu.mb@ACED=temp1 </action>
-    </script>
-  </cheat>
-
-  <cheat desc="Skip minigame instructions">
-    <script state="on">
-      <action>temp0 =maincpu.mb@1FC0</action>
-    </script>
-    <script state="run">
-      <action>maincpu.mb@1FC0=18</action>
-    </script>
-    <script state="off">
-      <action>maincpu.mb@1FC0=temp0 </action>
     </script>
   </cheat>
 
