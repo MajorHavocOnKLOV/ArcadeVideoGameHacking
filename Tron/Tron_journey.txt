@@ -180,7 +180,7 @@ MAME
 
 621D-6235 Set some values in C02x?
 
-6B39-6B78 Table of 16x 4 bytes used by joystick direction input @5FB3.  There are 8 valid inputs (D,U,R,L,DR,DL,UR,UL).  All others (no input or invalid input) are set to all zeroes effectively ging you no input.
+6B39-6B78 Table of 16x 4 bytes used by joystick direction input @5FB3.  There are 8 valid inputs (D,U,R,L,DR,DL,UR,UL).  All others (no input or invalid input) are set to all zeroes effectively givng you no input.
 
 6B79? Data for setting up tron sprites?
 
@@ -241,72 +241,9 @@ C422 - Display level language and decide whether to type instructions
   702A - 00
   0E7D - set to 0 before starting game selection
   
-C424 - Direction chosen for P1 or P2!  01=Left,02=Right,04=Up,08=Down
-Game type?: 08=Circle/Spiders, 01=Light Cycle, 04=MCP, 02=Tanks
-
-C456 Difficulty of this level.  From table at 20A7
-C45F - Player number, P1=0, P2=1
-
-C466=# of messages, max 06! (used by service routine and the message array at C4D6)
-
 C469, C46B, AND C48E only get updated when interrupts are disabled!
-
-C473 Left coin
-C474 Right coin
 
 C4B8- screen destination
 C4BA- source
 
 C4D6-CD60? - array of messages to display.  C466=# of messages.  First 2 bytes are next array entry.  Each entry is 2 bytes destination & 2 bytes source
-
-C4F6 - Difficulty level picked by operator?
-C4F7-C4FC High score digits
-
-C504-C522 High score initials table.  10x 3 bytes  (first initial, last initial, level).
-C52C-C54C High scores in BCD?  3 bytes each (so 6 digits)
-
-F000-F1FF Sprite RAM (X, picture, Y, unused?: Can I read it?  If so, I can use it!)
-  Pictures: (bit 7=flipX & 6=flipY)
-    00 = explosion small
-	01 = explosion large A
-	02 = explosion large B (only 1 bit looks different from A???)
-	03 = explosion large C
-	04 = tank shot right
-	05 = tank shot up
-	06 = dot large
-	07 = dot small
-	08 = enemy tank facing right
-	09 = enemy tank facing up
-	0A = tank right
-	0B = explosion small (looks identical to 00)
-	0C = BIT!
-	0D = side of MCP cone?
-	0E = spider egg
-	0F = spider full kick
-	10 = spider half kick
-	11 = spider squat
-	12 = spider lift
-	13-1C = cannon from tank, left (90 degrees) to up (0 degrees) (10 positions, 18 & 19 are 45 degrees and just ever so slightly different)
-	1D - tron torso and head, legs together
-	1E - tron legs, together
-	1F - tron torso and head, legs apart
-	20 - tron legs, apart
-	21-2A - tron arm throwing, up (0 degrees) to left (270 degrees) (10 positions)
-	2B - tron arm other lifted
-	2C - tron arm other down
-	2D - enemy light cycle up
-	2E - enemy light cycle right
-	2F - light cycle up
-	30 - light cycle right
-	31-36 - MCP brick left to right (6 positions)
-	37 - MCP cone block
-	38 - MCP cone left triangle?
-	39 - MCP cone right triangle?
-	3A - tron torso derez
-	3B - tron legs derez
-	3C - solar sailor (drops off bit)
-	3D - Recognizer right
-	3E - Recognizer up
-	3F - nothing/empty/null
-	
-F800-FF7F - background RAM.  Starts top right, moves down and then left when it wraps around.  One byte picks the character or sprite, the other picks the color palette, flip, reverse, etc.

@@ -20,10 +20,26 @@
 ;   as such, and an error will be printed.  If this is the case, mark the line before the data as data also.
 
 label 234A BACKGROUND_PICK_A_GAME
+label 6f00 ADD_A_TO_HL_WITH_CARRY
 label 7200 BACKGROUND_TANK_GAME
+label 7a00 BACKGROUND_IO_TOWER_GAME
 label 8900 BACKGROUND_LIGHT_CYCLE
 label 9100 BACKGROUND_TRAINING_FOR_LIGHT_CYCLE
-label 7a00 BACKGROUND_CIRCLE_GAME
+label c419 DATA_TO_C42E
+label c423 COMPLETED_GAMES_XXXXDURL
+label c424 DIRECTION_CHOSEN_8D4U2R1L
+label c425 ATTEMPTED_GAMES_XXXXDURL
+label c426 VECTOR_OF_GAMES_4x
+label c42f DATA_TO_C445
+label c45f PLAYER_NUMBER
+label c466 NUMBER_OF_SCREEN_MESSAGES
+label c473 LEFT_COIN
+label c474 RIGHT_COIN
+label c47b IN_ATTRACT_MODE
+label c4f6 DIFFICULTY_LEVEL
+label c4f7 HIGH_SCORES_DIGITS
+label c504 HIGH_SCORES_INITIALS_LEVEL
+label c52c HIGH_SCORES_DIGITS_BCD
 
 ; map(0xc000, 0xc7ff).mirror(0x1800)
 label C000 NVRAM
@@ -52,8 +68,8 @@ commentline 0000 Dissasembly of the Tron 8/9 ROMs used by MAME (labelled as tron
 
 ascii 006b-008c
 
+; default high scores
 commentline 04b0 Default high score initials
-
 ascii 04b0-04b2
 ascii 04b3-04b5
 ascii 04b6-04b8
@@ -64,6 +80,7 @@ ascii 04c2-04c4
 ascii 04c5-04c7
 ascii 04c8-04ca
 ascii 04cb-04cd
+
 ascii 0513-051a
 ascii 0b58-0b6a
 ascii 0b6b-0b82
@@ -165,6 +182,15 @@ ascii 1dcb-1de2
 ascii 1de3-1deb
 ascii 1dec-1e05
 ascii 1e06-1e10
+
+; hack to print 2308
+data 2304-2307
+commentline 2308 Used at 2115.  Set what minigame is at what quadrant for attact mode?  Then 4x vector table.  Then 
+data 2308-230F
+data 2310-2311
+data 2312-2313
+data 2314-2315
+data 2316-2317
 
 ; hack to get label at 234A to print
 data 2346-2349
@@ -375,3 +401,56 @@ ascii b16e-b176
 ascii b177-b179
 ascii b17a-b17d
 ascii b17e-b182
+
+; C4F7-C4FC High score digits
+
+; C504-C522 High score initials table.  10x 3 bytes  (first initial, last initial, level).
+; C52C-C54C High scores in BCD?  3 bytes each (so 6 digits)
+
+; F000-F1FF Sprite RAM (X, picture, Y, unused)
+;   Pictures: (bit 7=flipX & 6=flipY)
+;   00 = explosion small
+; 	01 = explosion large A
+; 	02 = explosion large B (only 1 bit looks different from A???)
+; 	03 = explosion large C
+; 	04 = tank shot right
+; 	05 = tank shot up
+; 	06 = dot large
+; 	07 = dot small
+; 	08 = enemy tank facing right
+; 	09 = enemy tank facing up
+; 	0A = tank right
+; 	0B = explosion small (looks identical to 00)
+; 	0C = BIT!
+; 	0D = side of MCP cone?
+; 	0E = spider egg
+; 	0F = spider full kick
+; 	10 = spider half kick
+; 	11 = spider squat
+; 	12 = spider lift
+; 	13-1C = cannon from tank, left (90 degrees) to up (0 degrees) (10 positions,
+;      18 & 19 are 45 degrees and just ever so slightly different)
+; 	1D - tron torso and head, legs together
+; 	1E - tron legs, together
+; 	1F - tron torso and head, legs apart
+; 	20 - tron legs, apart
+; 	21-2A - tron arm throwing, up (0 degrees) to left (270 degrees) (10 positions)
+; 	2B - tron arm other lifted
+; 	2C - tron arm other down
+; 	2D - enemy light cycle up
+; 	2E - enemy light cycle right
+; 	2F - light cycle up
+; 	30 - light cycle right
+; 	31-36 - MCP brick left to right (6 positions)
+; 	37 - MCP cone block
+; 	38 - MCP cone left triangle?
+; 	39 - MCP cone right triangle?
+; 	3A - tron torso derez
+; 	3B - tron legs derez
+; 	3C - solar sailor (drops off bit)
+; 	3D - Recognizer right
+; 	3E - Recognizer up
+; 	3F - nothing/empty/null
+
+; F800-FF7F - background RAM.  Starts top right, moves down and then left when it wraps around.
+; One byte picks the character or sprite, the other picks the color palette, flip, reverse, etc.
