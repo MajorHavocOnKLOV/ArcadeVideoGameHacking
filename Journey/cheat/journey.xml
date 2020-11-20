@@ -33,6 +33,18 @@
     </script>
   </cheat>
 
+  <cheat desc="Jonathan Cain can jump using the blast button!"> <!-- By Franklin Bowen, Maryland, USA -->
+    <script state="on">
+      <action>temp0 =maincpu.mq@449b, temp1 =maincpu.mb@44a3</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mq@449b=18C1603201F60FE6, maincpu.mb@44a3=19</action>
+    </script>
+    <script state="off">
+      <action>maincpu.mq@449b=temp0, maincpu.mb@44a3=temp1</action>
+    </script>
+  </cheat>
+
   <cheat desc=" "/>
 
   <cheat desc="Skip RAM/ROM Check">
@@ -47,18 +59,6 @@
     <script state="off">
       <action>maincpu.mb@9223=temp0 </action>
       <action>maincpu.mb@92F7=temp1 </action>
-    </script>
-  </cheat>
-
-  <cheat desc="Jonathan Cain can jump using the blast button!"> <!-- By Franklin Bowen, Maryland, USA -->
-    <script state="on">
-      <action>temp0 =maincpu.mq@449b, temp1 =maincpu.mb@44a3</action>
-    </script>
-    <script state="run">
-      <action>maincpu.mq@449b=18C1603201F60FE6, maincpu.mb@44a3=19</action>
-    </script>
-    <script state="off">
-      <action>maincpu.mq@449b=temp0, maincpu.mb@44a3=temp1</action>
     </script>
   </cheat>
 
