@@ -80,12 +80,6 @@ MAME
 
 03C0 - copy from here into background RAM?
 
-01CB-0220 Service interrupt routine
-
-04B0-04CD Default high score table.  10x 3 bytes (FI,LI,level)
-
-06CA-0785 Print out messages in queue.  Count @C466 and data starting @C4D8
-
 0786-0824 Teletype printing to the screen until null byte.
 - FF byte has some special processing at 07CC
 - 00 byte falls to 07E7
@@ -117,21 +111,6 @@ MAME
 
 204F-20A6 Finished level?
 
-20A7-2114 Table of Difficulty level settings.  Difficulty level stored in C456, values 01-09.  Taken from Setup Options screen when service switch is turned on.  The data is values between 0-20 for how hard the level plays.  Difficulty 1 moves from 0 to 20 one at a time.  Difficulty 9 moves 0,4,10,15,20
-  20A7-20B8 Pointers to below
-  20B9-2114 9x variable byte blocks
-    21 bytes
-	15 bytes
-	13 bytes
-	10 bytes
-	8 bytes
-	7 bytes
-	7 bytes
-	6 bytes
-	5 bytes
-
-2115- ?
-
 2070 - increment level (C422)
 
 2207-226D Modify mini-games screen to disable completed and show type of game if already attempted
@@ -145,32 +124,18 @@ MAME
 
 233E-? Table of ? 3 bytes each entry used in 223x range of code
 
-234B-2AC9 Background for picking minigame
-
 2ACA-2AEF Color palette for minigame selection
 
-2C00-? ?
-
 2D22-2FEC set up for cone?
-
-3BE0-? ?
-
-51AA-? ?
 
 -5E7D Put I/O Tower instruction strings in a message queue
 
 5E7E-5EB6 Data for I/O Tower instructions.  3x (destination, source). 2x 00 to end loop @5E6D 3x null-terminated string. 56 bytes (0x38)
 
-5F47-5F72 ?
-
 5F73-601F handles joystick input?
   IO:0000 - xxxBxxxx
   IO:0002 - xxxxDURL
   
-6020-? ?
-
-6065-60EC ?
-
 6065-6120 Set up sprites for tron at bottom middle of screen (MCP & I/O Tower)?
   60CE-60EC Tron fires his disk here (so don't set up disk in hand, maybe?)
   
@@ -185,24 +150,12 @@ MAME
 6F2D-6FB7? Set color RAMs in some way?
   6F35 - is another entry point
   
-7020-7034: Clear RAM (00) C400-
-  7020 - to C418
-  7026 = to C450
-
 7035-7048 Paint background screen from HL
 - 2x reset watchdog until C400 is one
 - ldir (copy from HL to F800 until BC (0780) is decremented to zero)
 
-705D-707D ?
-
 ABD1-AC6E: Check RAM?
 
-C029-C02C Joystick input array (from table at 6B39)
-
-C419-C42E: 22 bytes of table data.  Gets copied to C42F
-C42F-C444: copied from C419-C42E
-
-C422 - Display level language and decide whether to type instructions
 - test RAM
   ABFB - 00
   ABFB - FF

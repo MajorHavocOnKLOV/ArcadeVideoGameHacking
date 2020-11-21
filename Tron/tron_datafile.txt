@@ -31,13 +31,19 @@ label 00E8 IO_UNKNOWN_WRITTEN_AT_INITIALIZATION
 label 00F0 IO_CTC
 
 label 0401 STRING_IN_DE_TO_HL
+label 04b0 DEFAULT_HIGH_SCORE_TABLE
 label 0557 OUTPUT_TO_SOUND_LATCHES
+label 06ca PRINT_OUT_MESSAGES_IN_QUEUE
+label 01cb SERVICE_INTERRUPT_ROUTINE
+label 20a7 VECTOR_OF_DIFFICULTY_TO_HARDNESS_MAPS
 label 234A BACKGROUND_PICK_A_GAME
 label 6b39 JOYSTICK_INPUT_TABLE
 label 6f00 ADD_A_TO_HL_WITH_CARRY
 label 6f17 RESET_WATCHDOG_UNTIL_C400_IS_ONE
 label 6fb8 PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 label 6fc7 CLEAR_BACKGROUND
+label 7020 ZERO_RAM_C400-C418
+label 7026 ZERO_RAM_C400-C450
 label 7049 INITIALIZE_SPRITES
 label 7159 RETURN_C687-7_IF_NZ_IN_A
 label 7165 RETURN_C687-2_IF_NZ_IN_A
@@ -48,14 +54,17 @@ label 8900 BACKGROUND_LIGHT_CYCLE
 label 9100 BACKGROUND_TRAINING_FOR_LIGHT_CYCLE
 label b126 VECTOR_OF_USER_LEVEL_STRINGS
 label c14a NUMBER_OF_TANKS
-label c419 DATA_TO_C42E
+label C029 JOYSTICK_INPUT_ARRAY_TO_C02C
+label c419 CURRENT_PLAYER_DATA
+label c422 USER_LEVEL
 label c423 COMPLETED_GAMES_XXXXDURL
 label c424 DIRECTION_CHOSEN_8D4U2R1L
 label c425 ATTEMPTED_GAMES_XXXXDURL
 label c426 VECTOR_OF_GAMES_4x
-label c42f DATA_TO_C445
+label c42f OTHER_PLAYER_DATA
 label c45f PLAYER_NUMBER
 label c466 NUMBER_OF_SCREEN_MESSAGES
+label C4d8 SCREEN_MESSAGE_QUEUE
 label c473 LEFT_COIN
 label c474 RIGHT_COIN
 label c47b IN_ATTRACT_MODE
@@ -93,8 +102,8 @@ ascii 006b-008c
 
 commentline 0401 Copy null-terminated string in DE to HL
 
-; default high scores
-commentline 04b0 Default high score initials
+commentline 04b0 Default high score initials table. 10x 3 bytes (FI,LI,level)
+;data 04b0-04cd
 ascii 04b0-04b2
 ascii 04b3-04b5
 ascii 04b6-04b8
@@ -107,6 +116,10 @@ ascii 04c8-04ca
 ascii 04cb-04cd
 
 ascii 0513-051a
+
+; Print messages from message queue
+commentline 06ca Count @C466 and data starting @C4D8
+
 ascii 0b58-0b6a
 ascii 0b6b-0b82
 ascii 0b87-0b9a
@@ -207,6 +220,21 @@ ascii 1dcb-1de2
 ascii 1de3-1deb
 ascii 1dec-1e05
 ascii 1e06-1e10
+
+commentline 20a7 Map of Difficulty level settings (picked by operator in settings) to how hard
+commentline 20a7 each user level is set.  The hardness values range from 0 (easy) to 20 (hard)
+commentline 20a7 Difficulty 1 moves from 0 to 20 one at a time.  Difficulty 9 moves 0,4,10,15,20
+data 20a7-20b8
+commentline 20b9 Maps for difficulty 1 to 9 to how hard the levels progress. 21,15,13,10,8,7,7,6,5 bytes
+data 20b9-20cd
+data 20ce-20dc
+data 20dd-20e9
+data 20ea-20f3
+data 20f4-20fb
+data 20fc-2102
+data 2103-2109
+data 210a-210f
+data 2110-2114
 
 ; hack to print 2308
 data 2304-2307
