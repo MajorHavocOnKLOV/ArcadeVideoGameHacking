@@ -19,6 +19,17 @@
 ; o if a DATA/ASCII area is preceded by what Z80dasm thinks is code that continues into the DATA/ASCII area, the data will not be marked
 ;   as such, and an error will be printed.  If this is the case, mark the line before the data as data also.
 
+label 0000 IO_0
+label 0001 IO_1
+label 0002 IO_2
+label 0003 IO_3
+label 0004 IO_4
+label 0007 IO_AUDIO_STATUS
+label 001C IO_AUDIO_LATCHES
+label 00E0 IO_WATCHDOG_RESET
+label 00E8 IO_UNKNOWN_WRITTEN_AT_INITIALIZATION
+label 00F0 IO_CTC
+
 label 234A BACKGROUND_PICK_A_GAME
 label 6b39 JOYSTICK_INPUT_TABLE
 label 6f00 ADD_A_TO_HL_WITH_CARRY
