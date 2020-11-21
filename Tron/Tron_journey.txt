@@ -82,8 +82,6 @@ MAME
 
 01CB-0220 Service interrupt routine
 
-0401-0483 Put null-terminated message in DE to HL
-
 04B0-04CD Default high score table.  10x 3 bytes (FI,LI,level)
 
 06CA-0785 Print out messages in queue.  Count @C466 and data starting @C4D8
@@ -182,7 +180,6 @@ MAME
 
 6B79? Data for setting up tron sprites?
 
-6F17-6F24 Reset watchdog until C400 is one
   6F20 is hit for every tick of the teletype (which strikes twice per character)
 
 6F2D-6FB7? Set color RAMs in some way?
@@ -197,10 +194,6 @@ MAME
 - ldir (copy from HL to F800 until BC (0780) is decremented to zero)
 
 705D-707D ?
-
-7159-7164 Return C687 in A.  If non-zero, subtract 7.  Do not affect other registers.
-
-7980-799F Color palette for tanks
 
 ABD1-AC6E: Check RAM?
 

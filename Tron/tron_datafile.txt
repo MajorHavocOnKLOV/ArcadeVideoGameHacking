@@ -30,12 +30,19 @@ label 00E0 IO_WATCHDOG_RESET
 label 00E8 IO_UNKNOWN_WRITTEN_AT_INITIALIZATION
 label 00F0 IO_CTC
 
+label 0401 STRING_IN_DE_TO_HL
+label 0557 OUTPUT_TO_SOUND_LATCHES
 label 234A BACKGROUND_PICK_A_GAME
 label 6b39 JOYSTICK_INPUT_TABLE
 label 6f00 ADD_A_TO_HL_WITH_CARRY
+label 6f17 RESET_WATCHDOG_UNTIL_C400_IS_ONE
+label 6fb8 PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 label 6fc7 CLEAR_BACKGROUND
 label 7049 INITIALIZE_SPRITES
+label 7159 RETURN_C687-7_IF_NZ_IN_A
+label 7165 RETURN_C687-2_IF_NZ_IN_A
 label 7200 BACKGROUND_TANK_GAME
+label 7980 COLOR_PALETTE_FOR_TANKS_GAME
 label 7a00 BACKGROUND_IO_TOWER_GAME
 label 8900 BACKGROUND_LIGHT_CYCLE
 label 9100 BACKGROUND_TRAINING_FOR_LIGHT_CYCLE
@@ -83,6 +90,8 @@ org 0000
 commentline 0000 Dissasembly of the Tron 8/9 ROMs used by MAME (labelled as tron)
 
 ascii 006b-008c
+
+commentline 0401 Copy null-terminated string in DE to HL
 
 ; default high scores
 commentline 04b0 Default high score initials
@@ -239,7 +248,14 @@ commentline 6fff Add a message to the output queue (max of 6) DE is source and B
 
 commentline 7049 Initialize sprites (X=0, picture=3F, Y=0, unused=0)
 
+commentline 7159 Return C687 in A.  If non-zero, subtract 7.  Do not affect other registers.
+commentline 7165 Return C687 in A.  If non-zero, subtract 2.  Do not affect other registers.
+
 data 7200-797F
+
+; Color palette for tanks
+data 7980-799F
+
 data 7a00-817F
 data 8900-907F
 ; hack to get label at 9100 to print

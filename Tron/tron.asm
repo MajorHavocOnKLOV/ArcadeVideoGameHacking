@@ -1,9 +1,26 @@
+IO_0 EQU $0000
+IO_1 EQU $0001
+IO_2 EQU $0002
+IO_3 EQU $0003
+IO_4 EQU $0004
+IO_AUDIO_STATUS EQU $0007
+IO_AUDIO_LATCHES EQU $001c
+IO_WATCHDOG_RESET EQU $00e0
+IO_UNKNOWN_WRITTEN_AT_INITIALIZATION EQU $00e8
+IO_CTC EQU $00f0
+STRING_IN_DE_TO_HL EQU $0401
+OUTPUT_TO_SOUND_LATCHES EQU $0557
 BACKGROUND_PICK_A_GAME EQU $234a
 JOYSTICK_INPUT_TABLE EQU $6b39
 ADD_A_TO_HL_WITH_CARRY EQU $6f00
+RESET_WATCHDOG_UNTIL_C400_IS_ONE EQU $6f17
+PUT_C_ON_STACK_TO_SEND_TO_AUDIO EQU $6fb8
 CLEAR_BACKGROUND EQU $6fc7
 INITIALIZE_SPRITES EQU $7049
+RETURN_C687-7_IF_NZ_IN_A EQU $7159
+RETURN_C687-2_IF_NZ_IN_A EQU $7165
 BACKGROUND_TANK_GAME EQU $7200
+COLOR_PALETTE_FOR_TANKS_GAME EQU $7980
 BACKGROUND_IO_TOWER_GAME EQU $7a00
 BACKGROUND_LIGHT_CYCLE EQU $8900
 BACKGROUND_TRAINING_FOR_LIGHT_CYCLE EQU $9100
@@ -42,12 +59,16 @@ VIDEO_RAM_M1 EQU $f800
 ORG $0000
 
 *** Dissasembly of the Tron 8/9 ROMs used by MAME (labelled as tron)
+IO_0:
 0000: C3 00 01       JP    $0100
 
+IO_3:
 0003: 34             INC   (HL)
+IO_4:
 0004: 19             ADD   HL,DE
 0005: 85             ADD   A,L
 0006: 0A             LD    A,(BC)
+IO_AUDIO_STATUS:
 0007: 0E 22          LD    C,#$22
 0009: 02             LD    (BC),A
 000a: 34             INC   (HL)
@@ -65,6 +86,7 @@ ORG $0000
 0019: C5             PUSH  BC
 001a: 35             DEC   (HL)
 001b: 96             SUB   A,(HL)
+IO_AUDIO_LATCHES:
 001c: C7             RST   $00
 
 001d: E1             POP   HL
@@ -198,6 +220,7 @@ ORG $0000
 
 00dc: FC F1 0E       CALL  M,$0EF1
 00df: 9C             SBC   A,H
+IO_WATCHDOG_RESET:
 00e0: 9E             SBC   A,(HL)
 00e1: 23             INC   HL
 00e2: 6F             LD    L,A
@@ -206,6 +229,7 @@ ORG $0000
 00e4: C6 73          ADD   A,#$73
 00e6: 44             LD    B,H
 00e7: 98             SBC   A,B
+IO_UNKNOWN_WRITTEN_AT_INITIALIZATION:
 00e8: 4E             LD    C,(HL)
 00e9: 6A             LD    L,D
 00ea: 13             INC   DE
@@ -214,6 +238,7 @@ ORG $0000
 
 00ed: 3E 9B          LD    A,#$9B
 00ef: 0F             RRCA  
+IO_CTC:
 00f0: E6 78          AND   A,#$78
 00f2: 0F             RRCA  
 00f3: 8B             ADC   A,E
@@ -295,16 +320,16 @@ ORG $0000
 0186: 22 80 C4       LD    ($C480),HL
 0189: FB             EI    
 018a: CD A3 AD       CALL  $ADA3
-018d: CD 17 6F       CALL  $6F17
+018d: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 0190: 0E 02          LD    C,#$02
-0192: CD B8 6F       CALL  $6FB8
-0195: CD 17 6F       CALL  $6F17
-0198: CD 17 6F       CALL  $6F17
+0192: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
+0195: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
+0198: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 019b: 0E 02          LD    C,#$02
-019d: CD B8 6F       CALL  $6FB8
+019d: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 01a0: 0E 01          LD    C,#$01
-01a2: CD B8 6F       CALL  $6FB8
-01a5: CD 17 6F       CALL  $6F17
+01a2: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
+01a5: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 01a8: C3 00 09       JP    $0900
 
 01ab: 00             NOP   
@@ -688,6 +713,9 @@ ORG $0000
 03ff: 34             INC   (HL)
 0400: C9             RET   
 
+
+*** Copy null-terminated string in DE to HL
+STRING_IN_DE_TO_HL:
 0401: 01 BF FF       LD    BC,$FFBF
 0404: 1A             LD    A,(DE)
 0405: B7             OR    A,A
@@ -887,7 +915,7 @@ ORG $0000
 
 04fc: 21 BC FE       LD    HL,$FEBC
 04ff: 11 13 05       LD    DE,$0513
-0502: CD 01 04       CALL  $0401
+0502: CD 01 04       CALL  STRING_IN_DE_TO_HL
 0505: 3A 01 C5       LD    A,($C501)
 0508: C6 30          ADD   A,#$30
 050a: 32 BC FC       LD    ($FCBC),A
@@ -921,7 +949,7 @@ ORG $0000
 0541: 21 64 C4       LD    HL,$C464
 0544: 7E             LD    A,(HL)
 0545: B7             OR    A,A
-0546: 28 0F          JR    Z,$0557
+0546: 28 0F          JR    Z,OUTPUT_TO_SOUND_LATCHES
 
 0548: 36 00          LD    (HL),#$00
 054a: 2A 80 C4       LD    HL,($C480)
@@ -930,6 +958,7 @@ ORG $0000
 0550: 22 80 C4       LD    ($C480),HL
 0553: 21 6C C4       LD    HL,$C46C
 0556: 34             INC   (HL)
+OUTPUT_TO_SOUND_LATCHES:
 0557: 3A 6C C4       LD    A,($C46C)
 055a: B7             OR    A,A
 055b: 28 45          JR    Z,$05A2
@@ -1055,13 +1084,13 @@ ORG $0000
 0603: 32 65 C4       LD    ($C465),A
 0606: 21 44 FC       LD    HL,$FC44
 0609: 11 2D B0       LD    DE,$B02D
-060c: CD 01 04       CALL  $0401
+060c: CD 01 04       CALL  STRING_IN_DE_TO_HL
 060f: 21 46 FC       LD    HL,$FC46
 0612: 11 F7 C4       LD    DE,HIGH_SCORES_DIGITS
 0615: CD 20 07       CALL  $0720
 0618: 21 84 FE       LD    HL,$FE84
 061b: 11 00 B0       LD    DE,$B000
-061e: CD 01 04       CALL  $0401
+061e: CD 01 04       CALL  STRING_IN_DE_TO_HL
 0621: 21 86 FE       LD    HL,$FE86
 0624: 11 45 C4       LD    DE,$C445
 0627: CD 20 07       CALL  $0720
@@ -1082,7 +1111,7 @@ ORG $0000
 
 0646: 21 44 FA       LD    HL,$FA44
 0649: 11 04 B0       LD    DE,$B004
-064c: CD 01 04       CALL  $0401
+064c: CD 01 04       CALL  STRING_IN_DE_TO_HL
 064f: 21 46 FA       LD    HL,$FA46
 0652: 11 4B C4       LD    DE,$C44B
 0655: CD 20 07       CALL  $0720
@@ -1136,7 +1165,7 @@ ORG $0000
 06b4: C8             RET   Z
 
 06b5: 11 29 B0       LD    DE,$B029
-06b8: C3 01 04       JP    $0401
+06b8: C3 01 04       JP    STRING_IN_DE_TO_HL
 
 06bb: B7             OR    A,A
 06bc: C8             RET   Z
@@ -1163,9 +1192,9 @@ ORG $0000
 06df: DD 5E 02       LD    E,(IX+$02)
 06e2: DD 56 03       LD    D,(IX+$03)
 06e5: C5             PUSH  BC
-06e6: CD 01 04       CALL  $0401
+06e6: CD 01 04       CALL  STRING_IN_DE_TO_HL
 06e9: C1             POP   BC
-06ea: 11 04 00       LD    DE,$0004
+06ea: 11 04 00       LD    DE,IO_4
 06ed: DD 19          ADD   IX,DE
 06ef: 10 E8          DJNZ  $06D9
 
@@ -1185,7 +1214,7 @@ ORG $0000
 070f: C5             PUSH  BC
 0710: CD 25 08       CALL  $0825
 0713: C1             POP   BC
-0714: 11 04 00       LD    DE,$0004
+0714: 11 04 00       LD    DE,IO_4
 0717: DD 19          ADD   IX,DE
 0719: 10 E8          DJNZ  $0703
 
@@ -1260,7 +1289,7 @@ ORG $0000
 077b: 21 A2 FF       LD    HL,$FFA2
 077e: 19             ADD   HL,DE
 077f: 77             LD    (HL),A
-0780: 11 04 00       LD    DE,$0004
+0780: 11 04 00       LD    DE,IO_4
 0783: 19             ADD   HL,DE
 0784: 77             LD    (HL),A
 0785: C9             RET   
@@ -1600,7 +1629,7 @@ ORG $0000
 0950: CD 26 70       CALL  $7026
 0953: CD 6D 0E       CALL  $0E6D
 0956: CD D1 1F       CALL  $1FD1
-0959: CD 17 6F       CALL  $6F17
+0959: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 095c: CD 38 0D       CALL  $0D38
 095f: CD 52 0D       CALL  $0D52
 0962: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
@@ -1625,13 +1654,13 @@ ORG $0000
 0983: 28 D4          JR    Z,$0959
 
 0985: 0E 01          LD    C,#$01
-0987: CD B8 6F       CALL  $6FB8
+0987: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 098a: AF             XOR   A,A
 098b: 32 5A C4       LD    ($C45A),A
 098e: C3 00 09       JP    $0900
 
 0991: 0E 03          LD    C,#$03
-0993: CD B8 6F       CALL  $6FB8
+0993: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 0996: 3E 78          LD    A,#$78
 0998: 32 6E C4       LD    ($C46E),A
 099b: 3A 7C C4       LD    A,($C47C)
@@ -1701,7 +1730,7 @@ ORG $0000
 0a17: CD F4 6F       CALL  $6FF4
 0a1a: 11 6D B0       LD    DE,$B06D
 0a1d: CD F4 6F       CALL  $6FF4
-0a20: CD 17 6F       CALL  $6F17
+0a20: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 0a23: 3A 01 C5       LD    A,($C501)
 0a26: 21 15 C4       LD    HL,$C415
 0a29: BE             CP    A,(HL)
@@ -1721,7 +1750,7 @@ ORG $0000
 0a43: CD F4 6F       CALL  $6FF4
 0a46: 11 54 B0       LD    DE,$B054
 0a49: CD F4 6F       CALL  $6FF4
-0a4c: CD 17 6F       CALL  $6F17
+0a4c: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 0a4f: DB 00          IN    A,($00)
 0a51: E6 04          AND   A,#$04
 0a53: 28 0B          JR    Z,$0A60
@@ -1807,7 +1836,7 @@ ORG $0000
 0ae2: 3E 01          LD    A,#$01
 0ae4: 32 65 C4       LD    ($C465),A
 0ae7: 06 40          LD    B,#$40
-0ae9: CD 17 6F       CALL  $6F17
+0ae9: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 0aec: 10 FB          DJNZ  $0AE9
 
 0aee: C3 28 0D       JP    $0D28
@@ -1838,7 +1867,7 @@ ORG $0000
 0b34: 32 7E C4       LD    ($C47E),A
 0b37: 3E FF          LD    A,#$FF
 0b39: 32 06 C4       LD    ($C406),A
-0b3c: CD 17 6F       CALL  $6F17
+0b3c: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 0b3f: 21 7F C4       LD    HL,$C47F
 0b42: 35             DEC   (HL)
 0b43: CC 32 0E       CALL  Z,$0E32
@@ -1888,7 +1917,7 @@ ORG $0000
 0bda: CD 00 0C       CALL  $0C00
 0bdd: F1             POP   AF
 0bde: 32 15 C4       LD    ($C415),A
-0be1: CD 17 6F       CALL  $6F17
+0be1: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 0be4: DB 00          IN    A,($00)
 0be6: E6 10          AND   A,#$10
 0be8: 20 0A          JR    NZ,$0BF4
@@ -2006,9 +2035,9 @@ ORG $0000
 0cbc: 3A 5A C4       LD    A,($C45A)
 0cbf: B7             OR    A,A
 0cc0: 0E 02          LD    C,#$02
-0cc2: CD B8 6F       CALL  $6FB8
+0cc2: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 0cc5: 0E 25          LD    C,#$25
-0cc7: CD B8 6F       CALL  $6FB8
+0cc7: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 0cca: 3E 01          LD    A,#$01
 0ccc: 32 5A C4       LD    ($C45A),A
 0ccf: AF             XOR   A,A
@@ -2037,7 +2066,7 @@ ORG $0000
 0d00: 4D             LD    C,L
 0d01: CD FF 6F       CALL  $6FFF
 0d04: 01 60 00       LD    BC,$0060
-0d07: CD 17 6F       CALL  $6F17
+0d07: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 0d0a: 0B             DEC   BC
 0d0b: 78             LD    A,B
 0d0c: B1             OR    A,C
@@ -2113,7 +2142,7 @@ ORG $0000
 0d7c: FD 21 64 F0    LD    IY,$F064
 0d80: 21 0B 0E       LD    HL,$0E0B
 0d83: 06 0D          LD    B,#$0D
-0d85: 11 04 00       LD    DE,$0004
+0d85: 11 04 00       LD    DE,IO_4
 0d88: 3E 56          LD    A,#$56
 0d8a: 86             ADD   A,(HL)
 0d8b: FD 77 00       LD    (IY+$00),A
@@ -2142,7 +2171,7 @@ ORG $0000
 0db6: 7E             LD    A,(HL)
 0db7: FD 77 01       LD    (IY+$01),A
 0dba: 23             INC   HL
-0dbb: 11 04 00       LD    DE,$0004
+0dbb: 11 04 00       LD    DE,IO_4
 0dbe: FD 19          ADD   IY,DE
 0dc0: 10 E6          DJNZ  $0DA8
 
@@ -2360,7 +2389,7 @@ ORG $0000
 0efd: D6 D0          SUB   A,#$D0
 0eff: 85             ADD   A,L
 0f00: 06 20          LD    B,#$20
-0f02: CD 17 6F       CALL  $6F17
+0f02: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 0f05: 10 FB          DJNZ  $0F02
 
 0f07: AF             XOR   A,A
@@ -2403,7 +2432,7 @@ ORG $0000
 0f48: 11 BB B0       LD    DE,$B0BB
 0f4b: CD EE 6F       CALL  $6FEE
 0f4e: 0E 38          LD    C,#$38
-0f50: CD B8 6F       CALL  $6FB8
+0f50: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 0f53: 11 14 B1       LD    DE,$B114
 0f56: 3A 5F C4       LD    A,(PLAYER_NUMBER)
 0f59: B7             OR    A,A
@@ -2415,7 +2444,7 @@ ORG $0000
 0f64: 32 65 C4       LD    ($C465),A
 0f67: CD 65 11       CALL  $1165
 0f6a: 06 60          LD    B,#$60
-0f6c: CD 17 6F       CALL  $6F17
+0f6c: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 0f6f: 10 FB          DJNZ  $0F6C
 
 0f71: 3A 00 C0       LD    A,(NVRAM)
@@ -2437,7 +2466,7 @@ ORG $0000
 0f94: DD 5E 02       LD    E,(IX+$02)
 0f97: DD 56 03       LD    D,(IX+$03)
 0f9a: CD FF 6F       CALL  $6FFF
-0f9d: 11 04 00       LD    DE,$0004
+0f9d: 11 04 00       LD    DE,IO_4
 0fa0: DD 19          ADD   IX,DE
 0fa2: 18 E6          JR    $0F8A
 
@@ -2454,7 +2483,7 @@ ORG $0000
 0fb3: FD 21 04 F0    LD    IY,$F004
 0fb7: FD 36 00 28    LD    (IY+$00),#$28
 0fbb: 3E 10          LD    A,#$10
-0fbd: CD 59 71       CALL  $7159
+0fbd: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 0fc0: FD 77 02       LD    (IY+$02),A
 0fc3: FD 36 01 06    LD    (IY+$01),#$06
 0fc7: AF             XOR   A,A
@@ -2470,7 +2499,7 @@ ORG $0000
 0fe3: CD 3C 12       CALL  $123C
 0fe6: CD 40 10       CALL  $1040
 0fe9: 06 04          LD    B,#$04
-0feb: CD 17 6F       CALL  $6F17
+0feb: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 0fee: 10 FB          DJNZ  $0FEB
 
 0ff0: 2A 01 C0       LD    HL,($C001)
@@ -2587,7 +2616,7 @@ ORG $0000
 10ad: CB 27          SLA   A
 10af: CB 27          SLA   A
 10b1: C6 10          ADD   A,#$10
-10b3: CD 59 71       CALL  $7159
+10b3: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 10b6: 32 06 F0       LD    ($F006),A
 10b9: 11 04 FE       LD    DE,$FE04
 10bc: 3A 14 C4       LD    A,($C414)
@@ -3058,7 +3087,7 @@ ORG $0000
 13f7: 00             NOP   
 13f8: 50             LD    D,B
 13f9: 00             NOP   
-13fa: 01 00 00       LD    BC,$0000
+13fa: 01 00 00       LD    BC,IO_0
 13fd: 02             LD    (BC),A
 13fe: 00             NOP   
 13ff: 00             NOP   
@@ -3324,7 +3353,7 @@ ORG $0000
 1533: 52             LD    D,D
 1534: 1A             LD    A,(DE)
 1535: 01 C0 00       LD    BC,$00C0
-1538: CD 17 6F       CALL  $6F17
+1538: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 153b: CD 45 15       CALL  $1545
 153e: C0             RET   NZ
 
@@ -3491,7 +3520,7 @@ ORG $0000
 1639: 23             INC   HL
 163a: 56             LD    D,(HL)
 163b: CD FF 6F       CALL  $6FFF
-163e: 11 03 00       LD    DE,$0003
+163e: 11 03 00       LD    DE,IO_3
 1641: DD 19          ADD   IX,DE
 1643: 03             INC   BC
 1644: 03             INC   BC
@@ -3520,9 +3549,9 @@ ORG $0000
 167a: FD 77 00       LD    (IY+$00),A
 167d: DD 7E 02       LD    A,(IX+$02)
 1680: FD 77 01       LD    (IY+$01),A
-1683: 11 04 00       LD    DE,$0004
+1683: 11 04 00       LD    DE,IO_4
 1686: FD 19          ADD   IY,DE
-1688: 11 03 00       LD    DE,$0003
+1688: 11 03 00       LD    DE,IO_3
 168b: DD 19          ADD   IX,DE
 168d: DD 7E 00       LD    A,(IX+$00)
 1690: B7             OR    A,A
@@ -3534,7 +3563,7 @@ ORG $0000
 169b: DD 5E 02       LD    E,(IX+$02)
 169e: DD 56 03       LD    D,(IX+$03)
 16a1: CD FF 6F       CALL  $6FFF
-16a4: 11 04 00       LD    DE,$0004
+16a4: 11 04 00       LD    DE,IO_4
 16a7: DD 19          ADD   IX,DE
 16a9: 18 C2          JR    $166D
 
@@ -3593,7 +3622,7 @@ ORG $0000
 173c: DD 5E 02       LD    E,(IX+$02)
 173f: DD 56 03       LD    D,(IX+$03)
 1742: CD FF 6F       CALL  $6FFF
-1745: 11 04 00       LD    DE,$0004
+1745: 11 04 00       LD    DE,IO_4
 1748: DD 19          ADD   IX,DE
 174a: 18 E6          JR    $1732
 
@@ -4219,7 +4248,7 @@ ORG $0000
 
 1eef: 84             ADD   A,H
 1ef0: 05             DEC   B
-1ef1: D4 00 00       CALL  NC,$0000
+1ef1: D4 00 00       CALL  NC,IO_0
 1ef4: 94             SUB   A,H
 1ef5: 3A 02 56       LD    A,($5602)
 1ef8: A1             AND   A,C
@@ -4298,7 +4327,7 @@ ORG $0000
 1f78: 0E FF          LD    C,#$FF
 1f7a: 81             ADD   A,C
 1f7b: 32 02 C0       LD    ($C002),A
-1f7e: CD 59 71       CALL  $7159
+1f7e: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 1f81: FD 77 02       LD    (IY+$02),A
 1f84: 3A 02 C0       LD    A,($C002)
 1f87: DD BE 01       CP    A,(IX+$01)
@@ -4335,7 +4364,7 @@ ORG $0000
 1fbf: B7             OR    A,A
 1fc0: 20 0D          JR    NZ,$1FCF
 
-1fc2: 11 03 00       LD    DE,$0003
+1fc2: 11 03 00       LD    DE,IO_3
 1fc5: 19             ADD   HL,DE
 1fc6: 5E             LD    E,(HL)
 1fc7: 23             INC   HL
@@ -4350,7 +4379,7 @@ ORG $0000
 1fd8: 32 5E C4       LD    ($C45E),A
 1fdb: 3E 78          LD    A,#$78
 1fdd: 32 6E C4       LD    ($C46E),A
-1fe0: 21 00 00       LD    HL,$0000
+1fe0: 21 00 00       LD    HL,IO_0
 1fe3: 22 56 C4       LD    ($C456),HL
 1fe6: 3E 09          LD    A,#$09
 1fe8: 32 02 C4       LD    ($C402),A
@@ -4374,7 +4403,7 @@ ORG $0000
 201c: FD 77 00       LD    (IY+$00),A
 201f: 3E A4          LD    A,#$A4
 2021: 32 02 C0       LD    ($C002),A
-2024: CD 59 71       CALL  $7159
+2024: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 2027: FD 77 02       LD    (IY+$02),A
 202a: FD 36 01 06    LD    (IY+$01),#$06
 202e: 3E 01          LD    A,#$01
@@ -4696,7 +4725,7 @@ ORG $0000
 21f9: 32 04 F0       LD    ($F004),A
 21fc: 79             LD    A,C
 21fd: 32 02 C0       LD    ($C002),A
-2200: CD 59 71       CALL  $7159
+2200: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 2203: 32 06 F0       LD    ($F006),A
 2206: C9             RET   
 
@@ -4731,13 +4760,13 @@ ORG $0000
 2233: 23             INC   HL
 2234: 7E             LD    A,(HL)
 2235: DD 86 02       ADD   A,(IX+$02)
-2238: CD 59 71       CALL  $7159
+2238: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 223b: FD 77 02       LD    (IY+$02),A
 223e: 23             INC   HL
 223f: 7E             LD    A,(HL)
 2240: FD 77 01       LD    (IY+$01),A
 2243: 23             INC   HL
-2244: 11 04 00       LD    DE,$0004
+2244: 11 04 00       LD    DE,IO_4
 2247: FD 19          ADD   IY,DE
 2249: 7E             LD    A,(HL)
 224a: B7             OR    A,A
@@ -4753,7 +4782,7 @@ ORG $0000
 2259: 12             LD    (DE),A
 225a: 23             INC   HL
 225b: 23             INC   HL
-225c: 11 03 00       LD    DE,$0003
+225c: 11 03 00       LD    DE,IO_3
 225f: DD 19          ADD   IX,DE
 2261: 18 B7          JR    $221A
 
@@ -4829,7 +4858,7 @@ ORG $0000
 22ba: FF             RST   $38
 
 22bb: 00             NOP   
-22bc: 01 00 00       LD    BC,$0000
+22bc: 01 00 00       LD    BC,IO_0
 22bf: 00             NOP   
 22c0: 00             NOP   
 22c1: FF             RST   $38
@@ -4842,7 +4871,7 @@ ORG $0000
 22c7: 00             NOP   
 22c8: 00             NOP   
 22c9: 01 FF 01       LD    BC,$01FF
-22cc: 01 01 00       LD    BC,$0001
+22cc: 01 01 00       LD    BC,IO_1
 22cf: 00             NOP   
 22d0: 00             NOP   
 22d1: 00             NOP   
@@ -4905,7 +4934,7 @@ ORG $0000
 2330: 36 00          LD    (HL),#$00
 2332: 00             NOP   
 2333: 00             NOP   
-2334: 11 00 00       LD    DE,$0000
+2334: 11 00 00       LD    DE,IO_0
 2337: 00             NOP   
 2338: 2F             CPL   
 2339: 00             NOP   
@@ -5324,7 +5353,7 @@ BACKGROUND_PICK_A_GAME:
 2c1c: 3E 82          LD    A,#$82
 2c1e: 32 05 C0       LD    ($C005),A
 2c21: 0E 41          LD    C,#$41
-2c23: CD B8 6F       CALL  $6FB8
+2c23: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 2c26: 3E 26          LD    A,#$26
 2c28: 32 EA C0       LD    ($C0EA),A
 2c2b: 3E 60          LD    A,#$60
@@ -5362,14 +5391,14 @@ BACKGROUND_PICK_A_GAME:
 2c9e: FD 21 A0 F0    LD    IY,$F0A0
 2ca2: 21 B3 35       LD    HL,$35B3
 2ca5: 06 0D          LD    B,#$0D
-2ca7: 11 04 00       LD    DE,$0004
+2ca7: 11 04 00       LD    DE,IO_4
 2caa: 3A DD C0       LD    A,($C0DD)
 2cad: 86             ADD   A,(HL)
 2cae: FD 77 00       LD    (IY+$00),A
 2cb1: 79             LD    A,C
 2cb2: 23             INC   HL
 2cb3: 86             ADD   A,(HL)
-2cb4: CD 59 71       CALL  $7159
+2cb4: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 2cb7: FD 77 02       LD    (IY+$02),A
 2cba: 23             INC   HL
 2cbb: 7E             LD    A,(HL)
@@ -5388,7 +5417,7 @@ BACKGROUND_PICK_A_GAME:
 2cd2: DD 5E 02       LD    E,(IX+$02)
 2cd5: DD 56 03       LD    D,(IX+$03)
 2cd8: CD 5D 70       CALL  $705D
-2cdb: 11 04 00       LD    DE,$0004
+2cdb: 11 04 00       LD    DE,IO_4
 2cde: DD 19          ADD   IX,DE
 2ce0: 18 E6          JR    $2CC8
 
@@ -5471,7 +5500,7 @@ BACKGROUND_PICK_A_GAME:
 2d84: 32 DD C0       LD    ($C0DD),A
 2d87: 3E 40          LD    A,#$40
 2d89: 32 DC C0       LD    ($C0DC),A
-2d8c: 11 04 00       LD    DE,$0004
+2d8c: 11 04 00       LD    DE,IO_4
 2d8f: DD 21 63 C0    LD    IX,$C063
 2d93: 06 1E          LD    B,#$1E
 2d95: 3A 01 C0       LD    A,($C001)
@@ -5536,7 +5565,7 @@ BACKGROUND_PICK_A_GAME:
 2dfb: 21 3A 36       LD    HL,$363A
 2dfe: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 2e01: 11 0A C0       LD    DE,$C00A
-2e04: 01 04 00       LD    BC,$0004
+2e04: 01 04 00       LD    BC,IO_4
 2e07: ED B0          LDIR  
 2e09: 2A 06 C0       LD    HL,($C006)
 2e0c: ED 5B 0A C0    LD    DE,($C00A)
@@ -5641,7 +5670,7 @@ BACKGROUND_PICK_A_GAME:
 2ea0: 21 05 C0       LD    HL,$C005
 2ea3: CB C6          SET   0,(HL)
 2ea5: 0E 08          LD    C,#$08
-2ea7: CD B8 6F       CALL  $6FB8
+2ea7: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 2eaa: C3 D6 30       JP    $30D6
 
 2ead: DD 2A 10 C0    LD    IX,($C010)
@@ -5650,7 +5679,7 @@ BACKGROUND_PICK_A_GAME:
 2eb7: 32 08 F0       LD    ($F008),A
 2eba: 47             LD    B,A
 2ebb: 3A 09 C0       LD    A,($C009)
-2ebe: CD 59 71       CALL  $7159
+2ebe: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 2ec1: 4F             LD    C,A
 2ec2: 32 06 F0       LD    ($F006),A
 2ec5: C6 10          ADD   A,#$10
@@ -5744,7 +5773,7 @@ BACKGROUND_PICK_A_GAME:
 2f81: 32 14 F0       LD    ($F014),A
 2f84: 32 18 F0       LD    ($F018),A
 2f87: 0E 30          LD    C,#$30
-2f89: C3 B8 6F       JP    $6FB8
+2f89: C3 B8 6F       JP    PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 
 2f8c: 21 0E C0       LD    HL,$C00E
 2f8f: 7E             LD    A,(HL)
@@ -5779,9 +5808,9 @@ BACKGROUND_PICK_A_GAME:
 2fc0: C0             RET   NZ
 
 2fc1: 0E 22          LD    C,#$22
-2fc3: CD B8 6F       CALL  $6FB8
+2fc3: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 2fc6: 0E 27          LD    C,#$27
-2fc8: CD B8 6F       CALL  $6FB8
+2fc8: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 2fcb: 3E 80          LD    A,#$80
 2fcd: 32 02 C0       LD    ($C002),A
 2fd0: 3E 00          LD    A,#$00
@@ -5827,7 +5856,7 @@ BACKGROUND_PICK_A_GAME:
 3014: C0             RET   NZ
 
 3015: 0E 25          LD    C,#$25
-3017: CD B8 6F       CALL  $6FB8
+3017: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 301a: 21 0E C0       LD    HL,$C00E
 301d: 35             DEC   (HL)
 301e: C0             RET   NZ
@@ -5908,12 +5937,12 @@ BACKGROUND_PICK_A_GAME:
 30b2: DD 75 06       LD    (IX+$06),L
 30b5: DD 74 07       LD    (IX+$07),H
 30b8: DD 7E 03       LD    A,(IX+$03)
-30bb: CD 59 71       CALL  $7159
+30bb: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 30be: FD 77 02       LD    (IY+$02),A
 30c1: CD 49 31       CALL  $3149
 30c4: 11 0A 00       LD    DE,$000A
 30c7: DD 19          ADD   IX,DE
-30c9: 11 04 00       LD    DE,$0004
+30c9: 11 04 00       LD    DE,IO_4
 30cc: FD 19          ADD   IY,DE
 30ce: 21 06 C4       LD    HL,$C406
 30d1: 35             DEC   (HL)
@@ -5929,7 +5958,7 @@ BACKGROUND_PICK_A_GAME:
 
 30e4: 11 0A 00       LD    DE,$000A
 30e7: DD 19          ADD   IX,DE
-30e9: 11 04 00       LD    DE,$0004
+30e9: 11 04 00       LD    DE,IO_4
 30ec: FD 19          ADD   IY,DE
 30ee: 18 EE          JR    $30DE
 
@@ -5962,7 +5991,7 @@ BACKGROUND_PICK_A_GAME:
 3135: DD 36 08 18    LD    (IX+$08),#$18
 3139: FD E1          POP   IY
 313b: FD 70 00       LD    (IY+$00),B
-313e: CD 59 71       CALL  $7159
+313e: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 3141: FD 77 02       LD    (IY+$02),A
 3144: FD 36 01 07    LD    (IY+$01),#$07
 3148: C9             RET   
@@ -6061,7 +6090,7 @@ BACKGROUND_PICK_A_GAME:
 31f0: 3E 01          LD    A,#$01
 31f2: 32 0F C4       LD    ($C40F),A
 31f5: 0E 39          LD    C,#$39
-31f7: C3 B8 6F       JP    $6FB8
+31f7: C3 B8 6F       JP    PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 
 31fa: DD 21 C3 C0    LD    IX,$C0C3
 31fe: 11 FC FF       LD    DE,$FFFC
@@ -6080,7 +6109,7 @@ BACKGROUND_PICK_A_GAME:
 3213: 06 05          LD    B,#$05
 3215: 0E 00          LD    C,#$00
 3217: DD 21 C7 C0    LD    IX,$C0C7
-321b: 11 04 00       LD    DE,$0004
+321b: 11 04 00       LD    DE,IO_4
 321e: CB 21          SLA   C
 3220: DD 7E 03       LD    A,(IX+$03)
 3223: E6 81          AND   A,#$81
@@ -6122,7 +6151,7 @@ BACKGROUND_PICK_A_GAME:
 3267: C9             RET   
 
 3268: DD 21 63 C0    LD    IX,$C063
-326c: 11 04 00       LD    DE,$0004
+326c: 11 04 00       LD    DE,IO_4
 326f: 06 19          LD    B,#$19
 3271: DD 7E 17       LD    A,(IX+$17)
 3274: FE 80          CP    A,#$80
@@ -6138,7 +6167,7 @@ BACKGROUND_PICK_A_GAME:
 3281: 06 05          LD    B,#$05
 3283: 0E 00          LD    C,#$00
 3285: DD 21 63 C0    LD    IX,$C063
-3289: 11 04 00       LD    DE,$0004
+3289: 11 04 00       LD    DE,IO_4
 328c: CB 21          SLA   C
 328e: DD 7E 03       LD    A,(IX+$03)
 3291: E6 81          AND   A,#$81
@@ -6211,18 +6240,18 @@ BACKGROUND_PICK_A_GAME:
 3303: 22 DB C0       LD    ($C0DB),HL
 3306: 7C             LD    A,H
 3307: 4F             LD    C,A
-3308: CD 59 71       CALL  $7159
+3308: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 330b: FD 21 A0 F0    LD    IY,$F0A0
 330f: 21 B3 35       LD    HL,$35B3
 3312: 06 0D          LD    B,#$0D
-3314: 11 04 00       LD    DE,$0004
+3314: 11 04 00       LD    DE,IO_4
 3317: 3A DD C0       LD    A,($C0DD)
 331a: 86             ADD   A,(HL)
 331b: FD 77 00       LD    (IY+$00),A
 331e: 79             LD    A,C
 331f: 23             INC   HL
 3320: 86             ADD   A,(HL)
-3321: CD 59 71       CALL  $7159
+3321: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 3324: FD 77 02       LD    (IY+$02),A
 3327: 23             INC   HL
 3328: 7E             LD    A,(HL)
@@ -6238,7 +6267,7 @@ BACKGROUND_PICK_A_GAME:
 333a: FE F8          CP    A,#$F8
 333c: 30 25          JR    NC,$3363
 
-333e: CD 59 71       CALL  $7159
+333e: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 3341: FD 77 02       LD    (IY+$02),A
 3344: FD 77 06       LD    (IY+$06),A
 3347: 3A DD C0       LD    A,($C0DD)
@@ -6279,7 +6308,7 @@ BACKGROUND_PICK_A_GAME:
 33a0: 38 0D          JR    C,$33AF
 
 33a2: DD 77 01       LD    (IX+$01),A
-33a5: CD 59 71       CALL  $7159
+33a5: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 33a8: FD 77 02       LD    (IY+$02),A
 33ab: FE F8          CP    A,#$F8
 33ad: 38 12          JR    C,$33C1
@@ -6307,9 +6336,9 @@ BACKGROUND_PICK_A_GAME:
 33e1: 23             INC   HL
 33e2: 23             INC   HL
 33e3: 23             INC   HL
-33e4: 11 04 00       LD    DE,$0004
+33e4: 11 04 00       LD    DE,IO_4
 33e7: FD 19          ADD   IY,DE
-33e9: 11 04 00       LD    DE,$0004
+33e9: 11 04 00       LD    DE,IO_4
 33ec: DD 19          ADD   IX,DE
 33ee: 3A 01 C0       LD    A,($C001)
 33f1: 3C             INC   A
@@ -6333,7 +6362,7 @@ BACKGROUND_PICK_A_GAME:
 340b: 3E 60          LD    A,#$60
 340d: 32 0E C0       LD    ($C00E),A
 3410: 0E 25          LD    C,#$25
-3412: CD B8 6F       CALL  $6FB8
+3412: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 3415: 11 67 2C       LD    DE,$2C67
 3418: 01 92 FE       LD    BC,$FE92
 341b: CD 5D 70       CALL  $705D
@@ -6388,9 +6417,9 @@ BACKGROUND_PICK_A_GAME:
 346f: FE 0E          CP    A,#$0E
 3471: DA 5F 2F       JP    C,$2F5F
 
-3474: 11 04 00       LD    DE,$0004
+3474: 11 04 00       LD    DE,IO_4
 3477: DD 19          ADD   IX,DE
-3479: 11 03 00       LD    DE,$0003
+3479: 11 03 00       LD    DE,IO_3
 347c: FD 19          ADD   IY,DE
 347e: 10 BC          DJNZ  $343C
 
@@ -6457,7 +6486,7 @@ BACKGROUND_PICK_A_GAME:
 34f1: CD 2A 35       CALL  $352A
 34f4: 18 14          JR    $350A
 
-34f6: 11 04 00       LD    DE,$0004
+34f6: 11 04 00       LD    DE,IO_4
 34f9: FD 19          ADD   IY,DE
 34fb: 11 0A 00       LD    DE,$000A
 34fe: DD 19          ADD   IX,DE
@@ -6497,7 +6526,7 @@ BACKGROUND_PICK_A_GAME:
 3545: 21 4F 35       LD    HL,$354F
 3548: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 354b: 4E             LD    C,(HL)
-354c: C3 B8 6F       JP    $6FB8
+354c: C3 B8 6F       JP    PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 
 354f: 34             INC   (HL)
 3550: 33             INC   SP
@@ -6746,7 +6775,7 @@ BACKGROUND_PICK_A_GAME:
 3684: AA             XOR   A,D
 3685: 07             RLCA  
 3686: F9             LD    SP,HL
-3687: FA 03 00       JP    M,$0003
+3687: FA 03 00       JP    M,IO_3
 
 368a: 04             INC   B
 368b: 00             NOP   
@@ -6807,7 +6836,7 @@ BACKGROUND_PICK_A_GAME:
 36cf: 02             LD    (BC),A
 36d0: E6 07          AND   A,#$07
 36d2: 03             INC   BC
-36d3: FA 03 00       JP    M,$0003
+36d3: FA 03 00       JP    M,IO_3
 
 36d6: 03             INC   BC
 36d7: 84             ADD   A,H
@@ -6881,7 +6910,7 @@ BACKGROUND_PICK_A_GAME:
 372f: E1             POP   HL
 3730: 07             RLCA  
 3731: 03             INC   BC
-3732: FA 03 00       JP    M,$0003
+3732: FA 03 00       JP    M,IO_3
 
 3735: 00             NOP   
 3736: 00             NOP   
@@ -7010,7 +7039,7 @@ BACKGROUND_PICK_A_GAME:
 37da: 2A FA F9       LD    HL,($F9FA)
 37dd: 06 03          LD    B,#$03
 37df: 00             NOP   
-37e0: FC 00 00       CALL  M,$0000
+37e0: FC 00 00       CALL  M,IO_0
 37e3: 1D             DEC   E
 37e4: 1E 1F          LD    E,#$1F
 37e6: 20 2B          JR    NZ,$3813
@@ -7199,7 +7228,7 @@ BACKGROUND_PICK_A_GAME:
 38e4: A6             AND   A,(HL)
 38e5: 07             RLCA  
 38e6: F9             LD    SP,HL
-38e7: FA 03 00       JP    M,$0003
+38e7: FA 03 00       JP    M,IO_3
 
 38ea: 03             INC   BC
 38eb: 7C             LD    A,H
@@ -7443,7 +7472,7 @@ BACKGROUND_PICK_A_GAME:
 3a0d: 32 4E C1       LD    ($C14E),A
 3a10: 21 00 72       LD    HL,BACKGROUND_TANK_GAME
 3a13: CD 35 70       CALL  $7035
-3a16: 21 80 79       LD    HL,$7980
+3a16: 21 80 79       LD    HL,COLOR_PALETTE_FOR_TANKS_GAME
 3a19: CD 35 6F       CALL  $6F35
 3a1c: AF             XOR   A,A
 3a1d: 32 05 C4       LD    ($C405),A
@@ -7473,7 +7502,7 @@ BACKGROUND_PICK_A_GAME:
 3a5d: 20 DC          JR    NZ,$3A3B
 
 3a5f: 21 1C F0       LD    HL,$F01C
-3a62: 11 04 00       LD    DE,$0004
+3a62: 11 04 00       LD    DE,IO_4
 3a65: 36 00          LD    (HL),#$00
 3a67: 19             ADD   HL,DE
 3a68: 36 00          LD    (HL),#$00
@@ -7593,7 +7622,7 @@ BACKGROUND_PICK_A_GAME:
 3b3f: DD 75 18       LD    (IX+$18),L
 3b42: DD 74 19       LD    (IX+$19),H
 3b45: 36 00          LD    (HL),#$00
-3b47: 11 04 00       LD    DE,$0004
+3b47: 11 04 00       LD    DE,IO_4
 3b4a: 19             ADD   HL,DE
 3b4b: 36 00          LD    (HL),#$00
 3b4d: 19             ADD   HL,DE
@@ -7669,9 +7698,9 @@ BACKGROUND_PICK_A_GAME:
 3bd1: 32 50 C1       LD    ($C150),A
 3bd4: 32 51 C1       LD    ($C151),A
 3bd7: 4F             LD    C,A
-3bd8: CD B8 6F       CALL  $6FB8
+3bd8: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 3bdb: 0E 2E          LD    C,#$2E
-3bdd: C3 B8 6F       JP    $6FB8
+3bdd: C3 B8 6F       JP    PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 
 3be0: 3A 47 C1       LD    A,($C147)
 3be3: CB 47          BIT   0,A
@@ -7727,7 +7756,7 @@ BACKGROUND_PICK_A_GAME:
 3c40: 28 09          JR    Z,$3C4B
 
 3c42: 4F             LD    C,A
-3c43: CD B8 6F       CALL  $6FB8
+3c43: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 3c46: 18 03          JR    $3C4B
 
 3c48: CD A8 3C       CALL  $3CA8
@@ -7798,7 +7827,7 @@ BACKGROUND_PICK_A_GAME:
 3cc2: FD 36 02 00    LD    (IY+$02),#$00
 3cc6: FD 36 01 3F    LD    (IY+$01),#$3F
 3cca: 0E 27          LD    C,#$27
-3ccc: CD B8 6F       CALL  $6FB8
+3ccc: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 3ccf: 3E 80          LD    A,#$80
 3cd1: 32 52 C1       LD    ($C152),A
 3cd4: 21 07 C4       LD    HL,$C407
@@ -7810,7 +7839,7 @@ BACKGROUND_PICK_A_GAME:
 3cdf: CD 20 70       CALL  $7020
 3ce2: CD 49 70       CALL  INITIALIZE_SPRITES
 3ce5: CD C7 6F       CALL  CLEAR_BACKGROUND
-3ce8: 21 80 79       LD    HL,$7980
+3ce8: 21 80 79       LD    HL,COLOR_PALETTE_FOR_TANKS_GAME
 3ceb: CD 35 6F       CALL  $6F35
 3cee: AF             XOR   A,A
 3cef: 32 05 C4       LD    ($C405),A
@@ -7965,7 +7994,7 @@ BACKGROUND_PICK_A_GAME:
 3dc4: 36 00          LD    (HL),#$00
 3dc6: 3A 4E C1       LD    A,($C14E)
 3dc9: 21 A5 3D       LD    HL,$3DA5
-3dcc: 11 04 00       LD    DE,$0004
+3dcc: 11 04 00       LD    DE,IO_4
 3dcf: BE             CP    A,(HL)
 3dd0: 28 03          JR    Z,$3DD5
 
@@ -8176,11 +8205,11 @@ BACKGROUND_PICK_A_GAME:
 3f2d: 28 02          JR    Z,$3F31
 
 3f2f: 0E 36          LD    C,#$36
-3f31: CD B8 6F       CALL  $6FB8
+3f31: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 3f34: 3A 50 C1       LD    A,($C150)
 3f37: 32 51 C1       LD    ($C151),A
 3f3a: 4F             LD    C,A
-3f3b: C3 B8 6F       JP    $6FB8
+3f3b: C3 B8 6F       JP    PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 
 3f3e: 3A 59 C1       LD    A,($C159)
 3f41: 11 20 00       LD    DE,$0020
@@ -8559,7 +8588,7 @@ BACKGROUND_PICK_A_GAME:
 40a3: 65             LD    H,L
 40a4: 40             LD    B,B
 40a5: DD 21 63 40    LD    IX,$4063
-40a9: 11 03 00       LD    DE,$0003
+40a9: 11 03 00       LD    DE,IO_3
 40ac: DD 19          ADD   IX,DE
 40ae: DD 7E 00       LD    A,(IX+$00)
 40b1: B8             CP    A,B
@@ -8568,7 +8597,7 @@ BACKGROUND_PICK_A_GAME:
 40b4: DD 6E 01       LD    L,(IX+$01)
 40b7: DD 66 02       LD    H,(IX+$02)
 40ba: DD 21 FB 4C    LD    IX,$4CFB
-40be: 11 04 00       LD    DE,$0004
+40be: 11 04 00       LD    DE,IO_4
 40c1: DD 19          ADD   IX,DE
 40c3: DD 7E 00       LD    A,(IX+$00)
 40c6: B9             CP    A,C
@@ -8580,7 +8609,7 @@ BACKGROUND_PICK_A_GAME:
 
 40d0: 21 04 F0       LD    HL,$F004
 40d3: 3A 00 C0       LD    A,(NVRAM)
-40d6: CD 65 71       CALL  $7165
+40d6: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 40d9: 77             LD    (HL),A
 40da: 23             INC   HL
 40db: 3A 01 C0       LD    A,($C001)
@@ -8588,7 +8617,7 @@ BACKGROUND_PICK_A_GAME:
 40df: 23             INC   HL
 40e0: 3A 02 C0       LD    A,($C002)
 40e3: C6 04          ADD   A,#$04
-40e5: CD 59 71       CALL  $7159
+40e5: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 40e8: 77             LD    (HL),A
 40e9: C9             RET   
 
@@ -8623,7 +8652,7 @@ BACKGROUND_PICK_A_GAME:
 4117: 7E             LD    A,(HL)
 4118: F5             PUSH  AF
 4119: 0E 37          LD    C,#$37
-411b: CD B8 6F       CALL  $6FB8
+411b: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 411e: CD D0 40       CALL  $40D0
 4121: F1             POP   AF
 4122: 37             SCF   
@@ -8900,10 +8929,10 @@ BACKGROUND_PICK_A_GAME:
 4223: 30 1B          JR    NC,$4240
 
 4225: CD 5A 45       CALL  $455A
-4228: 11 04 00       LD    DE,$0004
+4228: 11 04 00       LD    DE,IO_4
 422b: 19             ADD   HL,DE
 422c: DD 7E 00       LD    A,(IX+$00)
-422f: CD 65 71       CALL  $7165
+422f: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 4232: 77             LD    (HL),A
 4233: 23             INC   HL
 4234: 7E             LD    A,(HL)
@@ -8911,7 +8940,7 @@ BACKGROUND_PICK_A_GAME:
 4237: 77             LD    (HL),A
 4238: 23             INC   HL
 4239: DD 7E 02       LD    A,(IX+$02)
-423c: CD 59 71       CALL  $7159
+423c: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 423f: 77             LD    (HL),A
 4240: C5             PUSH  BC
 4241: CD B3 42       CALL  $42B3
@@ -8962,9 +8991,9 @@ BACKGROUND_PICK_A_GAME:
 4297: 20 0F          JR    NZ,$42A8
 
 4299: 0E 03          LD    C,#$03
-429b: CD B8 6F       CALL  $6FB8
+429b: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 429e: 0E 25          LD    C,#$25
-42a0: CD B8 6F       CALL  $6FB8
+42a0: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 42a3: 3E 60          LD    A,#$60
 42a5: 32 52 C1       LD    ($C152),A
 42a8: 21 47 C1       LD    HL,$C147
@@ -9194,7 +9223,7 @@ BACKGROUND_PICK_A_GAME:
 4414: DD 36 09 00    LD    (IX+$09),#$00
 4418: DD 7E 02       LD    A,(IX+$02)
 441b: FD 21 45 41    LD    IY,$4145
-441f: 11 03 00       LD    DE,$0003
+441f: 11 03 00       LD    DE,IO_3
 4422: FD 19          ADD   IY,DE
 4424: FD BE 00       CP    A,(IY+$00)
 4427: 20 F9          JR    NZ,$4422
@@ -9216,7 +9245,7 @@ BACKGROUND_PICK_A_GAME:
 4443: DD 36 09 01    LD    (IX+$09),#$01
 4447: DD 7E 00       LD    A,(IX+$00)
 444a: FD 21 24 41    LD    IY,$4124
-444e: 11 03 00       LD    DE,$0003
+444e: 11 03 00       LD    DE,IO_3
 4451: FD 19          ADD   IY,DE
 4453: FD BE 00       CP    A,(IY+$00)
 4456: 20 F9          JR    NZ,$4451
@@ -9242,11 +9271,11 @@ BACKGROUND_PICK_A_GAME:
 447d: C9             RET   
 
 447e: DD 7E 09       LD    A,(IX+$09)
-4481: 01 02 00       LD    BC,$0002
+4481: 01 02 00       LD    BC,IO_2
 4484: B7             OR    A,A
 4485: 20 03          JR    NZ,$448A
 
-4487: 01 00 00       LD    BC,$0000
+4487: 01 00 00       LD    BC,IO_0
 448a: 3A 59 C1       LD    A,($C159)
 448d: 6F             LD    L,A
 448e: 11 20 00       LD    DE,$0020
@@ -9329,7 +9358,7 @@ BACKGROUND_PICK_A_GAME:
 4516: 87             ADD   A,A
 4517: DD 86 08       ADD   A,(IX+$08)
 451a: DD 86 00       ADD   A,(IX+$00)
-451d: CD 65 71       CALL  $7165
+451d: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 4520: 77             LD    (HL),A
 4521: 23             INC   HL
 4522: 7E             LD    A,(HL)
@@ -9338,7 +9367,7 @@ BACKGROUND_PICK_A_GAME:
 4526: 23             INC   HL
 4527: DD 7E 02       LD    A,(IX+$02)
 452a: C6 06          ADD   A,#$06
-452c: CD 59 71       CALL  $7159
+452c: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 452f: 77             LD    (HL),A
 4530: C9             RET   
 
@@ -9352,7 +9381,7 @@ BACKGROUND_PICK_A_GAME:
 4539: CD 5A 45       CALL  $455A
 453c: DD 7E 00       LD    A,(IX+$00)
 453f: C6 06          ADD   A,#$06
-4541: CD 65 71       CALL  $7165
+4541: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 4544: 77             LD    (HL),A
 4545: 23             INC   HL
 4546: 7E             LD    A,(HL)
@@ -9363,7 +9392,7 @@ BACKGROUND_PICK_A_GAME:
 454e: 87             ADD   A,A
 454f: DD 86 08       ADD   A,(IX+$08)
 4552: DD 86 02       ADD   A,(IX+$02)
-4555: CD 59 71       CALL  $7159
+4555: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 4558: 77             LD    (HL),A
 4559: C9             RET   
 
@@ -9601,14 +9630,14 @@ BACKGROUND_PICK_A_GAME:
 46d9: 24             INC   H
 46da: 6F             LD    L,A
 46db: FD 7E 00       LD    A,(IY+$00)
-46de: CD 65 71       CALL  $7165
+46de: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 46e1: 77             LD    (HL),A
 46e2: 23             INC   HL
 46e3: 36 00          LD    (HL),#$00
 46e5: 23             INC   HL
 46e6: FD 7E 02       LD    A,(IY+$02)
 46e9: C6 04          ADD   A,#$04
-46eb: CD 59 71       CALL  $7159
+46eb: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 46ee: 77             LD    (HL),A
 46ef: FD 36 0E 04    LD    (IY+$0E),#$04
 46f3: E1             POP   HL
@@ -9685,7 +9714,7 @@ BACKGROUND_PICK_A_GAME:
 4761: C9             RET   
 
 4762: 0E 0E          LD    C,#$0E
-4764: CD B8 6F       CALL  $6FB8
+4764: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 4767: DD 35 11       DEC   (IX+$11)
 476a: 21 B8 47       LD    HL,$47B8
 476d: 28 0C          JR    Z,$477B
@@ -9740,25 +9769,25 @@ BACKGROUND_PICK_A_GAME:
 47c1: 00             NOP   
 47c2: 00             NOP   
 47c3: 00             NOP   
-47c4: 01 00 00       LD    BC,$0000
+47c4: 01 00 00       LD    BC,IO_0
 47c7: FD 6E 0B       LD    L,(IY+$0B)
 47ca: FD 66 0C       LD    H,(IY+$0C)
 47cd: FD 7E 00       LD    A,(IY+$00)
-47d0: CD 65 71       CALL  $7165
+47d0: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 47d3: 77             LD    (HL),A
 47d4: 23             INC   HL
 47d5: 36 07          LD    (HL),#$07
 47d7: 23             INC   HL
 47d8: FD 7E 02       LD    A,(IY+$02)
 47db: C6 04          ADD   A,#$04
-47dd: CD 59 71       CALL  $7159
+47dd: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 47e0: 77             LD    (HL),A
 47e1: C9             RET   
 
 47e2: DD 6E 16       LD    L,(IX+$16)
 47e5: DD 66 17       LD    H,(IX+$17)
 47e8: DD 7E 00       LD    A,(IX+$00)
-47eb: CD 65 71       CALL  $7165
+47eb: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 47ee: 77             LD    (HL),A
 47ef: 23             INC   HL
 47f0: DD 7E 01       LD    A,(IX+$01)
@@ -9766,7 +9795,7 @@ BACKGROUND_PICK_A_GAME:
 47f4: 23             INC   HL
 47f5: DD 7E 02       LD    A,(IX+$02)
 47f8: C6 04          ADD   A,#$04
-47fa: CD 59 71       CALL  $7159
+47fa: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 47fd: 77             LD    (HL),A
 47fe: C9             RET   
 
@@ -9808,7 +9837,7 @@ BACKGROUND_PICK_A_GAME:
 4832: C8             RET   Z
 
 4833: 0E 2D          LD    C,#$2D
-4835: CD B8 6F       CALL  $6FB8
+4835: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 4838: 3A 1E C4       LD    A,($C41E)
 483b: 47             LD    B,A
 483c: 11 10 00       LD    DE,$0010
@@ -9847,7 +9876,7 @@ BACKGROUND_PICK_A_GAME:
 4884: 02             LD    (BC),A
 4885: FC 13 0C       CALL  M,$0C13
 4888: 00             NOP   
-4889: 01 00 00       LD    BC,$0000
+4889: 01 00 00       LD    BC,IO_0
 488c: 00             NOP   
 488d: 02             LD    (BC),A
 488e: FC 14 0C       CALL  M,$0C14
@@ -9903,7 +9932,7 @@ BACKGROUND_PICK_A_GAME:
 48d4: 04             INC   B
 48d5: 02             LD    (BC),A
 48d6: FC 1C FE       CALL  M,$FE1C
-48d9: F4 00 00       CALL  P,$0000
+48d9: F4 00 00       CALL  P,IO_0
 48dc: FF             RST   $38
 
 48dd: 00             NOP   
@@ -10138,7 +10167,7 @@ BACKGROUND_PICK_A_GAME:
 49f8: 3A 0B C0       LD    A,($C00B)
 49fb: 80             ADD   A,B
 49fc: 86             ADD   A,(HL)
-49fd: CD 65 71       CALL  $7165
+49fd: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 4a00: DD 77 00       LD    (IX+$00),A
 4a03: 23             INC   HL
 4a04: 3A 02 C0       LD    A,($C002)
@@ -10147,7 +10176,7 @@ BACKGROUND_PICK_A_GAME:
 4a0b: 80             ADD   A,B
 4a0c: 86             ADD   A,(HL)
 4a0d: C6 04          ADD   A,#$04
-4a0f: CD 59 71       CALL  $7159
+4a0f: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 4a12: DD 77 02       LD    (IX+$02),A
 4a15: 23             INC   HL
 4a16: 7E             LD    A,(HL)
@@ -10300,7 +10329,7 @@ BACKGROUND_PICK_A_GAME:
 4b1c: C0             RET   NZ
 
 4b1d: 0E 0F          LD    C,#$0F
-4b1f: CD B8 6F       CALL  $6FB8
+4b1f: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 4b22: DD 7E 0A       LD    A,(IX+$0A)
 4b25: FD 77 08       LD    (IY+$08),A
 4b28: DD 7E 00       LD    A,(IX+$00)
@@ -10336,7 +10365,7 @@ BACKGROUND_PICK_A_GAME:
 4b70: FD 6E 03       LD    L,(IY+$03)
 4b73: FD 66 04       LD    H,(IY+$04)
 4b76: FD 7E 00       LD    A,(IY+$00)
-4b79: CD 65 71       CALL  $7165
+4b79: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 4b7c: 77             LD    (HL),A
 4b7d: FD 7E 01       LD    A,(IY+$01)
 4b80: 23             INC   HL
@@ -10344,7 +10373,7 @@ BACKGROUND_PICK_A_GAME:
 4b82: FD 7E 02       LD    A,(IY+$02)
 4b85: C6 04          ADD   A,#$04
 4b87: 23             INC   HL
-4b88: CD 59 71       CALL  $7159
+4b88: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 4b8b: 77             LD    (HL),A
 4b8c: C9             RET   
 
@@ -10431,9 +10460,9 @@ BACKGROUND_PICK_A_GAME:
 4c1d: AF             XOR   A,A
 4c1e: 32 08 C4       LD    ($C408),A
 4c21: 0E 03          LD    C,#$03
-4c23: CD B8 6F       CALL  $6FB8
+4c23: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 4c26: 0E 30          LD    C,#$30
-4c28: C3 B8 6F       JP    $6FB8
+4c28: C3 B8 6F       JP    PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 
 4c2b: C9             RET   
 
@@ -10795,7 +10824,7 @@ BACKGROUND_PICK_A_GAME:
 4d74: 00             NOP   
 4d75: FE 4C          CP    A,#$4C
 4d77: DD 21 FB 4C    LD    IX,$4CFB
-4d7b: 11 04 00       LD    DE,$0004
+4d7b: 11 04 00       LD    DE,IO_4
 4d7e: DD 19          ADD   IX,DE
 4d80: DD 7E 00       LD    A,(IX+$00)
 4d83: B9             CP    A,C
@@ -10887,7 +10916,7 @@ BACKGROUND_PICK_A_GAME:
 
 4df1: 00             NOP   
 4df2: 01 0E 0E       LD    BC,$0E0E
-4df5: 01 01 00       LD    BC,$0001
+4df5: 01 01 00       LD    BC,IO_1
 4df8: E8             RET   PE
 
 4df9: 09             ADD   HL,BC
@@ -10902,7 +10931,7 @@ BACKGROUND_PICK_A_GAME:
 4e04: 28 00          JR    Z,$4E06
 
 4e06: 01 0E 0E       LD    BC,$0E0E
-4e09: 01 01 00       LD    BC,$0001
+4e09: 01 01 00       LD    BC,IO_1
 4e0c: 18 09          JR    $4E17
 
 4e0e: D0             RET   NC
@@ -10947,7 +10976,7 @@ BACKGROUND_PICK_A_GAME:
 
 4e41: 00             NOP   
 4e42: 01 0E 0E       LD    BC,$0E0E
-4e45: 01 01 00       LD    BC,$0001
+4e45: 01 01 00       LD    BC,IO_1
 4e48: 18 3E          JR    $4E88
 
 4e4a: D0             RET   NC
@@ -10993,7 +11022,7 @@ BACKGROUND_PICK_A_GAME:
 
 4e7d: 00             NOP   
 4e7e: 01 0E 0E       LD    BC,$0E0E
-4e81: 01 01 00       LD    BC,$0001
+4e81: 01 01 00       LD    BC,IO_1
 4e84: E8             RET   PE
 
 4e85: 09             ADD   HL,BC
@@ -11035,7 +11064,7 @@ BACKGROUND_PICK_A_GAME:
 
 4eaf: 00             NOP   
 4eb0: 01 0E 0E       LD    BC,$0E0E
-4eb3: 01 01 00       LD    BC,$0001
+4eb3: 01 01 00       LD    BC,IO_1
 4eb6: 18 09          JR    $4EC1
 
 4eb8: D0             RET   NC
@@ -11066,7 +11095,7 @@ BACKGROUND_PICK_A_GAME:
 4ed6: 28 00          JR    Z,$4ED8
 
 4ed8: 01 0E 0E       LD    BC,$0E0E
-4edb: 01 01 00       LD    BC,$0001
+4edb: 01 01 00       LD    BC,IO_1
 4ede: 18 09          JR    $4EE9
 
 4ee0: D0             RET   NC
@@ -11116,7 +11145,7 @@ BACKGROUND_PICK_A_GAME:
 
 4f1d: 00             NOP   
 4f1e: 01 0E 0E       LD    BC,$0E0E
-4f21: 01 01 00       LD    BC,$0001
+4f21: 01 01 00       LD    BC,IO_1
 4f24: E8             RET   PE
 
 4f25: BD             CP    A,L
@@ -11165,7 +11194,7 @@ BACKGROUND_PICK_A_GAME:
 
 4f59: 00             NOP   
 4f5a: 01 0E 0E       LD    BC,$0E0E
-4f5d: 01 01 00       LD    BC,$0001
+4f5d: 01 01 00       LD    BC,IO_1
 4f60: E8             RET   PE
 
 4f61: 88             ADC   A,B
@@ -11442,7 +11471,7 @@ BACKGROUND_PICK_A_GAME:
 50f5: 4E             LD    C,(HL)
 50f6: 21 09 C2       LD    HL,$C209
 50f9: 71             LD    (HL),C
-50fa: CD B8 6F       CALL  $6FB8
+50fa: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 50fd: CD F4 56       CALL  $56F4
 5100: C3 3B 52       JP    $523B
 
@@ -11457,11 +11486,11 @@ BACKGROUND_PICK_A_GAME:
 5119: 32 08 C4       LD    ($C408),A
 511c: FD 21 04 F0    LD    IY,$F004
 5120: 3E 75          LD    A,#$75
-5122: CD 65 71       CALL  $7165
+5122: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 5125: FD 77 00       LD    (IY+$00),A
 5128: FD 36 01 2D    LD    (IY+$01),#$2D
 512c: 3E E8          LD    A,#$E8
-512e: CD 59 71       CALL  $7159
+512e: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 5131: FD 77 02       LD    (IY+$02),A
 5134: DD 21 51 51    LD    IX,$5151
 5138: DD 4E 00       LD    C,(IX+$00)
@@ -11473,7 +11502,7 @@ BACKGROUND_PICK_A_GAME:
 5141: DD 5E 02       LD    E,(IX+$02)
 5144: DD 56 03       LD    D,(IX+$03)
 5147: CD 5D 70       CALL  $705D
-514a: 11 04 00       LD    DE,$0004
+514a: 11 04 00       LD    DE,IO_4
 514d: DD 19          ADD   IX,DE
 514f: 18 E7          JR    $5138
 
@@ -11696,7 +11725,7 @@ BACKGROUND_PICK_A_GAME:
 5310: CD D4 57       CALL  $57D4
 5313: 3A 09 C2       LD    A,($C209)
 5316: 4F             LD    C,A
-5317: CD B8 6F       CALL  $6FB8
+5317: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 531a: ED 53 EE C1    LD    ($C1EE),DE
 531e: C9             RET   
 
@@ -11919,7 +11948,7 @@ BACKGROUND_PICK_A_GAME:
 
 5495: CD D4 57       CALL  $57D4
 5498: 0E 19          LD    C,#$19
-549a: CD B8 6F       CALL  $6FB8
+549a: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 549d: 3E 04          LD    A,#$04
 549f: CD 51 55       CALL  $5551
 54a2: 21 F4 C1       LD    HL,$C1F4
@@ -11949,7 +11978,7 @@ BACKGROUND_PICK_A_GAME:
 54d0: 32 07 C4       LD    ($C407),A
 54d3: 78             LD    A,B
 54d4: 32 22 C2       LD    ($C222),A
-54d7: CD B8 6F       CALL  $6FB8
+54d7: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 54da: 3E 78          LD    A,#$78
 54dc: 32 6E C4       LD    ($C46E),A
 54df: E1             POP   HL
@@ -11961,7 +11990,7 @@ BACKGROUND_PICK_A_GAME:
 
 54e8: CB 8F          RES   1,A
 54ea: 32 E8 C1       LD    ($C1E8),A
-54ed: 11 00 00       LD    DE,$0000
+54ed: 11 00 00       LD    DE,IO_0
 54f0: CD 35 55       CALL  $5535
 54f3: 3E 01          LD    A,#$01
 54f5: CD 51 55       CALL  $5551
@@ -11973,7 +12002,7 @@ BACKGROUND_PICK_A_GAME:
 
 5504: CB 97          RES   2,A
 5506: 32 E8 C1       LD    ($C1E8),A
-5509: 11 01 00       LD    DE,$0001
+5509: 11 01 00       LD    DE,IO_1
 550c: CD 35 55       CALL  $5535
 550f: 3E 02          LD    A,#$02
 5511: CD 51 55       CALL  $5551
@@ -11985,7 +12014,7 @@ BACKGROUND_PICK_A_GAME:
 
 551f: CB 9F          RES   3,A
 5521: 32 E8 C1       LD    ($C1E8),A
-5524: 11 02 00       LD    DE,$0002
+5524: 11 02 00       LD    DE,IO_2
 5527: CD 35 55       CALL  $5535
 552a: 3E 03          LD    A,#$03
 552c: CD 51 55       CALL  $5551
@@ -12000,7 +12029,7 @@ BACKGROUND_PICK_A_GAME:
 553e: 19             ADD   HL,DE
 553f: 36 00          LD    (HL),#$00
 5541: 0E 0E          LD    C,#$0E
-5543: CD B8 6F       CALL  $6FB8
+5543: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 5546: 21 4C 55       LD    HL,$554C
 5549: C3 52 6F       JP    $6F52
 
@@ -12098,21 +12127,21 @@ BACKGROUND_PICK_A_GAME:
 55c8: CB 47          BIT   0,A
 55ca: C8             RET   Z
 
-55cb: 01 00 00       LD    BC,$0000
+55cb: 01 00 00       LD    BC,IO_0
 55ce: 18 16          JR    $55E6
 
 55d0: 3A 10 C2       LD    A,($C210)
 55d3: CB 4F          BIT   1,A
 55d5: C8             RET   Z
 
-55d6: 01 01 00       LD    BC,$0001
+55d6: 01 01 00       LD    BC,IO_1
 55d9: 18 0B          JR    $55E6
 
 55db: 3A 10 C2       LD    A,($C210)
 55de: CB 57          BIT   2,A
 55e0: C8             RET   Z
 
-55e1: 01 02 00       LD    BC,$0002
+55e1: 01 02 00       LD    BC,IO_2
 55e4: 18 00          JR    $55E6
 
 55e6: 3A F0 C1       LD    A,($C1F0)
@@ -12384,7 +12413,7 @@ BACKGROUND_PICK_A_GAME:
 579e: 4E             LD    C,(HL)
 579f: 21 09 C2       LD    HL,$C209
 57a2: 71             LD    (HL),C
-57a3: CD B8 6F       CALL  $6FB8
+57a3: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 57a6: CB 20          SLA   B
 57a8: CB 20          SLA   B
 57aa: 3A 11 C2       LD    A,($C211)
@@ -12424,7 +12453,7 @@ BACKGROUND_PICK_A_GAME:
 57e7: 28 02          JR    Z,$57EB
 
 57e9: 0E 1B          LD    C,#$1B
-57eb: CD B8 6F       CALL  $6FB8
+57eb: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 57ee: C9             RET   
 
 57ef: 1F             RRA   
@@ -12547,7 +12576,7 @@ BACKGROUND_PICK_A_GAME:
 58a3: 77             LD    (HL),A
 58a4: C9             RET   
 
-58a5: 11 00 00       LD    DE,$0000
+58a5: 11 00 00       LD    DE,IO_0
 58a8: CD D2 58       CALL  $58D2
 58ab: 13             INC   DE
 58ac: CD D2 58       CALL  $58D2
@@ -12613,28 +12642,28 @@ BACKGROUND_PICK_A_GAME:
 
 5901: DD 21 04 F0    LD    IX,$F004
 5905: 3A 03 C2       LD    A,($C203)
-5908: CD 65 71       CALL  $7165
+5908: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 590b: DD 77 00       LD    (IX+$00),A
 590e: 3A 07 C2       LD    A,($C207)
-5911: CD 59 71       CALL  $7159
+5911: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 5914: DD 77 02       LD    (IX+$02),A
 5917: 3A 00 C2       LD    A,($C200)
-591a: CD 65 71       CALL  $7165
+591a: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 591d: DD 77 04       LD    (IX+$04),A
 5920: 3A 04 C2       LD    A,($C204)
-5923: CD 59 71       CALL  $7159
+5923: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 5926: DD 77 06       LD    (IX+$06),A
 5929: 3A 01 C2       LD    A,($C201)
-592c: CD 65 71       CALL  $7165
+592c: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 592f: DD 77 08       LD    (IX+$08),A
 5932: 3A 05 C2       LD    A,($C205)
-5935: CD 59 71       CALL  $7159
+5935: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 5938: DD 77 0A       LD    (IX+$0A),A
 593b: 3A 02 C2       LD    A,($C202)
-593e: CD 65 71       CALL  $7165
+593e: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 5941: DD 77 0C       LD    (IX+$0C),A
 5944: 3A 06 C2       LD    A,($C206)
-5947: CD 59 71       CALL  $7159
+5947: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 594a: DD 77 0E       LD    (IX+$0E),A
 594d: 3A ED C1       LD    A,($C1ED)
 5950: DD 77 01       LD    (IX+$01),A
@@ -12692,7 +12721,7 @@ BACKGROUND_PICK_A_GAME:
 59a6: 3C             INC   A
 59a7: 18 F9          JR    $59A2
 
-59a9: 21 00 00       LD    HL,$0000
+59a9: 21 00 00       LD    HL,IO_0
 59ac: 06 00          LD    B,#$00
 59ae: 09             ADD   HL,BC
 59af: A7             AND   A,A
@@ -12935,7 +12964,7 @@ BACKGROUND_PICK_A_GAME:
 5b24: C5             PUSH  BC
 5b25: 21 F5 C1       LD    HL,$C1F5
 5b28: 56             LD    D,(HL)
-5b29: DD 21 00 00    LD    IX,$0000
+5b29: DD 21 00 00    LD    IX,IO_0
 5b2d: CD 4B 5B       CALL  $5B4B
 5b30: 79             LD    A,C
 5b31: 21 F6 C1       LD    HL,$C1F6
@@ -13137,7 +13166,7 @@ BACKGROUND_PICK_A_GAME:
 5c18: 02             LD    (BC),A
 5c19: 63             LD    H,E
 5c1a: 00             NOP   
-5c1b: 01 00 00       LD    BC,$0000
+5c1b: 01 00 00       LD    BC,IO_0
 5c1e: 00             NOP   
 5c1f: 00             NOP   
 5c20: 00             NOP   
@@ -13160,7 +13189,7 @@ BACKGROUND_PICK_A_GAME:
 5c37: 41             LD    B,C
 5c38: 82             ADD   A,D
 5c39: 07             RLCA  
-5c3a: 01 00 00       LD    BC,$0000
+5c3a: 01 00 00       LD    BC,IO_0
 5c3d: 83             ADD   A,E
 5c3e: 43             LD    B,E
 5c3f: 07             RLCA  
@@ -13171,7 +13200,7 @@ BACKGROUND_PICK_A_GAME:
 5c44: 82             ADD   A,D
 5c45: 07             RLCA  
 5c46: 40             LD    B,B
-5c47: 01 00 00       LD    BC,$0000
+5c47: 01 00 00       LD    BC,IO_0
 5c4a: 42             LD    B,D
 5c4b: 07             RLCA  
 5c4c: 80             ADD   A,B
@@ -13192,7 +13221,7 @@ BACKGROUND_PICK_A_GAME:
 5c63: 07             RLCA  
 5c64: C0             RET   NZ
 
-5c65: 01 00 00       LD    BC,$0000
+5c65: 01 00 00       LD    BC,IO_0
 5c68: 42             LD    B,D
 5c69: 07             RLCA  
 5c6a: 00             NOP   
@@ -13379,7 +13408,7 @@ BACKGROUND_PICK_A_GAME:
 5d71: 22 2E C0       LD    ($C02E),HL
 5d74: CD 65 60       CALL  $6065
 5d77: 0E 21          LD    C,#$21
-5d79: C3 B8 6F       JP    $6FB8
+5d79: C3 B8 6F       JP    PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 
 5d7c: 3A 04 C0       LD    A,($C004)
 5d7f: E6 06          AND   A,#$06
@@ -13427,9 +13456,9 @@ BACKGROUND_PICK_A_GAME:
 5dc0: 3E 04          LD    A,#$04
 5dc2: 32 0C C0       LD    ($C00C),A
 5dc5: 0E 40          LD    C,#$40
-5dc7: CD B8 6F       CALL  $6FB8
+5dc7: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 5dca: 0E 27          LD    C,#$27
-5dcc: CD B8 6F       CALL  $6FB8
+5dcc: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 5dcf: 3E 80          LD    A,#$80
 5dd1: 32 20 C0       LD    ($C020),A
 5dd4: C3 23 5F       JP    $5F23
@@ -13442,9 +13471,9 @@ BACKGROUND_PICK_A_GAME:
 5ddd: 20 0A          JR    NZ,$5DE9
 
 5ddf: 0E 22          LD    C,#$22
-5de1: CD B8 6F       CALL  $6FB8
+5de1: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 5de4: 0E 3F          LD    C,#$3F
-5de6: CD B8 6F       CALL  $6FB8
+5de6: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 5de9: CD 23 5F       CALL  $5F23
 5dec: 21 1E C0       LD    HL,$C01E
 5def: 35             DEC   (HL)
@@ -13515,7 +13544,7 @@ BACKGROUND_PICK_A_GAME:
 5e6e: DD 5E 02       LD    E,(IX+$02)
 5e71: DD 56 03       LD    D,(IX+$03)
 5e74: CD 5D 70       CALL  $705D
-5e77: 11 04 00       LD    DE,$0004
+5e77: 11 04 00       LD    DE,IO_4
 5e7a: DD 19          ADD   IX,DE
 5e7c: 18 E7          JR    $5E65
 
@@ -13705,7 +13734,7 @@ BACKGROUND_PICK_A_GAME:
 5fb3: 21 39 6B       LD    HL,JOYSTICK_INPUT_TABLE;look at 6b39 for more info!
 5fb6: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 5fb9: 11 29 C0       LD    DE,$C029
-5fbc: 01 04 00       LD    BC,$0004
+5fbc: 01 04 00       LD    BC,IO_4
 5fbf: ED B0          LDIR  
 5fc1: 2A 25 C0       LD    HL,($C025)
 5fc4: ED 5B 29 C0    LD    DE,($C029)
@@ -13797,7 +13826,7 @@ BACKGROUND_PICK_A_GAME:
 6055: 20 05          JR    NZ,$605C
 
 6057: 0E 40          LD    C,#$40
-6059: CD B8 6F       CALL  $6FB8
+6059: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 605c: F6 80          OR    A,#$80
 605e: C9             RET   
 
@@ -13815,11 +13844,11 @@ BACKGROUND_PICK_A_GAME:
 6072: 47             LD    B,A
 6073: 3A 28 C0       LD    A,($C028)
 6076: 4F             LD    C,A
-6077: CD 59 71       CALL  $7159
+6077: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 607a: 32 06 F0       LD    ($F006),A
 607d: 79             LD    A,C
 607e: C6 10          ADD   A,#$10
-6080: CD 59 71       CALL  $7159
+6080: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 6083: 32 0A F0       LD    ($F00A),A
 6086: 3A 2A C0       LD    A,($C02A)
 6089: 21 2C C0       LD    HL,$C02C
@@ -13847,7 +13876,7 @@ BACKGROUND_PICK_A_GAME:
 60b4: 32 14 F0       LD    ($F014),A
 60b7: 79             LD    A,C
 60b8: DD 86 0C       ADD   A,(IX+$0C)
-60bb: CD 59 71       CALL  $7159
+60bb: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 60be: 32 16 F0       LD    ($F016),A
 60c1: DD 7E 0A       LD    A,(IX+$0A)
 60c4: 32 15 F0       LD    ($F015),A
@@ -13861,7 +13890,7 @@ BACKGROUND_PICK_A_GAME:
 60d4: 32 0C F0       LD    ($F00C),A
 60d7: 79             LD    A,C
 60d8: DD 86 09       ADD   A,(IX+$09)
-60db: CD 59 71       CALL  $7159
+60db: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 60de: 32 0E F0       LD    ($F00E),A
 60e1: DD 7E 07       LD    A,(IX+$07)
 60e4: 32 0D F0       LD    ($F00D),A
@@ -13874,7 +13903,7 @@ BACKGROUND_PICK_A_GAME:
 60f1: 32 0C F0       LD    ($F00C),A
 60f4: 79             LD    A,C
 60f5: DD 86 06       ADD   A,(IX+$06)
-60f8: CD 59 71       CALL  $7159
+60f8: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 60fb: 32 0E F0       LD    ($F00E),A
 60fe: DD 7E 04       LD    A,(IX+$04)
 6101: 32 0D F0       LD    ($F00D),A
@@ -13887,7 +13916,7 @@ BACKGROUND_PICK_A_GAME:
 610e: 32 10 F0       LD    ($F010),A
 6111: 79             LD    A,C
 6112: DD 86 0E       ADD   A,(IX+$0E)
-6115: CD 59 71       CALL  $7159
+6115: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 6118: 32 12 F0       LD    ($F012),A
 611b: 3E 07          LD    A,#$07
 611d: 32 11 F0       LD    ($F011),A
@@ -13944,7 +13973,7 @@ BACKGROUND_PICK_A_GAME:
 
 6169: 35             DEC   (HL)
 616a: 0E 08          LD    C,#$08
-616c: CD B8 6F       CALL  $6FB8
+616c: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 616f: 21 24 C0       LD    HL,$C024
 6172: CB C6          SET   0,(HL)
 6174: C3 33 64       JP    $6433
@@ -13993,7 +14022,7 @@ BACKGROUND_PICK_A_GAME:
 61c1: 32 14 F0       LD    ($F014),A
 61c4: 32 18 F0       LD    ($F018),A
 61c7: 0E 30          LD    C,#$30
-61c9: C3 B8 6F       JP    $6FB8
+61c9: C3 B8 6F       JP    PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 
 61cc: 21 2D C0       LD    HL,$C02D
 61cf: 7E             LD    A,(HL)
@@ -14030,9 +14059,9 @@ BACKGROUND_PICK_A_GAME:
 6204: C0             RET   NZ
 
 6205: 0E 22          LD    C,#$22
-6207: CD B8 6F       CALL  $6FB8
+6207: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 620a: 0E 27          LD    C,#$27
-620c: CD B8 6F       CALL  $6FB8
+620c: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 620f: 3E 80          LD    A,#$80
 6211: 32 20 C0       LD    ($C020),A
 6214: 3E 00          LD    A,#$00
@@ -14088,7 +14117,7 @@ BACKGROUND_PICK_A_GAME:
 6264: C0             RET   NZ
 
 6265: CB CE          SET   1,(HL)
-6267: 21 00 00       LD    HL,$0000
+6267: 21 00 00       LD    HL,IO_0
 626a: 22 29 C0       LD    ($C029),HL
 626d: 22 2B C0       LD    ($C02B),HL
 6270: 21 80 81       LD    HL,$8180
@@ -14097,9 +14126,9 @@ BACKGROUND_PICK_A_GAME:
 6279: ED B0          LDIR  
 627b: CD 23 5F       CALL  $5F23
 627e: 0E 22          LD    C,#$22
-6280: CD B8 6F       CALL  $6FB8
+6280: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 6283: 0E 3C          LD    C,#$3C
-6285: C3 B8 6F       JP    $6FB8
+6285: C3 B8 6F       JP    PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 
 6288: 2A 27 C0       LD    HL,($C027)
 628b: 7C             LD    A,H
@@ -14180,7 +14209,7 @@ BACKGROUND_PICK_A_GAME:
 630f: 7E             LD    A,(HL)
 6310: C6 02          ADD   A,#$02
 6312: 77             LD    (HL),A
-6313: CD 59 71       CALL  $7159
+6313: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 6316: FD 77 02       LD    (IY+$02),A
 6319: CB 50          BIT   2,B
 631b: 20 04          JR    NZ,$6321
@@ -14199,7 +14228,7 @@ BACKGROUND_PICK_A_GAME:
 632a: 7E             LD    A,(HL)
 632b: D6 02          SUB   A,#$02
 632d: 77             LD    (HL),A
-632e: CD 59 71       CALL  $7159
+632e: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 6331: FD 77 02       LD    (IY+$02),A
 6334: CB 50          BIT   2,B
 6336: 20 1C          JR    NZ,$6354
@@ -14210,7 +14239,7 @@ BACKGROUND_PICK_A_GAME:
 633a: 3A 00 C0       LD    A,(NVRAM)
 633d: 32 28 F0       LD    ($F028),A
 6340: 3A 01 C0       LD    A,($C001)
-6343: CD 59 71       CALL  $7159
+6343: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 6346: 32 2A F0       LD    ($F02A),A
 6349: 3E 0C          LD    A,#$0C
 634b: 32 29 F0       LD    ($F029),A
@@ -14313,12 +14342,12 @@ BACKGROUND_PICK_A_GAME:
 640f: DD 75 06       LD    (IX+$06),L
 6412: DD 74 07       LD    (IX+$07),H
 6415: DD 7E 03       LD    A,(IX+$03)
-6418: CD 59 71       CALL  $7159
+6418: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 641b: FD 77 02       LD    (IY+$02),A
 641e: CD A6 64       CALL  $64A6
 6421: 11 0A 00       LD    DE,$000A
 6424: DD 19          ADD   IX,DE
-6426: 11 04 00       LD    DE,$0004
+6426: 11 04 00       LD    DE,IO_4
 6429: FD 19          ADD   IY,DE
 642b: 21 06 C4       LD    HL,$C406
 642e: 35             DEC   (HL)
@@ -14334,7 +14363,7 @@ BACKGROUND_PICK_A_GAME:
 
 6441: 11 0A 00       LD    DE,$000A
 6444: DD 19          ADD   IX,DE
-6446: 11 04 00       LD    DE,$0004
+6446: 11 04 00       LD    DE,IO_4
 6449: FD 19          ADD   IY,DE
 644b: 18 EE          JR    $643B
 
@@ -14367,7 +14396,7 @@ BACKGROUND_PICK_A_GAME:
 6492: DD 36 08 18    LD    (IX+$08),#$18
 6496: FD E1          POP   IY
 6498: FD 70 00       LD    (IY+$00),B
-649b: CD 59 71       CALL  $7159
+649b: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 649e: FD 77 02       LD    (IY+$02),A
 64a1: FD 36 01 07    LD    (IY+$01),#$07
 64a5: C9             RET   
@@ -14460,7 +14489,7 @@ BACKGROUND_PICK_A_GAME:
 6540: CD 81 68       CALL  $6881
 6543: 11 0B 00       LD    DE,$000B
 6546: DD 19          ADD   IX,DE
-6548: 11 04 00       LD    DE,$0004
+6548: 11 04 00       LD    DE,IO_4
 654b: FD 19          ADD   IY,DE
 654d: 21 06 C4       LD    HL,$C406
 6550: 35             DEC   (HL)
@@ -14538,7 +14567,7 @@ BACKGROUND_PICK_A_GAME:
 
 65d7: DD 77 03       LD    (IX+$03),A
 65da: DD 75 02       LD    (IX+$02),L
-65dd: CD 59 71       CALL  $7159
+65dd: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 65e0: FD 77 02       LD    (IY+$02),A
 65e3: 7C             LD    A,H
 65e4: FE 96          CP    A,#$96
@@ -14588,7 +14617,7 @@ BACKGROUND_PICK_A_GAME:
 6635: 92             SUB   A,D
 6636: 30 04          JR    NC,$663C
 
-6638: 01 04 00       LD    BC,$0004
+6638: 01 04 00       LD    BC,IO_4
 663b: 09             ADD   HL,BC
 663c: 3A 28 C0       LD    A,($C028)
 663f: 93             SUB   A,E
@@ -14616,7 +14645,7 @@ BACKGROUND_PICK_A_GAME:
 665f: FD 72 00       LD    (IY+$00),D
 6662: DD 73 03       LD    (IX+$03),E
 6665: 7B             LD    A,E
-6666: CD 59 71       CALL  $7159
+6666: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 6669: FD 77 02       LD    (IY+$02),A
 666c: 7E             LD    A,(HL)
 666d: DD 77 04       LD    (IX+$04),A
@@ -14644,7 +14673,7 @@ BACKGROUND_PICK_A_GAME:
 
 669c: 11 0B 00       LD    DE,$000B
 669f: DD 19          ADD   IX,DE
-66a1: 11 04 00       LD    DE,$0004
+66a1: 11 04 00       LD    DE,IO_4
 66a4: FD 19          ADD   IY,DE
 66a6: 10 AC          DJNZ  $6654
 
@@ -14850,7 +14879,7 @@ BACKGROUND_PICK_A_GAME:
 67e3: FD 77 00       LD    (IY+$00),A
 67e6: 7E             LD    A,(HL)
 67e7: DD 77 03       LD    (IX+$03),A
-67ea: CD 59 71       CALL  $7159
+67ea: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 67ed: FD 77 02       LD    (IY+$02),A
 67f0: 23             INC   HL
 67f1: DD 36 0A 80    LD    (IX+$0A),#$80
@@ -14886,7 +14915,7 @@ BACKGROUND_PICK_A_GAME:
 6819: 23             INC   HL
 681a: 11 0B 00       LD    DE,$000B
 681d: DD 19          ADD   IX,DE
-681f: 11 04 00       LD    DE,$0004
+681f: 11 04 00       LD    DE,IO_4
 6822: FD 19          ADD   IY,DE
 6824: 10 B8          DJNZ  $67DE
 
@@ -14931,7 +14960,7 @@ BACKGROUND_PICK_A_GAME:
 6870: C1             POP   BC
 6871: 11 0A 00       LD    DE,$000A
 6874: FD 19          ADD   IY,DE
-6876: 11 04 00       LD    DE,$0004
+6876: 11 04 00       LD    DE,IO_4
 6879: 19             ADD   HL,DE
 687a: 10 B6          DJNZ  $6832
 
@@ -15418,7 +15447,7 @@ JOYSTICK_INPUT_TABLE:
 6b83: AA             XOR   A,D
 6b84: 07             RLCA  
 6b85: F9             LD    SP,HL
-6b86: FA 03 00       JP    M,$0003
+6b86: FA 03 00       JP    M,IO_3
 
 6b89: 04             INC   B
 6b8a: 00             NOP   
@@ -15479,7 +15508,7 @@ JOYSTICK_INPUT_TABLE:
 6bce: 02             LD    (BC),A
 6bcf: E6 07          AND   A,#$07
 6bd1: 03             INC   BC
-6bd2: FA 03 00       JP    M,$0003
+6bd2: FA 03 00       JP    M,IO_3
 
 6bd5: 03             INC   BC
 6bd6: 84             ADD   A,H
@@ -15553,7 +15582,7 @@ JOYSTICK_INPUT_TABLE:
 6c2e: E1             POP   HL
 6c2f: 07             RLCA  
 6c30: 03             INC   BC
-6c31: FA 03 00       JP    M,$0003
+6c31: FA 03 00       JP    M,IO_3
 
 6c34: 00             NOP   
 6c35: 00             NOP   
@@ -15682,7 +15711,7 @@ JOYSTICK_INPUT_TABLE:
 6cd9: 2A FA F9       LD    HL,($F9FA)
 6cdc: 06 03          LD    B,#$03
 6cde: 00             NOP   
-6cdf: FC 00 00       CALL  M,$0000
+6cdf: FC 00 00       CALL  M,IO_0
 6ce2: 1D             DEC   E
 6ce3: 1E 1F          LD    E,#$1F
 6ce5: 20 2B          JR    NZ,$6D12
@@ -15871,7 +15900,7 @@ JOYSTICK_INPUT_TABLE:
 6de3: A6             AND   A,(HL)
 6de4: 07             RLCA  
 6de5: F9             LD    SP,HL
-6de6: FA 03 00       JP    M,$0003
+6de6: FA 03 00       JP    M,IO_3
 
 6de9: 03             INC   BC
 6dea: 7C             LD    A,H
@@ -16142,10 +16171,11 @@ JOYSTICK_INPUT_TABLE:
 6f13: 32 7A C4       LD    ($C47A),A
 6f16: C9             RET   
 
+RESET_WATCHDOG_UNTIL_C400_IS_ONE:
 6f17: 3A 00 C4       LD    A,($C400)
 6f1a: D3 E0          OUT   ($E0),A
 6f1c: FE 01          CP    A,#$01
-6f1e: 38 F7          JR    C,$6F17
+6f1e: 38 F7          JR    C,RESET_WATCHDOG_UNTIL_C400_IS_ONE
 
 6f20: AF             XOR   A,A
 6f21: 32 00 C4       LD    ($C400),A
@@ -16166,7 +16196,7 @@ JOYSTICK_INPUT_TABLE:
 
 6f35: 06 20          LD    B,#$20
 6f37: DD 21 80 FF    LD    IX,$FF80
-6f3b: 11 02 00       LD    DE,$0002
+6f3b: 11 02 00       LD    DE,IO_2
 6f3e: 7E             LD    A,(HL)
 6f3f: 23             INC   HL
 6f40: B7             OR    A,A
@@ -16242,11 +16272,12 @@ JOYSTICK_INPUT_TABLE:
 6fa9: 3E 01          LD    A,#$01
 6fab: 32 65 C4       LD    ($C465),A
 6fae: 0E 11          LD    C,#$11
-6fb0: CD B8 6F       CALL  $6FB8
+6fb0: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 6fb3: FD E1          POP   IY
 6fb5: DD E1          POP   IX
 6fb7: C9             RET   
 
+PUT_C_ON_STACK_TO_SEND_TO_AUDIO:
 6fb8: F3             DI    
 6fb9: 2A 80 C4       LD    HL,($C480)
 6fbc: 71             LD    (HL),C
@@ -16260,8 +16291,8 @@ JOYSTICK_INPUT_TABLE:
 
 *** Clear background screen (set graphic to 51 and attributes to 5E)
 CLEAR_BACKGROUND:
-6fc7: CD 17 6F       CALL  $6F17
-6fca: CD 17 6F       CALL  $6F17
+6fc7: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
+6fca: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 6fcd: F3             DI    
 6fce: AF             XOR   A,A
 6fcf: 32 6B C4       LD    ($C46B),A
@@ -16285,7 +16316,7 @@ CLEAR_BACKGROUND:
 6fee: 21 CC FD       LD    HL,$FDCC
 6ff1: 22 0D C4       LD    ($C40D),HL
 6ff4: ED 4B 0D C4    LD    BC,($C40D)
-6ff8: 21 04 00       LD    HL,$0004
+6ff8: 21 04 00       LD    HL,IO_4
 6ffb: 09             ADD   HL,BC
 6ffc: 22 0D C4       LD    ($C40D),HL
 
@@ -16294,7 +16325,7 @@ CLEAR_BACKGROUND:
 7002: FE 06          CP    A,#$06
 7004: 38 05          JR    C,$700B
 
-7006: CD 17 6F       CALL  $6F17
+7006: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 7009: 18 F4          JR    $6FFF
 
 700b: F3             DI    
@@ -16328,8 +16359,8 @@ CLEAR_BACKGROUND:
 
 7034: C9             RET   
 
-7035: CD 17 6F       CALL  $6F17
-7038: CD 17 6F       CALL  $6F17
+7035: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
+7038: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 703b: 11 00 F8       LD    DE,VIDEO_RAM_M1
 703e: 01 80 07       LD    BC,$0780
 7041: ED B0          LDIR  
@@ -16358,7 +16389,7 @@ INITIALIZE_SPRITES:
 7060: FE 0A          CP    A,#$0A
 7062: 38 05          JR    C,$7069
 
-7064: CD 17 6F       CALL  $6F17
+7064: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 7067: 18 F4          JR    $705D
 
 7069: F3             DI    
@@ -16381,7 +16412,7 @@ INITIALIZE_SPRITES:
 7081: FE 06          CP    A,#$06
 7083: 38 05          JR    C,$708A
 
-7085: CD 17 6F       CALL  $6F17
+7085: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 7088: 18 F4          JR    $707E
 
 708a: F3             DI    
@@ -16564,6 +16595,9 @@ INITIALIZE_SPRITES:
 7156: C1             POP   BC
 7157: 51             LD    D,C
 7158: 00             NOP   
+
+*** Return C687 in A.  If non-zero, subtract 7.  Do not affect other registers.
+RETURN_C687-7_IF_NZ_IN_A:
 7159: C5             PUSH  BC
 715a: 47             LD    B,A
 715b: 3A 87 C6       LD    A,($C687)
@@ -16575,6 +16609,9 @@ INITIALIZE_SPRITES:
 7162: D6 07          SUB   A,#$07
 7164: C9             RET   
 
+
+*** Return C687 in A.  If non-zero, subtract 2.  Do not affect other registers.
+RETURN_C687-2_IF_NZ_IN_A:
 7165: C5             PUSH  BC
 7166: 47             LD    B,A
 7167: 3A 87 C6       LD    A,($C687)
@@ -16821,29 +16858,11 @@ BACKGROUND_TANK_GAME:
 7960: 74 40 80 40 8A 40 94 40 9F 40 10 42 20 42 23 42 
 7970: 2F 42 5D 42 60 40 64 42 64 42 AC 40 AB 40 AD 40 
 
-7980: 00             NOP   
-7981: 00             NOP   
-7982: 01 C2 01       LD    BC,$01C2
-7985: C0             RET   NZ
+COLOR_PALETTE_FOR_TANKS_GAME:
+7980: 00 00 01 C2 01 C0 01 E0 00 38 00 10 00 87 01 F8 
+7990: 00 10 00 A8 00 80 01 00 00 3F 00 DB 00 03 01 FF 
 
-7986: 01 E0 00       LD    BC,$00E0
-7989: 38 00          JR    C,$798B
-
-798b: 10 00          DJNZ  $798D
-
-798d: 87             ADD   A,A
-798e: 01 F8 00       LD    BC,$00F8
-7991: 10 00          DJNZ  $7993
-
-7993: A8             XOR   A,B
-7994: 00             NOP   
-7995: 80             ADD   A,B
-7996: 01 00 00       LD    BC,$0000
-7999: 3F             CCF   
-799a: 00             NOP   
-799b: DB 00          IN    A,($00)
-799d: 03             INC   BC
-799e: 01 FF 00       LD    BC,$00FF
+79a0: 00             NOP   
 79a1: 00             NOP   
 79a2: 00             NOP   
 79a3: 2B             DEC   HL
@@ -16876,7 +16895,7 @@ BACKGROUND_TANK_GAME:
 79c7: 08             EX    AF,AF'
 79c8: 01 F4 01       LD    BC,$01F4
 79cb: FC 00 51       CALL  M,$5100
-79ce: 01 F0 00       LD    BC,$00F0
+79ce: 01 F0 00       LD    BC,IO_CTC
 79d1: 30 01          JR    NC,$79D4
 
 79d3: E0             RET   PO
@@ -19146,7 +19165,7 @@ BACKGROUND_LIGHT_CYCLE:
 90d3: A8             XOR   A,B
 90d4: 00             NOP   
 90d5: 80             ADD   A,B
-90d6: 01 00 00       LD    BC,$0000
+90d6: 01 00 00       LD    BC,IO_0
 90d9: 3F             CCF   
 90da: 00             NOP   
 90db: DB 00          IN    A,($00)
@@ -19411,7 +19430,7 @@ BACKGROUND_TRAINING_FOR_LIGHT_CYCLE:
 991f: 32 04 C0       LD    ($C004),A
 9922: CD 49 70       CALL  INITIALIZE_SPRITES
 9925: 0E 02          LD    C,#$02
-9927: CD B8 6F       CALL  $6FB8
+9927: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 992a: CD C7 6F       CALL  CLEAR_BACKGROUND
 992d: CD A4 99       CALL  $99A4
 9930: DD 2A 00 C0    LD    IX,(NVRAM)
@@ -19421,9 +19440,9 @@ BACKGROUND_TRAINING_FOR_LIGHT_CYCLE:
 993d: DB 00          IN    A,($00)
 993f: 2F             CPL   
 9940: E6 80          AND   A,#$80
-9942: CA 00 00       JP    Z,$0000
+9942: CA 00 00       JP    Z,IO_0
 
-9945: CD 17 6F       CALL  $6F17
+9945: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 9948: CD 58 99       CALL  $9958
 994b: CD CA 99       CALL  $99CA
 994e: CD 8C 99       CALL  $998C
@@ -19504,7 +19523,7 @@ BACKGROUND_TRAINING_FOR_LIGHT_CYCLE:
 99ba: DD 5E 02       LD    E,(IX+$02)
 99bd: DD 56 03       LD    D,(IX+$03)
 99c0: CD FF 6F       CALL  $6FFF
-99c3: 11 04 00       LD    DE,$0004
+99c3: 11 04 00       LD    DE,IO_4
 99c6: DD 19          ADD   IX,DE
 99c8: 18 E7          JR    $99B1
 
@@ -19645,7 +19664,7 @@ BACKGROUND_TRAINING_FOR_LIGHT_CYCLE:
 9b40: CD C7 6F       CALL  CLEAR_BACKGROUND
 9b43: CD 49 70       CALL  INITIALIZE_SPRITES
 9b46: 0E 02          LD    C,#$02
-9b48: CD B8 6F       CALL  $6FB8
+9b48: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 9b4b: CD A4 99       CALL  $99A4
 9b4e: DD 2A 00 C0    LD    IX,(NVRAM)
 9b52: DD 7E 07       LD    A,(IX+$07)
@@ -19659,7 +19678,7 @@ BACKGROUND_TRAINING_FOR_LIGHT_CYCLE:
 9b60: E6 80          AND   A,#$80
 9b62: C8             RET   Z
 
-9b63: CD 17 6F       CALL  $6F17
+9b63: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 9b66: CD 58 99       CALL  $9958
 9b69: CD CA 99       CALL  $99CA
 9b6c: CD 8C 99       CALL  $998C
@@ -19679,10 +19698,10 @@ BACKGROUND_TRAINING_FOR_LIGHT_CYCLE:
 9b84: E5             PUSH  HL
 9b85: DD E1          POP   IX
 9b87: DD 4E 00       LD    C,(IX+$00)
-9b8a: CD B8 6F       CALL  $6FB8
+9b8a: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 9b8d: DD 46 01       LD    B,(IX+$01)
 9b90: 04             INC   B
-9b91: CD 17 6F       CALL  $6F17
+9b91: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 9b94: 10 FB          DJNZ  $9B91
 
 9b96: DD 7E 02       LD    A,(IX+$02)
@@ -19697,7 +19716,7 @@ BACKGROUND_TRAINING_FOR_LIGHT_CYCLE:
 9ba2: 18 01          JR    $9BA5
 
 9ba4: 4F             LD    C,A
-9ba5: CD B8 6F       CALL  $6FB8
+9ba5: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 9ba8: C9             RET   
 
 9ba9: 3E 02          LD    A,#$02
@@ -19709,7 +19728,7 @@ BACKGROUND_TRAINING_FOR_LIGHT_CYCLE:
 
 9bba: CD CA 99       CALL  $99CA
 9bbd: 06 0A          LD    B,#$0A
-9bbf: CD 17 6F       CALL  $6F17
+9bbf: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 9bc2: 10 FB          DJNZ  $9BBF
 
 9bc4: CD 76 9B       CALL  $9B76
@@ -20071,7 +20090,7 @@ BACKGROUND_TRAINING_FOR_LIGHT_CYCLE:
 9ea7: CD C7 6F       CALL  CLEAR_BACKGROUND
 9eaa: CD 49 70       CALL  INITIALIZE_SPRITES
 9ead: 0E 02          LD    C,#$02
-9eaf: CD B8 6F       CALL  $6FB8
+9eaf: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 9eb2: CD A4 99       CALL  $99A4
 9eb5: DD 2A 00 C0    LD    IX,(NVRAM)
 9eb9: DD 7E 07       LD    A,(IX+$07)
@@ -20086,7 +20105,7 @@ BACKGROUND_TRAINING_FOR_LIGHT_CYCLE:
 9eca: E6 80          AND   A,#$80
 9ecc: C8             RET   Z
 
-9ecd: CD 17 6F       CALL  $6F17
+9ecd: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 9ed0: CD 58 99       CALL  $9958
 9ed3: CD CA 99       CALL  $99CA
 9ed6: CD 8C 99       CALL  $998C
@@ -20342,7 +20361,7 @@ a10e: C1             POP   BC
 a10f: E1             POP   HL
 a110: 10 D1          DJNZ  $A0E3
 
-a112: CD 17 6F       CALL  $6F17
+a112: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 a115: CD 8C 99       CALL  $998C
 a118: C0             RET   NZ
 
@@ -20462,7 +20481,7 @@ a247: C1             POP   BC
 a248: E1             POP   HL
 a249: 10 D3          DJNZ  $A21E
 
-a24b: CD 17 6F       CALL  $6F17
+a24b: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 a24e: CD 8C 99       CALL  $998C
 a251: C0             RET   NZ
 
@@ -20552,7 +20571,7 @@ a365: C7             RST   $00
 a366: 6F             LD    L,A
 a367: CD 49 70       CALL  INITIALIZE_SPRITES
 a36a: 0E 02          LD    C,#$02
-a36c: CD B8 6F       CALL  $6FB8
+a36c: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 a36f: 21 AD A3       LD    HL,$A3AD
 a372: 22 00 C0       LD    (NVRAM),HL
 a375: AF             XOR   A,A
@@ -20562,14 +20581,14 @@ a37c: DD 2A 00 C0    LD    IX,(NVRAM)
 a380: DD 7E 07       LD    A,(IX+$07)
 a383: 32 05 F0       LD    ($F005),A
 a386: 0E 1A          LD    C,#$1A
-a388: CD B8 6F       CALL  $6FB8
+a388: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 a38b: 3A 03 C0       LD    A,($C003)
 a38e: FE 06          CP    A,#$06
 a390: 30 D2          JR    NC,$A364
 
 a392: CD CA 99       CALL  $99CA
 a395: 06 0E          LD    B,#$0E
-a397: CD 17 6F       CALL  $6F17
+a397: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 a39a: DB 00          IN    A,($00)
 a39c: E6 80          AND   A,#$80
 a39e: C0             RET   NZ
@@ -20645,7 +20664,7 @@ a422: CHANNEL 6
 a42c: CD C7 6F       CALL  CLEAR_BACKGROUND
 a42f: CD 49 70       CALL  INITIALIZE_SPRITES
 a432: 0E 02          LD    C,#$02
-a434: CD B8 6F       CALL  $6FB8
+a434: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 a437: DD 21 50 A4    LD    IX,$A450
 a43b: CD B1 99       CALL  $99B1
 a43e: AF             XOR   A,A
@@ -20655,7 +20674,7 @@ a444: 2F             CPL
 a445: E6 80          AND   A,#$80
 a447: C8             RET   Z
 
-a448: CD 17 6F       CALL  $6F17
+a448: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 a44b: CD B0 A4       CALL  $A4B0
 a44e: 18 F2          JR    $A442
 
@@ -20722,7 +20741,7 @@ a4f2: B7             OR    A,A
 a4f3: 28 53          JR    Z,$A548
 
 a4f5: DD 4E 03       LD    C,(IX+$03)
-a4f8: CD B8 6F       CALL  $6FB8
+a4f8: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 a4fb: 18 4B          JR    $A548
 
 a4fd: DD 5E 06       LD    E,(IX+$06)
@@ -21129,7 +21148,7 @@ a830: FE 03          CP    A,#$03
 a832: 38 02          JR    C,$A836
 
 a834: 06 01          LD    B,#$01
-a836: CD 17 6F       CALL  $6F17
+a836: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 a839: 10 FB          DJNZ  $A836
 
 a83b: C3 73 A7       JP    $A773
@@ -21165,7 +21184,7 @@ a864: 11 1D C0       LD    DE,$C01D
 a867: DD 4E 04       LD    C,(IX+$04)
 a86a: DD 46 05       LD    B,(IX+$05)
 a86d: CD FF 6F       CALL  $6FFF
-a870: C3 17 6F       JP    $6F17
+a870: C3 17 6F       JP    RESET_WATCHDOG_UNTIL_C400_IS_ONE
 
 a873: 42             LD    B,D
 a874: FC BD A8       CALL  M,$A8BD
@@ -21367,11 +21386,11 @@ aa4a: CD C7 6F       CALL  CLEAR_BACKGROUND
 aa4d: CD A3 AD       CALL  $ADA3
 aa50: F5             PUSH  AF
 aa51: 0E 02          LD    C,#$02
-aa53: CD B8 6F       CALL  $6FB8
-aa56: CD 17 6F       CALL  $6F17
+aa53: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
+aa56: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 aa59: 0E 02          LD    C,#$02
-aa5b: CD B8 6F       CALL  $6FB8
-aa5e: CD 17 6F       CALL  $6F17
+aa5b: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
+aa5e: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 aa61: F1             POP   AF
 aa62: 28 20          JR    Z,$AA84
 
@@ -21660,7 +21679,7 @@ ac79: C2 00 02       JP    NZ,$0200
 ac7c: 00             NOP   
 ac7d: C0             RET   NZ
 
-ac7e: 01 02 00       LD    BC,$0002
+ac7e: 01 02 00       LD    BC,IO_2
 ac81: C4 00 02       CALL  NZ,$0200
 ac84: 00             NOP   
 ac85: C2 01 03       JP    NZ,$0301
@@ -21668,7 +21687,7 @@ ac85: C2 01 03       JP    NZ,$0301
 ac88: 00             NOP   
 ac89: C6 FF          ADD   A,#$FF
 ac8b: 01 00 C0       LD    BC,NVRAM
-ac8e: 01 04 00       LD    BC,$0004
+ac8e: 01 04 00       LD    BC,IO_4
 ac91: F8             RET   M
 
 ac92: 00             NOP   
@@ -21706,7 +21725,7 @@ acc5: DD 46 01       LD    B,(IX+$01)
 acc8: F5             PUSH  AF
 acc9: CD 70 AD       CALL  $AD70
 accc: F1             POP   AF
-accd: 11 02 00       LD    DE,$0002
+accd: 11 02 00       LD    DE,IO_2
 acd0: DD 19          ADD   IX,DE
 acd2: B7             OR    A,A
 acd3: 20 E9          JR    NZ,$ACBE
@@ -21838,7 +21857,7 @@ ad87: 18 E7          JR    $AD70
 
 ad89: CD 49 70       CALL  INITIALIZE_SPRITES
 ad8c: CD 7C AE       CALL  $AE7C
-ad8f: CD 17 6F       CALL  $6F17
+ad8f: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 ad92: DB 00          IN    A,($00)
 ad94: E6 80          AND   A,#$80
 ad96: 20 05          JR    NZ,$AD9D
@@ -21850,19 +21869,19 @@ ad9d: 21 C0 90       LD    HL,$90C0
 ada0: C3 35 6F       JP    $6F35
 
 ada3: 0E 02          LD    C,#$02
-ada5: CD B8 6F       CALL  $6FB8
-ada8: CD 17 6F       CALL  $6F17
-adab: CD 17 6F       CALL  $6F17
+ada5: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
+ada8: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
+adab: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 adae: CD C7 6F       CALL  CLEAR_BACKGROUND
 adb1: CD 49 70       CALL  INITIALIZE_SPRITES
 adb4: 0E 02          LD    C,#$02
-adb6: CD B8 6F       CALL  $6FB8
+adb6: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 adb9: 0E 06          LD    C,#$06
-adbb: CD B8 6F       CALL  $6FB8
-adbe: CD 17 6F       CALL  $6F17
+adbb: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
+adbe: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 adc1: DD 21 2A AE    LD    IX,$AE2A
 adc5: 01 00 04       LD    BC,$0400
-adc8: CD 17 6F       CALL  $6F17
+adc8: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 adcb: C5             PUSH  BC
 adcc: 0E 1F          LD    C,#$1F
 adce: DD 7E 00       LD    A,(IX+$00)
@@ -21871,8 +21890,8 @@ add3: ED 79          OUT   (C),A
 add5: 0D             DEC   C
 add6: 10 FB          DJNZ  $ADD3
 
-add8: CD 17 6F       CALL  $6F17
-addb: CD 17 6F       CALL  $6F17
+add8: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
+addb: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 adde: DB 07          IN    A,($07)
 ade0: C1             POP   BC
 ade1: DD BE 00       CP    A,(IX+$00)
@@ -21894,7 +21913,7 @@ adf6: DB 07          IN    A,($07)
 adf8: E6 80          AND   A,#$80
 adfa: 28 19          JR    Z,$AE15
 
-adfc: CD 17 6F       CALL  $6F17
+adfc: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 adff: 10 F5          DJNZ  $ADF6
 
 ae01: 01 3E AE       LD    BC,$AE3E
@@ -21912,7 +21931,7 @@ ae18: C8             RET   Z
 ae19: DD 21 58 AE    LD    IX,$AE58
 ae1d: CD A2 AC       CALL  $ACA2
 ae20: 06 60          LD    B,#$60
-ae22: CD 17 6F       CALL  $6F17
+ae22: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 ae25: 10 FB          DJNZ  $AE22
 
 ae27: F6 01          OR    A,#$01
