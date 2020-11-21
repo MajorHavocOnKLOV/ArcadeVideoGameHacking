@@ -140,7 +140,7 @@ MAME
 ???
 
 231A-2321? Table of instruction printing
-  5E36 Circle/Spiders
+  5E36 I/O Tower
   5000
   2336
   5103
@@ -159,9 +159,9 @@ MAME
 
 51AA-? ?
 
--5E7D Put Circle/Spiders instruction strings in a message queue
+-5E7D Put I/O Tower instruction strings in a message queue
 
-5E7E-5EB6 Data for Circle/Spiders instructions.  3x (destination, source). 2x 00 to end loop @5E6D 3x null-terminated string. 56 bytes (0x38)
+5E7E-5EB6 Data for I/O Tower instructions.  3x (destination, source). 2x 00 to end loop @5E6D 3x null-terminated string. 56 bytes (0x38)
 
 5F47-5F72 ?
 
@@ -173,18 +173,14 @@ MAME
 
 6065-60EC ?
 
-6065-6120 Set up sprites for tron at bottom middle of screen (MCP & Circle/Spiders)?
+6065-6120 Set up sprites for tron at bottom middle of screen (MCP & I/O Tower)?
   60CE-60EC Tron fires his disk here (so don't set up disk in hand, maybe?)
   
 6127-? Move spiders?
 
 621D-6235 Set some values in C02x?
 
-6B39-6B78 Table of 16x 4 bytes used by joystick direction input @5FB3.  There are 8 valid inputs (D,U,R,L,DR,DL,UR,UL).  All others (no input or invalid input) are set to all zeroes effectively givng you no input.
-
 6B79? Data for setting up tron sprites?
-
-6F00-6F04 Add A to L and handle carry into H
 
 6F17-6F24 Reset watchdog until C400 is one
   6F20 is hit for every tick of the teletype (which strikes twice per character)
@@ -192,11 +188,6 @@ MAME
 6F2D-6FB7? Set color RAMs in some way?
   6F35 - is another entry point
   
-
-6FFF-701F Add a message to the output queue.  Maximum of 6!  BC is destination and DE is source
-
-6FC7-6FED - clear screen (set background RAM to 51 and 5E)
-
 7020-7034: Clear RAM (00) C400-
   7020 - to C418
   7026 = to C450
@@ -205,23 +196,15 @@ MAME
 - 2x reset watchdog until C400 is one
 - ldir (copy from HL to F800 until BC (0780) is decremented to zero)
 
-7049-705C Initialize sprites (X=0, picture=3F, Y=0, unused=0)
-
 705D-707D ?
 
 7159-7164 Return C687 in A.  If non-zero, subtract 7.  Do not affect other registers.
-
-7200-797F Background for tank minigame
 
 7980-799F Color palette for tanks
 
 ABD1-AC6E: Check RAM?
 
-B126-B182: Table of User levels (12 x 2bytes of null-terminated string location.) and then the strings.
-
 C029-C02C Joystick input array (from table at 6B39)
-
-C14A - Number of tanks
 
 C419-C42E: 22 bytes of table data.  Gets copied to C42F
 C42F-C444: copied from C419-C42E

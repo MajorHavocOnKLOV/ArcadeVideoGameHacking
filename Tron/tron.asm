@@ -1,9 +1,14 @@
 BACKGROUND_PICK_A_GAME EQU $234a
+JOYSTICK_INPUT_TABLE EQU $6b39
 ADD_A_TO_HL_WITH_CARRY EQU $6f00
+CLEAR_BACKGROUND EQU $6fc7
+INITIALIZE_SPRITES EQU $7049
 BACKGROUND_TANK_GAME EQU $7200
 BACKGROUND_IO_TOWER_GAME EQU $7a00
 BACKGROUND_LIGHT_CYCLE EQU $8900
 BACKGROUND_TRAINING_FOR_LIGHT_CYCLE EQU $9100
+VECTOR_OF_USER_LEVEL_STRINGS EQU $b126
+NUMBER_OF_TANKS EQU $c14a
 DATA_TO_C42E EQU $c419
 COMPLETED_GAMES_XXXXDURL EQU $c423
 DIRECTION_CHOSEN_8D4U2R1L EQU $c424
@@ -1568,7 +1573,7 @@ ORG $0000
 0912: E6 80          AND   A,#$80
 0914: CA 00 99       JP    Z,$9900
 
-0917: CD 49 70       CALL  $7049
+0917: CD 49 70       CALL  INITIALIZE_SPRITES
 091a: 21 C0 90       LD    HL,$90C0
 091d: CD 35 6F       CALL  $6F35
 0920: 3E 01          LD    A,#$01
@@ -1579,13 +1584,13 @@ ORG $0000
 092d: B7             OR    A,A
 092e: 20 16          JR    NZ,$0946
 
-0930: CD C7 6F       CALL  $6FC7
+0930: CD C7 6F       CALL  CLEAR_BACKGROUND
 0933: CD 20 70       CALL  $7020
 0936: 3E 01          LD    A,#$01
 0938: 32 65 C4       LD    ($C465),A
 093b: CD F1 0A       CALL  $0AF1
-093e: CD 49 70       CALL  $7049
-0941: CD C7 6F       CALL  $6FC7
+093e: CD 49 70       CALL  INITIALIZE_SPRITES
+0941: CD C7 6F       CALL  CLEAR_BACKGROUND
 0944: 18 0D          JR    $0953
 
 0946: CD 20 70       CALL  $7020
@@ -1677,7 +1682,7 @@ ORG $0000
 09ec: FE 03          CP    A,#$03
 09ee: D0             RET   NC
 
-09ef: CD 49 70       CALL  $7049
+09ef: CD 49 70       CALL  INITIALIZE_SPRITES
 09f2: 3E 09          LD    A,#$09
 09f4: 32 02 C4       LD    ($C402),A
 09f7: 3E 1E          LD    A,#$1E
@@ -1689,7 +1694,7 @@ ORG $0000
 0a06: 30 2F          JR    NC,$0A37
 
 0a08: 32 15 C4       LD    ($C415),A
-0a0b: CD C7 6F       CALL  $6FC7
+0a0b: CD C7 6F       CALL  CLEAR_BACKGROUND
 0a0e: CD AC 70       CALL  $70AC
 0a11: CD 10 0D       CALL  $0D10
 0a14: 11 43 B0       LD    DE,$B043
@@ -1709,7 +1714,7 @@ ORG $0000
 
 0a35: 18 64          JR    $0A9B
 
-0a37: CD C7 6F       CALL  $6FC7
+0a37: CD C7 6F       CALL  CLEAR_BACKGROUND
 0a3a: CD AC 70       CALL  $70AC
 0a3d: CD 10 0D       CALL  $0D10
 0a40: 11 43 B0       LD    DE,$B043
@@ -1774,8 +1779,8 @@ ORG $0000
 0aae: 23             INC   HL
 0aaf: 10 F7          DJNZ  $0AA8
 
-0ab1: CD 49 70       CALL  $7049
-0ab4: CD C7 6F       CALL  $6FC7
+0ab1: CD 49 70       CALL  INITIALIZE_SPRITES
+0ab4: CD C7 6F       CALL  CLEAR_BACKGROUND
 0ab7: DB 03          IN    A,($03)
 0ab9: E6 02          AND   A,#$02
 0abb: 28 13          JR    Z,$0AD0
@@ -1889,7 +1894,7 @@ ORG $0000
 0be8: 20 0A          JR    NZ,$0BF4
 
 0bea: CD 00 15       CALL  $1500
-0bed: CD 49 70       CALL  $7049
+0bed: CD 49 70       CALL  INITIALIZE_SPRITES
 0bf0: AF             XOR   A,A
 0bf1: 32 15 C4       LD    ($C415),A
 0bf4: CD 84 0C       CALL  $0C84
@@ -1906,8 +1911,8 @@ ORG $0000
 0c08: B8             CP    A,B
 0c09: D0             RET   NC
 
-0c0a: CD 49 70       CALL  $7049
-0c0d: CD C7 6F       CALL  $6FC7
+0c0a: CD 49 70       CALL  INITIALIZE_SPRITES
+0c0d: CD C7 6F       CALL  CLEAR_BACKGROUND
 0c10: FD 21 04 F0    LD    IY,$F004
 0c14: 3E 01          LD    A,#$01
 0c16: 32 65 C4       LD    ($C465),A
@@ -2008,8 +2013,8 @@ ORG $0000
 0ccc: 32 5A C4       LD    ($C45A),A
 0ccf: AF             XOR   A,A
 0cd0: 32 65 C4       LD    ($C465),A
-0cd3: CD C7 6F       CALL  $6FC7
-0cd6: CD 49 70       CALL  $7049
+0cd3: CD C7 6F       CALL  CLEAR_BACKGROUND
+0cd6: CD 49 70       CALL  INITIALIZE_SPRITES
 0cd9: 11 CF B0       LD    DE,$B0CF
 0cdc: CD EE 6F       CALL  $6FEE
 0cdf: 11 E3 B0       LD    DE,$B0E3
@@ -2391,8 +2396,8 @@ ORG $0000
 0f37: 10 FA          DJNZ  $0F33
 
 0f39: CD 20 70       CALL  $7020
-0f3c: CD 49 70       CALL  $7049
-0f3f: CD C7 6F       CALL  $6FC7
+0f3c: CD 49 70       CALL  INITIALIZE_SPRITES
+0f3f: CD C7 6F       CALL  CLEAR_BACKGROUND
 0f42: 21 C0 90       LD    HL,$90C0
 0f45: CD 35 6F       CALL  $6F35
 0f48: 11 BB B0       LD    DE,$B0BB
@@ -2421,7 +2426,7 @@ ORG $0000
 
 0f7f: AF             XOR   A,A
 0f80: 32 65 C4       LD    ($C465),A
-0f83: CD C7 6F       CALL  $6FC7
+0f83: CD C7 6F       CALL  CLEAR_BACKGROUND
 0f86: DD 21 01 10    LD    IX,$1001
 0f8a: DD 4E 00       LD    C,(IX+$00)
 0f8d: DD 46 01       LD    B,(IX+$01)
@@ -3288,8 +3293,8 @@ ORG $0000
 14ff: 4B             LD    C,E
 1500: 21 C0 90       LD    HL,$90C0
 1503: CD 35 6F       CALL  $6F35
-1506: CD 49 70       CALL  $7049
-1509: CD C7 6F       CALL  $6FC7
+1506: CD 49 70       CALL  INITIALIZE_SPRITES
+1509: CD C7 6F       CALL  CLEAR_BACKGROUND
 150c: 21 27 15       LD    HL,$1527
 150f: 3A 61 C4       LD    A,($C461)
 1512: 87             ADD   A,A
@@ -3480,7 +3485,7 @@ ORG $0000
 
 162f: 3E 0B          LD    A,#$0B
 1631: 87             ADD   A,A
-1632: 21 26 B1       LD    HL,$B126
+1632: 21 26 B1       LD    HL,VECTOR_OF_USER_LEVEL_STRINGS
 1635: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 1638: 5E             LD    E,(HL)
 1639: 23             INC   HL
@@ -3598,7 +3603,7 @@ ORG $0000
 
 1755: DD 21 66 17    LD    IX,$1766
 1759: CD 32 17       CALL  $1732
-175c: CD C7 6F       CALL  $6FC7
+175c: CD C7 6F       CALL  CLEAR_BACKGROUND
 175f: DD 21 8A 17    LD    IX,$178A
 1763: C3 32 17       JP    $1732
 
@@ -3832,7 +3837,7 @@ ORG $0000
 
 1b69: DD 21 7A 1B    LD    IX,$1B7A
 1b6d: CD 32 17       CALL  $1732
-1b70: CD C7 6F       CALL  $6FC7
+1b70: CD C7 6F       CALL  CLEAR_BACKGROUND
 1b73: DD 21 9E 1B    LD    IX,$1B9E
 1b77: C3 32 17       JP    $1732
 
@@ -3922,7 +3927,7 @@ ORG $0000
 
 1cb9: DD 21 CA 1C    LD    IX,$1CCA
 1cbd: CD 32 17       CALL  $1732
-1cc0: CD C7 6F       CALL  $6FC7
+1cc0: CD C7 6F       CALL  CLEAR_BACKGROUND
 1cc3: DD 21 EE 1C    LD    IX,$1CEE
 1cc7: C3 32 17       JP    $1732
 
@@ -4353,7 +4358,7 @@ ORG $0000
 1fed: 32 03 C4       LD    ($C403),A
 1ff0: 3E 01          LD    A,#$01
 1ff2: 32 08 C4       LD    ($C408),A
-1ff5: CD 49 70       CALL  $7049
+1ff5: CD 49 70       CALL  INITIALIZE_SPRITES
 1ff8: 21 4A 23       LD    HL,BACKGROUND_PICK_A_GAME
 1ffb: CD 35 70       CALL  $7035
 1ffe: 21 CA 2A       LD    HL,$2ACA
@@ -4381,7 +4386,7 @@ ORG $0000
 
 203d: 3E 0B          LD    A,#$0B
 203f: 87             ADD   A,A
-2040: 21 26 B1       LD    HL,$B126
+2040: 21 26 B1       LD    HL,VECTOR_OF_USER_LEVEL_STRINGS
 2043: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 2046: 5E             LD    E,(HL)
 2047: 23             INC   HL
@@ -5347,8 +5352,8 @@ BACKGROUND_PICK_A_GAME:
 2c84: CD 20 70       CALL  $7020
 2c87: 3E 01          LD    A,#$01
 2c89: 32 08 C4       LD    ($C408),A
-2c8c: CD 49 70       CALL  $7049
-2c8f: CD C7 6F       CALL  $6FC7
+2c8c: CD 49 70       CALL  INITIALIZE_SPRITES
+2c8f: CD C7 6F       CALL  CLEAR_BACKGROUND
 2c92: 3E 01          LD    A,#$01
 2c94: 32 65 C4       LD    ($C465),A
 2c97: 3E 56          LD    A,#$56
@@ -5410,8 +5415,8 @@ BACKGROUND_PICK_A_GAME:
 2d1d: 32 5B C4       LD    ($C45B),A
 2d20: 3E 01          LD    A,#$01
 2d22: 32 08 C4       LD    ($C408),A
-2d25: CD 49 70       CALL  $7049
-2d28: CD C7 6F       CALL  $6FC7
+2d25: CD 49 70       CALL  INITIALIZE_SPRITES
+2d28: CD C7 6F       CALL  CLEAR_BACKGROUND
 2d2b: 3E 01          LD    A,#$01
 2d2d: 32 65 C4       LD    ($C465),A
 2d30: 3A 19 C4       LD    A,(DATA_TO_C42E)
@@ -7431,7 +7436,7 @@ BACKGROUND_PICK_A_GAME:
 39fe: 6D             LD    L,L
 39ff: 4B             LD    C,E
 3a00: CD 20 70       CALL  $7020
-3a03: CD 49 70       CALL  $7049
+3a03: CD 49 70       CALL  INITIALIZE_SPRITES
 3a06: 3E 02          LD    A,#$02
 3a08: 32 5B C4       LD    ($C45B),A
 3a0b: 3E 10          LD    A,#$10
@@ -7505,7 +7510,7 @@ BACKGROUND_PICK_A_GAME:
 3a9e: 23             INC   HL
 3a9f: 7E             LD    A,(HL)
 3aa0: E6 7F          AND   A,#$7F
-3aa2: 32 4A C1       LD    ($C14A),A
+3aa2: 32 4A C1       LD    (NUMBER_OF_TANKS),A
 3aa5: 32 59 C1       LD    ($C159),A
 3aa8: 4F             LD    C,A
 3aa9: 7E             LD    A,(HL)
@@ -7803,8 +7808,8 @@ BACKGROUND_PICK_A_GAME:
 3cde: C9             RET   
 
 3cdf: CD 20 70       CALL  $7020
-3ce2: CD 49 70       CALL  $7049
-3ce5: CD C7 6F       CALL  $6FC7
+3ce2: CD 49 70       CALL  INITIALIZE_SPRITES
+3ce5: CD C7 6F       CALL  CLEAR_BACKGROUND
 3ce8: 21 80 79       LD    HL,$7980
 3ceb: CD 35 6F       CALL  $6F35
 3cee: AF             XOR   A,A
@@ -8945,9 +8950,9 @@ BACKGROUND_PICK_A_GAME:
 4282: 23             INC   HL
 4283: 10 F4          DJNZ  $4279
 
-4285: 3A 4A C1       LD    A,($C14A)
+4285: 3A 4A C1       LD    A,(NUMBER_OF_TANKS)
 4288: 3D             DEC   A
-4289: 32 4A C1       LD    ($C14A),A
+4289: 32 4A C1       LD    (NUMBER_OF_TANKS),A
 428c: 20 20          JR    NZ,$42AE
 
 428e: 21 07 C4       LD    HL,$C407
@@ -11307,7 +11312,7 @@ BACKGROUND_PICK_A_GAME:
 4ffc: FD F2          Illegal Opcode
 4ffe: 27             DAA   
 4fff: 6F             LD    L,A
-5000: CD 49 70       CALL  $7049
+5000: CD 49 70       CALL  INITIALIZE_SPRITES
 5003: 21 80 90       LD    HL,$9080
 5006: CD 35 6F       CALL  $6F35
 5009: CD 20 70       CALL  $7020
@@ -11443,7 +11448,7 @@ BACKGROUND_PICK_A_GAME:
 
 5103: 21 00 91       LD    HL,BACKGROUND_TRAINING_FOR_LIGHT_CYCLE
 5106: CD 35 70       CALL  $7035
-5109: CD 49 70       CALL  $7049
+5109: CD 49 70       CALL  INITIALIZE_SPRITES
 510c: 21 80 90       LD    HL,$9080
 510f: CD 35 6F       CALL  $6F35
 5112: 3E 01          LD    A,#$01
@@ -13334,7 +13339,7 @@ BACKGROUND_PICK_A_GAME:
 5d1c: DD 21 E0 FF    LD    IX,$FFE0
 5d20: 06 0E          LD    B,#$0E
 5d22: CD 3B 6F       CALL  $6F3B
-5d25: CD 49 70       CALL  $7049
+5d25: CD 49 70       CALL  INITIALIZE_SPRITES
 5d28: 3E 78          LD    A,#$78
 5d2a: 32 1E C0       LD    ($C01E),A
 5d2d: 3A 19 C4       LD    A,(DATA_TO_C42E)
@@ -13492,7 +13497,7 @@ BACKGROUND_PICK_A_GAME:
 5e41: CD 35 70       CALL  $7035
 5e44: 21 B7 5E       LD    HL,$5EB7
 5e47: CD 35 6F       CALL  $6F35
-5e4a: CD 49 70       CALL  $7049
+5e4a: CD 49 70       CALL  INITIALIZE_SPRITES
 5e4d: 21 B7 5E       LD    HL,$5EB7
 5e50: CD 1D 62       CALL  $621D
 5e53: 21 79 6B       LD    HL,$6B79
@@ -13697,7 +13702,7 @@ BACKGROUND_PICK_A_GAME:
 5faf: E6 0F          AND   A,#$0F
 5fb1: 87             ADD   A,A
 5fb2: 87             ADD   A,A
-5fb3: 21 39 6B       LD    HL,$6B39
+5fb3: 21 39 6B       LD    HL,JOYSTICK_INPUT_TABLE;look at 6b39 for more info!
 5fb6: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 5fb9: 11 29 C0       LD    DE,$C029
 5fbc: 01 04 00       LD    BC,$0004
@@ -15392,64 +15397,16 @@ BACKGROUND_PICK_A_GAME:
 6b32: EC 14 0E       CALL  PE,$0E14
 6b35: 80             ADD   A,B
 6b36: EC 14 0E       CALL  PE,$0E14
-6b39: 00             NOP   
-6b3a: 00             NOP   
-6b3b: 00             NOP   
-6b3c: 00             NOP   
-6b3d: 00             NOP   
-6b3e: FE 00          CP    A,#$00
-6b40: 00             NOP   
-6b41: 00             NOP   
-6b42: 02             LD    (BC),A
-6b43: 00             NOP   
-6b44: 00             NOP   
-6b45: 00             NOP   
-6b46: 00             NOP   
-6b47: 00             NOP   
-6b48: 00             NOP   
-6b49: 00             NOP   
-6b4a: 00             NOP   
-6b4b: 00             NOP   
-6b4c: FE 00          CP    A,#$00
-6b4e: FE 00          CP    A,#$00
-6b50: FE 00          CP    A,#$00
-6b52: 02             LD    (BC),A
-6b53: 00             NOP   
-6b54: FE 00          CP    A,#$00
-6b56: 00             NOP   
-6b57: 00             NOP   
-6b58: 00             NOP   
-6b59: 00             NOP   
-6b5a: 00             NOP   
-6b5b: 00             NOP   
-6b5c: 02             LD    (BC),A
-6b5d: 00             NOP   
-6b5e: FE 00          CP    A,#$00
-6b60: 02             LD    (BC),A
-6b61: 00             NOP   
-6b62: 02             LD    (BC),A
-6b63: 00             NOP   
-6b64: 02             LD    (BC),A
-6b65: 00             NOP   
-6b66: 00             NOP   
-6b67: 00             NOP   
-6b68: 00             NOP   
-6b69: 00             NOP   
-6b6a: 00             NOP   
-6b6b: 00             NOP   
-6b6c: 00             NOP   
-6b6d: 00             NOP   
-6b6e: 00             NOP   
-6b6f: 00             NOP   
-6b70: 00             NOP   
-6b71: 00             NOP   
-6b72: 00             NOP   
-6b73: 00             NOP   
-6b74: 00             NOP   
-6b75: 00             NOP   
-6b76: 00             NOP   
-6b77: 00             NOP   
-6b78: 00             NOP   
+
+*** Table of 16x 4 bytes used by joystick direction input @5FB3. There are 8 valid
+*** inputs (D,U,R,L,DR,DL,UR,UL).  All others (no input or invalid input) are set
+*** to all zeroes effectively giving you no input.
+JOYSTICK_INPUT_TABLE:
+6b39: 00 00 00 00 00 FE 00 00 00 02 00 00 00 00 00 00 
+6b49: 00 00 00 FE 00 FE 00 FE 00 02 00 FE 00 00 00 00 
+6b59: 00 00 00 02 00 FE 00 02 00 02 00 02 00 00 00 00 
+6b69: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+
 6b79: 9D             SBC   A,L
 6b7a: 9E             SBC   A,(HL)
 6b7b: 9F             SBC   A,A
@@ -16300,6 +16257,9 @@ BACKGROUND_PICK_A_GAME:
 6fc5: FB             EI    
 6fc6: C9             RET   
 
+
+*** Clear background screen (set graphic to 51 and attributes to 5E)
+CLEAR_BACKGROUND:
 6fc7: CD 17 6F       CALL  $6F17
 6fca: CD 17 6F       CALL  $6F17
 6fcd: F3             DI    
@@ -16328,6 +16288,8 @@ BACKGROUND_PICK_A_GAME:
 6ff8: 21 04 00       LD    HL,$0004
 6ffb: 09             ADD   HL,BC
 6ffc: 22 0D C4       LD    ($C40D),HL
+
+*** Add a message to the output queue (max of 6) DE is source and BC is destination
 6fff: 3A 66 C4       LD    A,(NUMBER_OF_SCREEN_MESSAGES)
 7002: FE 06          CP    A,#$06
 7004: 38 05          JR    C,$700B
@@ -16375,6 +16337,9 @@ BACKGROUND_PICK_A_GAME:
 7045: 32 65 C4       LD    ($C465),A
 7048: C9             RET   
 
+
+*** Initialize sprites (X=0, picture=3F, Y=0, unused=0)
+INITIALIZE_SPRITES:
 7049: 21 00 F0       LD    HL,SPRITE_RAM_M4
 704c: 06 80          LD    B,#$80
 704e: 36 00          LD    (HL),#$00
@@ -19444,10 +19409,10 @@ BACKGROUND_TRAINING_FOR_LIGHT_CYCLE:
 991c: 2F             CPL   
 991d: E6 10          AND   A,#$10
 991f: 32 04 C0       LD    ($C004),A
-9922: CD 49 70       CALL  $7049
+9922: CD 49 70       CALL  INITIALIZE_SPRITES
 9925: 0E 02          LD    C,#$02
 9927: CD B8 6F       CALL  $6FB8
-992a: CD C7 6F       CALL  $6FC7
+992a: CD C7 6F       CALL  CLEAR_BACKGROUND
 992d: CD A4 99       CALL  $99A4
 9930: DD 2A 00 C0    LD    IX,(NVRAM)
 9934: DD 7E 07       LD    A,(IX+$07)
@@ -19677,8 +19642,8 @@ BACKGROUND_TRAINING_FOR_LIGHT_CYCLE:
 9b39: AF             XOR   A,A
 9b3a: 32 03 C0       LD    ($C003),A
 9b3d: 32 05 C0       LD    ($C005),A
-9b40: CD C7 6F       CALL  $6FC7
-9b43: CD 49 70       CALL  $7049
+9b40: CD C7 6F       CALL  CLEAR_BACKGROUND
+9b43: CD 49 70       CALL  INITIALIZE_SPRITES
 9b46: 0E 02          LD    C,#$02
 9b48: CD B8 6F       CALL  $6FB8
 9b4b: CD A4 99       CALL  $99A4
@@ -20103,8 +20068,8 @@ BACKGROUND_TRAINING_FOR_LIGHT_CYCLE:
 9ea0: AF             XOR   A,A
 9ea1: 32 03 C0       LD    ($C003),A
 9ea4: 32 05 C0       LD    ($C005),A
-9ea7: CD C7 6F       CALL  $6FC7
-9eaa: CD 49 70       CALL  $7049
+9ea7: CD C7 6F       CALL  CLEAR_BACKGROUND
+9eaa: CD 49 70       CALL  INITIALIZE_SPRITES
 9ead: 0E 02          LD    C,#$02
 9eaf: CD B8 6F       CALL  $6FB8
 9eb2: CD A4 99       CALL  $99A4
@@ -20344,8 +20309,8 @@ a0c6: 01 02 02       LD    BC,$0202
 a0c9: CD 77 A0       CALL  $A077
 a0cc: C9             RET   
 
-a0cd: CD C7 6F       CALL  $6FC7
-a0d0: CD 49 70       CALL  $7049
+a0cd: CD C7 6F       CALL  CLEAR_BACKGROUND
+a0d0: CD 49 70       CALL  INITIALIZE_SPRITES
 a0d3: DD 21 20 A1    LD    IX,$A120
 a0d7: CD B1 99       CALL  $99B1
 a0da: 06 0A          LD    B,#$0A
@@ -20466,7 +20431,7 @@ a206: EA F9 CD       JP    PE,$CDF9
 a209: C7             RST   $00
 
 a20a: 6F             LD    L,A
-a20b: CD 49 70       CALL  $7049
+a20b: CD 49 70       CALL  INITIALIZE_SPRITES
 a20e: DD 21 59 A2    LD    IX,$A259
 a212: CD B1 99       CALL  $99B1
 a215: 06 0A          LD    B,#$0A
@@ -20585,7 +20550,7 @@ a362: EA F9 CD       JP    PE,$CDF9
 a365: C7             RST   $00
 
 a366: 6F             LD    L,A
-a367: CD 49 70       CALL  $7049
+a367: CD 49 70       CALL  INITIALIZE_SPRITES
 a36a: 0E 02          LD    C,#$02
 a36c: CD B8 6F       CALL  $6FB8
 a36f: 21 AD A3       LD    HL,$A3AD
@@ -20677,8 +20642,8 @@ a418: CHANNEL 5
 
 a422: CHANNEL 6
 
-a42c: CD C7 6F       CALL  $6FC7
-a42f: CD 49 70       CALL  $7049
+a42c: CD C7 6F       CALL  CLEAR_BACKGROUND
+a42f: CD 49 70       CALL  INITIALIZE_SPRITES
 a432: 0E 02          LD    C,#$02
 a434: CD B8 6F       CALL  $6FB8
 a437: DD 21 50 A4    LD    IX,$A450
@@ -21020,8 +20985,8 @@ a72a: L2 UP
 a730: EC FD 50       CALL  PE,$50FD
 a733: L2 DOWN
 
-a73b: CD C7 6F       CALL  $6FC7
-a73e: CD 49 70       CALL  $7049
+a73b: CD C7 6F       CALL  CLEAR_BACKGROUND
+a73e: CD 49 70       CALL  INITIALIZE_SPRITES
 a741: DD 21 73 A8    LD    IX,$A873
 a745: CD B1 99       CALL  $99B1
 a748: DD 21 94 A9    LD    IX,$A994
@@ -21398,7 +21363,7 @@ aa43: D3 E0          OUT   ($E0),A
 aa45: 18 F2          JR    $AA39
 
 aa47: CD 39 AB       CALL  $AB39
-aa4a: CD C7 6F       CALL  $6FC7
+aa4a: CD C7 6F       CALL  CLEAR_BACKGROUND
 aa4d: CD A3 AD       CALL  $ADA3
 aa50: F5             PUSH  AF
 aa51: 0E 02          LD    C,#$02
@@ -21426,7 +21391,7 @@ aa7f: C0             RET   NZ
 aa80: D3 E0          OUT   ($E0),A
 aa82: 18 F2          JR    $AA76
 
-aa84: CD C7 6F       CALL  $6FC7
+aa84: CD C7 6F       CALL  CLEAR_BACKGROUND
 aa87: 21 CC FD       LD    HL,$FDCC
 aa8a: 01 CE AA       LD    BC,$AACE
 aa8d: CD 70 AD       CALL  $AD70
@@ -21447,7 +21412,7 @@ aaa8: 7A             LD    A,D
 aaa9: B3             OR    A,E
 aaaa: 20 F0          JR    NZ,$AA9C
 
-aaac: CD C7 6F       CALL  $6FC7
+aaac: CD C7 6F       CALL  CLEAR_BACKGROUND
 aaaf: C3 00 AA       JP    $AA00
 
 aab2: HIT FIRE BUTTON
@@ -21458,8 +21423,8 @@ aace: HIT FIRE BUTTON
 
 aade: TO EXIT
 
-aae6: CD 49 70       CALL  $7049
-aae9: CD 49 70       CALL  $7049
+aae6: CD 49 70       CALL  INITIALIZE_SPRITES
+aae9: CD 49 70       CALL  INITIALIZE_SPRITES
 aaec: DD 21 70 AC    LD    IX,$AC70
 aaf0: CD C3 AB       CALL  $ABC3
 aaf3: F5             PUSH  AF
@@ -21871,7 +21836,7 @@ ad85: 19             ADD   HL,DE
 ad86: 03             INC   BC
 ad87: 18 E7          JR    $AD70
 
-ad89: CD 49 70       CALL  $7049
+ad89: CD 49 70       CALL  INITIALIZE_SPRITES
 ad8c: CD 7C AE       CALL  $AE7C
 ad8f: CD 17 6F       CALL  $6F17
 ad92: DB 00          IN    A,($00)
@@ -21888,8 +21853,8 @@ ada3: 0E 02          LD    C,#$02
 ada5: CD B8 6F       CALL  $6FB8
 ada8: CD 17 6F       CALL  $6F17
 adab: CD 17 6F       CALL  $6F17
-adae: CD C7 6F       CALL  $6FC7
-adb1: CD 49 70       CALL  $7049
+adae: CD C7 6F       CALL  CLEAR_BACKGROUND
+adb1: CD 49 70       CALL  INITIALIZE_SPRITES
 adb4: 0E 02          LD    C,#$02
 adb6: CD B8 6F       CALL  $6FB8
 adb9: 0E 06          LD    C,#$06
@@ -22370,29 +22335,10 @@ b114: PLAYER 1
 
 b11d: PLAYER 2
 
-b126: 3E B1          LD    A,#$B1
-b128: 42             LD    B,D
-b129: B1             OR    A,C
-b12a: 48             LD    C,B
-b12b: B1             OR    A,C
-b12c: 4E             LD    C,(HL)
-b12d: B1             OR    A,C
-b12e: 56             LD    D,(HL)
-b12f: B1             OR    A,C
-b130: 5D             LD    E,L
-b131: B1             OR    A,C
-b132: 61             LD    H,C
-b133: B1             OR    A,C
-b134: 68             LD    L,B
-b135: B1             OR    A,C
-b136: 6E             LD    L,(HL)
-b137: B1             OR    A,C
-b138: 77             LD    (HL),A
-b139: B1             OR    A,C
-b13a: 7A             LD    A,D
-b13b: B1             OR    A,C
-b13c: 7E             LD    A,(HL)
-b13d: B1             OR    A,C
+VECTOR_OF_USER_LEVEL_STRINGS:
+b126: 3E B1 42 B1 48 B1 4E B1 56 B1 5D B1 61 B1 68 B1 
+b136: 6E B1 77 B1 7A B1 7E B1 
+
 b13e: RPG
 
 b142: COBOL

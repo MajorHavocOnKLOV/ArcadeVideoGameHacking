@@ -20,11 +20,16 @@
 ;   as such, and an error will be printed.  If this is the case, mark the line before the data as data also.
 
 label 234A BACKGROUND_PICK_A_GAME
+label 6b39 JOYSTICK_INPUT_TABLE
 label 6f00 ADD_A_TO_HL_WITH_CARRY
+label 6fc7 CLEAR_BACKGROUND
+label 7049 INITIALIZE_SPRITES
 label 7200 BACKGROUND_TANK_GAME
 label 7a00 BACKGROUND_IO_TOWER_GAME
 label 8900 BACKGROUND_LIGHT_CYCLE
 label 9100 BACKGROUND_TRAINING_FOR_LIGHT_CYCLE
+label b126 VECTOR_OF_USER_LEVEL_STRINGS
+label c14a NUMBER_OF_TANKS
 label c419 DATA_TO_C42E
 label c423 COMPLETED_GAMES_XXXXDURL
 label c424 DIRECTION_CHOSEN_8D4U2R1L
@@ -211,6 +216,18 @@ ascii 5e8c-5e9a
 ascii 5e9b-5ea8
 ascii 5ea9-5eb6
 
+comment 5fb3 look at 6b39 for more info!
+
+commentline 6b39 Table of 16x 4 bytes used by joystick direction input @5FB3. There are 8 valid
+commentline 6b39 inputs (D,U,R,L,DR,DL,UR,UL).  All others (no input or invalid input) are set
+commentline 6b39 to all zeroes effectively giving you no input.
+data 6b39-6b78
+
+commentline 6fc7 Clear background screen (set graphic to 51 and attributes to 5E)
+commentline 6fff Add a message to the output queue (max of 6) DE is source and BC is destination
+
+commentline 7049 Initialize sprites (X=0, picture=3F, Y=0, unused=0)
+
 data 7200-797F
 data 7a00-817F
 data 8900-907F
@@ -389,6 +406,9 @@ ascii b0f3-b104
 ascii b105-b113
 ascii b114-b11c
 ascii b11d-b125
+
+; B126-B182: Table of User levels. 12 x 2bytes of string location, and then the null-terminated strings.
+data b126-b13d
 ascii b13e-b141
 ascii b142-b147
 ascii b148-b14d
