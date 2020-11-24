@@ -4,33 +4,33 @@
      30 INITIALIZE_SPRITES
      26 CLEAR_BACKGROUND
      26 ADD_A_TO_HL_WITH_CARRY
-     16 $6FF4
+     16 INCREASE_C40D_BY_4_AND_ADD_A_MESSAGE_TO_Q
      14 RETURN_C687-2_IF_NZ_IN_A
-     14 $6FFF
-     14 $6F35
-     13 $705D
-     11 ZERO_RAM_C400-C418
-     10 $AD70
-     10 $998C
-     10 $4D77
+     14 COPY_20_FROM_HL_TO_FF80
+     14 ADD_A_MESSAGE_TO_Q
+     13 ADD_MESSAGE_TO_Q
+     11 ZERO_RAM_C000-C418
+     10 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE
+     10 PRINT_A_NULL_TERMINATED_ASCII_STRING_FROM_BC_TO_HL
+     10 GET_TRIGGER_INPUT_FOR_SERVICE_MENU
       9 $5AC9
       8 $5A1A
+      6 PSEUDO_RANDOM_VALUE_IN_C47A?
       6 PE,$0E01
+      6 COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
       6 $A069
       6 $99CA
-      6 $7035
       6 $6F25
-      6 $6F05
       5 STRING_IN_DE_TO_HL
       5 PE,$0E14
       5 NC,$EA01
       5 $A077
+      4 SET_C40D_TO_FDD0_AND_ADD_A_MESSAGE_TO_Q
       4 M,$1E1D
+      4 CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?
       4 $A079
       4 $99B1
       4 $99A4
-      4 $6FEE
-      4 $5F23
       4 $5B16
       4 $5995
       4 $58D2
@@ -50,11 +50,11 @@
       4 $40A5
       4 $0D10
       4 $0720
+      3 PUT_GAME_SELECT_COUNTDOWN_DIGIT_MESSAGE_IN_Q2
+      3 PROCESS_GAME_SELECT_COUNTDOWN_TIMER
       3 $ACA2
       3 $99EA
       3 $9958
-      3 $70AC
-      3 $709F
       3 $6F52
       3 $5535
       3 $5234
@@ -81,6 +81,9 @@
       2 M,$9E9D
       2 M,$01F4
       2 M,$0158
+      2 INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
+      2 INITIALIZE_LEVEL?
+      2 COPY_10_FROM_HL_TO_FFC0
       2 C,$4B90
       2 C,$4AFF
       2 C,$3437
@@ -93,12 +96,10 @@
       2 $A0B7
       2 $7029
       2 $6F3B
-      2 $6F2D
       2 $66F5
       2 $64E8
       2 $64DB
       2 $621D
-      2 $6065
       2 $6020
       2 $5B4B
       2 $59F4
@@ -121,10 +122,10 @@
       2 $420D
       2 $3F3E
       2 $317E
-      2 $2115
       2 $0AA0
       2 $051B
-      1 ZERO_RAM_C400-C450
+      1 ZERO_RAM_C000-C450
+      1 Z,INITIALIZE_LEVEL?
       1 Z,$F92F
       1 Z,$F8FC
       1 Z,$DE7C
@@ -146,13 +147,13 @@
       1 Z,$33FA
       1 Z,$31FD
       1 Z,$31A1
-      1 Z,$2115
       1 Z,$20CD
       1 Z,$1200
       1 Z,$0E32
       1 Z,$0E01
       1 Z,$04A4
-      1 PRINT_OUT_MESSAGES_IN_QUEUE
+      1 UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE
+      1 PRINT_OUT_MESSAGES_IN_QUEUES
       1 PO,$E706
       1 PO,$D3CE
       1 PO,$B458
@@ -205,6 +206,7 @@
       1 P,$5B9D
       1 P,$066A
       1 P,$0425
+      1 OUTPUT_IO_TOWER_TIMER
       1 NZ,$FD4A
       1 NZ,$FD48
       1 NZ,$FA73
@@ -235,7 +237,6 @@
       1 NZ,$0402
       1 NZ,$0200
       1 NC,IO_0
-      1 NC,$FF4E
       1 NC,$FCFB
       1 NC,$FC00
       1 NC,$DF9F
@@ -325,6 +326,7 @@
       1 C,$0F7F
       1 C,$0CCA
       1 C,$0021
+      1 ADD_MESSAGE_TO_Q2
       1 $FCD9
       1 $F99B
       1 $F8FF
@@ -346,7 +348,6 @@
       1 $9B76
       1 $87C9
       1 $818D
-      1 $707E
       1 $6881
       1 $6827
       1 $67EF
@@ -444,9 +445,7 @@
       1 $0AF1
       1 $09E4
       1 $08A0
-      1 $0825
       1 $07B0
-      1 $0792
       1 $074F
       1 $06BB
       1 $05F8
