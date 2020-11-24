@@ -116,12 +116,6 @@ MAME
 2207-226D Modify mini-games screen to disable completed and show type of game if already attempted
 ???
 
-231A-2321? Table of instruction printing
-  5E36 I/O Tower
-  5000
-  2336
-  5103
-
 233E-? Table of ? 3 bytes each entry used in 223x range of code
 
 2ACA-2AEF Color palette for minigame selection
@@ -150,10 +144,6 @@ MAME
 6F2D-6FB7? Set color RAMs in some way?
   6F35 - is another entry point
   
-7035-7048 Paint background screen from HL
-- 2x reset watchdog until C400 is one
-- ldir (copy from HL to F800 until BC (0780) is decremented to zero)
-
 ABD1-AC6E: Check RAM?
 
 - test RAM

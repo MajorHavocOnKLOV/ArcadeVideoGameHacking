@@ -1,3 +1,21 @@
+`data 4e66-4e6f'
+DATA out of order
+
+`data 4e98-4ea1'
+DATA out of order
+
+`data 4ed4-4edd'
+DATA out of order
+
+`data 4e2a-4e33'
+DATA out of order
+
+`comment 5e6d if BC was 0, return.  Does this mean skip instructions?'
+COMMENT out of order
+
+`comment 5fb3 look at 6b39 for more info!'
+COMMENT out of order
+
 IO_0 EQU $0000
 IO_1 EQU $0001
 IO_2 EQU $0002
@@ -11,18 +29,42 @@ IO_CTC EQU $00f0
 STRING_IN_DE_TO_HL EQU $0401
 DEFAULT_HIGH_SCORE_TABLE EQU $04b0
 OUTPUT_TO_SOUND_LATCHES EQU $0557
-PRINT_OUT_MESSAGES_IN_QUEUE EQU $06ca
+PRINT_OUT_MESSAGES_IN_QUEUES EQU $06ca
+PRINT_OUT_MESSAGES_IN_QUEUE_2 EQU $06f5
+OUTPUT_IO_TOWER_TIMER EQU $0792
+UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE EQU $0825
 SERVICE_INTERRUPT_ROUTINE EQU $01cb
+START_GAME EQU $1f97
 VECTOR_OF_DIFFICULTY_TO_HARDNESS_MAPS EQU $20a7
+INITIALIZE_LEVEL? EQU $2115
 BACKGROUND_PICK_A_GAME EQU $234a
+MCP_INSTRUCTIONS EQU $2c7e
+PLAY_MCP EQU $2d12
+PLAY_TANKS EQU $3a00
+TANKS_INSTRUCTIONS EQU $3cdf
+TANK_DATA_FOR_? EQU $4f7e
+PLAY_LIGHT_CYCLE EQU $5000
+LIGHT_CYCLE_INSTRUCTIONS EQU $5103
+PLAY_IO_TOWER EQU $5d00
+IO_TOWER_INSTRUCTIONS EQU $5e36
+CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_? EQU $5f23
+INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER EQU $6065
 JOYSTICK_INPUT_TABLE EQU $6b39
 ADD_A_TO_HL_WITH_CARRY EQU $6f00
+PSEUDO_RANDOM_VALUE_IN_C47A? EQU $6f05
 RESET_WATCHDOG_UNTIL_C400_IS_ONE EQU $6f17
+COPY_10_FROM_HL_TO_FFC0 EQU $6f2d
+COPY_20_FROM_HL_TO_FF80 EQU $6f35
 PUT_C_ON_STACK_TO_SEND_TO_AUDIO EQU $6fb8
 CLEAR_BACKGROUND EQU $6fc7
-ZERO_RAM_C400-C418 EQU $7020
-ZERO_RAM_C400-C450 EQU $7026
+ZERO_RAM_C000-C418 EQU $7020
+ZERO_RAM_C000-C450 EQU $7026
+COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800) EQU $7035
 INITIALIZE_SPRITES EQU $7049
+ADD_MESSAGE_TO_MESSAGE_QUEUE_2 EQU $707e
+PROCESS_GAME_SELECT_COUNTDOWN_TIMER EQU $709f
+PUT_GAME_SELECT_COUNTDOWN_DIGIT_MESSAGE_IN_Q2 EQU $70ac
+GAME_SELECT_COUNTDOWN_DIGITS EQU $70cd
 RETURN_C687-7_IF_NZ_IN_A EQU $7159
 RETURN_C687-2_IF_NZ_IN_A EQU $7165
 BACKGROUND_TANK_GAME EQU $7200
@@ -31,39 +73,48 @@ BACKGROUND_IO_TOWER_GAME EQU $7a00
 BACKGROUND_LIGHT_CYCLE EQU $8900
 BACKGROUND_TRAINING_FOR_LIGHT_CYCLE EQU $9100
 VECTOR_OF_USER_LEVEL_STRINGS EQU $b126
-NUMBER_OF_TANKS EQU $c14a
+IO_TOWER_TIMER_VALUE_REVERSED_TO_C010 EQU $c00d
+INFINITE_TIME_CHEAT EQU $c00e
+IO_TOWER_TIMER_DIGITS_TO_C019 EQU $c012
 JOYSTICK_INPUT_ARRAY_TO_C02C EQU $c029
-CURRENT_PLAYER_DATA EQU $c419
+INFO_FOR_TANK_GAME_SEE_3ABF_TO_C05A EQU $c051
+NUMBER_OF_TANKS EQU $c14a
+NUMBER_OF_TANKS_ALSO? EQU $c159
+COUNTDOWN_TIMER_SECONDS EQU $c402
+COUNTDOWN_TIMER_FRAMES EQU $c403
+USER_LEVEL/CURRENT_PLAYER_DATA EQU $c419
+PLAYING_HOW_LONG_NOW_TO_C41C EQU $c41a
+CURRENT_PLAYER_DATA_BYTE_02 EQU $c41b
+CURRENT_PLAYER_DATA_BYTE_03 EQU $c41c
+CURRENT_PLAYER_DATA_BYTE_04 EQU $c41d
+CURRENT_PLAYER_DATA_BYTE_05 EQU $c41e
+LIVES_REMAINING EQU $c41f
+CURRENT_PLAYER_DATA_BYTE_07 EQU $c420
+CURRENT_PLAYER_DATA_BYTE_08 EQU $c421
 USER_LEVEL EQU $c422
 COMPLETED_GAMES_XXXXDURL EQU $c423
 DIRECTION_CHOSEN_8D4U2R1L EQU $c424
 ATTEMPTED_GAMES_XXXXDURL EQU $c425
-VECTOR_OF_GAMES_4x EQU $c426
+VECTOR_OF_GAMES_TO_C42D EQU $c426
+CURRENT_PLAYER_DATA_BYTE_15 EQU $c42e
 OTHER_PLAYER_DATA EQU $c42f
 PLAYER_NUMBER EQU $c45f
 NUMBER_OF_SCREEN_MESSAGES EQU $c466
-SCREEN_MESSAGE_QUEUE EQU $c4d8
+NUMBER_OF_SCREEN_MESSAGES_2_FROM_C4BE EQU $c467
 LEFT_COIN EQU $c473
 RIGHT_COIN EQU $c474
 IN_ATTRACT_MODE EQU $c47b
+NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2 EQU $c47c
+SCREEN_MESSAGE_QUEUE_2_TO_C4D5 EQU $c4be
+SCREEN_MESSAGE_QUEUE EQU $c4d8
 DIFFICULTY_LEVEL EQU $c4f6
 HIGH_SCORES_DIGITS EQU $c4f7
-HIGH_SCORES_INITIALS_LEVEL EQU $c504
-HIGH_SCORES_DIGITS_BCD EQU $c52c
+HIGH_SCORES_INITIALS_AND_LEVEL EQU $c504
+HIGH_SCORES_DIGITS_3BYTES_BCD EQU $c52c
 NVRAM EQU $c000
-NVRAM_M1 EQU $c800
-NVRAM_M2 EQU $d000
-NVRAM_M3 EQU $d800
-SPRITE_RAM EQU $e000
-SPRITE_RAM_M1 EQU $e200
-SPRITE_RAM_M2 EQU $e400
-SPRITE_RAM_M3 EQU $e600
-VIDEO_RAM EQU $e800
-SPRITE_RAM_M4 EQU $f000
-SPRITE_RAM_M5 EQU $f200
-SPRITE_RAM_M6 EQU $f400
-SPRITE_RAM_M7 EQU $f600
-VIDEO_RAM_M1 EQU $f800
+SPRITE_RAM EQU $f000
+VIDEO_RAM_TO_FF7F EQU $f800
+SCRATCH_RAM_TO_FFFF EQU $ff80
 
 ORG $0000
 
@@ -299,7 +350,7 @@ IO_CTC:
 013c: 32 7A C4       LD    ($C47A),A
 013f: 3E 01          LD    A,#$01
 0141: 21 AB 01       LD    HL,$01AB
-0144: CD 2D 6F       CALL  $6F2D
+0144: CD 2D 6F       CALL  COPY_10_FROM_HL_TO_FFC0
 0147: 32 60 C4       LD    ($C460),A
 014a: 3E 01          LD    A,#$01
 014c: 32 77 C4       LD    ($C477),A
@@ -311,7 +362,7 @@ IO_CTC:
 015c: 22 D6 C4       LD    ($C4D6),HL
 015f: 21 90 C4       LD    HL,$C490
 0162: 22 8E C4       LD    ($C48E),HL
-0165: 21 BE C4       LD    HL,$C4BE
+0165: 21 BE C4       LD    HL,SCREEN_MESSAGE_QUEUE_2_TO_C4D5
 0168: 22 BC C4       LD    ($C4BC),HL
 016b: 3E 00          LD    A,#$00
 016d: ED 47          LD    I,A
@@ -386,13 +437,16 @@ IO_CTC:
 01dd: FB             EI    
 01de: CD C3 05       CALL  $05C3
 01e1: CD 4F 07       CALL  $074F
-01e4: CD 92 07       CALL  $0792
+01e4: CD 92 07       CALL  OUTPUT_IO_TOWER_TIMER
 01e7: CD F8 05       CALL  $05F8
-01ea: CD CA 06       CALL  PRINT_OUT_MESSAGES_IN_QUEUE
+01ea: CD CA 06       CALL  PRINT_OUT_MESSAGES_IN_QUEUES
 01ed: CD B0 07       CALL  $07B0
 01f0: CD F6 04       CALL  $04F6
 01f3: CD 1B 05       CALL  $051B
-01f6: 21 1C C4       LD    HL,$C41C
+
+*** How long has this user been playing?  C41A = BCD minutes, C41B = BCD seconds,
+*** C41C = countdown of 30 frames? (reset to 30 once count goes negative)
+01f6: 21 1C C4       LD    HL,CURRENT_PLAYER_DATA_BYTE_03
 01f9: 7E             LD    A,(HL)
 01fa: D6 01          SUB   A,#$01
 01fc: 77             LD    (HL),A
@@ -1106,10 +1160,10 @@ OUTPUT_TO_SOUND_LATCHES:
 0627: CD 20 07       CALL  $0720
 062a: 3A 5F C4       LD    A,(PLAYER_NUMBER)
 062d: B7             OR    A,A
-062e: 3A 1F C4       LD    A,($C41F)
+062e: 3A 1F C4       LD    A,(LIVES_REMAINING)
 0631: 28 08          JR    Z,$063B
 
-0633: 21 1F C4       LD    HL,$C41F
+0633: 21 1F C4       LD    HL,LIVES_REMAINING
 0636: 11 16 00       LD    DE,$0016
 0639: 19             ADD   HL,DE
 063a: 7E             LD    A,(HL)
@@ -1127,10 +1181,10 @@ OUTPUT_TO_SOUND_LATCHES:
 0655: CD 20 07       CALL  $0720
 0658: 3A 5F C4       LD    A,(PLAYER_NUMBER)
 065b: B7             OR    A,A
-065c: 3A 1F C4       LD    A,($C41F)
+065c: 3A 1F C4       LD    A,(LIVES_REMAINING)
 065f: 20 08          JR    NZ,$0669
 
-0661: 21 1F C4       LD    HL,$C41F
+0661: 21 1F C4       LD    HL,LIVES_REMAINING
 0664: 11 16 00       LD    DE,$0016
 0667: 19             ADD   HL,DE
 0668: 7E             LD    A,(HL)
@@ -1192,10 +1246,10 @@ OUTPUT_TO_SOUND_LATCHES:
 
 
 *** Count @C466 and data starting @C4D8
-PRINT_OUT_MESSAGES_IN_QUEUE:
+PRINT_OUT_MESSAGES_IN_QUEUES:
 06ca: 3A 66 C4       LD    A,(NUMBER_OF_SCREEN_MESSAGES)
 06cd: B7             OR    A,A
-06ce: 28 25          JR    Z,$06F5
+06ce: 28 25          JR    Z,PRINT_OUT_MESSAGES_IN_QUEUE_2
 
 06d0: DD 21 D8 C4    LD    IX,SCREEN_MESSAGE_QUEUE
 06d4: DD 22 D6 C4    LD    ($C4D6),IX
@@ -1213,11 +1267,14 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 
 06f1: AF             XOR   A,A
 06f2: 32 66 C4       LD    (NUMBER_OF_SCREEN_MESSAGES),A
-06f5: 3A 67 C4       LD    A,($C467)
+
+*** Count @C467 and data starting @C4BE
+PRINT_OUT_MESSAGES_IN_QUEUE_2:
+06f5: 3A 67 C4       LD    A,(NUMBER_OF_SCREEN_MESSAGES_2_FROM_C4BE)
 06f8: B7             OR    A,A
 06f9: C8             RET   Z
 
-06fa: DD 21 BE C4    LD    IX,$C4BE
+06fa: DD 21 BE C4    LD    IX,SCREEN_MESSAGE_QUEUE_2_TO_C4D5
 06fe: DD 22 BC C4    LD    ($C4BC),IX
 0702: 47             LD    B,A
 0703: DD 6E 00       LD    L,(IX+$00)
@@ -1225,14 +1282,14 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 0709: DD 5E 02       LD    E,(IX+$02)
 070c: DD 56 03       LD    D,(IX+$03)
 070f: C5             PUSH  BC
-0710: CD 25 08       CALL  $0825
+0710: CD 25 08       CALL  UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE
 0713: C1             POP   BC
 0714: 11 04 00       LD    DE,IO_4
 0717: DD 19          ADD   IX,DE
 0719: 10 E8          DJNZ  $0703
 
 071b: AF             XOR   A,A
-071c: 32 67 C4       LD    ($C467),A
+071c: 32 67 C4       LD    (NUMBER_OF_SCREEN_MESSAGES_2_FROM_C4BE),A
 071f: C9             RET   
 
 0720: 06 06          LD    B,#$06
@@ -1317,6 +1374,7 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 078f: 03             INC   BC
 0790: 00             NOP   
 0791: 07             RLCA  
+OUTPUT_IO_TOWER_TIMER:
 0792: 21 51 C4       LD    HL,$C451
 0795: 7E             LD    A,(HL)
 0796: B7             OR    A,A
@@ -1409,6 +1467,7 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 0820: DD 22 8E C4    LD    ($C48E),IX
 0824: C9             RET   
 
+UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE:
 0825: 01 BF FF       LD    BC,$FFBF
 0828: 1A             LD    A,(DE)
 0829: B7             OR    A,A
@@ -1617,7 +1676,7 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 
 0917: CD 49 70       CALL  INITIALIZE_SPRITES
 091a: 21 C0 90       LD    HL,$90C0
-091d: CD 35 6F       CALL  $6F35
+091d: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 0920: 3E 01          LD    A,#$01
 0922: 32 7B C4       LD    (IN_ATTRACT_MODE),A
 0925: 3E 78          LD    A,#$78
@@ -1627,7 +1686,7 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 092e: 20 16          JR    NZ,$0946
 
 0930: CD C7 6F       CALL  CLEAR_BACKGROUND
-0933: CD 20 70       CALL  ZERO_RAM_C400-C418
+0933: CD 20 70       CALL  ZERO_RAM_C000-C418
 0936: 3E 01          LD    A,#$01
 0938: 32 65 C4       LD    ($C465),A
 093b: CD F1 0A       CALL  $0AF1
@@ -1635,11 +1694,11 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 0941: CD C7 6F       CALL  CLEAR_BACKGROUND
 0944: 18 0D          JR    $0953
 
-0946: CD 20 70       CALL  ZERO_RAM_C400-C418
+0946: CD 20 70       CALL  ZERO_RAM_C000-C418
 0949: CD C3 0B       CALL  $0BC3
 094c: AF             XOR   A,A
 094d: 32 7B C4       LD    (IN_ATTRACT_MODE),A
-0950: CD 26 70       CALL  ZERO_RAM_C400-C450
+0950: CD 26 70       CALL  ZERO_RAM_C000-C450
 0953: CD 6D 0E       CALL  $0E6D
 0956: CD D1 1F       CALL  $1FD1
 0959: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
@@ -1653,16 +1712,16 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 096b: B7             OR    A,A
 096c: C2 00 09       JP    NZ,$0900
 
-096f: 3A 7C C4       LD    A,($C47C)
+096f: 3A 7C C4       LD    A,(NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2)
 0972: B7             OR    A,A
 0973: C2 00 09       JP    NZ,$0900
 
 0976: 18 E1          JR    $0959
 
-0978: 3A 7C C4       LD    A,($C47C)
+0978: 3A 7C C4       LD    A,(NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2)
 097b: B7             OR    A,A
 097c: C4 91 09       CALL  NZ,$0991
-097f: 3A 7C C4       LD    A,($C47C)
+097f: 3A 7C C4       LD    A,(NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2)
 0982: B7             OR    A,A
 0983: 28 D4          JR    Z,$0959
 
@@ -1676,24 +1735,24 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 0993: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 0996: 3E 78          LD    A,#$78
 0998: 32 6E C4       LD    ($C46E),A
-099b: 3A 7C C4       LD    A,($C47C)
+099b: 3A 7C C4       LD    A,(NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2)
 099e: CB 47          BIT   0,A
 09a0: 28 08          JR    Z,$09AA
 
 09a2: CB 87          RES   0,A
-09a4: 32 7C C4       LD    ($C47C),A
+09a4: 32 7C C4       LD    (NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2),A
 09a7: CD 4F 20       CALL  $204F
-09aa: 3A 7C C4       LD    A,($C47C)
+09aa: 3A 7C C4       LD    A,(NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2)
 09ad: E6 02          AND   A,#$02
 09af: CA DD 09       JP    Z,$09DD
 
-09b2: 3A 1F C4       LD    A,($C41F)
+09b2: 3A 1F C4       LD    A,(LIVES_REMAINING)
 09b5: B7             OR    A,A
 09b6: 20 16          JR    NZ,$09CE
 
 09b8: CD 00 0F       CALL  $0F00
 09bb: CD E4 09       CALL  $09E4
-09be: 3A 1F C4       LD    A,($C41F)
+09be: 3A 1F C4       LD    A,(LIVES_REMAINING)
 09c1: B7             OR    A,A
 09c2: 20 0A          JR    NZ,$09CE
 
@@ -1713,7 +1772,7 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 
 09da: CD 28 0D       CALL  $0D28
 09dd: AF             XOR   A,A
-09de: 32 7C C4       LD    ($C47C),A
+09de: 32 7C C4       LD    (NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2),A
 09e1: C3 D1 1F       JP    $1FD1
 
 09e4: DB 03          IN    A,($03)
@@ -1726,9 +1785,9 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 
 09ef: CD 49 70       CALL  INITIALIZE_SPRITES
 09f2: 3E 09          LD    A,#$09
-09f4: 32 02 C4       LD    ($C402),A
+09f4: 32 02 C4       LD    (COUNTDOWN_TIMER_SECONDS),A
 09f7: 3E 1E          LD    A,#$1E
-09f9: 32 03 C4       LD    ($C403),A
+09f9: 32 03 C4       LD    (COUNTDOWN_TIMER_FRAMES),A
 09fc: 32 7B C4       LD    (IN_ATTRACT_MODE),A
 09ff: 3A 01 C5       LD    A,($C501)
 0a02: 21 F5 C4       LD    HL,$C4F5
@@ -1737,7 +1796,7 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 
 0a08: 32 15 C4       LD    ($C415),A
 0a0b: CD C7 6F       CALL  CLEAR_BACKGROUND
-0a0e: CD AC 70       CALL  $70AC
+0a0e: CD AC 70       CALL  PUT_GAME_SELECT_COUNTDOWN_DIGIT_MESSAGE_IN_Q2
 0a11: CD 10 0D       CALL  $0D10
 0a14: 11 43 B0       LD    DE,$B043
 0a17: CD F4 6F       CALL  $6FF4
@@ -1749,15 +1808,15 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 0a29: BE             CP    A,(HL)
 0a2a: 20 C6          JR    NZ,$09F2
 
-0a2c: CD 9F 70       CALL  $709F
-0a2f: 3A 02 C4       LD    A,($C402)
+0a2c: CD 9F 70       CALL  PROCESS_GAME_SELECT_COUNTDOWN_TIMER
+0a2f: 3A 02 C4       LD    A,(COUNTDOWN_TIMER_SECONDS)
 0a32: B7             OR    A,A
 0a33: 20 EB          JR    NZ,$0A20
 
 0a35: 18 64          JR    $0A9B
 
 0a37: CD C7 6F       CALL  CLEAR_BACKGROUND
-0a3a: CD AC 70       CALL  $70AC
+0a3a: CD AC 70       CALL  PUT_GAME_SELECT_COUNTDOWN_DIGIT_MESSAGE_IN_Q2
 0a3d: CD 10 0D       CALL  $0D10
 0a40: 11 43 B0       LD    DE,$B043
 0a43: CD F4 6F       CALL  $6FF4
@@ -1768,18 +1827,18 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 0a51: E6 04          AND   A,#$04
 0a53: 28 0B          JR    Z,$0A60
 
-0a55: CD 9F 70       CALL  $709F
-0a58: 3A 02 C4       LD    A,($C402)
+0a55: CD 9F 70       CALL  PROCESS_GAME_SELECT_COUNTDOWN_TIMER
+0a58: 3A 02 C4       LD    A,(COUNTDOWN_TIMER_SECONDS)
 0a5b: B7             OR    A,A
 0a5c: 20 EE          JR    NZ,$0A4C
 
 0a5e: 18 3B          JR    $0A9B
 
 0a60: 3A F4 C4       LD    A,($C4F4)
-0a63: 32 1F C4       LD    ($C41F),A
+0a63: 32 1F C4       LD    (LIVES_REMAINING),A
 0a66: 2A FD C4       LD    HL,($C4FD)
-0a69: 22 20 C4       LD    ($C420),HL
-0a6c: 21 1A C4       LD    HL,$C41A
+0a69: 22 20 C4       LD    (CURRENT_PLAYER_DATA_BYTE_07),HL
+0a6c: 21 1A C4       LD    HL,PLAYING_HOW_LONG_NOW_TO_C41C
 0a6f: 36 00          LD    (HL),#$00
 0a71: 23             INC   HL
 0a72: 36 00          LD    (HL),#$00
@@ -1809,7 +1868,7 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 0a9c: 32 7B C4       LD    (IN_ATTRACT_MODE),A
 0a9f: C9             RET   
 
-0aa0: 21 19 C4       LD    HL,CURRENT_PLAYER_DATA
+0aa0: 21 19 C4       LD    HL,USER_LEVEL/CURRENT_PLAYER_DATA
 0aa3: 11 2F C4       LD    DE,OTHER_PLAYER_DATA
 0aa6: 06 16          LD    B,#$16
 0aa8: 4E             LD    C,(HL)
@@ -2099,12 +2158,12 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 0d22: 01 8C FD       LD    BC,$FD8C
 0d25: C3 FF 6F       JP    $6FFF
 
-0d28: 21 1F C4       LD    HL,$C41F
+0d28: 21 1F C4       LD    HL,LIVES_REMAINING
 0d2b: 35             DEC   (HL)
 0d2c: 3E 01          LD    A,#$01
 0d2e: 32 08 C4       LD    ($C408),A
-0d31: 3A 2E C4       LD    A,($C42E)
-0d34: 32 1E C4       LD    ($C41E),A
+0d31: 3A 2E C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_15)
+0d34: 32 1E C4       LD    (CURRENT_PLAYER_DATA_BYTE_05),A
 0d37: C9             RET   
 
 0d38: 3A 5B C4       LD    A,($C45B)
@@ -2149,7 +2208,7 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 0d70: 3A 23 C4       LD    A,(COMPLETED_GAMES_XXXXDURL)
 0d73: 32 24 C4       LD    (DIRECTION_CHOSEN_8D4U2R1L),A
 0d76: 3E 01          LD    A,#$01
-0d78: 32 7C C4       LD    ($C47C),A
+0d78: 32 7C C4       LD    (NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2),A
 0d7b: C9             RET   
 
 0d7c: FD 21 64 F0    LD    IY,$F064
@@ -2308,11 +2367,11 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 0e6b: 00             NOP   
 0e6c: 3F             CCF   
 0e6d: 3A 86 C6       LD    A,($C686)
-0e70: 32 1F C4       LD    ($C41F),A
+0e70: 32 1F C4       LD    (LIVES_REMAINING),A
 0e73: 2A FD C4       LD    HL,($C4FD)
-0e76: 22 20 C4       LD    ($C420),HL
+0e76: 22 20 C4       LD    (CURRENT_PLAYER_DATA_BYTE_07),HL
 0e79: AF             XOR   A,A
-0e7a: 32 7C C4       LD    ($C47C),A
+0e7a: 32 7C C4       LD    (NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2),A
 0e7d: 32 22 C4       LD    (USER_LEVEL),A
 0e80: 32 5F C4       LD    (PLAYER_NUMBER),A
 0e83: 21 23 C4       LD    HL,COMPLETED_GAMES_XXXXDURL
@@ -2322,22 +2381,22 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 
 0e8c: 3E 01          LD    A,#$01
 0e8e: 32 60 C4       LD    ($C460),A
-0e91: 32 1F C4       LD    ($C41F),A
+0e91: 32 1F C4       LD    (LIVES_REMAINING),A
 0e94: 7E             LD    A,(HL)
 0e95: B7             OR    A,A
 0e96: 20 03          JR    NZ,$0E9B
 
-0e98: CD 15 21       CALL  $2115
+0e98: CD 15 21       CALL  INITIALIZE_LEVEL?
 0e9b: 3E 01          LD    A,#$01
-0e9d: 32 2E C4       LD    ($C42E),A
-0ea0: 32 1E C4       LD    ($C41E),A
-0ea3: 21 19 C4       LD    HL,CURRENT_PLAYER_DATA
+0e9d: 32 2E C4       LD    (CURRENT_PLAYER_DATA_BYTE_15),A
+0ea0: 32 1E C4       LD    (CURRENT_PLAYER_DATA_BYTE_05),A
+0ea3: 21 19 C4       LD    HL,USER_LEVEL/CURRENT_PLAYER_DATA
 0ea6: 11 2F C4       LD    DE,OTHER_PLAYER_DATA
 0ea9: 01 16 00       LD    BC,$0016
 0eac: ED B0          LDIR  
 0eae: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
 0eb1: B7             OR    A,A
-0eb2: CC 15 21       CALL  Z,$2115
+0eb2: CC 15 21       CALL  Z,INITIALIZE_LEVEL?
 0eb5: 3A 60 C4       LD    A,($C460)
 0eb8: 32 7D C4       LD    ($C47D),A
 0ebb: C3 28 0D       JP    $0D28
@@ -2437,11 +2496,11 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 0f36: 13             INC   DE
 0f37: 10 FA          DJNZ  $0F33
 
-0f39: CD 20 70       CALL  ZERO_RAM_C400-C418
+0f39: CD 20 70       CALL  ZERO_RAM_C000-C418
 0f3c: CD 49 70       CALL  INITIALIZE_SPRITES
 0f3f: CD C7 6F       CALL  CLEAR_BACKGROUND
 0f42: 21 C0 90       LD    HL,$90C0
-0f45: CD 35 6F       CALL  $6F35
+0f45: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 0f48: 11 BB B0       LD    DE,$B0BB
 0f4b: CD EE 6F       CALL  $6FEE
 0f4e: 0E 38          LD    C,#$38
@@ -2810,7 +2869,7 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 11fb: 36 00          LD    (HL),#$00
 11fd: 11 05 C0       LD    DE,$C005
 1200: 2A 0D C4       LD    HL,($C40D)
-1203: 01 80 FF       LD    BC,$FF80
+1203: 01 80 FF       LD    BC,SCRATCH_RAM_TO_FFFF
 1206: 09             ADD   HL,BC
 1207: 44             LD    B,H
 1208: 4D             LD    C,L
@@ -2889,13 +2948,13 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 129e: 21 6C C6       LD    HL,$C66C
 12a1: DD 21 2D 13    LD    IX,$132D
 12a5: 06 09          LD    B,#$09
-12a7: 3A 1A C4       LD    A,($C41A)
+12a7: 3A 1A C4       LD    A,(PLAYING_HOW_LONG_NOW_TO_C41C)
 12aa: DD BE 00       CP    A,(IX+$00)
 12ad: 38 14          JR    C,$12C3
 
 12af: 20 0A          JR    NZ,$12BB
 
-12b1: 3A 1B C4       LD    A,($C41B)
+12b1: 3A 1B C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_02)
 12b4: DD BE 01       CP    A,(IX+$01)
 12b7: 38 0A          JR    C,$12C3
 
@@ -2937,38 +2996,38 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 12ef: 10 E5          DJNZ  $12D6
 
 12f1: 21 28 C5       LD    HL,$C528
-12f4: 3A 1A C4       LD    A,($C41A)
+12f4: 3A 1A C4       LD    A,(PLAYING_HOW_LONG_NOW_TO_C41C)
 12f7: BE             CP    A,(HL)
 12f8: 38 16          JR    C,$1310
 
 12fa: 20 07          JR    NZ,$1303
 
 12fc: 23             INC   HL
-12fd: 3A 1B C4       LD    A,($C41B)
+12fd: 3A 1B C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_02)
 1300: BE             CP    A,(HL)
 1301: 38 0D          JR    C,$1310
 
-1303: 3A 1A C4       LD    A,($C41A)
+1303: 3A 1A C4       LD    A,(PLAYING_HOW_LONG_NOW_TO_C41C)
 1306: 32 28 C5       LD    ($C528),A
-1309: 3A 1B C4       LD    A,($C41B)
+1309: 3A 1B C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_02)
 130c: 32 29 C5       LD    ($C529),A
 130f: C9             RET   
 
 1310: 21 2A C5       LD    HL,$C52A
-1313: 3A 1A C4       LD    A,($C41A)
+1313: 3A 1A C4       LD    A,(PLAYING_HOW_LONG_NOW_TO_C41C)
 1316: BE             CP    A,(HL)
 1317: 38 07          JR    C,$1320
 
 1319: C0             RET   NZ
 
-131a: 3A 1B C4       LD    A,($C41B)
+131a: 3A 1B C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_02)
 131d: 23             INC   HL
 131e: BE             CP    A,(HL)
 131f: D0             RET   NC
 
-1320: 3A 1A C4       LD    A,($C41A)
+1320: 3A 1A C4       LD    A,(PLAYING_HOW_LONG_NOW_TO_C41C)
 1323: 32 2A C5       LD    ($C52A),A
-1326: 3A 1B C4       LD    A,($C41B)
+1326: 3A 1B C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_02)
 1329: 32 2B C5       LD    ($C52B),A
 132c: C9             RET   
 
@@ -3334,7 +3393,7 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 14fe: B8             CP    A,B
 14ff: 4B             LD    C,E
 1500: 21 C0 90       LD    HL,$90C0
-1503: CD 35 6F       CALL  $6F35
+1503: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 1506: CD 49 70       CALL  INITIALIZE_SPRITES
 1509: CD C7 6F       CALL  CLEAR_BACKGROUND
 150c: 21 27 15       LD    HL,$1527
@@ -3398,8 +3457,8 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 155e: CD FF 6F       CALL  $6FFF
 1561: 06 01          LD    B,#$01
 1563: 21 0C FE       LD    HL,$FE0C
-1566: DD 21 04 C5    LD    IX,HIGH_SCORES_INITIALS_LEVEL
-156a: FD 21 2C C5    LD    IY,HIGH_SCORES_DIGITS_BCD
+1566: DD 21 04 C5    LD    IX,HIGH_SCORES_INITIALS_AND_LEVEL
+156a: FD 21 2C C5    LD    IY,HIGH_SCORES_DIGITS_3BYTES_BCD
 156e: 78             LD    A,B
 156f: FE 0B          CP    A,#$0B
 1571: CA 1C 16       JP    Z,$161C
@@ -3590,7 +3649,7 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 
 16bf: 16 60          LD    D,#$60
 16c1: 48             LD    C,B
-16c2: 11 00 D8       LD    DE,NVRAM_M3
+16c2: 11 00 D8       LD    DE,$D800
 16c5: FC F6 16       CALL  M,$16F6
 16c8: 78             LD    A,B
 16c9: 48             LD    C,B
@@ -4285,8 +4344,8 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 1f12: B7             OR    A,A
 1f13: 20 0A          JR    NZ,$1F1F
 
-1f15: CD 9F 70       CALL  $709F
-1f18: 3A 02 C4       LD    A,($C402)
+1f15: CD 9F 70       CALL  PROCESS_GAME_SELECT_COUNTDOWN_TIMER
+1f18: 3A 02 C4       LD    A,(COUNTDOWN_TIMER_SECONDS)
 1f1b: B7             OR    A,A
 1f1c: C2 67 21       JP    NZ,$2167
 
@@ -4348,16 +4407,17 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 
 1f8c: 3A 00 C0       LD    A,(NVRAM)
 1f8f: DD BE 00       CP    A,(IX+$00)
-1f92: 28 03          JR    Z,$1F97
+1f92: 28 03          JR    Z,START_GAME
 
 1f94: 10 C1          DJNZ  $1F57
 
 1f96: C9             RET   
 
-1f97: 3A 1E C4       LD    A,($C41E)
-1f9a: 32 1D C4       LD    ($C41D),A
+START_GAME:
+1f97: 3A 1E C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_05)
+1f9a: 32 1D C4       LD    (CURRENT_PLAYER_DATA_BYTE_04),A
 1f9d: DD 7E 02       LD    A,(IX+$02)
-1fa0: 21 26 C4       LD    HL,VECTOR_OF_GAMES_4x
+1fa0: 21 26 C4       LD    HL,VECTOR_OF_GAMES_TO_C42D
 1fa3: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 1fa6: 7E             LD    A,(HL)
 1fa7: 23             INC   HL
@@ -4375,6 +4435,8 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 
 1fbc: 3A 22 C4       LD    A,(USER_LEVEL)
 1fbf: B7             OR    A,A
+
+*** skip game instructions
 1fc0: 20 0D          JR    NZ,$1FCF
 
 1fc2: 11 03 00       LD    DE,IO_3
@@ -4395,16 +4457,16 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 1fe0: 21 00 00       LD    HL,IO_0
 1fe3: 22 56 C4       LD    ($C456),HL
 1fe6: 3E 09          LD    A,#$09
-1fe8: 32 02 C4       LD    ($C402),A
+1fe8: 32 02 C4       LD    (COUNTDOWN_TIMER_SECONDS),A
 1feb: 3E 1E          LD    A,#$1E
-1fed: 32 03 C4       LD    ($C403),A
+1fed: 32 03 C4       LD    (COUNTDOWN_TIMER_FRAMES),A
 1ff0: 3E 01          LD    A,#$01
 1ff2: 32 08 C4       LD    ($C408),A
 1ff5: CD 49 70       CALL  INITIALIZE_SPRITES
 1ff8: 21 4A 23       LD    HL,BACKGROUND_PICK_A_GAME
-1ffb: CD 35 70       CALL  $7035
+1ffb: CD 35 70       CALL  COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
 1ffe: 21 CA 2A       LD    HL,$2ACA
-2001: CD 35 6F       CALL  $6F35
+2001: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 2004: 21 CA 2A       LD    HL,$2ACA
 2007: DD 21 E0 FF    LD    IX,$FFE0
 200b: 06 10          LD    B,#$10
@@ -4421,7 +4483,7 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 202a: FD 36 01 06    LD    (IY+$01),#$06
 202e: 3E 01          LD    A,#$01
 2030: 32 5B C4       LD    ($C45B),A
-2033: CD AC 70       CALL  $70AC
+2033: CD AC 70       CALL  PUT_GAME_SELECT_COUNTDOWN_DIGIT_MESSAGE_IN_Q2
 2036: 3A 22 C4       LD    A,(USER_LEVEL)
 2039: FE 0C          CP    A,#$0C
 203b: 38 02          JR    C,$203F
@@ -4436,15 +4498,15 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 2049: 01 FC FB       LD    BC,$FBFC
 204c: C3 FF 6F       JP    $6FFF
 
-204f: CD 20 70       CALL  ZERO_RAM_C400-C418
+204f: CD 20 70       CALL  ZERO_RAM_C000-C418
 2052: 3A 24 C4       LD    A,(DIRECTION_CHOSEN_8D4U2R1L)
 2055: 21 23 C4       LD    HL,COMPLETED_GAMES_XXXXDURL
 2058: AE             XOR   A,(HL)
 2059: 77             LD    (HL),A
 205a: 20 3C          JR    NZ,$2098
 
-205c: CD 15 21       CALL  $2115
-205f: 21 2E C4       LD    HL,$C42E
+205c: CD 15 21       CALL  INITIALIZE_LEVEL?
+205f: 21 2E C4       LD    HL,CURRENT_PLAYER_DATA_BYTE_15
 2062: 7E             LD    A,(HL)
 2063: FE 03          CP    A,#$03
 2065: 28 01          JR    Z,$2068
@@ -4456,7 +4518,7 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 206e: 28 01          JR    Z,$2071
 
 2070: 34             INC   (HL)
-2071: 3A 19 C4       LD    A,(CURRENT_PLAYER_DATA)
+2071: 3A 19 C4       LD    A,(USER_LEVEL/CURRENT_PLAYER_DATA)
 2074: FE 14          CP    A,#$14
 2076: 30 18          JR    NC,$2090
 
@@ -4480,14 +4542,14 @@ PRINT_OUT_MESSAGES_IN_QUEUE:
 2092: 28 01          JR    Z,$2095
 
 2094: 3C             INC   A
-2095: 32 19 C4       LD    (CURRENT_PLAYER_DATA),A
+2095: 32 19 C4       LD    (USER_LEVEL/CURRENT_PLAYER_DATA),A
 2098: 3A 5B C4       LD    A,($C45B)
 209b: FE 04          CP    A,#$04
-209d: 3A 2E C4       LD    A,($C42E)
+209d: 3A 2E C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_15)
 20a0: 20 01          JR    NZ,$20A3
 
 20a2: 3C             INC   A
-20a3: 32 1E C4       LD    ($C41E),A
+20a3: 32 1E C4       LD    (CURRENT_PLAYER_DATA_BYTE_05),A
 20a6: C9             RET   
 
 
@@ -4519,13 +4581,14 @@ VECTOR_OF_DIFFICULTY_TO_HARDNESS_MAPS:
 
 2110: 00 04 0A 0F 14 
 
+INITIALIZE_LEVEL?:
 2115: 21 08 23       LD    HL,$2308
 2118: 11 04 C0       LD    DE,$C004
 211b: 01 08 00       LD    BC,$0008
 211e: ED B0          LDIR  
 2120: 06 04          LD    B,#$04
-2122: DD 21 26 C4    LD    IX,VECTOR_OF_GAMES_4x
-2126: CD 05 6F       CALL  $6F05
+2122: DD 21 26 C4    LD    IX,VECTOR_OF_GAMES_TO_C42D
+2126: CD 05 6F       CALL  PSEUDO_RANDOM_VALUE_IN_C47A?
 2129: CB 3F          SRL   A
 212b: CB 3F          SRL   A
 212d: E6 03          AND   A,#$03
@@ -4566,6 +4629,8 @@ VECTOR_OF_DIFFICULTY_TO_HARDNESS_MAPS:
 
 215d: 3E 0F          LD    A,#$0F
 215f: 32 23 C4       LD    (COMPLETED_GAMES_XXXXDURL),A
+
+*** show games on game selection screen
 2162: AF             XOR   A,A
 2163: 32 25 C4       LD    (ATTEMPTED_GAMES_XXXXDURL),A
 2166: C9             RET   
@@ -4683,7 +4748,7 @@ VECTOR_OF_DIFFICULTY_TO_HARDNESS_MAPS:
 220e: 4F             LD    C,A
 220f: FD 21 08 F0    LD    IY,$F008
 2213: DD 21 3E 23    LD    IX,$233E
-2217: 21 26 C4       LD    HL,VECTOR_OF_GAMES_4x
+2217: 21 26 C4       LD    HL,VECTOR_OF_GAMES_TO_C42D
 221a: 78             LD    A,B
 221b: B7             OR    A,A
 221c: C8             RET   Z
@@ -4848,7 +4913,7 @@ VECTOR_OF_DIFFICULTY_TO_HARDNESS_MAPS:
 2304: 22 08 B5 22 
 
 
-*** Used at 2115.  Set what minigame is at what quadrant for attact mode?  Then 4x 
+*** Used at 2115.  Set what game is at what quadrant?  Then 4x vector table.  Then 
 2308: 10 23 16 23 1C 23 22 23 
 
 2310: 12 2D 
@@ -5305,7 +5370,7 @@ BACKGROUND_PICK_A_GAME:
 2c26: 3E 26          LD    A,#$26
 2c28: 32 EA C0       LD    ($C0EA),A
 2c2b: 3E 60          LD    A,#$60
-2c2d: 32 0E C0       LD    ($C00E),A
+2c2d: 32 0E C0       LD    (INFINITE_TIME_CHEAT),A
 2c30: 11 4D 2C       LD    DE,$2C4D
 2c33: 01 90 FE       LD    BC,$FE90
 2c36: CD 5D 70       CALL  $705D
@@ -5324,9 +5389,10 @@ BACKGROUND_PICK_A_GAME:
 
 2c67: 1000 FOR ENTERING CONE
 
+MCP_INSTRUCTIONS:
 2c7e: 21 26 39       LD    HL,$3926
-2c81: CD 35 6F       CALL  $6F35
-2c84: CD 20 70       CALL  ZERO_RAM_C400-C418
+2c81: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
+2c84: CD 20 70       CALL  ZERO_RAM_C000-C418
 2c87: 3E 01          LD    A,#$01
 2c89: 32 08 C4       LD    ($C408),A
 2c8c: CD 49 70       CALL  INITIALIZE_SPRITES
@@ -5385,9 +5451,10 @@ BACKGROUND_PICK_A_GAME:
 
 2d05: THE MCP CONE
 
+PLAY_MCP:
 2d12: 21 26 39       LD    HL,$3926
-2d15: CD 35 6F       CALL  $6F35
-2d18: CD 20 70       CALL  ZERO_RAM_C400-C418
+2d15: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
+2d18: CD 20 70       CALL  ZERO_RAM_C000-C418
 2d1b: 3E 03          LD    A,#$03
 2d1d: 32 5B C4       LD    ($C45B),A
 2d20: 3E 01          LD    A,#$01
@@ -5396,7 +5463,7 @@ BACKGROUND_PICK_A_GAME:
 2d28: CD C7 6F       CALL  CLEAR_BACKGROUND
 2d2b: 3E 01          LD    A,#$01
 2d2d: 32 65 C4       LD    ($C465),A
-2d30: 3A 19 C4       LD    A,(CURRENT_PLAYER_DATA)
+2d30: 3A 19 C4       LD    A,(USER_LEVEL/CURRENT_PLAYER_DATA)
 2d33: 21 01 C0       LD    HL,$C001
 2d36: 36 03          LD    (HL),#$03
 2d38: 0E 1C          LD    C,#$1C
@@ -5609,7 +5676,7 @@ BACKGROUND_PICK_A_GAME:
 
 2e94: 3E 04          LD    A,#$04
 2e96: 32 03 C0       LD    ($C003),A
-2e99: 21 1D C4       LD    HL,$C41D
+2e99: 21 1D C4       LD    HL,CURRENT_PLAYER_DATA_BYTE_04
 2e9c: 7E             LD    A,(HL)
 2e9d: B7             OR    A,A
 2e9e: C8             RET   Z
@@ -5633,7 +5700,7 @@ BACKGROUND_PICK_A_GAME:
 2ec5: C6 10          ADD   A,#$10
 2ec7: 32 0A F0       LD    ($F00A),A
 2eca: 3A 0B C0       LD    A,($C00B)
-2ecd: 21 0D C0       LD    HL,$C00D
+2ecd: 21 0D C0       LD    HL,IO_TOWER_TIMER_VALUE_REVERSED_TO_C010
 2ed0: B6             OR    A,(HL)
 2ed1: 21 00 C0       LD    HL,NVRAM
 2ed4: 28 06          JR    Z,$2EDC
@@ -5686,7 +5753,7 @@ BACKGROUND_PICK_A_GAME:
 2f36: 32 0E F0       LD    ($F00E),A
 2f39: DD 7E 04       LD    A,(IX+$04)
 2f3c: 32 0D F0       LD    ($F00D),A
-2f3f: 3A 1D C4       LD    A,($C41D)
+2f3f: 3A 1D C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_04)
 2f42: B7             OR    A,A
 2f43: 28 14          JR    Z,$2F59
 
@@ -5711,7 +5778,7 @@ BACKGROUND_PICK_A_GAME:
 2f69: 3E 04          LD    A,#$04
 2f6b: 32 0F C0       LD    ($C00F),A
 2f6e: 3E 40          LD    A,#$40
-2f70: 32 0E C0       LD    ($C00E),A
+2f70: 32 0E C0       LD    (INFINITE_TIME_CHEAT),A
 2f73: 3E 84          LD    A,#$84
 2f75: 32 05 C0       LD    ($C005),A
 2f78: AF             XOR   A,A
@@ -5723,7 +5790,7 @@ BACKGROUND_PICK_A_GAME:
 2f87: 0E 30          LD    C,#$30
 2f89: C3 B8 6F       JP    PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 
-2f8c: 21 0E C0       LD    HL,$C00E
+2f8c: 21 0E C0       LD    HL,INFINITE_TIME_CHEAT
 2f8f: 7E             LD    A,(HL)
 2f90: B7             OR    A,A
 2f91: 20 11          JR    NZ,$2FA4
@@ -5737,7 +5804,7 @@ BACKGROUND_PICK_A_GAME:
 2f9d: C0             RET   NZ
 
 2f9e: 3E 02          LD    A,#$02
-2fa0: 32 7C C4       LD    ($C47C),A
+2fa0: 32 7C C4       LD    (NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2),A
 2fa3: C9             RET   
 
 2fa4: 21 0F C0       LD    HL,$C00F
@@ -5751,7 +5818,7 @@ BACKGROUND_PICK_A_GAME:
 2fb4: 3A 09 F0       LD    A,($F009)
 2fb7: EE 80          XOR   A,#$80
 2fb9: 32 09 F0       LD    ($F009),A
-2fbc: 21 0E C0       LD    HL,$C00E
+2fbc: 21 0E C0       LD    HL,INFINITE_TIME_CHEAT
 2fbf: 35             DEC   (HL)
 2fc0: C0             RET   NZ
 
@@ -5805,17 +5872,17 @@ BACKGROUND_PICK_A_GAME:
 
 3015: 0E 25          LD    C,#$25
 3017: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
-301a: 21 0E C0       LD    HL,$C00E
+301a: 21 0E C0       LD    HL,INFINITE_TIME_CHEAT
 301d: 35             DEC   (HL)
 301e: C0             RET   NZ
 
 301f: 3E 01          LD    A,#$01
-3021: 32 7C C4       LD    ($C47C),A
+3021: 32 7C C4       LD    (NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2),A
 3024: C9             RET   
 
-3025: DD 21 12 C0    LD    IX,$C012
+3025: DD 21 12 C0    LD    IX,IO_TOWER_TIMER_DIGITS_TO_C019
 3029: FD 21 18 F0    LD    IY,$F018
-302d: 3A 1E C4       LD    A,($C41E)
+302d: 3A 1E C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_05)
 3030: 32 06 C4       LD    ($C406),A
 3033: DD CB 09 7E    BIT   7,(IX+$09)
 3037: CA C4 30       JP    Z,$30C4
@@ -5898,7 +5965,7 @@ BACKGROUND_PICK_A_GAME:
 
 30d5: C9             RET   
 
-30d6: DD 21 12 C0    LD    IX,$C012
+30d6: DD 21 12 C0    LD    IX,IO_TOWER_TIMER_DIGITS_TO_C019
 30da: FD 21 18 F0    LD    IY,$F018
 30de: DD 7E 09       LD    A,(IX+$09)
 30e1: B7             OR    A,A
@@ -5980,7 +6047,7 @@ BACKGROUND_PICK_A_GAME:
 
 317e: DD 36 09 00    LD    (IX+$09),#$00
 3182: FD 36 00 00    LD    (IY+$00),#$00
-3186: 21 1D C4       LD    HL,$C41D
+3186: 21 1D C4       LD    HL,CURRENT_PLAYER_DATA_BYTE_04
 3189: 34             INC   (HL)
 318a: C9             RET   
 
@@ -6308,7 +6375,7 @@ BACKGROUND_PICK_A_GAME:
 3406: 3E 82          LD    A,#$82
 3408: 32 05 C0       LD    ($C005),A
 340b: 3E 60          LD    A,#$60
-340d: 32 0E C0       LD    ($C00E),A
+340d: 32 0E C0       LD    (INFINITE_TIME_CHEAT),A
 3410: 0E 25          LD    C,#$25
 3412: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 3415: 11 67 2C       LD    DE,$2C67
@@ -6358,12 +6425,12 @@ BACKGROUND_PICK_A_GAME:
 
 3466: ED 44          NEG   
 3468: FE 17          CP    A,#$17
-346a: 30 08          JR    NC,$3474
+346a: 30 08          JR    NC,$3474       ;Invincibility MCP Game = 18 (JR *)
 
 346c: C3 5F 2F       JP    $2F5F
 
 346f: FE 0E          CP    A,#$0E
-3471: DA 5F 2F       JP    C,$2F5F
+3471: DA 5F 2F       JP    C,$2F5F        ;Invincibility MCP Game = 11 (LD DE, **)
 
 3474: 11 04 00       LD    DE,IO_4
 3477: DD 19          ADD   IX,DE
@@ -6393,9 +6460,9 @@ BACKGROUND_PICK_A_GAME:
 34a4: DD 66 01       LD    H,(IX+$01)
 34a7: 2E 0A          LD    L,#$0A
 34a9: 22 E1 C0       LD    ($C0E1),HL
-34ac: DD 21 12 C0    LD    IX,$C012
+34ac: DD 21 12 C0    LD    IX,IO_TOWER_TIMER_DIGITS_TO_C019
 34b0: FD 21 18 F0    LD    IY,$F018
-34b4: 3A 1E C4       LD    A,($C41E)
+34b4: 3A 1E C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_05)
 34b7: 47             LD    B,A
 34b8: DD CB 09 7E    BIT   7,(IX+$09)
 34bc: 28 38          JR    Z,$34F6
@@ -7412,23 +7479,24 @@ BACKGROUND_PICK_A_GAME:
 39fb: CD 9B F9       CALL  $F99B
 39fe: 6D             LD    L,L
 39ff: 4B             LD    C,E
-3a00: CD 20 70       CALL  ZERO_RAM_C400-C418
+PLAY_TANKS:
+3a00: CD 20 70       CALL  ZERO_RAM_C000-C418
 3a03: CD 49 70       CALL  INITIALIZE_SPRITES
 3a06: 3E 02          LD    A,#$02
 3a08: 32 5B C4       LD    ($C45B),A
 3a0b: 3E 10          LD    A,#$10
 3a0d: 32 4E C1       LD    ($C14E),A
 3a10: 21 00 72       LD    HL,BACKGROUND_TANK_GAME
-3a13: CD 35 70       CALL  $7035
+3a13: CD 35 70       CALL  COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
 3a16: 21 80 79       LD    HL,COLOR_PALETTE_FOR_TANKS_GAME
-3a19: CD 35 6F       CALL  $6F35
+3a19: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 3a1c: AF             XOR   A,A
 3a1d: 32 05 C4       LD    ($C405),A
 3a20: 21 2C 01       LD    HL,$012C
 3a23: 22 48 C1       LD    ($C148),HL
 3a26: 3E 01          LD    A,#$01
 3a28: 32 08 C4       LD    ($C408),A
-3a2b: 3A 1E C4       LD    A,($C41E)
+3a2b: 3A 1E C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_05)
 3a2e: 4F             LD    C,A
 3a2f: 06 00          LD    B,#$00
 3a31: 21 0C F0       LD    HL,$F00C
@@ -7459,7 +7527,7 @@ BACKGROUND_PICK_A_GAME:
 3a6d: 19             ADD   HL,DE
 3a6e: 36 00          LD    (HL),#$00
 3a70: 0E 00          LD    C,#$00
-3a72: 3A 19 C4       LD    A,(CURRENT_PLAYER_DATA)
+3a72: 3A 19 C4       LD    A,(USER_LEVEL/CURRENT_PLAYER_DATA)
 3a75: FE 0B          CP    A,#$0B
 3a77: 38 05          JR    C,$3A7E
 
@@ -7469,7 +7537,7 @@ BACKGROUND_PICK_A_GAME:
 
 3a7e: 87             ADD   A,A
 3a7f: 87             ADD   A,A
-3a80: 21 7E 4F       LD    HL,$4F7E
+3a80: 21 7E 4F       LD    HL,TANK_DATA_FOR_?
 3a83: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 3a86: 79             LD    A,C
 3a87: FE 04          CP    A,#$04
@@ -7488,7 +7556,7 @@ BACKGROUND_PICK_A_GAME:
 3a9f: 7E             LD    A,(HL)
 3aa0: E6 7F          AND   A,#$7F
 3aa2: 32 4A C1       LD    (NUMBER_OF_TANKS),A
-3aa5: 32 59 C1       LD    ($C159),A
+3aa5: 32 59 C1       LD    (NUMBER_OF_TANKS_ALSO?),A
 3aa8: 4F             LD    C,A
 3aa9: 7E             LD    A,(HL)
 3aaa: E6 80          AND   A,#$80
@@ -7504,7 +7572,7 @@ BACKGROUND_PICK_A_GAME:
 3ab9: D5             PUSH  DE
 3aba: FD E1          POP   IY
 3abc: 21 2C F0       LD    HL,$F02C
-3abf: DD 21 51 C0    LD    IX,$C051
+3abf: DD 21 51 C0    LD    IX,INFO_FOR_TANK_GAME_SEE_3ABF_TO_C05A
 3ac3: FD 7E 00       LD    A,(IY+$00)
 3ac6: DD 77 00       LD    (IX+$00),A
 3ac9: FD 7E 01       LD    A,(IY+$01)
@@ -7596,7 +7664,7 @@ BACKGROUND_PICK_A_GAME:
 3b72: 0D             DEC   C
 3b73: C2 C3 3A       JP    NZ,$3AC3
 
-3b76: 3A 59 C1       LD    A,($C159)
+3b76: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_ALSO?)
 3b79: 4F             LD    C,A
 3b7a: 21 44 F0       LD    HL,$F044
 3b7d: FD 21 08 C1    LD    IY,$C108
@@ -7728,8 +7796,8 @@ BACKGROUND_PICK_A_GAME:
 
 3c6f: 21 2C 01       LD    HL,$012C
 3c72: 22 48 C1       LD    ($C148),HL
-3c75: DD 21 51 C0    LD    IX,$C051
-3c79: 3A 59 C1       LD    A,($C159)
+3c75: DD 21 51 C0    LD    IX,INFO_FOR_TANK_GAME_SEE_3ABF_TO_C05A
+3c79: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_ALSO?)
 3c7c: 47             LD    B,A
 3c7d: 11 20 00       LD    DE,$0020
 3c80: DD 7E 07       LD    A,(IX+$07)
@@ -7755,7 +7823,7 @@ BACKGROUND_PICK_A_GAME:
 3ca0: C9             RET   
 
 3ca1: 3A 07 C4       LD    A,($C407)
-3ca4: 32 7C C4       LD    ($C47C),A
+3ca4: 32 7C C4       LD    (NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2),A
 3ca7: C9             RET   
 
 3ca8: 21 4C C1       LD    HL,$C14C
@@ -7784,11 +7852,12 @@ BACKGROUND_PICK_A_GAME:
 3cdc: 36 80          LD    (HL),#$80
 3cde: C9             RET   
 
-3cdf: CD 20 70       CALL  ZERO_RAM_C400-C418
+TANKS_INSTRUCTIONS:
+3cdf: CD 20 70       CALL  ZERO_RAM_C000-C418
 3ce2: CD 49 70       CALL  INITIALIZE_SPRITES
 3ce5: CD C7 6F       CALL  CLEAR_BACKGROUND
 3ce8: 21 80 79       LD    HL,COLOR_PALETTE_FOR_TANKS_GAME
-3ceb: CD 35 6F       CALL  $6F35
+3ceb: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 3cee: AF             XOR   A,A
 3cef: 32 05 C4       LD    ($C405),A
 3cf2: 3E 01          LD    A,#$01
@@ -7993,10 +8062,10 @@ BACKGROUND_PICK_A_GAME:
 3e10: 32 0F C0       LD    ($C00F),A
 3e13: 23             INC   HL
 3e14: 7E             LD    A,(HL)
-3e15: 32 0D C0       LD    ($C00D),A
+3e15: 32 0D C0       LD    (IO_TOWER_TIMER_VALUE_REVERSED_TO_C010),A
 3e18: 23             INC   HL
 3e19: 7E             LD    A,(HL)
-3e1a: 32 0E C0       LD    ($C00E),A
+3e1a: 32 0E C0       LD    (INFINITE_TIME_CHEAT),A
 3e1d: 23             INC   HL
 3e1e: 7E             LD    A,(HL)
 3e1f: B7             OR    A,A
@@ -8099,9 +8168,9 @@ BACKGROUND_PICK_A_GAME:
 3ecc: 32 01 C0       LD    ($C001),A
 3ecf: CD 21 3F       CALL  $3F21
 3ed2: CD D0 40       CALL  $40D0
-3ed5: 3A 0D C0       LD    A,($C00D)
+3ed5: 3A 0D C0       LD    A,(IO_TOWER_TIMER_VALUE_REVERSED_TO_C010)
 3ed8: 32 0B C0       LD    ($C00B),A
-3edb: 3A 0E C0       LD    A,($C00E)
+3edb: 3A 0E C0       LD    A,(INFINITE_TIME_CHEAT)
 3ede: 32 0C C0       LD    ($C00C),A
 3ee1: 3A 4D C1       LD    A,($C14D)
 3ee4: 32 4E C1       LD    ($C14E),A
@@ -8159,7 +8228,7 @@ BACKGROUND_PICK_A_GAME:
 3f3a: 4F             LD    C,A
 3f3b: C3 B8 6F       JP    PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 
-3f3e: 3A 59 C1       LD    A,($C159)
+3f3e: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_ALSO?)
 3f41: 11 20 00       LD    DE,$0020
 3f44: DD 21 31 C0    LD    IX,$C031
 3f48: 4F             LD    C,A
@@ -8200,7 +8269,7 @@ BACKGROUND_PICK_A_GAME:
 3f8c: 2F             CPL   
 3f8d: 21 10 C0       LD    HL,$C010
 3f90: BE             CP    A,(HL)
-3f91: 30 03          JR    NC,$3F96
+3f91: 30 03          JR    NC,$3F96       ;Invincibility TANK Game = 18 (JR *) (tank collision?)
 
 3f93: C3 09 4C       JP    $4C09
 
@@ -8580,7 +8649,7 @@ BACKGROUND_PICK_A_GAME:
 40f8: FE 91          CP    A,#$91
 40fa: 20 28          JR    NZ,$4124
 
-40fc: CD 05 6F       CALL  $6F05
+40fc: CD 05 6F       CALL  PSEUDO_RANDOM_VALUE_IN_C47A?
 40ff: E6 0F          AND   A,#$0F
 4101: 47             LD    B,A
 4102: CB 27          SLA   A
@@ -8864,7 +8933,7 @@ BACKGROUND_PICK_A_GAME:
 420b: E8             RET   PE
 
 420c: 00             NOP   
-420d: 3A 59 C1       LD    A,($C159)
+420d: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_ALSO?)
 4210: 4F             LD    C,A
 4211: DD 21 31 C0    LD    IX,$C031
 4215: 11 20 00       LD    DE,$0020
@@ -9015,7 +9084,7 @@ BACKGROUND_PICK_A_GAME:
 
 431f: 30 17          JR    NC,$4338
 
-4321: CD 05 6F       CALL  $6F05
+4321: CD 05 6F       CALL  PSEUDO_RANDOM_VALUE_IN_C47A?
 4324: E6 02          AND   A,#$02
 4326: 3D             DEC   A
 4327: 47             LD    B,A
@@ -9122,7 +9191,7 @@ BACKGROUND_PICK_A_GAME:
 
 43ce: 30 17          JR    NC,$43E7
 
-43d0: CD 05 6F       CALL  $6F05
+43d0: CD 05 6F       CALL  PSEUDO_RANDOM_VALUE_IN_C47A?
 43d3: E6 02          AND   A,#$02
 43d5: 3D             DEC   A
 43d6: 47             LD    B,A
@@ -9224,7 +9293,7 @@ BACKGROUND_PICK_A_GAME:
 4485: 20 03          JR    NZ,$448A
 
 4487: 01 00 00       LD    BC,IO_0
-448a: 3A 59 C1       LD    A,($C159)
+448a: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_ALSO?)
 448d: 6F             LD    L,A
 448e: 11 20 00       LD    DE,$0020
 4491: FD 21 31 C0    LD    IY,$C031
@@ -9356,7 +9425,7 @@ BACKGROUND_PICK_A_GAME:
 456b: 6F             LD    L,A
 456c: C9             RET   
 
-456d: 3A 1E C4       LD    A,($C41E)
+456d: 3A 1E C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_05)
 4570: 47             LD    B,A
 4571: FD 21 01 C0    LD    IY,$C001
 4575: 11 10 00       LD    DE,$0010
@@ -9591,7 +9660,7 @@ BACKGROUND_PICK_A_GAME:
 46f3: E1             POP   HL
 46f4: C9             RET   
 
-46f5: 3A 59 C1       LD    A,($C159)
+46f5: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_ALSO?)
 46f8: E5             PUSH  HL
 46f9: 11 20 00       LD    DE,$0020
 46fc: DD 21 31 C0    LD    IX,$C031
@@ -9636,7 +9705,7 @@ BACKGROUND_PICK_A_GAME:
 4736: 21 04 C0       LD    HL,$C004
 4739: 86             ADD   A,(HL)
 473a: B8             CP    A,B
-473b: 38 11          JR    C,$474E
+473b: 38 11          JR    C,$474E        ;Invincibility TANK Game = 18 (JR *) (bullet collision?)
 
 473d: 3A 02 C0       LD    A,($C002)
 4740: 21 05 C0       LD    HL,$C005
@@ -9656,7 +9725,7 @@ BACKGROUND_PICK_A_GAME:
 
 4752: FD 36 08 00    LD    (IY+$08),#$00
 4756: FD 36 00 00    LD    (IY+$00),#$00
-475a: 21 1D C4       LD    HL,$C41D
+475a: 21 1D C4       LD    HL,CURRENT_PLAYER_DATA_BYTE_04
 475d: 34             INC   (HL)
 475e: CD C7 47       CALL  $47C7
 4761: C9             RET   
@@ -9780,13 +9849,13 @@ BACKGROUND_PICK_A_GAME:
 
 4829: 3E 04          LD    A,#$04
 482b: 32 58 C1       LD    ($C158),A
-482e: 3A 1D C4       LD    A,($C41D)
+482e: 3A 1D C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_04)
 4831: B7             OR    A,A
 4832: C8             RET   Z
 
 4833: 0E 2D          LD    C,#$2D
 4835: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
-4838: 3A 1E C4       LD    A,($C41E)
+4838: 3A 1E C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_05)
 483b: 47             LD    B,A
 483c: 11 10 00       LD    DE,$0010
 483f: DD 21 01 C0    LD    IX,$C001
@@ -9812,7 +9881,7 @@ BACKGROUND_PICK_A_GAME:
 486f: DD 36 09 00    LD    (IX+$09),#$00
 4873: DD 36 08 90    LD    (IX+$08),#$90
 4877: DD 36 0D 00    LD    (IX+$0D),#$00
-487b: 21 1D C4       LD    HL,$C41D
+487b: 21 1D C4       LD    HL,CURRENT_PLAYER_DATA_BYTE_04
 487e: 35             DEC   (HL)
 487f: C9             RET   
 
@@ -10129,7 +10198,7 @@ BACKGROUND_PICK_A_GAME:
 4a15: 23             INC   HL
 4a16: 7E             LD    A,(HL)
 4a17: DD 77 01       LD    (IX+$01),A
-4a1a: 3A 1E C4       LD    A,($C41E)
+4a1a: 3A 1E C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_05)
 4a1d: 47             LD    B,A
 4a1e: 11 10 00       LD    DE,$0010
 4a21: DD 21 01 C0    LD    IX,$C001
@@ -10164,7 +10233,7 @@ BACKGROUND_PICK_A_GAME:
 
 4a53: C9             RET   
 
-4a54: 3A 59 C1       LD    A,($C159)
+4a54: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_ALSO?)
 4a57: 4F             LD    C,A
 4a58: DD 21 31 C0    LD    IX,$C031
 4a5c: 11 20 00       LD    DE,$0020
@@ -10329,7 +10398,7 @@ BACKGROUND_PICK_A_GAME:
 4b8e: 08             EX    AF,AF'
 4b8f: FF             RST   $38
 
-4b90: 3A 59 C1       LD    A,($C159)
+4b90: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_ALSO?)
 4b93: 4F             LD    C,A
 4b94: FD 21 08 C1    LD    IY,$C108
 4b98: 11 09 00       LD    DE,$0009
@@ -10797,21 +10866,12 @@ BACKGROUND_PICK_A_GAME:
 4d9b: 23             INC   HL
 4d9c: 18 F4          JR    $4D92
 
-4d9e: E8             RET   PE
 
-4d9f: 88             ADC   A,B
-4da0: E8             RET   PE
+*** tank level 0-10
+4d9e: E8 88 E8 00 01 0E 0E 01 FF 00 
 
-4da1: 00             NOP   
-4da2: 01 0E 0E       LD    BC,$0E0E
-4da5: 01 FF 00       LD    BC,$00FF
-4da8: D0             RET   NC
+4da8: D0 88 28 00 01 0E 0E 01 FF 00 
 
-4da9: 88             ADC   A,B
-4daa: 28 00          JR    Z,$4DAC
-
-4dac: 01 0E 0E       LD    BC,$0E0E
-4daf: 01 FF 00       LD    BC,$00FF
 4db2: 18 08          JR    $4DBC
 
 4db4: D0             RET   NC
@@ -10820,12 +10880,10 @@ BACKGROUND_PICK_A_GAME:
 4db6: 01 0E 0E       LD    BC,$0E0E
 4db9: 02             LD    (BC),A
 4dba: 01 00 18       LD    BC,$1800
-4dbd: 08             EX    AF,AF'
-4dbe: 28 00          JR    Z,$4DC0
+4dbd: 08 28 00 01 0E 0E 02 01 00 
 
-4dc0: 01 0E 0E       LD    BC,$0E0E
-4dc3: 02             LD    (BC),A
-4dc4: 01 00 E8       LD    BC,VIDEO_RAM
+4dc6: E8             RET   PE
+
 4dc7: 88             ADC   A,B
 4dc8: E8             RET   PE
 
@@ -10842,16 +10900,8 @@ BACKGROUND_PICK_A_GAME:
 4dd3: 00             NOP   
 4dd4: 01 0E 0E       LD    BC,$0E0E
 4dd7: 01 01 01       LD    BC,$0101
-4dda: D0             RET   NC
+4dda: D0 88 28 00 01 0E 0E 02 FF 00 
 
-4ddb: 88             ADC   A,B
-4ddc: 28 00          JR    Z,$4DDE
-
-4dde: 01 0E 0E       LD    BC,$0E0E
-4de1: 02             LD    (BC),A
-4de2: FF             RST   $38
-
-4de3: 00             NOP   
 4de4: 18 49          JR    $4E2F
 
 4de6: 28 00          JR    Z,$4DE8
@@ -10876,10 +10926,8 @@ BACKGROUND_PICK_A_GAME:
 4e00: FF             RST   $38
 
 4e01: 01 18 08       LD    BC,$0818
-4e04: 28 00          JR    Z,$4E06
+4e04: 28 00 01 0E 0E 01 01 00 
 
-4e06: 01 0E 0E       LD    BC,$0E0E
-4e09: 01 01 00       LD    BC,IO_1
 4e0c: 18 09          JR    $4E17
 
 4e0e: D0             RET   NC
@@ -10895,7 +10943,7 @@ BACKGROUND_PICK_A_GAME:
 4e19: 00             NOP   
 4e1a: 01 0E 0E       LD    BC,$0E0E
 4e1d: 02             LD    (BC),A
-4e1e: 01 00 E8       LD    BC,VIDEO_RAM
+4e1e: 01 00 E8       LD    BC,$E800
 4e21: 49             LD    C,C
 4e22: 40             LD    B,B
 4e23: 00             NOP   
@@ -11059,7 +11107,7 @@ BACKGROUND_PICK_A_GAME:
 4eeb: 00             NOP   
 4eec: 01 0E 0E       LD    BC,$0E0E
 4eef: 02             LD    (BC),A
-4ef0: 01 00 E8       LD    BC,VIDEO_RAM
+4ef0: 01 00 E8       LD    BC,$E800
 4ef3: 49             LD    C,C
 4ef4: 40             LD    B,B
 4ef5: 00             NOP   
@@ -11074,13 +11122,8 @@ BACKGROUND_PICK_A_GAME:
 4f04: FF             RST   $38
 
 4f05: 00             NOP   
-4f06: D0             RET   NC
+4f06: D0 BD 28 00 01 0E 0E 01 FF 00 
 
-4f07: BD             CP    A,L
-4f08: 28 00          JR    Z,$4F0A
-
-4f0a: 01 0E 0E       LD    BC,$0E0E
-4f0d: 01 FF 00       LD    BC,$00FF
 4f10: 18 3D          JR    $4F4F
 
 4f12: 28 00          JR    Z,$4F14
@@ -11123,13 +11166,8 @@ BACKGROUND_PICK_A_GAME:
 4f40: FF             RST   $38
 
 4f41: 00             NOP   
-4f42: D0             RET   NC
+4f42: D0 88 28 00 01 0E 0E 01 FF 00 
 
-4f43: 88             ADC   A,B
-4f44: 28 00          JR    Z,$4F46
-
-4f46: 01 0E 0E       LD    BC,$0E0E
-4f49: 01 FF 00       LD    BC,$00FF
 4f4c: 18 08          JR    $4F56
 
 4f4e: 28 00          JR    Z,$4F50
@@ -11172,44 +11210,13 @@ BACKGROUND_PICK_A_GAME:
 4f7c: FF             RST   $38
 
 4f7d: 00             NOP   
-4f7e: 80             ADD   A,B
-4f7f: 01 9E 4D       LD    BC,$4D9E
-4f82: 90             SUB   A,B
-4f83: 02             LD    (BC),A
-4f84: A8             XOR   A,B
-4f85: 4D             LD    C,L
-4f86: A0             AND   A,B
-4f87: 03             INC   BC
-4f88: BC             CP    A,H
-4f89: 4D             LD    C,L
-4f8a: B0             OR    A,B
-4f8b: 04             INC   B
-4f8c: DA 4D C0       JP    C,$C04D
 
-4f8f: 04             INC   B
-4f90: 02             LD    (BC),A
-4f91: 4E             LD    C,(HL)
-4f92: D0             RET   NC
+*** Tank game setup data. 10x4 bytes: ?, number of tanks, vector to level setup dat
+TANK_DATA_FOR_?:
+4f7e: 80 01 9E 4D 90 02 A8 4D A0 03 BC 4D B0 04 DA 4D 
+4f8e: C0 04 02 4E D0 86 06 4F E0 05 66 4E F0 06 98 4E 
+4f9e: FF 05 D4 4E FF 86 2A 4E FF 06 42 4F 
 
-4f93: 86             ADD   A,(HL)
-4f94: 06 4F          LD    B,#$4F
-4f96: E0             RET   PO
-
-4f97: 05             DEC   B
-4f98: 66             LD    H,(HL)
-4f99: 4E             LD    C,(HL)
-4f9a: F0             RET   P
-
-4f9b: 06 98          LD    B,#$98
-4f9d: 4E             LD    C,(HL)
-4f9e: FF             RST   $38
-
-4f9f: 05             DEC   B
-4fa0: D4 4E FF       CALL  NC,$FF4E
-4fa3: 86             ADD   A,(HL)
-4fa4: 2A 4E FF       LD    HL,($FF4E)
-4fa7: 06 42          LD    B,#$42
-4fa9: 4F             LD    C,A
 4faa: 31 A0 40       LD    SP,$40A0
 4fad: 31 48 20       LD    SP,$2048
 4fb0: E9             JP    (HL)
@@ -11289,14 +11296,15 @@ BACKGROUND_PICK_A_GAME:
 4ffc: FD F2          Illegal Opcode
 4ffe: 27             DAA   
 4fff: 6F             LD    L,A
+PLAY_LIGHT_CYCLE:
 5000: CD 49 70       CALL  INITIALIZE_SPRITES
 5003: 21 80 90       LD    HL,$9080
-5006: CD 35 6F       CALL  $6F35
-5009: CD 20 70       CALL  ZERO_RAM_C400-C418
+5006: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
+5009: CD 20 70       CALL  ZERO_RAM_C000-C418
 500c: 3E 05          LD    A,#$05
 500e: 32 5B C4       LD    ($C45B),A
 5011: 21 00 89       LD    HL,BACKGROUND_LIGHT_CYCLE
-5014: CD 35 70       CALL  $7035
+5014: CD 35 70       CALL  COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
 5017: 3E 01          LD    A,#$01
 5019: 32 08 C4       LD    ($C408),A
 501c: 3E FD          LD    A,#$FD
@@ -11308,7 +11316,7 @@ BACKGROUND_PICK_A_GAME:
 502c: 3E EF          LD    A,#$EF
 502e: 21 EA C1       LD    HL,$C1EA
 5031: CD 34 52       CALL  $5234
-5034: 3A 19 C4       LD    A,(CURRENT_PLAYER_DATA)
+5034: 3A 19 C4       LD    A,(USER_LEVEL/CURRENT_PLAYER_DATA)
 5037: FE 13          CP    A,#$13
 5039: 38 04          JR    C,$503F
 
@@ -11423,11 +11431,12 @@ BACKGROUND_PICK_A_GAME:
 50fd: CD F4 56       CALL  $56F4
 5100: C3 3B 52       JP    $523B
 
+LIGHT_CYCLE_INSTRUCTIONS:
 5103: 21 00 91       LD    HL,BACKGROUND_TRAINING_FOR_LIGHT_CYCLE
-5106: CD 35 70       CALL  $7035
+5106: CD 35 70       CALL  COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
 5109: CD 49 70       CALL  INITIALIZE_SPRITES
 510c: 21 80 90       LD    HL,$9080
-510f: CD 35 6F       CALL  $6F35
+510f: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 5112: 3E 01          LD    A,#$01
 5114: 32 65 C4       LD    ($C465),A
 5117: 3E 01          LD    A,#$01
@@ -11493,7 +11502,7 @@ BACKGROUND_PICK_A_GAME:
 51b8: C0             RET   NZ
 
 51b9: 3A 07 C4       LD    A,($C407)
-51bc: 32 7C C4       LD    ($C47C),A
+51bc: 32 7C C4       LD    (NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2),A
 51bf: C9             RET   
 
 51c0: CD 01 59       CALL  $5901
@@ -11987,7 +11996,7 @@ BACKGROUND_PICK_A_GAME:
 554f: 00             NOP   
 5550: 00             NOP   
 5551: 11 00 89       LD    DE,BACKGROUND_LIGHT_CYCLE
-5554: 21 00 F8       LD    HL,VIDEO_RAM_M1
+5554: 21 00 F8       LD    HL,VIDEO_RAM_TO_FF7F
 5557: 01 80 07       LD    BC,$0780
 555a: 32 E9 C1       LD    ($C1E9),A
 555d: E5             PUSH  HL
@@ -12255,7 +12264,7 @@ BACKGROUND_PICK_A_GAME:
 56f3: C9             RET   
 
 56f4: 16 0F          LD    D,#$0F
-56f6: 21 00 F8       LD    HL,VIDEO_RAM_M1
+56f6: 21 00 F8       LD    HL,VIDEO_RAM_TO_FF7F
 56f9: 06 20          LD    B,#$20
 56fb: E5             PUSH  HL
 56fc: CD 1A 5A       CALL  $5A1A
@@ -12385,7 +12394,7 @@ BACKGROUND_PICK_A_GAME:
 57c9: 12             LD    (DE),A
 57ca: 11 34 C2       LD    DE,$C234
 57cd: ED 4B E0 C1    LD    BC,($C1E0)
-57d1: C3 7E 70       JP    $707E
+57d1: C3 7E 70       JP    ADD_MESSAGE_TO_MESSAGE_QUEUE_2
 
 57d4: 3A 09 C2       LD    A,($C209)
 57d7: FE 1F          CP    A,#$1F
@@ -12479,7 +12488,7 @@ BACKGROUND_PICK_A_GAME:
 5862: AF             XOR   A,A
 5863: 12             LD    (DE),A
 5864: ED 5B 0B C4    LD    DE,($C40B)
-5868: C3 7E 70       JP    $707E
+5868: C3 7E 70       JP    ADD_MESSAGE_TO_MESSAGE_QUEUE_2
 
 586b: 34             INC   (HL)
 586c: 3E 03          LD    A,#$03
@@ -12657,7 +12666,7 @@ BACKGROUND_PICK_A_GAME:
 5994: C9             RET   
 
 5995: AF             XOR   A,A
-5996: 11 00 F8       LD    DE,VIDEO_RAM_M1
+5996: 11 00 F8       LD    DE,VIDEO_RAM_TO_FF7F
 5999: ED 52          SBC   HL,DE
 599b: CB 3C          SRL   H
 599d: CB 1D          RR    L
@@ -12682,12 +12691,12 @@ BACKGROUND_PICK_A_GAME:
 
 59b9: CB 25          SLA   L
 59bb: CB 14          RL    H
-59bd: 11 00 F8       LD    DE,VIDEO_RAM_M1
+59bd: 11 00 F8       LD    DE,VIDEO_RAM_TO_FF7F
 59c0: 19             ADD   HL,DE
 59c1: C9             RET   
 
 59c2: AF             XOR   A,A
-59c3: 11 00 F8       LD    DE,VIDEO_RAM_M1
+59c3: 11 00 F8       LD    DE,VIDEO_RAM_TO_FF7F
 59c6: ED 52          SBC   HL,DE
 59c8: CB 3C          SRL   H
 59ca: CB 1D          RR    L
@@ -12751,7 +12760,7 @@ BACKGROUND_PICK_A_GAME:
 
 5a1a: D5             PUSH  DE
 5a1b: A7             AND   A,A
-5a1c: 11 00 F8       LD    DE,VIDEO_RAM_M1
+5a1c: 11 00 F8       LD    DE,VIDEO_RAM_TO_FF7F
 5a1f: ED 52          SBC   HL,DE
 5a21: CB 3C          SRL   H
 5a23: CB 1D          RR    L
@@ -13303,15 +13312,16 @@ BACKGROUND_PICK_A_GAME:
 5cfb: 2A 17 82       LD    HL,($8217)
 5cfe: A0             AND   A,B
 5cff: 47             LD    B,A
-5d00: CD 20 70       CALL  ZERO_RAM_C400-C418
+PLAY_IO_TOWER:
+5d00: CD 20 70       CALL  ZERO_RAM_C000-C418
 5d03: 3E 04          LD    A,#$04
 5d05: 32 5B C4       LD    ($C45B),A
 5d08: 3E 01          LD    A,#$01
 5d0a: 32 08 C4       LD    ($C408),A
 5d0d: 21 00 7A       LD    HL,BACKGROUND_IO_TOWER_GAME
-5d10: CD 35 70       CALL  $7035
+5d10: CD 35 70       CALL  COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
 5d13: 21 C0 79       LD    HL,$79C0
-5d16: CD 35 6F       CALL  $6F35
+5d16: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 5d19: 21 C6 68       LD    HL,$68C6
 5d1c: DD 21 E0 FF    LD    IX,$FFE0
 5d20: 06 0E          LD    B,#$0E
@@ -13319,7 +13329,7 @@ BACKGROUND_PICK_A_GAME:
 5d25: CD 49 70       CALL  INITIALIZE_SPRITES
 5d28: 3E 78          LD    A,#$78
 5d2a: 32 1E C0       LD    ($C01E),A
-5d2d: 3A 19 C4       LD    A,(CURRENT_PLAYER_DATA)
+5d2d: 3A 19 C4       LD    A,(USER_LEVEL/CURRENT_PLAYER_DATA)
 5d30: FE 09          CP    A,#$09
 5d32: 38 04          JR    C,$5D38
 
@@ -13337,7 +13347,7 @@ BACKGROUND_PICK_A_GAME:
 5d46: CD 1D 62       CALL  $621D
 5d49: 3E 01          LD    A,#$01
 5d4b: 32 5E C4       LD    ($C45E),A
-5d4e: 3A 19 C4       LD    A,(CURRENT_PLAYER_DATA)
+5d4e: 3A 19 C4       LD    A,(USER_LEVEL/CURRENT_PLAYER_DATA)
 5d51: FE 00          CP    A,#$00
 5d53: 28 07          JR    Z,$5D5C
 
@@ -13351,10 +13361,10 @@ BACKGROUND_PICK_A_GAME:
 5d63: 32 0C C0       LD    ($C00C),A
 5d66: 3E 2D          LD    A,#$2D
 5d68: 32 07 C0       LD    ($C007),A
-5d6b: CD 23 5F       CALL  $5F23
+5d6b: CD 23 5F       CALL  CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?
 5d6e: 21 79 6B       LD    HL,$6B79
 5d71: 22 2E C0       LD    ($C02E),HL
-5d74: CD 65 60       CALL  $6065
+5d74: CD 65 60       CALL  INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
 5d77: 0E 21          LD    C,#$21
 5d79: C3 B8 6F       JP    PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 
@@ -13383,7 +13393,7 @@ BACKGROUND_PICK_A_GAME:
 5d9f: 20 4B          JR    NZ,$5DEC
 
 5da1: 36 01          LD    (HL),#$01
-5da3: 21 0D C0       LD    HL,$C00D
+5da3: 21 0D C0       LD    HL,IO_TOWER_TIMER_VALUE_REVERSED_TO_C010
 5da6: 06 04          LD    B,#$04
 5da8: 7E             LD    A,(HL)
 5da9: B7             OR    A,A
@@ -13394,7 +13404,7 @@ BACKGROUND_PICK_A_GAME:
 5daf: 10 F7          DJNZ  $5DA8
 
 5db1: 06 04          LD    B,#$04
-5db3: 21 0D C0       LD    HL,$C00D
+5db3: 21 0D C0       LD    HL,IO_TOWER_TIMER_VALUE_REVERSED_TO_C010
 5db6: 36 00          LD    (HL),#$00
 5db8: 23             INC   HL
 5db9: 10 FB          DJNZ  $5DB6
@@ -13409,7 +13419,7 @@ BACKGROUND_PICK_A_GAME:
 5dcc: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 5dcf: 3E 80          LD    A,#$80
 5dd1: 32 20 C0       LD    ($C020),A
-5dd4: C3 23 5F       JP    $5F23
+5dd4: C3 23 5F       JP    CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?
 
 5dd7: 35             DEC   (HL)
 5dd8: 20 0F          JR    NZ,$5DE9
@@ -13422,7 +13432,7 @@ BACKGROUND_PICK_A_GAME:
 5de1: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 5de4: 0E 3F          LD    C,#$3F
 5de6: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
-5de9: CD 23 5F       CALL  $5F23
+5de9: CD 23 5F       CALL  CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?
 5dec: 21 1E C0       LD    HL,$C01E
 5def: 35             DEC   (HL)
 5df0: 20 11          JR    NZ,$5E03
@@ -13467,19 +13477,20 @@ BACKGROUND_PICK_A_GAME:
 5e33: CB DE          SET   3,(HL)
 5e35: C9             RET   
 
-5e36: CD 20 70       CALL  ZERO_RAM_C400-C418
+IO_TOWER_INSTRUCTIONS:
+5e36: CD 20 70       CALL  ZERO_RAM_C000-C418
 5e39: 3E 01          LD    A,#$01
 5e3b: 32 08 C4       LD    ($C408),A
 5e3e: 21 00 7A       LD    HL,BACKGROUND_IO_TOWER_GAME
-5e41: CD 35 70       CALL  $7035
+5e41: CD 35 70       CALL  COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
 5e44: 21 B7 5E       LD    HL,$5EB7
-5e47: CD 35 6F       CALL  $6F35
+5e47: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 5e4a: CD 49 70       CALL  INITIALIZE_SPRITES
 5e4d: 21 B7 5E       LD    HL,$5EB7
 5e50: CD 1D 62       CALL  $621D
 5e53: 21 79 6B       LD    HL,$6B79
 5e56: 22 2E C0       LD    ($C02E),HL
-5e59: CD 65 60       CALL  $6065
+5e59: CD 65 60       CALL  INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
 5e5c: 3E 01          LD    A,#$01
 5e5e: 32 5E C4       LD    ($C45E),A
 5e61: DD 21 7E 5E    LD    IX,$5E7E
@@ -13575,7 +13586,7 @@ BACKGROUND_PICK_A_GAME:
 5efb: 20 07          JR    NZ,$5F04
 
 5efd: 36 08          LD    (HL),#$08
-5eff: CD 23 5F       CALL  $5F23
+5eff: CD 23 5F       CALL  CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?
 5f02: 18 14          JR    $5F18
 
 5f04: 7E             LD    A,(HL)
@@ -13592,10 +13603,11 @@ BACKGROUND_PICK_A_GAME:
 5f1c: C0             RET   NZ
 
 5f1d: 3E 02          LD    A,#$02
-5f1f: 32 7C C4       LD    ($C47C),A
+5f1f: 32 7C C4       LD    (NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2),A
 5f22: C9             RET   
 
-5f23: 21 12 C0       LD    HL,$C012
+CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?:
+5f23: 21 12 C0       LD    HL,IO_TOWER_TIMER_DIGITS_TO_C019
 5f26: 22 54 C4       LD    ($C454),HL
 5f29: 11 10 C0       LD    DE,$C010
 5f2c: 06 04          LD    B,#$04
@@ -13632,10 +13644,10 @@ BACKGROUND_PICK_A_GAME:
 5f62: 3A 04 C0       LD    A,($C004)
 5f65: FE 01          CP    A,#$01
 5f67: CC AD 62       CALL  Z,$62AD
-5f6a: C3 65 60       JP    $6065
+5f6a: C3 65 60       JP    INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
 
 5f6d: CD 36 62       CALL  $6236
-5f70: C3 65 60       JP    $6065
+5f70: C3 65 60       JP    INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
 
 5f73: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
 5f76: B7             OR    A,A
@@ -13679,7 +13691,7 @@ BACKGROUND_PICK_A_GAME:
 5faf: E6 0F          AND   A,#$0F
 5fb1: 87             ADD   A,A
 5fb2: 87             ADD   A,A
-5fb3: 21 39 6B       LD    HL,JOYSTICK_INPUT_TABLE;look at 6b39 for more info!
+5fb3: 21 39 6B       LD    HL,JOYSTICK_INPUT_TABLE
 5fb6: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 5fb9: 11 29 C0       LD    DE,JOYSTICK_INPUT_ARRAY_TO_C02C
 5fbc: 01 04 00       LD    BC,IO_4
@@ -13767,7 +13779,7 @@ BACKGROUND_PICK_A_GAME:
 6043: 32 2D C0       LD    ($C02D),A
 6046: 3E 88          LD    A,#$88
 6048: 32 24 C0       LD    ($C024),A
-604b: 21 0D C0       LD    HL,$C00D
+604b: 21 0D C0       LD    HL,IO_TOWER_TIMER_VALUE_REVERSED_TO_C010
 604e: CD 52 6F       CALL  $6F52
 6051: 3A 0F C0       LD    A,($C00F)
 6054: B7             OR    A,A
@@ -13785,6 +13797,7 @@ BACKGROUND_PICK_A_GAME:
 6063: AF             XOR   A,A
 6064: C9             RET   
 
+INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 6065: DD 2A 2E C0    LD    IX,($C02E)
 6069: 3A 26 C0       LD    A,($C026)
 606c: 32 04 F0       LD    ($F004),A
@@ -13832,6 +13845,8 @@ BACKGROUND_PICK_A_GAME:
 60ca: CB 46          BIT   0,(HL)
 60cc: 28 1F          JR    Z,$60ED
 
+
+*** Tron fires his disk here (so don't set up disk in hand, maybe?)
 60ce: CB 86          RES   0,(HL)
 60d0: 78             LD    A,B
 60d1: DD 86 08       ADD   A,(IX+$08)
@@ -13855,7 +13870,7 @@ BACKGROUND_PICK_A_GAME:
 60fb: 32 0E F0       LD    ($F00E),A
 60fe: DD 7E 04       LD    A,(IX+$04)
 6101: 32 0D F0       LD    ($F00D),A
-6104: 3A 1D C4       LD    A,($C41D)
+6104: 3A 1D C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_04)
 6107: B7             OR    A,A
 6108: 28 17          JR    Z,$6121
 
@@ -13914,7 +13929,7 @@ BACKGROUND_PICK_A_GAME:
 
 615e: 3E 19          LD    A,#$19
 6160: 32 22 C0       LD    ($C022),A
-6163: 21 1D C4       LD    HL,$C41D
+6163: 21 1D C4       LD    HL,CURRENT_PLAYER_DATA_BYTE_04
 6166: 7E             LD    A,(HL)
 6167: B7             OR    A,A
 6168: C8             RET   Z
@@ -13988,7 +14003,7 @@ BACKGROUND_PICK_A_GAME:
 61de: AF             XOR   A,A
 61df: 32 5E C4       LD    ($C45E),A
 61e2: 3E 02          LD    A,#$02
-61e4: 32 7C C4       LD    ($C47C),A
+61e4: 32 7C C4       LD    (NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2),A
 61e7: C9             RET   
 
 61e8: 21 08 C0       LD    HL,$C008
@@ -14069,10 +14084,10 @@ BACKGROUND_PICK_A_GAME:
 626a: 22 29 C0       LD    (JOYSTICK_INPUT_ARRAY_TO_C02C),HL
 626d: 22 2B C0       LD    ($C02B),HL
 6270: 21 80 81       LD    HL,$8180
-6273: 11 00 F8       LD    DE,VIDEO_RAM_M1
+6273: 11 00 F8       LD    DE,VIDEO_RAM_TO_FF7F
 6276: 01 80 07       LD    BC,$0780
 6279: ED B0          LDIR  
-627b: CD 23 5F       CALL  $5F23
+627b: CD 23 5F       CALL  CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?
 627e: 0E 22          LD    C,#$22
 6280: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 6283: 0E 3C          LD    C,#$3C
@@ -14097,7 +14112,7 @@ BACKGROUND_PICK_A_GAME:
 62a3: AF             XOR   A,A
 62a4: 32 5E C4       LD    ($C45E),A
 62a7: 3E 01          LD    A,#$01
-62a9: 32 7C C4       LD    ($C47C),A
+62a9: 32 7C C4       LD    (NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2),A
 62ac: C9             RET   
 
 62ad: 3A 26 C0       LD    A,($C026)
@@ -14208,7 +14223,7 @@ BACKGROUND_PICK_A_GAME:
 
 636d: DD 21 E8 C1    LD    IX,$C1E8
 6371: FD 21 18 F0    LD    IY,$F018
-6375: 3A 1E C4       LD    A,($C41E)
+6375: 3A 1E C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_05)
 6378: 32 06 C4       LD    ($C406),A
 637b: DD CB 09 7E    BIT   7,(IX+$09)
 637f: CA 21 64       JP    Z,$6421
@@ -14385,7 +14400,7 @@ BACKGROUND_PICK_A_GAME:
 
 64db: DD 36 09 00    LD    (IX+$09),#$00
 64df: FD 36 00 00    LD    (IY+$00),#$00
-64e3: 21 1D C4       LD    HL,$C41D
+64e3: 21 1D C4       LD    HL,CURRENT_PLAYER_DATA_BYTE_04
 64e6: 34             INC   (HL)
 64e7: C9             RET   
 
@@ -14764,7 +14779,7 @@ BACKGROUND_PICK_A_GAME:
 6774: 00             NOP   
 6775: 00             NOP   
 6776: 00             NOP   
-6777: 3A 19 C4       LD    A,(CURRENT_PLAYER_DATA)
+6777: 3A 19 C4       LD    A,(USER_LEVEL/CURRENT_PLAYER_DATA)
 677a: FE 09          CP    A,#$09
 677c: 30 07          JR    NC,$6785
 
@@ -14777,13 +14792,13 @@ BACKGROUND_PICK_A_GAME:
 6786: E6 80          AND   A,#$80
 6788: 28 26          JR    Z,$67B0
 
-678a: CD 05 6F       CALL  $6F05
+678a: CD 05 6F       CALL  PSEUDO_RANDOM_VALUE_IN_C47A?
 678d: E6 08          AND   A,#$08
 678f: 28 1F          JR    Z,$67B0
 
 6791: 3E 02          LD    A,#$02
 6793: 32 04 C0       LD    ($C004),A
-6796: CD 05 6F       CALL  $6F05
+6796: CD 05 6F       CALL  PSEUDO_RANDOM_VALUE_IN_C47A?
 6799: CB 3F          SRL   A
 679b: E6 0C          AND   A,#$0C
 679d: E5             PUSH  HL
@@ -14795,7 +14810,7 @@ BACKGROUND_PICK_A_GAME:
 67ab: ED A0          LDI   
 67ad: ED A0          LDI   
 67af: E1             POP   HL
-67b0: 3A 19 C4       LD    A,(CURRENT_PLAYER_DATA)
+67b0: 3A 19 C4       LD    A,(USER_LEVEL/CURRENT_PLAYER_DATA)
 67b3: 06 03          LD    B,#$03
 67b5: 0E 00          LD    C,#$00
 67b7: FE 09          CP    A,#$09
@@ -14869,7 +14884,7 @@ BACKGROUND_PICK_A_GAME:
 
 6826: C9             RET   
 
-6827: 3A 1E C4       LD    A,($C41E)
+6827: 3A 1E C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_05)
 682a: 47             LD    B,A
 682b: FD 21 E8 C1    LD    IY,$C1E8
 682f: 21 18 F0       LD    HL,$F018
@@ -14956,7 +14971,7 @@ BACKGROUND_PICK_A_GAME:
 68bd: 0E 0A          LD    C,#$0A
 68bf: 78             LD    A,B
 68c0: B9             CP    A,C
-68c1: D0             RET   NC
+68c1: D0             RET   NC             ;Invincibility I/O Tower Game = C9 (RET)
 
 68c2: CD 9F 61       CALL  $619F
 68c5: C9             RET   
@@ -16106,6 +16121,7 @@ JOYSTICK_INPUT_TABLE:
 6f03: 24             INC   H
 6f04: C9             RET   
 
+PSEUDO_RANDOM_VALUE_IN_C47A?:
 6f05: 3A 7A C4       LD    A,($C47A)
 6f08: 07             RLCA  
 6f09: 30 02          JR    NC,$6F0D
@@ -16138,12 +16154,14 @@ RESET_WATCHDOG_UNTIL_C400_IS_ONE:
 6f2b: 23             INC   HL
 6f2c: C9             RET   
 
+COPY_10_FROM_HL_TO_FFC0:
 6f2d: 06 10          LD    B,#$10
 6f2f: DD 21 C0 FF    LD    IX,$FFC0
 6f33: 18 06          JR    $6F3B
 
+COPY_20_FROM_HL_TO_FF80:
 6f35: 06 20          LD    B,#$20
-6f37: DD 21 80 FF    LD    IX,$FF80
+6f37: DD 21 80 FF    LD    IX,SCRATCH_RAM_TO_FFFF
 6f3b: 11 02 00       LD    DE,IO_2
 6f3e: 7E             LD    A,(HL)
 6f3f: 23             INC   HL
@@ -16200,7 +16218,7 @@ RESET_WATCHDOG_UNTIL_C400_IS_ONE:
 6f83: 36 00          LD    (HL),#$00
 6f85: DD E5          PUSH  IX
 6f87: FD E5          PUSH  IY
-6f89: DD 21 20 C4    LD    IX,$C420
+6f89: DD 21 20 C4    LD    IX,CURRENT_PLAYER_DATA_BYTE_07
 6f8d: 23             INC   HL
 6f8e: 7E             LD    A,(HL)
 6f8f: DD BE 00       CP    A,(IX+$00)
@@ -16213,7 +16231,7 @@ RESET_WATCHDOG_UNTIL_C400_IS_ONE:
 6f98: DD BE 01       CP    A,(IX+$01)
 6f9b: 38 16          JR    C,$6FB3
 
-6f9d: 21 1F C4       LD    HL,$C41F
+6f9d: 21 1F C4       LD    HL,LIVES_REMAINING
 6fa0: 34             INC   (HL)
 6fa1: DD 36 01 FF    LD    (IX+$01),#$FF
 6fa5: DD 36 00 0F    LD    (IX+$00),#$0F
@@ -16248,7 +16266,7 @@ CLEAR_BACKGROUND:
 6fd5: 21 90 C4       LD    HL,$C490
 6fd8: 22 8E C4       LD    ($C48E),HL
 6fdb: FB             EI    
-6fdc: 21 00 F8       LD    HL,VIDEO_RAM_M1
+6fdc: 21 00 F8       LD    HL,VIDEO_RAM_TO_FF7F
 6fdf: 01 C0 03       LD    BC,$03C0
 6fe2: 36 5E          LD    (HL),#$5E
 6fe4: 23             INC   HL
@@ -16292,11 +16310,11 @@ CLEAR_BACKGROUND:
 701e: FB             EI    
 701f: C9             RET   
 
-ZERO_RAM_C400-C418:
-7020: 21 19 C4       LD    HL,CURRENT_PLAYER_DATA
+ZERO_RAM_C000-C418:
+7020: 21 19 C4       LD    HL,USER_LEVEL/CURRENT_PLAYER_DATA
 7023: C3 29 70       JP    $7029
 
-ZERO_RAM_C400-C450:
+ZERO_RAM_C000-C450:
 7026: 21 51 C4       LD    HL,$C451
 7029: 2D             DEC   L
 702a: 36 00          LD    (HL),#$00
@@ -16309,9 +16327,10 @@ ZERO_RAM_C400-C450:
 
 7034: C9             RET   
 
+COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800):
 7035: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 7038: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
-703b: 11 00 F8       LD    DE,VIDEO_RAM_M1
+703b: 11 00 F8       LD    DE,VIDEO_RAM_TO_FF7F
 703e: 01 80 07       LD    BC,$0780
 7041: ED B0          LDIR  
 7043: 3E 01          LD    A,#$01
@@ -16321,7 +16340,7 @@ ZERO_RAM_C400-C450:
 
 *** Initialize sprites (X=0, picture=3F, Y=0, unused=0)
 INITIALIZE_SPRITES:
-7049: 21 00 F0       LD    HL,SPRITE_RAM_M4
+7049: 21 00 F0       LD    HL,SPRITE_RAM
 704c: 06 80          LD    B,#$80
 704e: 36 00          LD    (HL),#$00
 7050: 23             INC   HL
@@ -16358,12 +16377,15 @@ INITIALIZE_SPRITES:
 707c: FB             EI    
 707d: C9             RET   
 
-707e: 3A 67 C4       LD    A,($C467)
+ADD_MESSAGE_TO_MESSAGE_QUEUE_2:
+707e: 3A 67 C4       LD    A,(NUMBER_OF_SCREEN_MESSAGES_2_FROM_C4BE)
 7081: FE 06          CP    A,#$06
 7083: 38 05          JR    C,$708A
 
+
+*** message queue 2 is full!  Reset watchdog and spin until MQ2 count < 6
 7085: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
-7088: 18 F4          JR    $707E
+7088: 18 F4          JR    ADD_MESSAGE_TO_MESSAGE_QUEUE_2
 
 708a: F3             DI    
 708b: 2A BC C4       LD    HL,($C4BC)
@@ -16376,22 +16398,27 @@ INITIALIZE_SPRITES:
 7094: 72             LD    (HL),D
 7095: 23             INC   HL
 7096: 22 BC C4       LD    ($C4BC),HL
-7099: 21 67 C4       LD    HL,$C467
+7099: 21 67 C4       LD    HL,NUMBER_OF_SCREEN_MESSAGES_2_FROM_C4BE
 709c: 34             INC   (HL)
 709d: FB             EI    
 709e: C9             RET   
 
-709f: 21 03 C4       LD    HL,$C403
+
+*** Countdown 30 frames by decrementing c403
+*** Countdown seconds by decrementing c402 every time c403 hits 00
+PROCESS_GAME_SELECT_COUNTDOWN_TIMER:
+709f: 21 03 C4       LD    HL,COUNTDOWN_TIMER_FRAMES
 70a2: 35             DEC   (HL)
 70a3: C0             RET   NZ
 
 70a4: 36 1E          LD    (HL),#$1E
-70a6: 21 02 C4       LD    HL,$C402
+70a6: 21 02 C4       LD    HL,COUNTDOWN_TIMER_SECONDS
 70a9: 35             DEC   (HL)
-70aa: 18 00          JR    $70AC
+70aa: 18 00          JR    PUT_GAME_SELECT_COUNTDOWN_DIGIT_MESSAGE_IN_Q2
 
-70ac: 21 CD 70       LD    HL,$70CD
-70af: 3A 02 C4       LD    A,($C402)
+PUT_GAME_SELECT_COUNTDOWN_DIGIT_MESSAGE_IN_Q2:
+70ac: 21 CD 70       LD    HL,GAME_SELECT_COUNTDOWN_DIGITS
+70af: 3A 02 C4       LD    A,(COUNTDOWN_TIMER_SECONDS)
 70b2: 87             ADD   A,A
 70b3: 87             ADD   A,A
 70b4: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
@@ -16401,154 +16428,49 @@ INITIALIZE_SPRITES:
 70ba: 23             INC   HL
 70bb: 01 E8 FB       LD    BC,$FBE8
 70be: E5             PUSH  HL
-70bf: CD 7E 70       CALL  $707E
+70bf: CD 7E 70       CALL  ADD_MESSAGE_TO_MESSAGE_QUEUE_2
 70c2: E1             POP   HL
 70c3: 5E             LD    E,(HL)
 70c4: 23             INC   HL
 70c5: 56             LD    D,(HL)
 70c6: 23             INC   HL
 70c7: 01 EA FB       LD    BC,$FBEA
-70ca: C3 7E 70       JP    $707E
 
-70cd: F5             PUSH  AF
-70ce: 70             LD    (HL),B
-70cf: FA 70 FF       JP    M,$FF70
+*** game select countdown digits vectors
+*** each digit needs 2 vectors!  Why?  This could be simplified!
+70ca: C3 7E 70       JP    ADD_MESSAGE_TO_MESSAGE_QUEUE_2
 
-70d2: 70             LD    (HL),B
-70d3: 04             INC   B
-70d4: 71             LD    (HL),C
-70d5: 09             ADD   HL,BC
-70d6: 71             LD    (HL),C
-70d7: 0E 71          LD    C,#$71
-70d9: 13             INC   DE
-70da: 71             LD    (HL),C
-70db: 18 71          JR    $714E
+GAME_SELECT_COUNTDOWN_DIGITS:
+70cd: F5 70 FA 70 FF 70 04 71 09 71 0E 71 13 71 18 71 
+70dd: 1D 71 22 71 27 71 2C 71 31 71 36 71 3B 71 40 71 
+70ed: 45 71 4A 71 4F 71 54 71 
 
-70dd: 1D             DEC   E
-70de: 71             LD    (HL),C
-70df: 22 71 27       LD    ($2771),HL
-70e2: 71             LD    (HL),C
-70e3: 2C             INC   L
-70e4: 71             LD    (HL),C
-70e5: 31 71 36       LD    SP,$3671
-70e8: 71             LD    (HL),C
-70e9: 3B             DEC   SP
-70ea: 71             LD    (HL),C
-70eb: 40             LD    B,B
-70ec: 71             LD    (HL),C
-70ed: 45             LD    B,L
-70ee: 71             LD    (HL),C
-70ef: 4A             LD    C,D
-70f0: 71             LD    (HL),C
-70f1: 4F             LD    C,A
-70f2: 71             LD    (HL),C
-70f3: 54             LD    D,H
-70f4: 71             LD    (HL),C
-70f5: B2             OR    A,D
-70f6: 51             LD    D,C
-70f7: C0             RET   NZ
+70f5: B2 51 C0 51 00 
 
-70f8: 51             LD    D,C
-70f9: 00             NOP   
-70fa: C2 51 C3       JP    NZ,$C351
+70fa: C2 51 C3 51 00 
 
-70fd: 51             LD    D,C
-70fe: 00             NOP   
-70ff: A8             XOR   A,B
-7100: 51             LD    D,C
-7101: 5E             LD    E,(HL)
-7102: 51             LD    D,C
-7103: 00             NOP   
-7104: A9             XOR   A,C
-7105: 51             LD    D,C
-7106: 5E             LD    E,(HL)
-7107: 51             LD    D,C
-7108: 00             NOP   
-7109: AA             XOR   A,D
-710a: 51             LD    D,C
-710b: AC             XOR   A,H
-710c: 51             LD    D,C
-710d: 00             NOP   
-710e: AB             XOR   A,E
-710f: 51             LD    D,C
-7110: AD             XOR   A,L
-7111: 51             LD    D,C
-7112: 00             NOP   
-7113: AE             XOR   A,(HL)
-7114: 51             LD    D,C
-7115: B0             OR    A,B
-7116: 51             LD    D,C
-7117: 00             NOP   
-7118: AF             XOR   A,A
-7119: 51             LD    D,C
-711a: B1             OR    A,C
-711b: 51             LD    D,C
-711c: 00             NOP   
-711d: B2             OR    A,D
-711e: 51             LD    D,C
-711f: B4             OR    A,H
-7120: 51             LD    D,C
-7121: 00             NOP   
-7122: B3             OR    A,E
-7123: 51             LD    D,C
-7124: B5             OR    A,L
-7125: 51             LD    D,C
-7126: 00             NOP   
-7127: B2             OR    A,D
-7128: 51             LD    D,C
-7129: B7             OR    A,A
-712a: 51             LD    D,C
-712b: 00             NOP   
-712c: B6             OR    A,(HL)
-712d: 51             LD    D,C
-712e: B8             CP    A,B
-712f: 51             LD    D,C
-7130: 00             NOP   
-7131: B2             OR    A,D
-7132: 51             LD    D,C
-7133: B7             OR    A,A
-7134: 51             LD    D,C
-7135: 00             NOP   
-7136: B9             CP    A,C
-7137: 51             LD    D,C
-7138: B8             CP    A,B
-7139: 51             LD    D,C
-713a: 00             NOP   
-713b: BA             CP    A,D
-713c: 51             LD    D,C
-713d: AC             XOR   A,H
-713e: 51             LD    D,C
-713f: 00             NOP   
-7140: 5E             LD    E,(HL)
-7141: 51             LD    D,C
-7142: BB             CP    A,E
-7143: 51             LD    D,C
-7144: 00             NOP   
-7145: BC             CP    A,H
-7146: 51             LD    D,C
-7147: BE             CP    A,(HL)
-7148: 51             LD    D,C
-7149: 00             NOP   
-714a: BD             CP    A,L
-714b: 51             LD    D,C
-714c: B8             CP    A,B
-714d: 51             LD    D,C
-714e: 00             NOP   
-714f: B2             OR    A,D
-7150: 51             LD    D,C
-7151: C0             RET   NZ
+70ff: A8 51 5E 51 00 
 
-7152: 51             LD    D,C
-7153: 00             NOP   
-7154: BF             CP    A,A
-7155: 51             LD    D,C
-7156: C1             POP   BC
-7157: 51             LD    D,C
-7158: 00             NOP   
+7104: A9 51 5E 51 00 
 
-*** Return C687 in A.  If non-zero, subtract 7.  Do not affect other registers.
-RETURN_C687-7_IF_NZ_IN_A:
-7159: C5             PUSH  BC
+7109: AA 51 AC 51 00 
+
+710e: AB 51 AD 51 00 
+
+7113: AE 51 B0 51 00 
+
+7118: AF 51 B1 51 00 
+
+711d: B2 51 B4 51 00 
+
+7122: B3 51 B5 51 00 
+
+7127: B2 51 B7 51 00 B6 51 B8 51 00 B2 51 B7 51 00 B9 
+7137: 51 B8 51 00 BA 51 AC 51 00 5E 51 BB 51 00 BC 51 
+7147: BE 51 00 BD 51 B8 51 00 B2 51 C0 51 00 BF 51 C1 
+7157: 51 00 C5 
+
+Error: missed a comment line at 7159, line=715B
 715a: 47             LD    B,A
 715b: 3A 87 C6       LD    A,($C687)
 715e: B7             OR    A,A
@@ -21309,7 +21231,7 @@ aa11: 21 82 C4       LD    HL,$C482
 aa14: 22 80 C4       LD    ($C480),HL
 aa17: 21 90 C4       LD    HL,$C490
 aa1a: 22 8E C4       LD    ($C48E),HL
-aa1d: 21 BE C4       LD    HL,$C4BE
+aa1d: 21 BE C4       LD    HL,SCREEN_MESSAGE_QUEUE_2_TO_C4D5
 aa20: 22 BC C4       LD    ($C4BC),HL
 aa23: F1             POP   AF
 aa24: FB             EI    
@@ -21398,9 +21320,9 @@ aaec: DD 21 70 AC    LD    IX,$AC70
 aaf0: CD C3 AB       CALL  $ABC3
 aaf3: F5             PUSH  AF
 aaf4: 21 C0 90       LD    HL,$90C0
-aaf7: CD 35 6F       CALL  $6F35
+aaf7: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 aafa: 21 AB 01       LD    HL,$01AB
-aafd: CD 2D 6F       CALL  $6F2D
+aafd: CD 2D 6F       CALL  COPY_10_FROM_HL_TO_FFC0
 ab00: CD B1 AB       CALL  $ABB1
 ab03: F1             POP   AF
 ab04: B7             OR    A,A
@@ -21433,8 +21355,8 @@ ab31: B2
 ab35: F6 
 
 ab39: 1E 01          LD    E,#$01
-ab3b: FD 21 80 FF    LD    IY,$FF80
-ab3f: 21 00 F8       LD    HL,VIDEO_RAM_M1
+ab3b: FD 21 80 FF    LD    IY,SCRATCH_RAM_TO_FFFF
+ab3f: 21 00 F8       LD    HL,VIDEO_RAM_TO_FF7F
 ab42: FD 22 0B C4    LD    ($C40B),IY
 ab46: 16 5D          LD    D,#$5D
 ab48: 01 E0 01       LD    BC,$01E0
@@ -21493,9 +21415,9 @@ ab98: FE 21          CP    A,#$21
 ab9a: C2 3F AB       JP    NZ,$AB3F
 
 ab9d: 21 C0 90       LD    HL,$90C0
-aba0: CD 35 6F       CALL  $6F35
+aba0: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 aba3: 21 AB 01       LD    HL,$01AB
-aba6: C3 2D 6F       JP    $6F2D
+aba6: C3 2D 6F       JP    COPY_10_FROM_HL_TO_FFC0
 
 aba9: 00             NOP   
 abaa: 00             NOP   
@@ -21503,7 +21425,7 @@ abab: 01 C0 00       LD    BC,$00C0
 abae: 38 00          JR    C,$ABB0
 
 abb0: 07             RLCA  
-abb1: 21 00 F8       LD    HL,VIDEO_RAM_M1
+abb1: 21 00 F8       LD    HL,VIDEO_RAM_TO_FF7F
 abb4: 01 C0 03       LD    BC,$03C0
 abb7: 36 5E          LD    (HL),#$5E
 abb9: 23             INC   HL
@@ -21816,7 +21738,7 @@ ad98: CD 8C 99       CALL  $998C
 ad9b: 28 F2          JR    Z,$AD8F
 
 ad9d: 21 C0 90       LD    HL,$90C0
-ada0: C3 35 6F       JP    $6F35
+ada0: C3 35 6F       JP    COPY_20_FROM_HL_TO_FF80
 
 ada3: 0E 02          LD    C,#$02
 ada5: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
@@ -21926,7 +21848,7 @@ ae7c: AF             XOR   A,A
 ae7d: 32 9A FF       LD    ($FF9A),A
 ae80: 3D             DEC   A
 ae81: 32 9F FF       LD    ($FF9F),A
-ae84: 11 00 F8       LD    DE,VIDEO_RAM_M1
+ae84: 11 00 F8       LD    DE,VIDEO_RAM_TO_FF7F
 ae87: 3E 0F          LD    A,#$0F
 ae89: 21 95 AE       LD    HL,$AE95
 ae8c: 01 80 00       LD    BC,$0080
