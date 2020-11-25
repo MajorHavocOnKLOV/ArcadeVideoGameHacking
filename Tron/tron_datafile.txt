@@ -32,6 +32,7 @@ label 00F0 IO_CTC
 
 
 
+label 01cb SERVICE_INTERRUPT_ROUTINE
 label 0401 STRING_IN_DE_TO_HL
 label 04b0 DEFAULT_HIGH_SCORE_TABLE
 label 0557 OUTPUT_TO_SOUND_LATCHES
@@ -39,7 +40,6 @@ label 06ca PRINT_OUT_MESSAGES_IN_QUEUES
 label 06f5 PRINT_OUT_MESSAGES_IN_QUEUE_2
 label 0792 OUTPUT_IO_TOWER_TIMER
 label 0825 UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE
-label 01cb SERVICE_INTERRUPT_ROUTINE
 label 1f97 START_GAME
 label 20a7 VECTOR_OF_DIFFICULTY_TO_HARDNESS_MAPS
 label 2115 INITIALIZE_LEVEL?
@@ -86,10 +86,17 @@ label 9100 BACKGROUND_TRAINING_FOR_LIGHT_CYCLE
 label 998c GET_TRIGGER_INPUT_FOR_SERVICE_MENU
 label ad70 PRINT_A_NULL_TERMINATED_ASCII_STRING_FROM_BC_TO_HL
 label b126 VECTOR_OF_USER_LEVEL_STRINGS
+label B008 PLAYER_1_UP_STRING
+label B014 PLAYER_2_UP_STRING
 
 label c00d IO_TOWER_TIMER_VALUE_REVERSED_TO_C010
 label c00e INFINITE_TIME_CHEAT
 label c012 IO_TOWER_TIMER_DIGITS_TO_C019
+label c022 ?
+label c023 ?
+label c024 ?
+label c026 X_POS_TRON_SPRITE_IN_MCP
+label c028 Y_POS_TRON_SPRITE_IN_MCP
 label c029 JOYSTICK_INPUT_ARRAY_TO_C02C
 label c051 INFO_FOR_TANK_GAME_SEE_3ABF_TO_C05A
 label c14a NUMBER_OF_TANKS
@@ -129,6 +136,7 @@ label c4f6 DIFFICULTY_LEVEL
 label c4f7 HIGH_SCORES_DIGITS
 label c504 HIGH_SCORES_INITIALS_AND_LEVEL
 label c52c HIGH_SCORES_DIGITS_3BYTES_BCD
+label c687 FLIP_SCREEN_IF_VALUE_IS_01
 
 ; map(0xc000, 0xc7ff).mirror(0x1800)
 label C000 NVRAM
@@ -649,4 +657,6 @@ ascii b17e-b182
 ; 	3F - nothing/empty/null
 
 ; F800-FF7F - background RAM.  Starts top right, moves down and then left and up when it wraps around.
+; *UNLESS* the screen is inverted for P2 on a cocktail!  Then it starts bottom left, moves up and then
+; right and down when it wraps around.  When C687 is 01 the screen is flipped
 ; One byte picks the character or sprite, the other picks the color palette, flip, reverse, etc.

@@ -1,3 +1,5 @@
+duplicate label: ?
+duplicate label: ?
 `data 4e66-4e6f'
 DATA out of order
 
@@ -26,6 +28,7 @@ IO_AUDIO_LATCHES EQU $001c
 IO_WATCHDOG_RESET EQU $00e0
 IO_UNKNOWN_WRITTEN_AT_INITIALIZATION EQU $00e8
 IO_CTC EQU $00f0
+SERVICE_INTERRUPT_ROUTINE EQU $01cb
 STRING_IN_DE_TO_HL EQU $0401
 DEFAULT_HIGH_SCORE_TABLE EQU $04b0
 OUTPUT_TO_SOUND_LATCHES EQU $0557
@@ -33,7 +36,6 @@ PRINT_OUT_MESSAGES_IN_QUEUES EQU $06ca
 PRINT_OUT_MESSAGES_IN_QUEUE_2 EQU $06f5
 OUTPUT_IO_TOWER_TIMER EQU $0792
 UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE EQU $0825
-SERVICE_INTERRUPT_ROUTINE EQU $01cb
 START_GAME EQU $1f97
 VECTOR_OF_DIFFICULTY_TO_HARDNESS_MAPS EQU $20a7
 INITIALIZE_LEVEL? EQU $2115
@@ -80,9 +82,14 @@ BACKGROUND_TRAINING_FOR_LIGHT_CYCLE EQU $9100
 GET_TRIGGER_INPUT_FOR_SERVICE_MENU EQU $998c
 PRINT_A_NULL_TERMINATED_ASCII_STRING_FROM_BC_TO_HL EQU $ad70
 VECTOR_OF_USER_LEVEL_STRINGS EQU $b126
+PLAYER_1_UP_STRING EQU $b008
+PLAYER_2_UP_STRING EQU $b014
 IO_TOWER_TIMER_VALUE_REVERSED_TO_C010 EQU $c00d
 INFINITE_TIME_CHEAT EQU $c00e
 IO_TOWER_TIMER_DIGITS_TO_C019 EQU $c012
+? EQU $c022
+X_POS_TRON_SPRITE_IN_MCP EQU $c026
+Y_POS_TRON_SPRITE_IN_MCP EQU $c028
 JOYSTICK_INPUT_ARRAY_TO_C02C EQU $c029
 INFO_FOR_TANK_GAME_SEE_3ABF_TO_C05A EQU $c051
 NUMBER_OF_TANKS EQU $c14a
@@ -118,6 +125,7 @@ DIFFICULTY_LEVEL EQU $c4f6
 HIGH_SCORES_DIGITS EQU $c4f7
 HIGH_SCORES_INITIALS_AND_LEVEL EQU $c504
 HIGH_SCORES_DIGITS_3BYTES_BCD EQU $c52c
+FLIP_SCREEN_IF_VALUE_IS_01 EQU $c687
 NVRAM EQU $c000
 SPRITE_RAM EQU $f000
 VIDEO_RAM_TO_FF7F EQU $f800
@@ -544,7 +552,7 @@ IO_CTC:
 0286: FB             EI    
 0287: ED 4D          RETI  
 
-0289: 3A 87 C6       LD    A,($C687)
+0289: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
 028c: B7             OR    A,A
 028d: 0E 01          LD    C,#$01
 028f: 28 02          JR    Z,$0293
@@ -1676,7 +1684,7 @@ UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE:
 0909: D3 00          OUT   ($00),A
 090b: FB             EI    
 090c: AF             XOR   A,A
-090d: 32 87 C6       LD    ($C687),A
+090d: 32 87 C6       LD    (FLIP_SCREEN_IF_VALUE_IS_01),A
 0910: DB 00          IN    A,($00)
 0912: E6 80          AND   A,#$80
 0914: CA 00 99       JP    Z,$9900
@@ -1899,18 +1907,18 @@ UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE:
 0ac3: 32 76 C4       LD    ($C476),A
 0ac6: D3 00          OUT   ($00),A
 0ac8: FB             EI    
-0ac9: 21 87 C6       LD    HL,$C687
+0ac9: 21 87 C6       LD    HL,FLIP_SCREEN_IF_VALUE_IS_01
 0acc: 7E             LD    A,(HL)
 0acd: EE 01          XOR   A,#$01
 0acf: 77             LD    (HL),A
-0ad0: 11 08 B0       LD    DE,$B008
+0ad0: 11 08 B0       LD    DE,PLAYER_1_UP_STRING
 0ad3: 21 5F C4       LD    HL,PLAYER_NUMBER
 0ad6: 7E             LD    A,(HL)
 0ad7: EE 01          XOR   A,#$01
 0ad9: 77             LD    (HL),A
 0ada: 28 03          JR    Z,$0ADF
 
-0adc: 11 14 B0       LD    DE,$B014
+0adc: 11 14 B0       LD    DE,PLAYER_2_UP_STRING
 0adf: CD EE 6F       CALL  SET_C40D_TO_FDD0_AND_ADD_A_MESSAGE_TO_Q
 0ae2: 3E 01          LD    A,#$01
 0ae4: 32 65 C4       LD    ($C465),A
@@ -2625,7 +2633,7 @@ UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE:
 1040: DB 02          IN    A,($02)
 1042: 2F             CPL   
 1043: 4F             LD    C,A
-1044: 3A 87 C6       LD    A,($C687)
+1044: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
 1047: B7             OR    A,A
 1048: 28 08          JR    Z,$1052
 
@@ -2895,7 +2903,7 @@ UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE:
 123f: E6 0C          AND   A,#$0C
 1241: 20 39          JR    NZ,$127C
 
-1243: 3A 87 C6       LD    A,($C687)
+1243: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
 1246: B7             OR    A,A
 1247: 20 06          JR    NZ,$124F
 
@@ -4645,7 +4653,7 @@ INITIALIZE_LEVEL?:
 2167: DB 02          IN    A,($02)
 2169: 2F             CPL   
 216a: 4F             LD    C,A
-216b: 3A 87 C6       LD    A,($C687)
+216b: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
 216e: B7             OR    A,A
 216f: 79             LD    A,C
 2170: 28 08          JR    Z,$217A
@@ -5572,7 +5580,7 @@ PLAY_MCP:
 2de4: DB 02          IN    A,($02)
 2de6: 2F             CPL   
 2de7: 4F             LD    C,A
-2de8: 3A 87 C6       LD    A,($C687)
+2de8: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
 2deb: B7             OR    A,A
 2dec: 79             LD    A,C
 2ded: 28 08          JR    Z,$2DF7
@@ -5654,7 +5662,7 @@ PLAY_MCP:
 2e6d: B7             OR    A,A
 2e6e: 20 18          JR    NZ,$2E88
 
-2e70: 3A 87 C6       LD    A,($C687)
+2e70: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
 2e73: B7             OR    A,A
 2e74: 28 06          JR    Z,$2E7C
 
@@ -8031,7 +8039,7 @@ TANKS_INSTRUCTIONS:
 3dda: DB 02          IN    A,($02)
 3ddc: 2F             CPL   
 3ddd: 4F             LD    C,A
-3dde: 3A 87 C6       LD    A,($C687)
+3dde: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
 3de1: B7             OR    A,A
 3de2: 79             LD    A,C
 3de3: 28 08          JR    Z,$3DED
@@ -9836,7 +9844,7 @@ TANKS_INSTRUCTIONS:
 480d: 3E 10          LD    A,#$10
 480f: 18 16          JR    $4827
 
-4811: 3A 87 C6       LD    A,($C687)
+4811: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
 4814: B7             OR    A,A
 4815: 28 06          JR    Z,$481D
 
@@ -11372,7 +11380,7 @@ PLAY_LIGHT_CYCLE:
 5084: 3E FF          LD    A,#$FF
 5086: 18 10          JR    $5098
 
-5088: 3A 87 C6       LD    A,($C687)
+5088: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
 508b: 0E 00          LD    C,#$00
 508d: 06 10          LD    B,#$10
 508f: B7             OR    A,A
@@ -11525,7 +11533,7 @@ LIGHT_CYCLE_INSTRUCTIONS:
 51d0: 21 21 C2       LD    HL,$C221
 51d3: 34             INC   (HL)
 51d4: CD 2A 52       CALL  $522A
-51d7: 3A 87 C6       LD    A,($C687)
+51d7: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
 51da: 06 10          LD    B,#$10
 51dc: B7             OR    A,A
 51dd: 28 02          JR    Z,$51E1
@@ -11711,7 +11719,7 @@ LIGHT_CYCLE_INSTRUCTIONS:
 5335: B7             OR    A,A
 5336: C2 4B 54       JP    NZ,$544B
 
-5339: 3A 87 C6       LD    A,($C687)
+5339: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
 533c: B7             OR    A,A
 533d: 20 06          JR    NZ,$5345
 
@@ -11733,7 +11741,7 @@ LIGHT_CYCLE_INSTRUCTIONS:
 5359: DB 02          IN    A,($02)
 535b: 2F             CPL   
 535c: 6F             LD    L,A
-535d: 3A 87 C6       LD    A,($C687)
+535d: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
 5360: B7             OR    A,A
 5361: 7D             LD    A,L
 5362: 28 08          JR    Z,$536C
@@ -13661,7 +13669,7 @@ CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?:
 5f76: B7             OR    A,A
 5f77: 28 23          JR    Z,$5F9C
 
-5f79: 3A 28 C0       LD    A,($C028)
+5f79: 3A 28 C0       LD    A,(Y_POS_TRON_SPRITE_IN_MCP)
 5f7c: FE 5B          CP    A,#$5B
 5f7e: 3A 21 C0       LD    A,($C021)
 5f81: 30 08          JR    NC,$5F8B
@@ -13687,7 +13695,7 @@ CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?:
 5f9c: DB 02          IN    A,($02)
 5f9e: 2F             CPL   
 5f9f: 4F             LD    C,A
-5fa0: 3A 87 C6       LD    A,($C687)
+5fa0: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
 5fa3: B7             OR    A,A
 5fa4: 79             LD    A,C
 5fa5: 28 08          JR    Z,$5FAF
@@ -13726,13 +13734,13 @@ CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?:
 
 5fe2: F8             RET   M
 
-5fe3: 3A 26 C0       LD    A,($C026)
+5fe3: 3A 26 C0       LD    A,(X_POS_TRON_SPRITE_IN_MCP)
 5fe6: FE 80          CP    A,#$80
 5fe8: 3E 4B          LD    A,#$4B
 5fea: 38 02          JR    C,$5FEE
 
 5fec: 3E B6          LD    A,#$B6
-5fee: 32 26 C0       LD    ($C026),A
+5fee: 32 26 C0       LD    (X_POS_TRON_SPRITE_IN_MCP),A
 5ff1: 2A 27 C0       LD    HL,($C027)
 5ff4: ED 5B 2B C0    LD    DE,($C02B)
 5ff8: 19             ADD   HL,DE
@@ -13753,30 +13761,30 @@ CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?:
 600d: CD 20 60       CALL  $6020
 6010: C8             RET   Z
 
-6011: 3A 28 C0       LD    A,($C028)
+6011: 3A 28 C0       LD    A,(Y_POS_TRON_SPRITE_IN_MCP)
 6014: FE 60          CP    A,#$60
 6016: 3E 2A          LD    A,#$2A
 6018: 38 02          JR    C,$601C
 
 601a: 3E 96          LD    A,#$96
-601c: 32 28 C0       LD    ($C028),A
+601c: 32 28 C0       LD    (Y_POS_TRON_SPRITE_IN_MCP),A
 601f: C9             RET   
 
-6020: 3A 28 C0       LD    A,($C028)
+6020: 3A 28 C0       LD    A,(Y_POS_TRON_SPRITE_IN_MCP)
 6023: FE 2B          CP    A,#$2B
 6025: 38 3C          JR    C,$6063
 
 6027: FE 96          CP    A,#$96
 6029: 30 38          JR    NC,$6063
 
-602b: 3A 26 C0       LD    A,($C026)
+602b: 3A 26 C0       LD    A,(X_POS_TRON_SPRITE_IN_MCP)
 602e: FE 4C          CP    A,#$4C
 6030: 38 31          JR    C,$6063
 
 6032: FE B6          CP    A,#$B6
 6034: 30 2D          JR    NC,$6063
 
-6036: 3A 28 C0       LD    A,($C028)
+6036: 3A 28 C0       LD    A,(Y_POS_TRON_SPRITE_IN_MCP)
 6039: FE 58          CP    A,#$58
 603b: 38 22          JR    C,$605F
 
@@ -13807,11 +13815,11 @@ CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?:
 
 INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 6065: DD 2A 2E C0    LD    IX,($C02E)
-6069: 3A 26 C0       LD    A,($C026)
+6069: 3A 26 C0       LD    A,(X_POS_TRON_SPRITE_IN_MCP)
 606c: 32 04 F0       LD    ($F004),A
 606f: 32 08 F0       LD    ($F008),A
 6072: 47             LD    B,A
-6073: 3A 28 C0       LD    A,($C028)
+6073: 3A 28 C0       LD    A,(Y_POS_TRON_SPRITE_IN_MCP)
 6076: 4F             LD    C,A
 6077: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 607a: 32 06 F0       LD    ($F006),A
@@ -13910,7 +13918,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 6135: 3E 10          LD    A,#$10
 6137: 18 16          JR    $614F
 
-6139: 3A 87 C6       LD    A,($C687)
+6139: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
 613c: B7             OR    A,A
 613d: 28 06          JR    Z,$6145
 
@@ -13930,13 +13938,13 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 
 6151: 3E 04          LD    A,#$04
 6153: 32 21 C0       LD    ($C021),A
-6156: 3A 22 C0       LD    A,($C022)
+6156: 3A 22 C0       LD    A,(?)
 6159: 3C             INC   A
 615a: FE 1F          CP    A,#$1F
 615c: 38 02          JR    C,$6160
 
 615e: 3E 19          LD    A,#$19
-6160: 32 22 C0       LD    ($C022),A
+6160: 32 22 C0       LD    (?),A
 6163: 21 1D C4       LD    HL,CURRENT_PLAYER_DATA_BYTE_04
 6166: 7E             LD    A,(HL)
 6167: B7             OR    A,A
@@ -13951,7 +13959,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 
 6177: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
 617a: B7             OR    A,A
-617b: 3A 22 C0       LD    A,($C022)
+617b: 3A 22 C0       LD    A,(?)
 617e: 20 0A          JR    NZ,$618A
 
 6180: 3A 05 C4       LD    A,($C405)
@@ -14041,15 +14049,15 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 621c: C9             RET   
 
 621d: 3E 80          LD    A,#$80
-621f: 32 26 C0       LD    ($C026),A
+621f: 32 26 C0       LD    (X_POS_TRON_SPRITE_IN_MCP),A
 6222: 3E D4          LD    A,#$D4
-6224: 32 28 C0       LD    ($C028),A
+6224: 32 28 C0       LD    (Y_POS_TRON_SPRITE_IN_MCP),A
 6227: 3E 80          LD    A,#$80
 6229: 32 24 C0       LD    ($C024),A
 622c: AF             XOR   A,A
 622d: 32 05 C4       LD    ($C405),A
 6230: 3E 19          LD    A,#$19
-6232: 32 22 C0       LD    ($C022),A
+6232: 32 22 C0       LD    (?),A
 6235: C9             RET   
 
 6236: 21 24 C0       LD    HL,$C024
@@ -14057,7 +14065,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 623b: 20 4B          JR    NZ,$6288
 
 623d: 0E 02          LD    C,#$02
-623f: 3A 26 C0       LD    A,($C026)
+623f: 3A 26 C0       LD    A,(X_POS_TRON_SPRITE_IN_MCP)
 6242: FE 80          CP    A,#$80
 6244: 30 03          JR    NC,$6249
 
@@ -14067,11 +14075,11 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 6249: 28 06          JR    Z,$6251
 
 624b: 3D             DEC   A
-624c: 32 26 C0       LD    ($C026),A
+624c: 32 26 C0       LD    (X_POS_TRON_SPRITE_IN_MCP),A
 624f: 18 01          JR    $6252
 
 6251: 0D             DEC   C
-6252: 3A 28 C0       LD    A,($C028)
+6252: 3A 28 C0       LD    A,(Y_POS_TRON_SPRITE_IN_MCP)
 6255: FE 60          CP    A,#$60
 6257: 30 03          JR    NC,$625C
 
@@ -14081,7 +14089,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 625c: 28 05          JR    Z,$6263
 
 625e: 3D             DEC   A
-625f: 32 28 C0       LD    ($C028),A
+625f: 32 28 C0       LD    (Y_POS_TRON_SPRITE_IN_MCP),A
 6262: C9             RET   
 
 6263: 0D             DEC   C
@@ -14107,7 +14115,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 628e: 30 07          JR    NC,$6297
 
 6290: 3E 00          LD    A,#$00
-6292: 32 26 C0       LD    ($C026),A
+6292: 32 26 C0       LD    (X_POS_TRON_SPRITE_IN_MCP),A
 6295: 18 07          JR    $629E
 
 6297: 11 00 FF       LD    DE,$FF00
@@ -14123,7 +14131,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 62a9: 32 7C C4       LD    (NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2),A
 62ac: C9             RET   
 
-62ad: 3A 26 C0       LD    A,($C026)
+62ad: 3A 26 C0       LD    A,(X_POS_TRON_SPRITE_IN_MCP)
 62b0: 21 00 C0       LD    HL,NVRAM
 62b3: 96             SUB   A,(HL)
 62b4: 30 07          JR    NC,$62BD
@@ -14137,7 +14145,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 62bd: FE 06          CP    A,#$06
 62bf: D0             RET   NC
 
-62c0: 3A 28 C0       LD    A,($C028)
+62c0: 3A 28 C0       LD    A,(Y_POS_TRON_SPRITE_IN_MCP)
 62c3: 21 01 C0       LD    HL,$C001
 62c6: 96             SUB   A,(HL)
 62c7: 30 07          JR    NC,$62D0
@@ -14350,12 +14358,12 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 6465: F2 6A 64       JP    P,$646A
 
 6468: 3E FF          LD    A,#$FF
-646a: 21 26 C0       LD    HL,$C026
+646a: 21 26 C0       LD    HL,X_POS_TRON_SPRITE_IN_MCP
 646d: 86             ADD   A,(HL)
 646e: DD 77 01       LD    (IX+$01),A
 6471: DD 36 00 00    LD    (IX+$00),#$00
 6475: 47             LD    B,A
-6476: 3A 28 C0       LD    A,($C028)
+6476: 3A 28 C0       LD    A,(Y_POS_TRON_SPRITE_IN_MCP)
 6479: C6 03          ADD   A,#$03
 647b: FD 6E 11       LD    L,(IY+$11)
 647e: FD 66 12       LD    H,(IY+$12)
@@ -14372,7 +14380,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 64a1: FD 36 01 07    LD    (IY+$01),#$07
 64a5: C9             RET   
 
-64a6: 3A 26 C0       LD    A,($C026)
+64a6: 3A 26 C0       LD    A,(X_POS_TRON_SPRITE_IN_MCP)
 64a9: DD 96 01       SUB   A,(IX+$01)
 64ac: 30 08          JR    NC,$64B6
 
@@ -14385,7 +14393,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 64b6: FE 11          CP    A,#$11
 64b8: 30 1C          JR    NC,$64D6
 
-64ba: 3A 28 C0       LD    A,($C028)
+64ba: 3A 28 C0       LD    A,(Y_POS_TRON_SPRITE_IN_MCP)
 64bd: DD 96 03       SUB   A,(IX+$03)
 64c0: 30 08          JR    NC,$64CA
 
@@ -14584,13 +14592,13 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 6627: DD 21 30 C0    LD    IX,$C030
 662b: FD 21 30 F0    LD    IY,$F030
 662f: 21 AE 66       LD    HL,$66AE
-6632: 3A 26 C0       LD    A,($C026)
+6632: 3A 26 C0       LD    A,(X_POS_TRON_SPRITE_IN_MCP)
 6635: 92             SUB   A,D
 6636: 30 04          JR    NC,$663C
 
 6638: 01 04 00       LD    BC,IO_4
 663b: 09             ADD   HL,BC
-663c: 3A 28 C0       LD    A,($C028)
+663c: 3A 28 C0       LD    A,(Y_POS_TRON_SPRITE_IN_MCP)
 663f: 93             SUB   A,E
 6640: 30 02          JR    NC,$6644
 
@@ -14943,7 +14951,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 6886: FE 80          CP    A,#$80
 6888: C0             RET   NZ
 
-6889: 3A 26 C0       LD    A,($C026)
+6889: 3A 26 C0       LD    A,(X_POS_TRON_SPRITE_IN_MCP)
 688c: DD 96 01       SUB   A,(IX+$01)
 688f: 30 07          JR    NC,$6898
 
@@ -14956,7 +14964,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 6898: FE 09          CP    A,#$09
 689a: D0             RET   NC
 
-689b: 3A 28 C0       LD    A,($C028)
+689b: 3A 28 C0       LD    A,(Y_POS_TRON_SPRITE_IN_MCP)
 689e: DD 96 03       SUB   A,(IX+$03)
 68a1: 30 10          JR    NC,$68B3
 
@@ -16484,7 +16492,7 @@ GAME_SELECT_COUNTDOWN_DIGITS:
 
 Error: missed a comment line at 7159, line=715B
 715a: 47             LD    B,A
-715b: 3A 87 C6       LD    A,($C687)
+715b: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
 715e: B7             OR    A,A
 715f: 78             LD    A,B
 7160: C1             POP   BC
@@ -16498,7 +16506,7 @@ Error: missed a comment line at 7159, line=715B
 RETURN_C687-2_IF_NZ_IN_A:
 7165: C5             PUSH  BC
 7166: 47             LD    B,A
-7167: 3A 87 C6       LD    A,($C687)
+7167: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
 716a: B7             OR    A,A
 716b: 78             LD    A,B
 716c: C1             POP   BC
@@ -22194,8 +22202,10 @@ b000: 1ST
 
 b004: 2ND
 
+PLAYER_1_UP_STRING:
 b008: PLAYER 1 UP
 
+PLAYER_2_UP_STRING:
 b014: PLAYER 2 UP
 
 b020: PLAYER 1
