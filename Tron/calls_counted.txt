@@ -1,3 +1,6 @@
+In *nix (or WSL with *nix), type:
+cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted.txt
+
      56 PUT_C_ON_STACK_TO_SEND_TO_AUDIO
      43 RESET_WATCHDOG_UNTIL_C400_IS_ONE
      42 RETURN_C687-7_IF_NZ_IN_A
