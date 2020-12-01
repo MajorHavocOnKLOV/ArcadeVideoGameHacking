@@ -1,5 +1,7 @@
 In *nix (or WSL with *nix), type:
+cd /mnt/c/Users/PCAdmin.SIERRA/Desktop/Franklin/ArcadeVideoGameHacking.git/Tron
 cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted.txt
+
 
      56 PUT_C_ON_STACK_TO_SEND_TO_AUDIO
      43 RESET_WATCHDOG_UNTIL_C400_IS_ONE
@@ -30,6 +32,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       5 $A077
       4 SET_C40D_TO_FDD0_AND_ADD_A_MESSAGE_TO_Q
       4 M,$1E1D
+      4 LC_ERASE_TRAIL_OF_DESTROYED_LC
       4 CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?
       4 $A079
       4 $99B1
@@ -41,7 +44,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       4 $586B
       4 $57D4
       4 $572F
-      4 $5551
       4 $547F
       4 $52F6
       4 $52E8
@@ -54,11 +56,11 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       4 $0D10
       4 $0720
       3 PUT_GAME_SELECT_COUNTDOWN_DIGIT_MESSAGE_IN_Q2
+      3 PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LIGHT_CYCLE
       3 PROCESS_GAME_SELECT_COUNTDOWN_TIMER
       3 $ACA2
       3 $99EA
       3 $9958
-      3 $6F52
       3 $5535
       3 $5234
       3 $521A
@@ -77,13 +79,14 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       2 NZ,$E100
       2 NC,$4AFF
       2 M,IO_0
+      2 M,CREDITS_STRING2
+      2 M,COINS_FOR_STRING
       2 M,$FEA8
       2 M,$FE0C
-      2 M,$A8E2
-      2 M,$A8D8
       2 M,$9E9D
       2 M,$01F4
       2 M,$0158
+      2 LC_DRAW_A_TRAIL?
       2 INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
       2 INITIALIZE_LEVEL?
       2 COPY_10_FROM_HL_TO_FFC0
@@ -106,7 +109,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       2 $6020
       2 $5B4B
       2 $59F4
-      2 $59E5
       2 $59A9
       2 $5901
       2 $5745
@@ -262,6 +264,13 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 NC,$03F0
       1 NC,$0051
       1 NC,$0006
+      1 M,YOUR_STRING
+      1 M,SETUP_OPTIONS_STRING
+      1 M,SCORE_REPORT_STRING2
+      1 M,PLEASE_STRING
+      1 M,GRID_BUGS___50_STRING
+      1 M,D2_STRING
+      1 M,BASES_STRING
       1 M,$FE1C
       1 M,$FC9B
       1 M,$FA9A
@@ -280,14 +289,10 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 M,$C0BF
       1 M,$BE7B
       1 M,$BB4F
-      1 M,$AD58
       1 M,$AABD
-      1 M,$A903
-      1 M,$A8BD
       1 M,$A73D
       1 M,$A6FE
       1 M,$A6CE
-      1 M,$A28B
       1 M,$97D8
       1 M,$76D2
       1 M,$7610
@@ -297,11 +302,8 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 M,$3A17
       1 M,$2C00
       1 M,$2BE7
-      1 M,$16F6
       1 M,$1080
       1 M,$1071
-      1 M,$1028
-      1 M,$101B
       1 M,$0EF1
       1 M,$0C15
       1 M,$0C14

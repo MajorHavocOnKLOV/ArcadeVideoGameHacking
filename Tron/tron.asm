@@ -122,9 +122,10 @@ THE_CONE_STRING EQU $1de3
 1000_BONUS_FOR_DESTROYING_STRING EQU $1dec
 ALL_BLOCKS_STRING EQU $1e06
 START_GAME EQU $1f97
-VECTOR_OF_DIFFICULTY_TO_HARDNESS_MAPS EQU $20a7
+VECTOR_OF_DIFFICULTY_TO_HARDNESS_MAPS_(STARTS_AT_20A7) EQU $20a5
 INITIALIZE_LEVEL? EQU $2115
 BACKGROUND_PICK_A_GAME EQU $234a
+DATA_TO_2C4C?_USED_STARTING_AT_6F68 EQU $2c48
 1000_BONUS_ALL_BLOCKS_HIT_STRING EQU $2c4d
 1000_FOR_ENTERING_CONE_STRING EQU $2c67
 MCP_INSTRUCTIONS EQU $2c7e
@@ -144,6 +145,8 @@ LIGHT_TRACES_STRING2 EQU $5175
 AND_WALLS_STRING EQU $5182
 USE_TRIGGER_FOR_STRING EQU $518c
 SPEED_CONTROL_STRING EQU $519c
+LC_ERASE_TRAIL_OF_DESTROYED_LC EQU $5551
+LC_DRAW_A_TRAIL? EQU $59e5
 PLAY_IO_TOWER EQU $5d00
 IO_TOWER_INSTRUCTIONS EQU $5e36
 ENTER_FLASHING_STRING EQU $5e8c
@@ -157,6 +160,7 @@ PSEUDO_RANDOM_VALUE_IN_C47A? EQU $6f05
 RESET_WATCHDOG_UNTIL_C400_IS_ONE EQU $6f17
 COPY_10_FROM_HL_TO_FFC0 EQU $6f2d
 COPY_20_FROM_HL_TO_FF80 EQU $6f35
+PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LIGHT_CYCLE EQU $6f52
 PUT_C_ON_STACK_TO_SEND_TO_AUDIO EQU $6fb8
 CLEAR_BACKGROUND EQU $6fc7
 SET_C40D_TO_FDD0_AND_ADD_A_MESSAGE_TO_Q EQU $6fee
@@ -364,12 +368,13 @@ ASSEMBLY_STRING EQU $b16e
 OS_STRING EQU $b177
 JCL_STRING EQU $b17a
 USER_STRING EQU $b17e
+LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY EQU $c000
 IO_TOWER_TIMER_VALUE_REVERSED_TO_C010 EQU $c00d
 INFINITE_TIME_CHEAT EQU $c00e
 IO_TOWER_TIMER_DIGITS_TO_C019 EQU $c012
-?1 EQU $c022
-?2 EQU $c023
-?3 EQU $c024
+IO_TOWER_INCREMENTS_19_TO_1E_FOR_EACH_DISK_THROWN EQU $c022
+IO_TOWER_TRIGGER_DEBOUNCE? EQU $c023
+IO_TOWER_ALWAYS_80? EQU $c024
 X_POS_TRON_SPRITE_IN_IO_TOWER_GAME EQU $c026
 Y_POS_TRON_SPRITE_IN_IO_TOWER_GAME EQU $c028
 JOYSTICK_INPUT_ARRAY_TO_C02C EQU $c029
@@ -378,7 +383,7 @@ NUMBER_OF_TANKS EQU $c14a
 NUMBER_OF_TANKS_ALSO? EQU $c159
 COUNTDOWN_TIMER_SECONDS EQU $c402
 COUNTDOWN_TIMER_FRAMES EQU $c403
-USER_LEVEL/CURRENT_PLAYER_DATA EQU $c419
+HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?) EQU $c419
 PLAYING_HOW_LONG_NOW_TO_C41C EQU $c41a
 CURRENT_PLAYER_DATA_BYTE_02 EQU $c41b
 CURRENT_PLAYER_DATA_BYTE_03 EQU $c41c
@@ -399,7 +404,7 @@ NUMBER_OF_SCREEN_MESSAGES EQU $c466
 NUMBER_OF_SCREEN_MESSAGES_2_FROM_C4BE EQU $c467
 LEFT_COIN EQU $c473
 RIGHT_COIN EQU $c474
-IN_ATTRACT_MODE EQU $c47b
+IN_ATTRACT_MODE? EQU $c47b
 NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2 EQU $c47c
 SCREEN_MESSAGE_QUEUE_2_TO_C4D5 EQU $c4be
 SCREEN_MESSAGE_QUEUE EQU $c4d8
@@ -1280,7 +1285,7 @@ JJ_STRING:
 04f3: 00             NOP   
 04f4: 20 00          JR    NZ,$04F6
 
-04f6: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+04f6: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 04f9: B7             OR    A,A
 04fa: 28 16          JR    Z,$0512
 
@@ -1499,7 +1504,7 @@ OUTPUT_TO_SOUND_LATCHES:
 0669: 21 44 F9       LD    HL,$F944
 066c: C3 BB 06       JP    $06BB
 
-066f: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+066f: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 0672: B7             OR    A,A
 0673: C0             RET   NZ
 
@@ -1986,7 +1991,7 @@ UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE:
 091a: 21 C0 90       LD    HL,$90C0
 091d: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 0920: 3E 01          LD    A,#$01
-0922: 32 7B C4       LD    (IN_ATTRACT_MODE),A
+0922: 32 7B C4       LD    (IN_ATTRACT_MODE?),A
 0925: 3E 78          LD    A,#$78
 0927: 32 6E C4       LD    ($C46E),A
 092a: 3A 01 C5       LD    A,($C501)
@@ -2005,14 +2010,14 @@ UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE:
 0946: CD 20 70       CALL  ZERO_RAM_C000-C418
 0949: CD C3 0B       CALL  $0BC3
 094c: AF             XOR   A,A
-094d: 32 7B C4       LD    (IN_ATTRACT_MODE),A
+094d: 32 7B C4       LD    (IN_ATTRACT_MODE?),A
 0950: CD 26 70       CALL  ZERO_RAM_C000-C450
 0953: CD 6D 0E       CALL  $0E6D
 0956: CD D1 1F       CALL  $1FD1
 0959: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 095c: CD 38 0D       CALL  $0D38
 095f: CD 52 0D       CALL  $0D52
-0962: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+0962: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 0965: B7             OR    A,A
 0966: 28 10          JR    Z,$0978
 
@@ -2096,7 +2101,7 @@ UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE:
 09f4: 32 02 C4       LD    (COUNTDOWN_TIMER_SECONDS),A
 09f7: 3E 1E          LD    A,#$1E
 09f9: 32 03 C4       LD    (COUNTDOWN_TIMER_FRAMES),A
-09fc: 32 7B C4       LD    (IN_ATTRACT_MODE),A
+09fc: 32 7B C4       LD    (IN_ATTRACT_MODE?),A
 09ff: 3A 01 C5       LD    A,($C501)
 0a02: 21 F5 C4       LD    HL,$C4F5
 0a05: BE             CP    A,(HL)
@@ -2173,10 +2178,10 @@ UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE:
 0a99: 10 FB          DJNZ  $0A96
 
 0a9b: AF             XOR   A,A
-0a9c: 32 7B C4       LD    (IN_ATTRACT_MODE),A
+0a9c: 32 7B C4       LD    (IN_ATTRACT_MODE?),A
 0a9f: C9             RET   
 
-0aa0: 21 19 C4       LD    HL,USER_LEVEL/CURRENT_PLAYER_DATA
+0aa0: 21 19 C4       LD    HL,HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?)
 0aa3: 11 2F C4       LD    DE,OTHER_PLAYER_DATA
 0aa6: 06 16          LD    B,#$16
 0aa8: 4E             LD    C,(HL)
@@ -2686,7 +2691,7 @@ ALL_RIGHTS_RESERVED_STRING:
 0e7d: 32 22 C4       LD    (USER_LEVEL),A
 0e80: 32 5F C4       LD    (PLAYER_NUMBER),A
 0e83: 21 23 C4       LD    HL,COMPLETED_GAMES_XXXXDURL
-0e86: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+0e86: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 0e89: B7             OR    A,A
 0e8a: 28 0C          JR    Z,$0E98
 
@@ -2701,11 +2706,11 @@ ALL_RIGHTS_RESERVED_STRING:
 0e9b: 3E 01          LD    A,#$01
 0e9d: 32 2E C4       LD    (CURRENT_PLAYER_DATA_BYTE_15),A
 0ea0: 32 1E C4       LD    (CURRENT_PLAYER_DATA_BYTE_05),A
-0ea3: 21 19 C4       LD    HL,USER_LEVEL/CURRENT_PLAYER_DATA
+0ea3: 21 19 C4       LD    HL,HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?)
 0ea6: 11 2F C4       LD    DE,OTHER_PLAYER_DATA
 0ea9: 01 16 00       LD    BC,$0016
 0eac: ED B0          LDIR  
-0eae: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+0eae: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 0eb1: B7             OR    A,A
 0eb2: CC 15 21       CALL  Z,INITIALIZE_LEVEL?
 0eb5: 3A 60 C4       LD    A,($C460)
@@ -2830,7 +2835,7 @@ ALL_RIGHTS_RESERVED_STRING:
 0f6c: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 0f6f: 10 FB          DJNZ  $0F6C
 
-0f71: 3A 00 C0       LD    A,(NVRAM)
+0f71: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 0f74: FE 0B          CP    A,#$0B
 0f76: DC 7F 0F       CALL  C,$0F7F
 0f79: CD 3F 13       CALL  $133F
@@ -3068,7 +3073,7 @@ END_STRING2:
 111c: C9             RET   
 
 111d: DD 21 1F C5    LD    IX,$C51F
-1121: 21 00 C0       LD    HL,NVRAM
+1121: 21 00 C0       LD    HL,LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY
 1124: 3E 0A          LD    A,#$0A
 1126: 96             SUB   A,(HL)
 1127: 28 1A          JR    Z,$1143
@@ -3148,13 +3153,13 @@ END_STRING2:
 11b5: FE 65          CP    A,#$65
 11b7: 38 0F          JR    C,$11C8
 
-11b9: 32 00 C0       LD    (NVRAM),A
+11b9: 32 00 C0       LD    (LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY),A
 11bc: 11 22 12       LD    DE,NOT_IN_THE_TOP_STRING
 11bf: CD F4 6F       CALL  INCREASE_C40D_BY_4_AND_ADD_A_MESSAGE_TO_Q
 11c2: 11 31 12       LD    DE,100_SCORES_STRING
 11c5: C3 F4 6F       JP    INCREASE_C40D_BY_4_AND_ADD_A_MESSAGE_TO_Q
 
-11c8: 32 00 C0       LD    (NVRAM),A
+11c8: 32 00 C0       LD    (LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY),A
 11cb: 21 16 C4       LD    HL,$C416
 11ce: 06 03          LD    B,#$03
 11d0: 7E             LD    A,(HL)
@@ -3164,7 +3169,7 @@ END_STRING2:
 11d7: 10 F7          DJNZ  $11D0
 
 11d9: 21 05 C0       LD    HL,$C005
-11dc: 3A 00 C0       LD    A,(NVRAM)
+11dc: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 11df: FE 64          CP    A,#$64
 11e1: 38 05          JR    C,$11E8
 
@@ -3833,7 +3838,7 @@ NOT_IN_THE_TOP_STRING:
 15ba: 0E 03          LD    C,#$03
 15bc: 11 BF FF       LD    DE,$FFBF
 15bf: AF             XOR   A,A
-15c0: 32 00 C0       LD    (NVRAM),A
+15c0: 32 00 C0       LD    (LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY),A
 15c3: FD 7E 00       LD    A,(IY+$00)
 15c6: CB 3F          SRL   A
 15c8: CB 3F          SRL   A
@@ -3843,7 +3848,7 @@ NOT_IN_THE_TOP_STRING:
 15d0: FE 30          CP    A,#$30
 15d2: 20 0D          JR    NZ,$15E1
 
-15d4: 3A 00 C0       LD    A,(NVRAM)
+15d4: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 15d7: B7             OR    A,A
 15d8: 20 05          JR    NZ,$15DF
 
@@ -3866,7 +3871,7 @@ NOT_IN_THE_TOP_STRING:
 15f0: FE 30          CP    A,#$30
 15f2: 20 12          JR    NZ,$1606
 
-15f4: 3A 00 C0       LD    A,(NVRAM)
+15f4: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 15f7: B7             OR    A,A
 15f8: 20 0A          JR    NZ,$1604
 
@@ -3902,7 +3907,7 @@ NOT_IN_THE_TOP_STRING:
 161c: DD 21 06 C5    LD    IX,$C506
 1620: 01 8C FA       LD    BC,$FA8C
 1623: 3E 0A          LD    A,#$0A
-1625: 32 00 C0       LD    (NVRAM),A
+1625: 32 00 C0       LD    (LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY),A
 1628: DD 7E 00       LD    A,(IX+$00)
 162b: FE 0C          CP    A,#$0C
 162d: 38 02          JR    C,$1631
@@ -3921,7 +3926,7 @@ NOT_IN_THE_TOP_STRING:
 1644: 03             INC   BC
 1645: 03             INC   BC
 1646: 03             INC   BC
-1647: 21 00 C0       LD    HL,NVRAM
+1647: 21 00 C0       LD    HL,LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY
 164a: 35             DEC   (HL)
 164b: 20 DB          JR    NZ,$1628
 
@@ -4735,7 +4740,7 @@ ALL_BLOCKS_STRING:
 1f0b: B7             OR    A,A
 1f0c: C2 4D 1F       JP    NZ,$1F4D
 
-1f0f: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+1f0f: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 1f12: B7             OR    A,A
 1f13: 20 0A          JR    NZ,$1F1F
 
@@ -4752,7 +4757,7 @@ ALL_BLOCKS_STRING:
 1f28: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 1f2b: 7E             LD    A,(HL)
 1f2c: 32 24 C4       LD    (DIRECTION_CHOSEN_8D4U2R1L),A
-1f2f: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+1f2f: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 1f32: B7             OR    A,A
 1f33: 28 07          JR    Z,$1F3C
 
@@ -4773,7 +4778,7 @@ ALL_BLOCKS_STRING:
 1f4d: FD 21 04 F0    LD    IY,$F004
 1f51: DD 2A 58 C4    LD    IX,($C458)
 1f55: 06 02          LD    B,#$02
-1f57: 3A 00 C0       LD    A,(NVRAM)
+1f57: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 1f5a: DD BE 00       CP    A,(IX+$00)
 1f5d: 28 07          JR    Z,$1F66
 
@@ -4782,7 +4787,7 @@ ALL_BLOCKS_STRING:
 
 1f63: 0E FF          LD    C,#$FF
 1f65: 81             ADD   A,C
-1f66: 32 00 C0       LD    (NVRAM),A
+1f66: 32 00 C0       LD    (LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY),A
 1f69: FD 77 00       LD    (IY+$00),A
 1f6c: 3A 02 C0       LD    A,($C002)
 1f6f: DD BE 01       CP    A,(IX+$01)
@@ -4800,7 +4805,7 @@ ALL_BLOCKS_STRING:
 1f87: DD BE 01       CP    A,(IX+$01)
 1f8a: 20 08          JR    NZ,$1F94
 
-1f8c: 3A 00 C0       LD    A,(NVRAM)
+1f8c: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 1f8f: DD BE 00       CP    A,(IX+$00)
 1f92: 28 03          JR    Z,START_GAME
 
@@ -4824,7 +4829,7 @@ START_GAME:
 1fad: 3E 01          LD    A,#$01
 1faf: 32 5E C4       LD    ($C45E),A
 1fb2: ED 53 58 C4    LD    ($C458),DE
-1fb6: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+1fb6: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 1fb9: B7             OR    A,A
 1fba: 20 06          JR    NZ,$1FC2
 
@@ -4869,7 +4874,7 @@ START_GAME:
 2010: CD 07 22       CALL  $2207
 2013: FD 21 04 F0    LD    IY,$F004
 2017: 3E 80          LD    A,#$80
-2019: 32 00 C0       LD    (NVRAM),A
+2019: 32 00 C0       LD    (LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY),A
 201c: FD 77 00       LD    (IY+$00),A
 201f: 3E A4          LD    A,#$A4
 2021: 32 02 C0       LD    ($C002),A
@@ -4913,7 +4918,7 @@ START_GAME:
 206e: 28 01          JR    Z,$2071
 
 2070: 34             INC   (HL)
-2071: 3A 19 C4       LD    A,(USER_LEVEL/CURRENT_PLAYER_DATA)
+2071: 3A 19 C4       LD    A,(HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?))
 2074: FE 14          CP    A,#$14
 2076: 30 18          JR    NC,$2090
 
@@ -4921,7 +4926,7 @@ START_GAME:
 207b: 87             ADD   A,A
 207c: 6F             LD    L,A
 207d: 26 00          LD    H,#$00
-207f: 11 A5 20       LD    DE,$20A5
+207f: 11 A5 20       LD    DE,VECTOR_OF_DIFFICULTY_TO_HARDNESS_MAPS_(STARTS_AT_20A7)
 2082: 19             ADD   HL,DE
 2083: 5E             LD    E,(HL)
 2084: 23             INC   HL
@@ -4937,7 +4942,7 @@ START_GAME:
 2092: 28 01          JR    Z,$2095
 
 2094: 3C             INC   A
-2095: 32 19 C4       LD    (USER_LEVEL/CURRENT_PLAYER_DATA),A
+2095: 32 19 C4       LD    (HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?)),A
 2098: 3A 5B C4       LD    A,($C45B)
 209b: FE 04          CP    A,#$04
 209d: 3A 2E C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_15)
@@ -4951,7 +4956,6 @@ START_GAME:
 *** Map of Difficulty level settings (picked by operator in settings) to how hard
 *** each user level is set.  The hardness values range from 0 (easy) to 20 (hard)
 *** Difficulty 1 moves from 0 to 20 one at a time.  Difficulty 9 moves 0,4,10,15,20
-VECTOR_OF_DIFFICULTY_TO_HARDNESS_MAPS:
 20a7: B9 20 CE 20 DD 20 EA 20 F4 20 FC 20 03 21 0A 21 
 20b7: 10 21 
 
@@ -5048,7 +5052,7 @@ INITIALIZE_LEVEL?:
 217d: 21 B8 22       LD    HL,$22B8
 2180: 87             ADD   A,A
 2181: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
-2184: 3A 00 C0       LD    A,(NVRAM)
+2184: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 2187: 86             ADD   A,(HL)
 2188: 47             LD    B,A
 2189: 23             INC   HL
@@ -5129,7 +5133,7 @@ INITIALIZE_LEVEL?:
 
 21f4: C1             POP   BC
 21f5: 78             LD    A,B
-21f6: 32 00 C0       LD    (NVRAM),A
+21f6: 32 00 C0       LD    (LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY),A
 21f9: 32 04 F0       LD    ($F004),A
 21fc: 79             LD    A,C
 21fd: 32 02 C0       LD    ($C002),A
@@ -5772,14 +5776,14 @@ BACKGROUND_PICK_A_GAME:
 2c39: 11 67 2C       LD    DE,1000_FOR_ENTERING_CONE_STRING
 2c3c: 01 92 FE       LD    BC,$FE92
 2c3f: CD 5D 70       CALL  ADD_MESSAGE_TO_Q
-2c42: 21 48 2C       LD    HL,$2C48
-2c45: C3 52 6F       JP    $6F52
+2c42: 21 48 2C       LD    HL,DATA_TO_2C4C?_USED_STARTING_AT_6F68
+2c45: C3 52 6F       JP    PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LIGHT_CYCLE
 
-2c48: 00             NOP   
-2c49: 00             NOP   
-2c4a: 00             NOP   
-2c4b: 02             LD    (BC),A
-2c4c: 00             NOP   
+
+*** Not sure if all 5 bytes are data or how they're used starting at 6F68
+DATA_TO_2C4C?_USED_STARTING_AT_6F68:
+2c48: 00 00 00 02 00 
+
 1000_BONUS_ALL_BLOCKS_HIT_STRING:
 2c4d: 1000 BONUS ALL BLOCKS HIT
 
@@ -5862,7 +5866,7 @@ PLAY_MCP:
 2d28: CD C7 6F       CALL  CLEAR_BACKGROUND
 2d2b: 3E 01          LD    A,#$01
 2d2d: 32 65 C4       LD    ($C465),A
-2d30: 3A 19 C4       LD    A,(USER_LEVEL/CURRENT_PLAYER_DATA)
+2d30: 3A 19 C4       LD    A,(HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?))
 2d33: 21 01 C0       LD    HL,$C001
 2d36: 36 03          LD    (HL),#$03
 2d38: 0E 1C          LD    C,#$1C
@@ -5957,7 +5961,7 @@ PLAY_MCP:
 2dd9: CD ED 2F       CALL  $2FED
 2ddc: C3 AD 2E       JP    $2EAD
 
-2ddf: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+2ddf: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 2de2: B7             OR    A,A
 2de3: C0             RET   NZ
 
@@ -6015,7 +6019,7 @@ PLAY_MCP:
 2e3f: 32 09 C0       LD    ($C009),A
 2e42: C9             RET   
 
-2e43: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+2e43: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 2e46: B7             OR    A,A
 2e47: 3E 19          LD    A,#$19
 2e49: 20 0A          JR    NZ,$2E55
@@ -6042,7 +6046,7 @@ PLAY_MCP:
 2e66: 22 10 C0       LD    ($C010),HL
 2e69: C9             RET   
 
-2e6a: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+2e6a: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 2e6d: B7             OR    A,A
 2e6e: 20 18          JR    NZ,$2E88
 
@@ -6101,7 +6105,7 @@ PLAY_MCP:
 2eca: 3A 0B C0       LD    A,($C00B)
 2ecd: 21 0D C0       LD    HL,IO_TOWER_TIMER_VALUE_REVERSED_TO_C010
 2ed0: B6             OR    A,(HL)
-2ed1: 21 00 C0       LD    HL,NVRAM
+2ed1: 21 00 C0       LD    HL,LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY
 2ed4: 28 06          JR    Z,$2EDC
 
 2ed6: 35             DEC   (HL)
@@ -6194,7 +6198,7 @@ PLAY_MCP:
 2f90: B7             OR    A,A
 2f91: 20 11          JR    NZ,$2FA4
 
-2f93: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+2f93: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 2f96: B7             OR    A,A
 2f97: 20 05          JR    NZ,$2F9E
 
@@ -6781,7 +6785,7 @@ PLAY_MCP:
 3418: 01 92 FE       LD    BC,$FE92
 341b: CD 5D 70       CALL  ADD_MESSAGE_TO_Q
 341e: 21 81 34       LD    HL,$3481
-3421: C3 52 6F       JP    $6F52
+3421: C3 52 6F       JP    PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LIGHT_CYCLE
 
 3424: 79             LD    A,C
 3425: C6 42          ADD   A,#$42
@@ -6932,7 +6936,7 @@ PLAY_MCP:
 352e: FD 36 01 00    LD    (IY+$01),#$00
 3532: 21 54 35       LD    HL,$3554
 3535: C5             PUSH  BC
-3536: CD 52 6F       CALL  $6F52
+3536: CD 52 6F       CALL  PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LIGHT_CYCLE
 3539: C1             POP   BC
 353a: DD 36 02 02    LD    (IX+$02),#$02
 353e: DD 36 03 81    LD    (IX+$03),#$81
@@ -7926,7 +7930,7 @@ PLAY_TANKS:
 3a6d: 19             ADD   HL,DE
 3a6e: 36 00          LD    (HL),#$00
 3a70: 0E 00          LD    C,#$00
-3a72: 3A 19 C4       LD    A,(USER_LEVEL/CURRENT_PLAYER_DATA)
+3a72: 3A 19 C4       LD    A,(HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?))
 3a75: FE 0B          CP    A,#$0B
 3a77: 38 05          JR    C,$3A7E
 
@@ -8085,7 +8089,7 @@ PLAY_TANKS:
 3ba0: 0D             DEC   C
 3ba1: 20 DE          JR    NZ,$3B81
 
-3ba3: 21 00 C0       LD    HL,NVRAM
+3ba3: 21 00 C0       LD    HL,LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY
 3ba6: 3E 61          LD    A,#$61
 3ba8: 77             LD    (HL),A
 3ba9: C6 08          ADD   A,#$08
@@ -8209,7 +8213,7 @@ PLAY_TANKS:
 3c8f: FE 80          CP    A,#$80
 3c91: C0             RET   NZ
 
-3c92: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+3c92: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 3c95: B7             OR    A,A
 3c96: 20 09          JR    NZ,$3CA1
 
@@ -8261,7 +8265,7 @@ TANKS_INSTRUCTIONS:
 3cef: 32 05 C4       LD    ($C405),A
 3cf2: 3E 01          LD    A,#$01
 3cf4: 32 08 C4       LD    ($C408),A
-3cf7: 21 00 C0       LD    HL,NVRAM
+3cf7: 21 00 C0       LD    HL,LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY
 3cfa: 3E 61          LD    A,#$61
 3cfc: 77             LD    (HL),A
 3cfd: C6 08          ADD   A,#$08
@@ -8473,7 +8477,7 @@ ENEMY_TANKS_STRING:
 3e20: 28 03          JR    Z,$3E25
 
 3e22: 32 50 C1       LD    ($C150),A
-3e25: 3A 00 C0       LD    A,(NVRAM)
+3e25: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 3e28: 47             LD    B,A
 3e29: 3A 03 C0       LD    A,($C003)
 3e2c: 80             ADD   A,B
@@ -8546,7 +8550,7 @@ ENEMY_TANKS_STRING:
 3e9c: 78             LD    A,B
 3e9d: 21 03 C0       LD    HL,$C003
 3ea0: 96             SUB   A,(HL)
-3ea1: 32 00 C0       LD    (NVRAM),A
+3ea1: 32 00 C0       LD    (LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY),A
 3ea4: C6 08          ADD   A,#$08
 3ea6: 47             LD    B,A
 3ea7: 3A 06 C0       LD    A,($C006)
@@ -8577,7 +8581,7 @@ ENEMY_TANKS_STRING:
 3ee4: 32 4E C1       LD    ($C14E),A
 3ee7: C9             RET   
 
-3ee8: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+3ee8: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 3eeb: B7             OR    A,A
 3eec: 28 0B          JR    Z,$3EF9
 
@@ -8640,7 +8644,7 @@ ENEMY_TANKS_STRING:
 
 3f51: DD 7E 05       LD    A,(IX+$05)
 3f54: 32 10 C0       LD    ($C010),A
-3f57: 3A 00 C0       LD    A,(NVRAM)
+3f57: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 3f5a: 21 03 C0       LD    HL,$C003
 3f5d: 86             ADD   A,(HL)
 3f5e: 47             LD    B,A
@@ -9026,7 +9030,7 @@ ENEMY_TANKS_STRING:
 40cf: C9             RET   
 
 40d0: 21 04 F0       LD    HL,$F004
-40d3: 3A 00 C0       LD    A,(NVRAM)
+40d3: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 40d6: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 40d9: 77             LD    (HL),A
 40da: 23             INC   HL
@@ -9039,7 +9043,7 @@ ENEMY_TANKS_STRING:
 40e8: 77             LD    (HL),A
 40e9: C9             RET   
 
-40ea: 3A 00 C0       LD    A,(NVRAM)
+40ea: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 40ed: FE 81          CP    A,#$81
 40ef: 20 33          JR    NZ,$4124
 
@@ -9062,7 +9066,7 @@ ENEMY_TANKS_STRING:
 410b: 24             INC   H
 410c: 6F             LD    L,A
 410d: 7E             LD    A,(HL)
-410e: 32 00 C0       LD    (NVRAM),A
+410e: 32 00 C0       LD    (LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY),A
 4111: 23             INC   HL
 4112: 7E             LD    A,(HL)
 4113: 32 02 C0       LD    ($C002),A
@@ -9438,7 +9442,7 @@ ENEMY_TANKS_STRING:
 42cd: FE 01          CP    A,#$01
 42cf: 20 28          JR    NZ,$42F9
 
-42d1: 3A 00 C0       LD    A,(NVRAM)
+42d1: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 42d4: D6 10          SUB   A,#$10
 42d6: DD BE 00       CP    A,(IX+$00)
 42d9: 38 28          JR    C,$4303
@@ -9462,7 +9466,7 @@ ENEMY_TANKS_STRING:
 42f5: DD 77 0E       LD    (IX+$0E),A
 42f8: C9             RET   
 
-42f9: 3A 00 C0       LD    A,(NVRAM)
+42f9: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 42fc: C6 10          ADD   A,#$10
 42fe: DD BE 00       CP    A,(IX+$00)
 4301: 38 D8          JR    C,$42DB
@@ -9471,7 +9475,7 @@ ENEMY_TANKS_STRING:
 4306: 38 D3          JR    C,$42DB
 
 4308: CD 43 44       CALL  $4443
-430b: 3A 00 C0       LD    A,(NVRAM)
+430b: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 430e: DD 96 00       SUB   A,(IX+$00)
 4311: 30 01          JR    NC,$4314
 
@@ -9599,7 +9603,7 @@ ENEMY_TANKS_STRING:
 43d7: 18 1A          JR    $43F3
 
 43d9: 06 FF          LD    B,#$FF
-43db: 3A 00 C0       LD    A,(NVRAM)
+43db: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 43de: DD BE 00       CP    A,(IX+$00)
 43e1: 30 10          JR    NC,$43F3
 
@@ -9607,7 +9611,7 @@ ENEMY_TANKS_STRING:
 43e5: 18 0C          JR    $43F3
 
 43e7: 06 01          LD    B,#$01
-43e9: 3A 00 C0       LD    A,(NVRAM)
+43e9: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 43ec: DD BE 00       CP    A,(IX+$00)
 43ef: 30 02          JR    NC,$43F3
 
@@ -10096,7 +10100,7 @@ ENEMY_TANKS_STRING:
 4729: E1             POP   HL
 472a: C9             RET   
 
-472b: 3A 00 C0       LD    A,(NVRAM)
+472b: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 472e: E5             PUSH  HL
 472f: 21 03 C0       LD    HL,$C003
 4732: 86             ADD   A,(HL)
@@ -10106,6 +10110,8 @@ ENEMY_TANKS_STRING:
 4736: 21 04 C0       LD    HL,$C004
 4739: 86             ADD   A,(HL)
 473a: B8             CP    A,B
+
+*** 47b8-47c6 looks like data, not sure for what though ...
 473b: 38 11          JR    C,$474E        ;Invincibility TANK Game = 18 (JR *) (bullet collision?)
 
 473d: 3A 02 C0       LD    A,($C002)
@@ -10143,7 +10149,7 @@ ENEMY_TANKS_STRING:
 4776: 28 03          JR    Z,$477B
 
 4778: 21 C2 47       LD    HL,$47C2
-477b: CD 52 6F       CALL  $6F52
+477b: CD 52 6F       CALL  PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LIGHT_CYCLE
 477e: DD 7E 11       LD    A,(IX+$11)
 4781: B7             OR    A,A
 4782: 28 07          JR    Z,$478B
@@ -10175,19 +10181,8 @@ ENEMY_TANKS_STRING:
 47b3: DD 36 1A 08    LD    (IX+$1A),#$08
 47b7: C9             RET   
 
-47b8: 00             NOP   
-47b9: 00             NOP   
-47ba: 05             DEC   B
-47bb: 00             NOP   
-47bc: 00             NOP   
-47bd: 00             NOP   
-47be: 00             NOP   
-47bf: 03             INC   BC
-47c0: 00             NOP   
-47c1: 00             NOP   
-47c2: 00             NOP   
-47c3: 00             NOP   
-47c4: 01 00 00       LD    BC,IO_0
+47b8: 00 00 05 00 00 00 00 03 00 00 00 00 01 00 00 
+
 47c7: FD 6E 0B       LD    L,(IY+$0B)
 47ca: FD 66 0C       LD    H,(IY+$0C)
 47cd: FD 7E 00       LD    A,(IY+$00)
@@ -10217,7 +10212,7 @@ ENEMY_TANKS_STRING:
 47fd: 77             LD    (HL),A
 47fe: C9             RET   
 
-47ff: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+47ff: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 4802: B7             OR    A,A
 4803: 28 0C          JR    Z,$4811
 
@@ -10265,7 +10260,7 @@ ENEMY_TANKS_STRING:
 4848: B7             OR    A,A
 4849: 28 35          JR    Z,$4880
 
-484b: 3A 00 C0       LD    A,(NVRAM)
+484b: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 484e: 4F             LD    C,A
 484f: 3A 0B C0       LD    A,($C00B)
 4852: 81             ADD   A,C
@@ -10554,7 +10549,7 @@ ENEMY_TANKS_STRING:
 49c4: 00             NOP   
 49c5: FC 00 2C       CALL  M,$2C00
 49c8: 21 84 48       LD    HL,$4884
-49cb: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+49cb: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 49ce: B7             OR    A,A
 49cf: 3A 05 C4       LD    A,($C405)
 49d2: 28 07          JR    Z,$49DB
@@ -10580,7 +10575,7 @@ ENEMY_TANKS_STRING:
 49ee: 24             INC   H
 49ef: 6F             LD    L,A
 49f0: DD 21 08 F0    LD    IX,$F008
-49f4: 3A 00 C0       LD    A,(NVRAM)
+49f4: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 49f7: 47             LD    B,A
 49f8: 3A 0B C0       LD    A,($C00B)
 49fb: 80             ADD   A,B
@@ -10656,7 +10651,7 @@ ENEMY_TANKS_STRING:
 4a78: DD BE 15       CP    A,(IX+$15)
 4a7b: 20 77          JR    NZ,$4AF4
 
-4a7d: 3A 00 C0       LD    A,(NVRAM)
+4a7d: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 4a80: DD BE 00       CP    A,(IX+$00)
 4a83: 38 16          JR    C,$4A9B
 
@@ -10666,7 +10661,7 @@ ENEMY_TANKS_STRING:
 
 4a8c: DD 46 00       LD    B,(IX+$00)
 4a8f: CD F9 4A       CALL  $4AF9
-4a92: 3A 00 C0       LD    A,(NVRAM)
+4a92: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 4a95: BE             CP    A,(HL)
 4a96: DC FF 4A       CALL  C,$4AFF
 4a99: 18 59          JR    $4AF4
@@ -10677,7 +10672,7 @@ ENEMY_TANKS_STRING:
 
 4aa2: DD 46 00       LD    B,(IX+$00)
 4aa5: CD F9 4A       CALL  $4AF9
-4aa8: 3A 00 C0       LD    A,(NVRAM)
+4aa8: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 4aab: 2B             DEC   HL
 4aac: BE             CP    A,(HL)
 4aad: D4 FF 4A       CALL  NC,$4AFF
@@ -11690,7 +11685,7 @@ PLAY_LIGHT_CYCLE:
 502c: 3E EF          LD    A,#$EF
 502e: 21 EA C1       LD    HL,$C1EA
 5031: CD 34 52       CALL  $5234
-5034: 3A 19 C4       LD    A,(USER_LEVEL/CURRENT_PLAYER_DATA)
+5034: 3A 19 C4       LD    A,(HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?))
 5037: FE 13          CP    A,#$13
 5039: 38 04          JR    C,$503F
 
@@ -11731,7 +11726,7 @@ PLAY_LIGHT_CYCLE:
 5077: 3E 08          LD    A,#$08
 5079: ED 44          NEG   
 507b: 32 0E C2       LD    ($C20E),A
-507e: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+507e: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 5081: B7             OR    A,A
 5082: 28 04          JR    Z,$5088
 
@@ -11873,7 +11868,7 @@ SPEED_CONTROL_STRING:
 51ae: B7             OR    A,A
 51af: 28 0F          JR    Z,$51C0
 
-51b1: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+51b1: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 51b4: B7             OR    A,A
 51b5: 20 02          JR    NZ,$51B9
 
@@ -12078,7 +12073,7 @@ SPEED_CONTROL_STRING:
 532e: BE             CP    A,(HL)
 532f: C2 4B 54       JP    NZ,$544B
 
-5332: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+5332: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 5335: B7             OR    A,A
 5336: C2 4B 54       JP    NZ,$544B
 
@@ -12215,7 +12210,7 @@ SPEED_CONTROL_STRING:
 5427: 7E             LD    A,(HL)
 5428: F5             PUSH  AF
 5429: C5             PUSH  BC
-542a: CD E5 59       CALL  $59E5
+542a: CD E5 59       CALL  LC_DRAW_A_TRAIL?
 542d: A7             AND   A,A
 542e: 20 3A          JR    NZ,$546A
 
@@ -12286,7 +12281,7 @@ SPEED_CONTROL_STRING:
 5498: 0E 19          LD    C,#$19
 549a: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 549d: 3E 04          LD    A,#$04
-549f: CD 51 55       CALL  $5551
+549f: CD 51 55       CALL  LC_ERASE_TRAIL_OF_DESTROYED_LC
 54a2: 21 F4 C1       LD    HL,$C1F4
 54a5: 36 08          LD    (HL),#$08
 54a7: 21 ED C1       LD    HL,$C1ED
@@ -12329,7 +12324,7 @@ SPEED_CONTROL_STRING:
 54ed: 11 00 00       LD    DE,IO_0
 54f0: CD 35 55       CALL  $5535
 54f3: 3E 01          LD    A,#$01
-54f5: CD 51 55       CALL  $5551
+54f5: CD 51 55       CALL  LC_ERASE_TRAIL_OF_DESTROYED_LC
 54f8: 21 10 C2       LD    HL,$C210
 54fb: CB 86          RES   0,(HL)
 54fd: 3A E8 C1       LD    A,($C1E8)
@@ -12341,7 +12336,7 @@ SPEED_CONTROL_STRING:
 5509: 11 01 00       LD    DE,IO_1
 550c: CD 35 55       CALL  $5535
 550f: 3E 02          LD    A,#$02
-5511: CD 51 55       CALL  $5551
+5511: CD 51 55       CALL  LC_ERASE_TRAIL_OF_DESTROYED_LC
 5514: 21 10 C2       LD    HL,$C210
 5517: CB 8E          RES   1,(HL)
 5519: 3A E8 C1       LD    A,($C1E8)
@@ -12353,7 +12348,7 @@ SPEED_CONTROL_STRING:
 5524: 11 02 00       LD    DE,IO_2
 5527: CD 35 55       CALL  $5535
 552a: 3E 03          LD    A,#$03
-552c: CD 51 55       CALL  $5551
+552c: CD 51 55       CALL  LC_ERASE_TRAIL_OF_DESTROYED_LC
 552f: 21 10 C2       LD    HL,$C210
 5532: CB 96          RES   2,(HL)
 5534: C9             RET   
@@ -12367,13 +12362,14 @@ SPEED_CONTROL_STRING:
 5541: 0E 0E          LD    C,#$0E
 5543: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 5546: 21 4C 55       LD    HL,$554C
-5549: C3 52 6F       JP    $6F52
+5549: C3 52 6F       JP    PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LIGHT_CYCLE
 
 554c: 00             NOP   
 554d: 00             NOP   
 554e: 05             DEC   B
 554f: 00             NOP   
 5550: 00             NOP   
+LC_ERASE_TRAIL_OF_DESTROYED_LC:
 5551: 11 00 89       LD    DE,BACKGROUND_LIGHT_CYCLE
 5554: 21 00 F8       LD    HL,VIDEO_RAM_TO_FF7F
 5557: 01 80 07       LD    BC,$0780
@@ -13079,7 +13075,7 @@ SPEED_CONTROL_STRING:
 59c6: ED 52          SBC   HL,DE
 59c8: CB 3C          SRL   H
 59ca: CB 1D          RR    L
-59cc: 11 00 C0       LD    DE,NVRAM
+59cc: 11 00 C0       LD    DE,LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY
 59cf: CB 3C          SRL   H
 59d1: CB 1D          RR    L
 59d3: 38 08          JR    C,$59DD
@@ -13098,6 +13094,7 @@ SPEED_CONTROL_STRING:
 59e3: 78             LD    A,B
 59e4: C9             RET   
 
+LC_DRAW_A_TRAIL?:
 59e5: 6F             LD    L,A
 59e6: 26 00          LD    H,#$00
 59e8: 06 05          LD    B,#$05
@@ -13118,7 +13115,7 @@ SPEED_CONTROL_STRING:
 59fe: 10 FA          DJNZ  $59FA
 
 5a00: 09             ADD   HL,BC
-5a01: 11 00 C0       LD    DE,NVRAM
+5a01: 11 00 C0       LD    DE,LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY
 5a04: CB 3C          SRL   H
 5a06: CB 1D          RR    L
 5a08: 38 08          JR    C,$5A12
@@ -13286,7 +13283,7 @@ SPEED_CONTROL_STRING:
 
 5b16: F5             PUSH  AF
 5b17: C5             PUSH  BC
-5b18: CD E5 59       CALL  $59E5
+5b18: CD E5 59       CALL  LC_DRAW_A_TRAIL?
 5b1b: A7             AND   A,A
 5b1c: 28 03          JR    Z,$5B21
 
@@ -13708,7 +13705,7 @@ PLAY_IO_TOWER:
 5d25: CD 49 70       CALL  INITIALIZE_SPRITES
 5d28: 3E 78          LD    A,#$78
 5d2a: 32 1E C0       LD    ($C01E),A
-5d2d: 3A 19 C4       LD    A,(USER_LEVEL/CURRENT_PLAYER_DATA)
+5d2d: 3A 19 C4       LD    A,(HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?))
 5d30: FE 09          CP    A,#$09
 5d32: 38 04          JR    C,$5D38
 
@@ -13726,7 +13723,7 @@ PLAY_IO_TOWER:
 5d46: CD 1D 62       CALL  $621D
 5d49: 3E 01          LD    A,#$01
 5d4b: 32 5E C4       LD    ($C45E),A
-5d4e: 3A 19 C4       LD    A,(USER_LEVEL/CURRENT_PLAYER_DATA)
+5d4e: 3A 19 C4       LD    A,(HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?))
 5d51: FE 00          CP    A,#$00
 5d53: 28 07          JR    Z,$5D5C
 
@@ -13763,7 +13760,7 @@ PLAY_IO_TOWER:
 5d90: B7             OR    A,A
 5d91: C2 F7 5E       JP    NZ,$5EF7
 
-5d94: 3A 24 C0       LD    A,(?3)
+5d94: 3A 24 C0       LD    A,(IO_TOWER_ALWAYS_80?)
 5d97: FE 80          CP    A,#$80
 5d99: 20 51          JR    NZ,$5DEC
 
@@ -13847,7 +13844,7 @@ PLAY_IO_TOWER:
 5e28: BE             CP    A,(HL)
 5e29: C0             RET   NZ
 
-5e2a: 21 24 C0       LD    HL,?3
+5e2a: 21 24 C0       LD    HL,IO_TOWER_ALWAYS_80?
 5e2d: 7E             LD    A,(HL)
 5e2e: E6 8E          AND   A,#$8E
 5e30: FE 80          CP    A,#$80
@@ -14009,7 +14006,7 @@ CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?:
 5f43: 32 51 C4       LD    ($C451),A
 5f46: C9             RET   
 
-5f47: 3A 24 C0       LD    A,(?3)
+5f47: 3A 24 C0       LD    A,(IO_TOWER_ALWAYS_80?)
 5f4a: E6 84          AND   A,#$84
 5f4c: C8             RET   Z
 
@@ -14017,7 +14014,7 @@ CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?:
 5f4f: C2 CC 61       JP    NZ,$61CC
 
 5f52: CD 77 61       CALL  $6177
-5f55: 3A 24 C0       LD    A,(?3)
+5f55: 3A 24 C0       LD    A,(IO_TOWER_ALWAYS_80?)
 5f58: E6 08          AND   A,#$08
 5f5a: 20 11          JR    NZ,$5F6D
 
@@ -14031,7 +14028,7 @@ CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?:
 5f6d: CD 36 62       CALL  $6236
 5f70: C3 65 60       JP    INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
 
-5f73: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+5f73: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 5f76: B7             OR    A,A
 5f77: 28 23          JR    Z,$5F9C
 
@@ -14160,9 +14157,9 @@ CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?:
 6041: 3E 80          LD    A,#$80
 6043: 32 2D C0       LD    ($C02D),A
 6046: 3E 88          LD    A,#$88
-6048: 32 24 C0       LD    (?3),A
+6048: 32 24 C0       LD    (IO_TOWER_ALWAYS_80?),A
 604b: 21 0D C0       LD    HL,IO_TOWER_TIMER_VALUE_REVERSED_TO_C010
-604e: CD 52 6F       CALL  $6F52
+604e: CD 52 6F       CALL  PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LIGHT_CYCLE
 6051: 3A 0F C0       LD    A,($C00F)
 6054: B7             OR    A,A
 6055: 20 05          JR    NZ,$605C
@@ -14223,7 +14220,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 60be: 32 16 F0       LD    ($F016),A
 60c1: DD 7E 0A       LD    A,(IX+$0A)
 60c4: 32 15 F0       LD    ($F015),A
-60c7: 21 24 C0       LD    HL,?3
+60c7: 21 24 C0       LD    HL,IO_TOWER_ALWAYS_80?
 60ca: CB 46          BIT   0,(HL)
 60cc: 28 1F          JR    Z,$60ED
 
@@ -14271,7 +14268,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 6123: 32 10 F0       LD    ($F010),A
 6126: C9             RET   
 
-6127: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+6127: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 612a: B7             OR    A,A
 612b: 28 0C          JR    Z,$6139
 
@@ -14294,7 +14291,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 
 6145: DB 00          IN    A,($00)
 6147: E6 10          AND   A,#$10
-6149: 21 23 C0       LD    HL,?2
+6149: 21 23 C0       LD    HL,IO_TOWER_TRIGGER_DEBOUNCE?
 614c: BE             CP    A,(HL)
 614d: C8             RET   Z
 
@@ -14304,13 +14301,13 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 
 6151: 3E 04          LD    A,#$04
 6153: 32 21 C0       LD    ($C021),A
-6156: 3A 22 C0       LD    A,(?1)
+6156: 3A 22 C0       LD    A,(IO_TOWER_INCREMENTS_19_TO_1E_FOR_EACH_DISK_THROWN)
 6159: 3C             INC   A
 615a: FE 1F          CP    A,#$1F
 615c: 38 02          JR    C,$6160
 
 615e: 3E 19          LD    A,#$19
-6160: 32 22 C0       LD    (?1),A
+6160: 32 22 C0       LD    (IO_TOWER_INCREMENTS_19_TO_1E_FOR_EACH_DISK_THROWN),A
 6163: 21 1D C4       LD    HL,CURRENT_PLAYER_DATA_BYTE_04
 6166: 7E             LD    A,(HL)
 6167: B7             OR    A,A
@@ -14319,13 +14316,13 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 6169: 35             DEC   (HL)
 616a: 0E 08          LD    C,#$08
 616c: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
-616f: 21 24 C0       LD    HL,?3
+616f: 21 24 C0       LD    HL,IO_TOWER_ALWAYS_80?
 6172: CB C6          SET   0,(HL)
 6174: C3 33 64       JP    $6433
 
-6177: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+6177: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 617a: B7             OR    A,A
-617b: 3A 22 C0       LD    A,(?1)
+617b: 3A 22 C0       LD    A,(IO_TOWER_INCREMENTS_19_TO_1E_FOR_EACH_DISK_THROWN)
 617e: 20 0A          JR    NZ,$618A
 
 6180: 3A 05 C4       LD    A,($C405)
@@ -14359,7 +14356,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 61ae: 3E 40          LD    A,#$40
 61b0: 32 2D C0       LD    ($C02D),A
 61b3: 3E 84          LD    A,#$84
-61b5: 32 24 C0       LD    (?3),A
+61b5: 32 24 C0       LD    (IO_TOWER_ALWAYS_80?),A
 61b8: AF             XOR   A,A
 61b9: 32 08 C4       LD    ($C408),A
 61bc: 3E 00          LD    A,#$00
@@ -14374,7 +14371,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 61d0: B7             OR    A,A
 61d1: 20 15          JR    NZ,$61E8
 
-61d3: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+61d3: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 61d6: B7             OR    A,A
 61d7: 20 05          JR    NZ,$61DE
 
@@ -14419,14 +14416,14 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 6222: 3E D4          LD    A,#$D4
 6224: 32 28 C0       LD    (Y_POS_TRON_SPRITE_IN_IO_TOWER_GAME),A
 6227: 3E 80          LD    A,#$80
-6229: 32 24 C0       LD    (?3),A
+6229: 32 24 C0       LD    (IO_TOWER_ALWAYS_80?),A
 622c: AF             XOR   A,A
 622d: 32 05 C4       LD    ($C405),A
 6230: 3E 19          LD    A,#$19
-6232: 32 22 C0       LD    (?1),A
+6232: 32 22 C0       LD    (IO_TOWER_INCREMENTS_19_TO_1E_FOR_EACH_DISK_THROWN),A
 6235: C9             RET   
 
-6236: 21 24 C0       LD    HL,?3
+6236: 21 24 C0       LD    HL,IO_TOWER_ALWAYS_80?
 6239: CB 4E          BIT   1,(HL)
 623b: 20 4B          JR    NZ,$6288
 
@@ -14498,7 +14495,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 62ac: C9             RET   
 
 62ad: 3A 26 C0       LD    A,(X_POS_TRON_SPRITE_IN_IO_TOWER_GAME)
-62b0: 21 00 C0       LD    HL,NVRAM
+62b0: 21 00 C0       LD    HL,LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY
 62b3: 96             SUB   A,(HL)
 62b4: 30 07          JR    NC,$62BD
 
@@ -14532,7 +14529,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 62e3: AF             XOR   A,A
 62e4: 32 04 C0       LD    ($C004),A
 62e7: 21 ED 62       LD    HL,$62ED
-62ea: C3 52 6F       JP    $6F52
+62ea: C3 52 6F       JP    PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LIGHT_CYCLE
 
 62ed: 00             NOP   
 62ee: 00             NOP   
@@ -14581,7 +14578,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 6338: B9             CP    A,C
 6339: D0             RET   NC
 
-633a: 3A 00 C0       LD    A,(NVRAM)
+633a: 3A 00 C0       LD    A,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 633d: 32 28 F0       LD    ($F028),A
 6340: 3A 01 C0       LD    A,($C001)
 6343: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
@@ -15154,14 +15151,14 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 6764: DD 36 08 04    LD    (IX+$08),#$04
 6768: DD 36 0A 81    LD    (IX+$0A),#$81
 676c: 21 72 67       LD    HL,$6772
-676f: C3 52 6F       JP    $6F52
+676f: C3 52 6F       JP    PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LIGHT_CYCLE
 
 6772: 00             NOP   
 6773: 05             DEC   B
 6774: 00             NOP   
 6775: 00             NOP   
 6776: 00             NOP   
-6777: 3A 19 C4       LD    A,(USER_LEVEL/CURRENT_PLAYER_DATA)
+6777: 3A 19 C4       LD    A,(HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?))
 677a: FE 09          CP    A,#$09
 677c: 30 07          JR    NC,$6785
 
@@ -15186,13 +15183,13 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 679d: E5             PUSH  HL
 679e: 21 E2 68       LD    HL,$68E2
 67a1: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
-67a4: 11 00 C0       LD    DE,NVRAM
+67a4: 11 00 C0       LD    DE,LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY
 67a7: ED A0          LDI   
 67a9: ED A0          LDI   
 67ab: ED A0          LDI   
 67ad: ED A0          LDI   
 67af: E1             POP   HL
-67b0: 3A 19 C4       LD    A,(USER_LEVEL/CURRENT_PLAYER_DATA)
+67b0: 3A 19 C4       LD    A,(HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?))
 67b3: 06 03          LD    B,#$03
 67b5: 0E 00          LD    C,#$00
 67b7: FE 09          CP    A,#$09
@@ -15312,7 +15309,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 687c: FD 2A 09 C4    LD    IY,($C409)
 6880: C9             RET   
 
-6881: 3A 24 C0       LD    A,(?3)
+6881: 3A 24 C0       LD    A,(IO_TOWER_ALWAYS_80?)
 6884: E6 8E          AND   A,#$8E
 6886: FE 80          CP    A,#$80
 6888: C0             RET   NZ
@@ -16561,7 +16558,8 @@ COPY_20_FROM_HL_TO_FF80:
 
 6f51: C9             RET   
 
-6f52: 3A 7B C4       LD    A,(IN_ATTRACT_MODE)
+PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LIGHT_CYCLE:
+6f52: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 6f55: B7             OR    A,A
 6f56: C0             RET   NZ
 
@@ -16696,7 +16694,7 @@ ADD_A_MESSAGE_TO_Q:
 701f: C9             RET   
 
 ZERO_RAM_C000-C418:
-7020: 21 19 C4       LD    HL,USER_LEVEL/CURRENT_PLAYER_DATA
+7020: 21 19 C4       LD    HL,HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?)
 7023: C3 29 70       JP    $7029
 
 ZERO_RAM_C000-C450:
@@ -19676,11 +19674,11 @@ BACKGROUND_TRAINING_FOR_LIGHT_CYCLE:
 9903: 3E 78          LD    A,#$78
 9905: 32 6E C4       LD    ($C46E),A
 9908: 21 06 9A       LD    HL,$9A06
-990b: 22 00 C0       LD    (NVRAM),HL
+990b: 22 00 C0       LD    (LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY),HL
 990e: 3E 18          LD    A,#$18
 9910: 32 02 C0       LD    ($C002),A
 9913: AF             XOR   A,A
-9914: 32 7B C4       LD    (IN_ATTRACT_MODE),A
+9914: 32 7B C4       LD    (IN_ATTRACT_MODE?),A
 9917: 32 65 C4       LD    ($C465),A
 991a: DB 00          IN    A,($00)
 991c: 2F             CPL   
@@ -19691,7 +19689,7 @@ BACKGROUND_TRAINING_FOR_LIGHT_CYCLE:
 9927: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 992a: CD C7 6F       CALL  CLEAR_BACKGROUND
 992d: CD A4 99       CALL  $99A4
-9930: DD 2A 00 C0    LD    IX,(NVRAM)
+9930: DD 2A 00 C0    LD    IX,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 9934: DD 7E 07       LD    A,(IX+$07)
 9937: 32 05 F0       LD    ($F005),A
 993a: CD CA 99       CALL  $99CA
@@ -19715,7 +19713,7 @@ BACKGROUND_TRAINING_FOR_LIGHT_CYCLE:
 
 995d: 36 18          LD    (HL),#$18
 995f: 21 03 C0       LD    HL,$C003
-9962: DD 2A 00 C0    LD    IX,(NVRAM)
+9962: DD 2A 00 C0    LD    IX,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 9966: DB 02          IN    A,($02)
 9968: 2F             CPL   
 9969: E6 04          AND   A,#$04
@@ -19768,7 +19766,7 @@ GET_TRIGGER_INPUT_FOR_SERVICE_MENU:
 99a1: F6 01          OR    A,#$01
 99a3: C9             RET   
 
-99a4: DD 2A 00 C0    LD    IX,(NVRAM)
+99a4: DD 2A 00 C0    LD    IX,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 99a8: DD 6E 00       LD    L,(IX+$00)
 99ab: DD 66 01       LD    H,(IX+$01)
 99ae: E5             PUSH  HL
@@ -19786,7 +19784,7 @@ GET_TRIGGER_INPUT_FOR_SERVICE_MENU:
 99c6: DD 19          ADD   IX,DE
 99c8: 18 E7          JR    $99B1
 
-99ca: DD 2A 00 C0    LD    IX,(NVRAM)
+99ca: DD 2A 00 C0    LD    IX,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 99ce: DD 6E 02       LD    L,(IX+$02)
 99d1: DD 66 03       LD    H,(IX+$03)
 99d4: 16 00          LD    D,#$00
@@ -19802,7 +19800,7 @@ GET_TRIGGER_INPUT_FOR_SERVICE_MENU:
 99e6: DD 77 02       LD    (IX+$02),A
 99e9: C9             RET   
 
-99ea: DD 2A 00 C0    LD    IX,(NVRAM)
+99ea: DD 2A 00 C0    LD    IX,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 99ee: DD 6E 04       LD    L,(IX+$04)
 99f1: DD 66 05       LD    H,(IX+$05)
 99f4: 16 00          LD    D,#$00
@@ -19925,7 +19923,7 @@ HIT_FIRE_BUTTON_FOR_TEST_STRING:
 9b12: HIT FIRE BUTTON FOR TEST
 
 9b2b: 21 D8 9B       LD    HL,$9BD8
-9b2e: 22 00 C0       LD    (NVRAM),HL
+9b2e: 22 00 C0       LD    (LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY),HL
 9b31: 21 50 9E       LD    HL,$9E50
 9b34: 22 06 C0       LD    ($C006),HL
 9b37: 3E 18          LD    A,#$18
@@ -19937,7 +19935,7 @@ HIT_FIRE_BUTTON_FOR_TEST_STRING:
 9b46: 0E 02          LD    C,#$02
 9b48: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 9b4b: CD A4 99       CALL  $99A4
-9b4e: DD 2A 00 C0    LD    IX,(NVRAM)
+9b4e: DD 2A 00 C0    LD    IX,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 9b52: DD 7E 07       LD    A,(IX+$07)
 9b55: 32 05 F0       LD    ($F005),A
 9b58: 3A 05 C0       LD    A,($C005)
@@ -19993,7 +19991,7 @@ HIT_FIRE_BUTTON_FOR_TEST_STRING:
 9ba9: 3E 02          LD    A,#$02
 9bab: 32 03 C0       LD    ($C003),A
 9bae: 3A 03 C0       LD    A,($C003)
-9bb1: DD 2A 00 C0    LD    IX,(NVRAM)
+9bb1: DD 2A 00 C0    LD    IX,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 9bb5: DD BE 06       CP    A,(IX+$06)
 9bb8: 30 13          JR    NC,$9BCD
 
@@ -20380,7 +20378,7 @@ SELECT_A_SOUND_STRING:
 9e96: 14             INC   D
 9e97: 40             LD    B,B
 9e98: 21 E0 9E       LD    HL,$9EE0
-9e9b: 22 00 C0       LD    (NVRAM),HL
+9e9b: 22 00 C0       LD    (LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY),HL
 9e9e: 3E 18          LD    A,#$18
 9ea0: AF             XOR   A,A
 9ea1: 32 03 C0       LD    ($C003),A
@@ -20390,7 +20388,7 @@ SELECT_A_SOUND_STRING:
 9ead: 0E 02          LD    C,#$02
 9eaf: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 9eb2: CD A4 99       CALL  $99A4
-9eb5: DD 2A 00 C0    LD    IX,(NVRAM)
+9eb5: DD 2A 00 C0    LD    IX,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 9eb9: DD 7E 07       LD    A,(IX+$07)
 9ebc: 32 05 F0       LD    ($F005),A
 9ebf: CD BF 9F       CALL  $9FBF
@@ -20905,11 +20903,11 @@ a367: CD 49 70       CALL  INITIALIZE_SPRITES
 a36a: 0E 02          LD    C,#$02
 a36c: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 a36f: 21 AD A3       LD    HL,$A3AD
-a372: 22 00 C0       LD    (NVRAM),HL
+a372: 22 00 C0       LD    (LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY),HL
 a375: AF             XOR   A,A
 a376: 32 03 C0       LD    ($C003),A
 a379: CD A4 99       CALL  $99A4
-a37c: DD 2A 00 C0    LD    IX,(NVRAM)
+a37c: DD 2A 00 C0    LD    IX,(LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY)
 a380: DD 7E 07       LD    A,(IX+$07)
 a383: 32 05 F0       LD    ($F005),A
 a386: 0E 1A          LD    C,#$1A
@@ -22061,7 +22059,7 @@ ac85: C2 01 03       JP    NZ,$0301
 
 ac88: 00             NOP   
 ac89: C6 FF          ADD   A,#$FF
-ac8b: 01 00 C0       LD    BC,NVRAM
+ac8b: 01 00 C0       LD    BC,LIGHT_CYCLE_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY
 ac8e: 01 04 00       LD    BC,IO_4
 ac91: F8             RET   M
 
