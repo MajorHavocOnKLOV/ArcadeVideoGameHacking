@@ -8,6 +8,8 @@ z80:
 https://clrhome.org/table/
 http://www.z80.info/z80sflag.htm
 https://www.seanriddle.com/midway.html
+http://www.z80.info/z80sdt.htm
+https://www.asm80.com/
 
 MCR:
 https://github.com/mamedev/mame/blob/master/src/mame/drivers/mcr.cpp
