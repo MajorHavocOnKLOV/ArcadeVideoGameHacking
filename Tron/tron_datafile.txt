@@ -159,6 +159,7 @@ label 2c7e MCP_INSTRUCTIONS
 label 2cf8 TRY_TO_ENTER_STRING
 label 2d05 THE_MCP_CONE_STRING
 label 2d12 PLAY_MCP
+label 3025 MCP_PROCESS_DISK_POSITION(S)?
 label 3559 MCP_BRICKS_DATA_TO_35B2
 label 35b3 MCP_CONE_RELATIVEX_RELATIVEY_SPRITE_NUMBER_TO_35D9
 label 3926 COLOR_PALETTE_ALL_ZEROS(USED_BY_MCP)
@@ -413,7 +414,15 @@ label b177 OS_STRING
 label b17a JCL_STRING
 label b17e USER_STRING
 
-label c000 LC_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY
+; MCP
+; C004 high bit is 1 unless a shot is fired?
+; C013-16 path of disk? changes as disk flies
+; C017 inverts when shot fired and then reverts
+; C01A-1B change as shot fires
+;
+; c000 LC_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY
+; c000 MCP 00-03 legs open, 04-04 legs closed
+label c000 MCP_TRON_LEGS-LC_TRAILS_TO_C1DF
 label c001 MCP_ROWS_OF_BRICKS
 label c007 MCP_TRON_X
 label c009 MCP_TRON_Y
@@ -423,11 +432,12 @@ label c012 IO_TOWER_TIMER_DIGITS_TO_C019
 label c022 IO_TOWER_INCREMENTS_19_TO_1E_FOR_EACH_DISK_THROWN
 label c023 IO_TOWER_TRIGGER_DEBOUNCE?
 label c024 IO_TOWER_ALWAYS_80?
-label c026 X_POS_TRON_SPRITE_IN_IO_TOWER_GAME
-label c028 Y_POS_TRON_SPRITE_IN_IO_TOWER_GAME
+label c026 IO_TRON_X
+label c028 IO_TRON_Y
 label c029 JOYSTICK_INPUT_ARRAY_TO_C02C
 label c03a MCP_DATA_TO_C0D9?
 label c051 INFO_FOR_TANK_GAME_SEE_3ABF_TO_C05A
+label c062 MCP_POSITION_OF_BLOCKS_0_TO_F
 label c0dc MCP_TOWER_Y
 label c0dd MCP_TOWER_X
 label c0e3 MCP_BRICKS_REMAINING_COUNT
@@ -436,12 +446,13 @@ label c159 NUMBER_OF_TANKS_ALSO?
 
 label c402 COUNTDOWN_TIMER_SECONDS
 label c403 COUNTDOWN_TIMER_FRAMES
+label c406 MCP_DISK_NUMBER_BEING_PROCESSED
 label c419 HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?)
 label c41a PLAYING_HOW_LONG_NOW_TO_C41C
 label c41b CURRENT_PLAYER_DATA_BYTE_02
 label c41c CURRENT_PLAYER_DATA_BYTE_03
 label c41d CURRENT_PLAYER_DATA_BYTE_04
-label c41e CURRENT_PLAYER_DATA_BYTE_05
+label c41e MCP_MAX_DISKS_AT_A_TIME
 label c41f LIVES_REMAINING
 label c420 CURRENT_PLAYER_DATA_BYTE_07
 label c421 CURRENT_PLAYER_DATA_BYTE_08
@@ -689,6 +700,8 @@ commentline 2d33 Register c contains 1C, 1E, or 1F (why? visibility of bricks?)
 commentline 2d33 C0E3 ends up with the total number of bricks (C001*0x10)
 
 commentline 2d82 Set MCP tower at 40x and 56y
+commentline 2e19 MCP: Tron has gone too far left. Set him to 21 x
+commentline 2e21 MCP: Tron has gone too far right. Set him to E7 x
 
 comment 346a Invincibility MCP Game = 18 (JR *)
 comment 3471 Invincibility MCP Game = 11 (LD DE, **)

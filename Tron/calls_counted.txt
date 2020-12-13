@@ -260,6 +260,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 NC,$03F0
       1 NC,$0051
       1 NC,$0006
+      1 MCP_PROCESS_DISK_POSITION(S)?
       1 M,YOUR_STRING
       1 M,SETUP_OPTIONS_STRING
       1 M,SCORE_REPORT_STRING2
@@ -417,7 +418,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $31FA
       1 $318B
       1 $3149
-      1 $3025
       1 $2FED
       1 $2FD9
       1 $2E6A
