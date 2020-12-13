@@ -88,6 +88,77 @@
 
   <cheat desc=" "/>
 
+<!-- By Franklin Bowen, Maryland, USA -->
+<!--
+  <cheat desc="Keep MCP cone at current X (works but Tron then moves beyond the edge of the cone!)"> 
+    <script state="on">
+      <action>temp0 =maincpu.mb@32df</action>
+      <action>temp1 =maincpu.mb@32ee</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mb@32df=0</action>
+      <action>maincpu.mb@32ee=0</action>
+    </script>
+    <script state="off">
+      <action>maincpu.mb@32df=temp0</action>
+      <action>maincpu.mb@32ee=temp1</action>
+    </script>
+  </cheat>
+  -->
+
+  <cheat desc="Disable ROM check"> <!-- By Franklin Bowen, Maryland, USA -->
+    <script state="on">
+      <action>temp0 =maincpu.mb@acea</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mb@acea=18</action>
+    </script>
+    <script state="off">
+      <action>maincpu.mb@acea=temp0 </action>
+    </script>
+  </cheat>
+
+  <cheat desc="Keep MCP cone at current X">
+  <!-- By Franklin Bowen, Maryland, USA -->
+  <!-- This technically blocks Tron from hitting the wall of the cone, but it works -->
+    <script state="on">
+      <action>temp0 =maincpu.mb@2e16</action>
+      <action>temp1 =maincpu.mb@2e1a</action>
+      <action>temp2 =maincpu.mb@2e1e</action>
+      <action>temp3 =maincpu.mb@2e22</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mb@2e16=56</action>
+      <action>maincpu.mb@2e1a=56</action>
+      <action>maincpu.mb@2e1e=9a</action>
+      <action>maincpu.mb@2e22=9a</action>
+    </script>
+    <script state="off">
+      <action>maincpu.mb@2e16=temp0</action>
+      <action>maincpu.mb@2e1a=temp1</action>
+      <action>maincpu.mb@2e1e=temp2</action>
+      <action>maincpu.mb@2e22=temp3</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Keep MCP cone at current Y"> <!-- By Franklin Bowen, Maryland, USA -->
+    <script state="on">
+      <action>temp0 =maincpu.mb@3303</action>
+      <action>temp1 =maincpu.mb@3304</action>
+      <action>temp2 =maincpu.mb@3305</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mb@3303=0</action>
+      <action>maincpu.mb@3304=0</action>
+      <action>maincpu.mb@3305=0</action>
+    </script>
+    <script state="off">
+      <action>maincpu.mb@3303=temp0</action>
+      <action>maincpu.mb@3304=temp1</action>
+      <action>maincpu.mb@3305=temp2</action>
+    </script>
+  </cheat>
+
   <cheat desc="Skip Game Instructions"> <!-- By Franklin Bowen, Maryland, USA -->
     <script state="on">
       <action>temp0 =maincpu.mb@1FC0</action>
