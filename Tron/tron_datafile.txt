@@ -428,7 +428,7 @@ label c007 MCP_TRON_X
 label c009 MCP_TRON_Y
 label c00d IO_TOWER_TIMER_VALUE_REVERSED_TO_C010
 label c00e INFINITE_TIME_CHEAT
-label c012 IO_TOWER_TIMER_DIGITS_TO_C019
+label c012 MCP_DISK_DATA_TO_C02F/IO_TOWER_TIMER_DIGITS_TO_C019
 label c022 IO_TOWER_INCREMENTS_19_TO_1E_FOR_EACH_DISK_THROWN
 label c023 IO_TOWER_TRIGGER_DEBOUNCE?
 label c024 IO_TOWER_ALWAYS_80?
@@ -451,8 +451,8 @@ label c419 HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?)
 label c41a PLAYING_HOW_LONG_NOW_TO_C41C
 label c41b CURRENT_PLAYER_DATA_BYTE_02
 label c41c CURRENT_PLAYER_DATA_BYTE_03
-label c41d CURRENT_PLAYER_DATA_BYTE_04
-label c41e MCP_MAX_DISKS_AT_A_TIME
+label c41d REMAINING_DISKS/SHOTS_AT_A_TIME
+label c41e MAX_DISKS/SHOTS_AT_A_TIME
 label c41f LIVES_REMAINING
 label c420 CURRENT_PLAYER_DATA_BYTE_07
 label c421 CURRENT_PLAYER_DATA_BYTE_08
@@ -496,7 +496,9 @@ label C000 NVRAM
 ; map(0xe800, 0xefff).mirror(0x1000)
 ; label e800 VIDEO_RAM_MIRROR
 
-label F000 MCP_TRON_AND_DISK_TO_F027(SPRITE_RAM)
+label F000 SPRITE_RAM
+label F004 MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
+label f018 DISK_1_TO_3/MAYBE_SHOTS_TOO?
 label f028 MCP_BLOCKS_TOP_LEFT_MOVING_DOWN_AND_WRAP_TO_TOP_RIGHT_TO_F09F
 label f0a0 MCP_TOWER_TO_F133
 ; label F200 SPRITE_RAM_M5
@@ -648,6 +650,8 @@ ascii 1dec-1e05
 ascii 1e06-1e10
 
 commentline 1fc0 skip game instructions
+
+commentline 20a3 This increment gives the next game an extra disk/shot! Is it a feature or a bug?
 
 commentline 20a7 Map of Difficulty level settings (picked by operator in settings) to how hard
 commentline 20a7 each user level is set.  The hardness values range from 0 (easy) to 20 (hard)
