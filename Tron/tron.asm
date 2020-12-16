@@ -328,6 +328,7 @@ HIT_FIRE_BUTTON_STRING EQU $aab2
 TO_CONTINUE_STRING EQU $aac2
 HIT_FIRE_BUTTON_STRING2 EQU $aace
 TO_EXIT_STRING EQU $aade
+DATA_USED_TO_DISPLAY_RAM_ERROR(S) EQU $ab1d
 RAM_ERROR_STRING EQU $ab27
 B2_STRING EQU $ab31
 F6_STRING EQU $ab35
@@ -351,6 +352,8 @@ A8_STRING EQU $ae6c
 A9_STRING EQU $ae70
 A10_STRING EQU $ae74
 A6_STRING EQU $ae79
+DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN EQU $ae7c
+DATA_TO_DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN EQU $ae95
 1ST_STRING EQU $b000
 2ND_STRING EQU $b004
 PLAYER_1_UP_STRING EQU $b008
@@ -21103,7 +21106,7 @@ ab03: F1             POP   AF
 ab04: B7             OR    A,A
 ab05: 28 0D          JR    Z,$AB14
 
-ab07: DD 21 1D AB    LD    IX,$AB1D
+ab07: DD 21 1D AB    LD    IX,DATA_USED_TO_DISPLAY_RAM_ERROR(S)
 ab0b: CD A2 AC       CALL  Print ROM error(s)
 ab0e: CD D6 AC       CALL  $ACD6
 ab11: F6 01          OR    A,#$01
@@ -21112,17 +21115,15 @@ ab13: C9             RET
 ab14: CD D6 AC       CALL  $ACD6
 ab17: C0             RET   NZ
 
-ab18: CD 7C AE       CALL  $AE7C
+ab18: CD 7C AE       CALL  DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN
 ab1b: AF             XOR   A,A
 ab1c: C9             RET   
 
-ab1d: 27             DAA   
-ab1e: AB             XOR   A,E
-ab1f: CC FD D0       CALL  Z,$D0FD
-ab22: FD 31          Illegal Opcode
-ab24: AB             XOR   A,E
-ab25: 35             DEC   (HL)
-ab26: AB             XOR   A,E
+
+*** 10 bytes: 2x source for RAM ERROR, 2x destination, 2x destination?, 2x RAM@B2 2
+DATA_USED_TO_DISPLAY_RAM_ERROR(S):
+ab1d: 27 AB CC FD D0 FD 31 AB 35 AB 
+
 RAM_ERROR_STRING:
 ab27: RAM ERROR
 
@@ -21458,7 +21459,7 @@ ad86: 03             INC   BC
 ad87: 18 E7          JR    PRINT_A_NULL_TERMINATED_ASCII_STRING_FROM_BC_TO_HL
 
 ad89: CD 49 70       CALL  INITIALIZE_SPRITES
-ad8c: CD 7C AE       CALL  $AE7C
+ad8c: CD 7C AE       CALL  DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN
 ad8f: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 ad92: DB 00          IN    A,($00)
 ad94: E6 80          AND   A,#$80
@@ -21582,13 +21583,14 @@ ae74: A10
 A6_STRING:
 ae79: A6
 
+DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN:
 ae7c: AF             XOR   A,A
 ae7d: 32 9A FF       LD    ($FF9A),A
 ae80: 3D             DEC   A
 ae81: 32 9F FF       LD    ($FF9F),A
 ae84: 11 00 F8       LD    DE,VIDEO_RAM_TO_FF7F
 ae87: 3E 0F          LD    A,#$0F
-ae89: 21 95 AE       LD    HL,$AE95
+ae89: 21 95 AE       LD    HL,DATA_TO_DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN
 ae8c: 01 80 00       LD    BC,$0080
 ae8f: ED B0          LDIR  
 ae91: 3D             DEC   A
@@ -21596,134 +21598,16 @@ ae92: 20 F5          JR    NZ,$AE89
 
 ae94: C9             RET   
 
-ae95: BB             CP    A,E
-ae96: 40             LD    B,B
-ae97: BD             CP    A,L
-ae98: 40             LD    B,B
-ae99: BB             CP    A,E
-ae9a: 40             LD    B,B
-ae9b: BD             CP    A,L
-ae9c: 40             LD    B,B
-ae9d: BB             CP    A,E
-ae9e: 40             LD    B,B
-ae9f: BD             CP    A,L
-aea0: 40             LD    B,B
-aea1: BB             CP    A,E
-aea2: 40             LD    B,B
-aea3: BD             CP    A,L
-aea4: 40             LD    B,B
-aea5: BB             CP    A,E
-aea6: 40             LD    B,B
-aea7: BD             CP    A,L
-aea8: 40             LD    B,B
-aea9: BB             CP    A,E
-aeaa: 40             LD    B,B
-aeab: BD             CP    A,L
-aeac: 40             LD    B,B
-aead: BB             CP    A,E
-aeae: 40             LD    B,B
-aeaf: BD             CP    A,L
-aeb0: 40             LD    B,B
-aeb1: BB             CP    A,E
-aeb2: 40             LD    B,B
-aeb3: BD             CP    A,L
-aeb4: 40             LD    B,B
-aeb5: BB             CP    A,E
-aeb6: 40             LD    B,B
-aeb7: BD             CP    A,L
-aeb8: 40             LD    B,B
-aeb9: BB             CP    A,E
-aeba: 40             LD    B,B
-aebb: BD             CP    A,L
-aebc: 40             LD    B,B
-aebd: BB             CP    A,E
-aebe: 40             LD    B,B
-aebf: BD             CP    A,L
-aec0: 40             LD    B,B
-aec1: BB             CP    A,E
-aec2: 40             LD    B,B
-aec3: BD             CP    A,L
-aec4: 40             LD    B,B
-aec5: BB             CP    A,E
-aec6: 40             LD    B,B
-aec7: BD             CP    A,L
-aec8: 40             LD    B,B
-aec9: BB             CP    A,E
-aeca: 40             LD    B,B
-aecb: BD             CP    A,L
-aecc: 40             LD    B,B
-aecd: BB             CP    A,E
-aece: 40             LD    B,B
-aecf: BD             CP    A,L
-aed0: 40             LD    B,B
-aed1: BB             CP    A,E
-aed2: 40             LD    B,B
-aed3: BD             CP    A,L
-aed4: 40             LD    B,B
-aed5: BE             CP    A,(HL)
-aed6: 40             LD    B,B
-aed7: BC             CP    A,H
-aed8: 40             LD    B,B
-aed9: BE             CP    A,(HL)
-aeda: 40             LD    B,B
-aedb: BC             CP    A,H
-aedc: 40             LD    B,B
-aedd: BE             CP    A,(HL)
-aede: 40             LD    B,B
-aedf: BC             CP    A,H
-aee0: 40             LD    B,B
-aee1: BE             CP    A,(HL)
-aee2: 40             LD    B,B
-aee3: BC             CP    A,H
-aee4: 40             LD    B,B
-aee5: BE             CP    A,(HL)
-aee6: 40             LD    B,B
-aee7: BC             CP    A,H
-aee8: 40             LD    B,B
-aee9: BE             CP    A,(HL)
-aeea: 40             LD    B,B
-aeeb: BC             CP    A,H
-aeec: 40             LD    B,B
-aeed: BE             CP    A,(HL)
-aeee: 40             LD    B,B
-aeef: BC             CP    A,H
-aef0: 40             LD    B,B
-aef1: BE             CP    A,(HL)
-aef2: 40             LD    B,B
-aef3: BC             CP    A,H
-aef4: 40             LD    B,B
-aef5: BE             CP    A,(HL)
-aef6: 40             LD    B,B
-aef7: BC             CP    A,H
-aef8: 40             LD    B,B
-aef9: BE             CP    A,(HL)
-aefa: 40             LD    B,B
-aefb: BC             CP    A,H
-aefc: 40             LD    B,B
-aefd: BE             CP    A,(HL)
-aefe: 40             LD    B,B
-aeff: BC             CP    A,H
-af00: 40             LD    B,B
-af01: BE             CP    A,(HL)
-af02: 40             LD    B,B
-af03: BC             CP    A,H
-af04: 40             LD    B,B
-af05: BE             CP    A,(HL)
-af06: 40             LD    B,B
-af07: BC             CP    A,H
-af08: 40             LD    B,B
-af09: BE             CP    A,(HL)
-af0a: 40             LD    B,B
-af0b: BC             CP    A,H
-af0c: 40             LD    B,B
-af0d: BE             CP    A,(HL)
-af0e: 40             LD    B,B
-af0f: BC             CP    A,H
-af10: 40             LD    B,B
-af11: BE             CP    A,(HL)
-af12: 40             LD    B,B
-af13: BC             CP    A,H
-af14: 40             LD    B,B
+DATA_TO_DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN:
+ae95: BB 40 BD 40 BB 40 BD 40 BB 40 BD 40 BB 40 BD 40 
+aea5: BB 40 BD 40 BB 40 BD 40 BB 40 BD 40 BB 40 BD 40 
+aeb5: BB 40 BD 40 BB 40 BD 40 BB 40 BD 40 BB 40 BD 40 
+aec5: BB 40 BD 40 BB 40 BD 40 BB 40 BD 40 BB 40 BD 40 
+aed5: BE 40 BC 40 BE 40 BC 40 BE 40 BC 40 BE 40 BC 40 
+aee5: BE 40 BC 40 BE 40 BC 40 BE 40 BC 40 BE 40 BC 40 
+aef5: BE 40 BC 40 BE 40 BC 40 BE 40 BC 40 BE 40 BC 40 
+af05: BE 40 BC 40 BE 40 BC 40 BE 40 BC 40 BE 40 BC 40 
+
 af15: 3A FF C7       LD    A,($C7FF)
 af18: B7             OR    A,A
 af19: C8             RET   Z

@@ -83,10 +83,10 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       2 LC_DRAW_A_TRAIL?
       2 INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
       2 INITIALIZE_LEVEL?
+      2 DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN
       2 COPY_10_FROM_HL_TO_FFC0
       2 C,$4B90
       2 C,$4AFF
-      2 $AE7C
       2 $ADA3
       2 $ACD6
       2 $AAE6
@@ -128,7 +128,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 Z,$DE7C
       1 Z,$D5D6
       1 Z,$D37F
-      1 Z,$D0FD
       1 Z,$C5BE
       1 Z,$BFED
       1 Z,$BFD1

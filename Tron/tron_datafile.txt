@@ -356,6 +356,7 @@ label aab2 HIT_FIRE_BUTTON_STRING
 label aac2 TO_CONTINUE_STRING
 label aace HIT_FIRE_BUTTON_STRING2
 label aade TO_EXIT_STRING
+label ab1d DATA_USED_TO_DISPLAY_RAM_ERROR(S)
 label ab27 RAM_ERROR_STRING
 label ab31 B2_STRING
 label ab35 F6_STRING
@@ -379,6 +380,8 @@ label ae6c A8_STRING
 label ae70 A9_STRING
 label ae74 A10_STRING
 label ae79 A6_STRING
+label ae7c DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN
+label ae95 DATA_TO_DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN
 label b000 1ST_STRING
 label b004 2ND_STRING
 label b008 PLAYER_1_UP_STRING
@@ -971,6 +974,10 @@ ascii aab2-aac1
 ascii aac2-aacd
 ascii aace-aadd
 ascii aade-aae5
+
+commentline ab1d 10 bytes: 2x source for RAM ERROR, 2x destination, 2x destination?, 2x RAM@B2 2x RAM@F6
+data ab1d-ab26
+
 ascii ab27-ab30
 ascii ab31-ab34
 ascii ab35-ab38
@@ -1006,6 +1013,9 @@ ascii ae6c-ae6f
 ascii ae70-ae73
 ascii ae74-ae78
 ascii ae79-ae7b
+
+data ae95-af14
+
 ascii b000-b003
 ascii b004-b007
 ascii b008-b013
