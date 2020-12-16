@@ -77,6 +77,7 @@ label 16f6 GRID_BUGS___50_STRING
 label 1705 CYCLES_____500_STRING
 label 1714 MCP_BLOCKS__25_STRING
 label 1723 BIT_______5000_STRING
+label 1732 PUT_STRINGS_IN_MSG_Q_DEST=IX+0_SRC=IX+2_END_WHEN_SRC=0000
 label 17ba MAP_OF_GAME_GRID_STRING
 label 17cb PLAYER____DOT_STRING
 label 17d9 JOYSTICK__MOVES_DOT_STRING
@@ -95,6 +96,7 @@ label 18df OF_A_GAME_IN_AN_AREA_THE_STRING
 label 18f8 AREA_CAN_NOT_BE_REENTERED_STRING
 label 1912 UNTIL_ALL_AREAS_HAVE_BEEN_STRING
 label 192c CONQUERED_STRING
+label 193d DATA_3?
 label 1971 TANK_GAME_STRING
 label 197b PLAYER____RED_TANK_STRING
 label 198e JOYSTICK__MOVES_TANK_STRING
@@ -585,6 +587,10 @@ ascii 16f6-1704
 ascii 1705-1713
 ascii 1714-1722
 ascii 1723-1731
+
+data 1766-1787
+data 1788-17b9
+
 ascii 17ba-17ca
 ascii 17cb-17d8
 ascii 17d9-17ec
@@ -603,6 +609,10 @@ ascii 18df-18f7
 ascii 18f8-1911
 ascii 1912-192b
 ascii 192c-1935
+
+data 193d-196e
+data 196f-1970
+
 ascii 1971-197a
 ascii 197b-198d
 ascii 198e-19a2
@@ -621,11 +631,18 @@ ascii 1aa9-1abe
 ascii 1abf-1ad6
 ascii 1ad7-1ae9
 ascii 1aea-1b02
+
+data 1a59-1a88
+
 ascii 1b03-1b19
 ascii 1b1a-1b2a
 ascii 1b2b-1b41
 ascii 1b42-1b5b
 ascii 1b5c-1b68
+
+data 1b7a-1b9d
+data 1b9e-1bc1
+
 ascii 1bc2-1bcf
 ascii 1bd0-1bdd
 ascii 1bde-1bf2
@@ -641,6 +658,10 @@ ascii 1c72-1c84
 ascii 1c85-1c97
 ascii 1c98-1ca7
 ascii 1ca8-1cb8
+
+data 1cca-1ced
+data 1cee-1d0d
+
 ascii 1d0e-1d16
 ascii 1d17-1d25
 ascii 1d26-1d3a
@@ -676,6 +697,10 @@ data 210a-210f
 data 2110-2114
 
 commentline 2162 show games on game selection screen
+
+data 226e-22b7
+comment 22b8 Is the data block at 22b8 correct?  What's it used for?
+data 22b8-2307
 
 ; 2310
 ; 2316
@@ -885,6 +910,9 @@ ascii 9dde-9dea
 ascii 9deb-9dfa
 ascii 9dfb-9e09
 ascii 9e0a-9e1b
+
+data 9ee0-9f27
+
 ascii 9f28-9f3f
 ascii 9f40-9f4e
 ascii 9f4f-9f5d
@@ -896,6 +924,9 @@ ascii 9f94-9f9a
 ascii 9f9b-9fa6
 ascii 9fa7-9fb3
 ascii 9fb4-9fb8
+
+data a120-a151
+
 ascii a152-a15d
 ascii a15e-a169
 ascii a16a-a176
@@ -908,6 +939,10 @@ ascii a1bb-a1c5
 ascii a1c6-a1d0
 ascii a1d1-a1db
 ascii a1dc-a1f3
+
+data a1f4-a207
+data a259-a28a
+
 ascii a28b-a297
 ascii a298-a2a5
 ascii a2a6-a2b7
@@ -919,6 +954,10 @@ ascii a304-a316
 ascii a317-a32a
 ascii a32b-a33f
 ascii a340-a34f
+
+data a350-a363
+data a3ad-a3e2
+
 ascii a3e3-a3ef
 ascii a3f0-a3f9
 ascii a3fa-a403
@@ -930,30 +969,61 @@ ascii a462-a46f
 ascii a470-a489
 ascii a48a-a49e
 ascii a49f-a4af
+
+data a450-a461
+data a556-a5f6
+
+data a5f7-a5f8
 ascii a5f9-a605
+data a606-a607
 ascii a608-a614
+data a615-a616
 ascii a617-a625
+data a626-a627
 ascii a628-a630
+data a631-a632
 ascii a633-a63b
+data a63c-a63d
 ascii a63e-a646
+data a647-a648
 ascii a649-a652
+data a653-a654
 ascii a655-a65d
+data a65e-a65f
 ascii a660-a666
+data a667-a668
 ascii a669-a671
+data a672-a673
 ascii a674-a682
+data a681-a682
 ascii a683-a691
+data a692-a693
 ascii a694-a6a5
+data a6a6-a6a7
 ascii a6a8-a6b9
+; data a6ba-a6bb
 ascii a6ba-a6ca
+data a6cb-a6cc
 ascii a6cd-a6d9
+; data a6d8-a6d9
 ascii a6da-a6e6
+data a6e7-a6e8
 ascii a6e9-a6f6
+data a6f5-a6f6
 ascii a6f7-a704
+data a705-a706
 ascii a707-a70f
+data a710-a711
 ascii a712-a71b
+data a71c-a71d
 ascii a71e-a726
+data a727-a728
 ascii a729-a72f
+data a730-a731
 ascii a732-a73a
+
+data a873-a8bc
+
 ascii a8bd-a8ca
 ascii a8cb-a8d7
 ascii a8d8-a8e1
@@ -970,6 +1040,10 @@ ascii a957-a969
 ascii a96a-a97a
 ascii a97b-a982
 ascii a983-a993
+
+commentline a994 Data for ?
+data a994-a9ff
+
 ascii aab2-aac1
 ascii aac2-aacd
 ascii aace-aadd
@@ -982,6 +1056,8 @@ ascii ab27-ab30
 ascii ab31-ab34
 ascii ab35-ab38
 
+data aba9-abb0
+
 commentline abb1 Clear background (same as 6fc7?)
 commentline abc3 Test RAM at C000, C200, C400, C600 (0x0200 each),F800,FC00 ((0x0400 each)
 commentline abd1 Copy RAM from IX+0 sized IX+2 to IX+4
@@ -993,8 +1069,17 @@ commentline ac46 Copy back RAM from IX+4 sized IX+2 to IX+0
 commentline ac70 8 bytes: 2x source, 2x count, 2x destination, ? watchdog setting?
 data ac70-aca1
 
-commentline ad15 6 bytes: 2x size, 2x location, checksum (bit mapped) location
-data ad15-ad3a
+commentline ad15 6x(6 bytes: 2x size, 2x location, checksum, (bit mapped) location), 2x 00 to signal end
+data ad15-ad1a
+data ad1b-ad20
+data ad21-ad26
+data ad27-ad2c
+data ad2d-ad32
+data ad33-ad38
+data ad39-ad3a
+
+comment is this used or is it just an unused byte between data tables?  Or the checksum byte for this ROM?
+data ad3b-ad3b
 
 data ad3c-ad4d
 
@@ -1008,6 +1093,10 @@ ascii ad6c-ad6f
 ascii ae2e-ae3d
 ascii ae3e-ae4b
 ascii ae4c-ae57
+
+commentline ae58 2x SOUND BOARD, 2x destination, 2x destination of ROM(s), 5x2 bytes: source of sound board devices
+data ae58-ae67
+
 ascii ae68-ae6b
 ascii ae6c-ae6f
 ascii ae70-ae73
@@ -1015,6 +1104,8 @@ ascii ae74-ae78
 ascii ae79-ae7b
 
 data ae95-af14
+commentline af4f It looks like data.  I want to figure out what it's for.
+data af4f-afff
 
 ascii b000-b003
 ascii b004-b007
@@ -1056,6 +1147,9 @@ ascii b16e-b176
 ascii b177-b179
 ascii b17a-b17d
 ascii b17e-b182
+
+commentline b183 It looks like data until the end of ROM space.  I want to figure out what it's for.
+data b183-bfff
 
 ; F000-F1FF Sprite RAM (X, picture, Y, unused)
 ;   Pictures: (bit 7=flipX & 6=flipY)
