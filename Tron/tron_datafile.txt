@@ -359,6 +359,10 @@ label aade TO_EXIT_STRING
 label ab27 RAM_ERROR_STRING
 label ab31 B2_STRING
 label ab35 F6_STRING
+label aca2 Print ROM error(s)
+label ac70 DATA_USED_TO_TEST_RAM
+label ad15 DATA_USED_TO_TEST_ROM
+label ad3c DATA_USED_TO_DISPLAY_ROM_ERROR(S)
 label ad4e ROM_ERROR_STRING
 label ad58 D2_STRING
 label ad5c D3_STRING
@@ -463,7 +467,7 @@ label c424 DIRECTION_CHOSEN_8D4U2R1L
 ; starts as 0x00.  Each attempted direction bit set
 label c425 ATTEMPTED_GAMES_XXXXDURL
 label c426 VECTOR_OF_GAMES_TO_C42D
-label c42e CURRENT_PLAYER_DATA_BYTE_15
+label c42e NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_SHOTS_MAY_GO_TO_1???
 label c42f OTHER_PLAYER_DATA
 label c45f PLAYER_NUMBER
 label c466 NUMBER_OF_SCREEN_MESSAGES
@@ -970,6 +974,23 @@ ascii aade-aae5
 ascii ab27-ab30
 ascii ab31-ab34
 ascii ab35-ab38
+
+commentline abb1 Clear background (same as 6fc7?)
+commentline abc3 Test RAM at C000, C200, C400, C600 (0x0200 each),F800,FC00 ((0x0400 each)
+commentline abd1 Copy RAM from IX+0 sized IX+2 to IX+4
+commentline abf7 Test RAM from IX+0 sized IX+2 to IX+4 with 00 and FF
+commentline ac16 Zero RAM from IX+0 to (IX+2)-1
+commentline ac38 Walking 1s from IX+0 to (IX+2)-1
+commentline ac46 Copy back RAM from IX+4 sized IX+2 to IX+0
+
+commentline ac70 8 bytes: 2x source, 2x count, 2x destination, ? watchdog setting?
+data ac70-aca1
+
+commentline ad15 6 bytes: 2x size, 2x location, checksum (bit mapped) location
+data ad15-ad3a
+
+data ad3c-ad4d
+
 ascii ad4e-ad57
 ascii ad58-ad5b
 ascii ad5c-ad5f

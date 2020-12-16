@@ -331,6 +331,10 @@ TO_EXIT_STRING EQU $aade
 RAM_ERROR_STRING EQU $ab27
 B2_STRING EQU $ab31
 F6_STRING EQU $ab35
+Print ROM error(s) EQU $aca2
+DATA_USED_TO_TEST_RAM EQU $ac70
+DATA_USED_TO_TEST_ROM EQU $ad15
+DATA_USED_TO_DISPLAY_ROM_ERROR(S) EQU $ad3c
 ROM_ERROR_STRING EQU $ad4e
 D2_STRING EQU $ad58
 D3_STRING EQU $ad5c
@@ -391,7 +395,7 @@ MCP_TRON_X EQU $c007
 MCP_TRON_Y EQU $c009
 IO_TOWER_TIMER_VALUE_REVERSED_TO_C010 EQU $c00d
 INFINITE_TIME_CHEAT EQU $c00e
-IO_TOWER_TIMER_DIGITS_TO_C019/MCP_DISK_DATA_TO_C02F EQU $c012
+MCP_DISK_DATA_TO_C02F/IO_TOWER_TIMER_DIGITS_TO_C019 EQU $c012
 IO_TOWER_INCREMENTS_19_TO_1E_FOR_EACH_DISK_THROWN EQU $c022
 IO_TOWER_TRIGGER_DEBOUNCE? EQU $c023
 IO_TOWER_ALWAYS_80? EQU $c024
@@ -423,7 +427,7 @@ COMPLETED_GAMES_XXXXDURL EQU $c423
 DIRECTION_CHOSEN_8D4U2R1L EQU $c424
 ATTEMPTED_GAMES_XXXXDURL EQU $c425
 VECTOR_OF_GAMES_TO_C42D EQU $c426
-CURRENT_PLAYER_DATA_BYTE_15 EQU $c42e
+NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_SHOTS_MAY_GO_TO_1??? EQU $c42e
 OTHER_PLAYER_DATA EQU $c42f
 PLAYER_NUMBER EQU $c45f
 NUMBER_OF_SCREEN_MESSAGES EQU $c466
@@ -2454,7 +2458,7 @@ ALL_RIGHTS_RESERVED_STRING:
 0d2b: 35             DEC   (HL)
 0d2c: 3E 01          LD    A,#$01
 0d2e: 32 08 C4       LD    ($C408),A
-0d31: 3A 2E C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_15)
+0d31: 3A 2E C4       LD    A,(NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_SHOTS_MAY_GO_TO_1???)
 0d34: 32 1E C4       LD    (MAX_DISKS/SHOTS_AT_A_TIME),A
 0d37: C9             RET   
 
@@ -2680,7 +2684,7 @@ ALL_RIGHTS_RESERVED_STRING:
 
 0e98: CD 15 21       CALL  INITIALIZE_LEVEL?
 0e9b: 3E 01          LD    A,#$01
-0e9d: 32 2E C4       LD    (CURRENT_PLAYER_DATA_BYTE_15),A
+0e9d: 32 2E C4       LD    (NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_SHOTS_MAY_GO_TO_1???),A
 0ea0: 32 1E C4       LD    (MAX_DISKS/SHOTS_AT_A_TIME),A
 0ea3: 21 19 C4       LD    HL,HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?)
 0ea6: 11 2F C4       LD    DE,OTHER_PLAYER_DATA
@@ -4882,7 +4886,7 @@ START_GAME:
 205a: 20 3C          JR    NZ,$2098
 
 205c: CD 15 21       CALL  INITIALIZE_LEVEL?
-205f: 21 2E C4       LD    HL,CURRENT_PLAYER_DATA_BYTE_15
+205f: 21 2E C4       LD    HL,NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_SHOTS_MAY_GO_TO_1???
 2062: 7E             LD    A,(HL)
 2063: FE 03          CP    A,#$03
 2065: 28 01          JR    Z,$2068
@@ -4921,7 +4925,7 @@ START_GAME:
 2095: 32 19 C4       LD    (HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?)),A
 2098: 3A 5B C4       LD    A,($C45B)
 209b: FE 04          CP    A,#$04
-209d: 3A 2E C4       LD    A,(CURRENT_PLAYER_DATA_BYTE_15)
+209d: 3A 2E C4       LD    A,(NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_SHOTS_MAY_GO_TO_1???)
 20a0: 20 01          JR    NZ,$20A3
 
 20a2: 3C             INC   A
@@ -6254,7 +6258,7 @@ PLAY_MCP:
 3024: C9             RET   
 
 MCP_PROCESS_DISK_POSITION(S)?:
-3025: DD 21 12 C0    LD    IX,IO_TOWER_TIMER_DIGITS_TO_C019/MCP_DISK_DATA_TO_C02F
+3025: DD 21 12 C0    LD    IX,MCP_DISK_DATA_TO_C02F/IO_TOWER_TIMER_DIGITS_TO_C019
 3029: FD 21 18 F0    LD    IY,DISK_1_TO_3/MAYBE_SHOTS_TOO?
 302d: 3A 1E C4       LD    A,(MAX_DISKS/SHOTS_AT_A_TIME)
 3030: 32 06 C4       LD    (MCP_DISK_NUMBER_BEING_PROCESSED),A
@@ -6339,7 +6343,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 
 30d5: C9             RET   
 
-30d6: DD 21 12 C0    LD    IX,IO_TOWER_TIMER_DIGITS_TO_C019/MCP_DISK_DATA_TO_C02F
+30d6: DD 21 12 C0    LD    IX,MCP_DISK_DATA_TO_C02F/IO_TOWER_TIMER_DIGITS_TO_C019
 30da: FD 21 18 F0    LD    IY,DISK_1_TO_3/MAYBE_SHOTS_TOO?
 30de: DD 7E 09       LD    A,(IX+$09)
 30e1: B7             OR    A,A
@@ -6834,7 +6838,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 34a4: DD 66 01       LD    H,(IX+$01)
 34a7: 2E 0A          LD    L,#$0A
 34a9: 22 E1 C0       LD    ($C0E1),HL
-34ac: DD 21 12 C0    LD    IX,IO_TOWER_TIMER_DIGITS_TO_C019/MCP_DISK_DATA_TO_C02F
+34ac: DD 21 12 C0    LD    IX,MCP_DISK_DATA_TO_C02F/IO_TOWER_TIMER_DIGITS_TO_C019
 34b0: FD 21 18 F0    LD    IY,DISK_1_TO_3/MAYBE_SHOTS_TOO?
 34b4: 3A 1E C4       LD    A,(MAX_DISKS/SHOTS_AT_A_TIME)
 34b7: 47             LD    B,A
@@ -13547,7 +13551,7 @@ COLOR_PALETTE_FOR_?2 :
 5f22: C9             RET   
 
 CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?:
-5f23: 21 12 C0       LD    HL,IO_TOWER_TIMER_DIGITS_TO_C019/MCP_DISK_DATA_TO_C02F
+5f23: 21 12 C0       LD    HL,MCP_DISK_DATA_TO_C02F/IO_TOWER_TIMER_DIGITS_TO_C019
 5f26: 22 54 C4       LD    ($C454),HL
 5f29: 11 10 C0       LD    DE,$C010
 5f2c: 06 04          LD    B,#$04
@@ -21087,7 +21091,7 @@ aade: TO EXIT
 
 aae6: CD 49 70       CALL  INITIALIZE_SPRITES
 aae9: CD 49 70       CALL  INITIALIZE_SPRITES
-aaec: DD 21 70 AC    LD    IX,$AC70
+aaec: DD 21 70 AC    LD    IX,DATA_USED_TO_TEST_RAM
 aaf0: CD C3 AB       CALL  $ABC3
 aaf3: F5             PUSH  AF
 aaf4: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_?5
@@ -21100,7 +21104,7 @@ ab04: B7             OR    A,A
 ab05: 28 0D          JR    Z,$AB14
 
 ab07: DD 21 1D AB    LD    IX,$AB1D
-ab0b: CD A2 AC       CALL  $ACA2
+ab0b: CD A2 AC       CALL  Print ROM error(s)
 ab0e: CD D6 AC       CALL  $ACD6
 ab11: F6 01          OR    A,#$01
 ab13: C9             RET   
@@ -21199,6 +21203,8 @@ abab: 01 C0 00       LD    BC,$00C0
 abae: 38 00          JR    C,$ABB0
 
 abb0: 07             RLCA  
+
+*** Clear background (same as 6fc7?)
 abb1: 21 00 F8       LD    HL,VIDEO_RAM_TO_FF7F
 abb4: 01 C0 03       LD    BC,$03C0
 abb7: 36 5E          LD    (HL),#$5E
@@ -21212,6 +21218,8 @@ abc0: 20 F5          JR    NZ,$ABB7
 
 abc2: C9             RET   
 
+
+*** Test RAM at C000, C200, C400, C600 (0x0200 each),F800,FC00 ((0x0400 each)
 abc3: AF             XOR   A,A
 abc4: F5             PUSH  AF
 abc5: DD 6E 00       LD    L,(IX+$00)
@@ -21223,6 +21231,8 @@ abcd: 20 02          JR    NZ,$ABD1
 abcf: F1             POP   AF
 abd0: C9             RET   
 
+
+*** Copy RAM from IX+0 sized IX+2 to IX+4
 abd1: DD 5E 04       LD    E,(IX+$04)
 abd4: DD 56 05       LD    D,(IX+$05)
 abd7: DD 4E 02       LD    C,(IX+$02)
@@ -21239,6 +21249,8 @@ abf3: 7A             LD    A,D
 abf4: B3             OR    A,E
 abf5: 28 11          JR    Z,$AC08
 
+
+*** Test RAM from IX+0 sized IX+2 to IX+4 with 00 and FF
 abf7: 06 02          LD    B,#$02
 abf9: 3E 00          LD    A,#$00
 abfb: 77             LD    (HL),A
@@ -21257,6 +21269,8 @@ ac0b: DD 6E 00       LD    L,(IX+$00)
 ac0e: DD 5E 02       LD    E,(IX+$02)
 ac11: DD 56 03       LD    D,(IX+$03)
 ac14: D3 E0          OUT   ($E0),A
+
+*** Zero RAM from IX+0 to (IX+2)-1
 ac16: 7A             LD    A,D
 ac17: B3             OR    A,E
 ac18: 28 06          JR    Z,$AC20
@@ -21279,6 +21293,8 @@ ac31: FE 00          CP    A,#$00
 ac33: C2 6B AC       JP    NZ,$AC6B
 
 ac36: 3E 01          LD    A,#$01
+
+*** Walking 1s from IX+0 to (IX+2)-1
 ac38: 77             LD    (HL),A
 ac39: BE             CP    A,(HL)
 ac3a: C2 6B AC       JP    NZ,$AC6B
@@ -21291,6 +21307,8 @@ ac42: 1B             DEC   DE
 ac43: 18 E7          JR    $AC2C
 
 ac45: AF             XOR   A,A
+
+*** Copy back RAM from IX+4 sized IX+2 to IX+0
 ac46: DD 66 05       LD    H,(IX+$05)
 ac49: DD 6E 04       LD    L,(IX+$04)
 ac4c: DD 56 01       LD    D,(IX+$01)
@@ -21311,47 +21329,15 @@ ac68: C3 C4 AB       JP    $ABC4
 ac6b: DD 7E 06       LD    A,(IX+$06)
 ac6e: 18 D6          JR    $AC46
 
-ac70: 00             NOP   
-ac71: C0             RET   NZ
 
-ac72: 00             NOP   
-ac73: 02             LD    (BC),A
-ac74: 00             NOP   
-ac75: C2 01 01       JP    NZ,$0101
+*** 8 bytes: 2x source, 2x count, 2x destination, ? watchdog setting?
+DATA_USED_TO_TEST_RAM:
+ac70: 00 C0 00 02 00 C2 01 01 00 C2 00 02 00 C0 01 02 
+ac80: 00 C4 00 02 00 C2 01 03 00 C6 FF 01 00 C0 01 04 
+ac90: 00 F8 00 04 00 C0 20 05 00 FC 00 04 00 C0 20 05 
+aca0: 00 00 
 
-ac78: 00             NOP   
-ac79: C2 00 02       JP    NZ,$0200
-
-ac7c: 00             NOP   
-ac7d: C0             RET   NZ
-
-ac7e: 01 02 00       LD    BC,IO_2
-ac81: C4 00 02       CALL  NZ,$0200
-ac84: 00             NOP   
-ac85: C2 01 03       JP    NZ,$0301
-
-ac88: 00             NOP   
-ac89: C6 FF          ADD   A,#$FF
-ac8b: 01 00 C0       LD    BC,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF
-ac8e: 01 04 00       LD    BC,IO_4
-ac91: F8             RET   M
-
-ac92: 00             NOP   
-ac93: 04             INC   B
-ac94: 00             NOP   
-ac95: C0             RET   NZ
-
-ac96: 20 05          JR    NZ,$AC9D
-
-ac98: 00             NOP   
-ac99: FC 00 04       CALL  M,$0400
-ac9c: 00             NOP   
-ac9d: C0             RET   NZ
-
-ac9e: 20 05          JR    NZ,$ACA5
-
-aca0: 00             NOP   
-aca1: 00             NOP   
+Print ROM error(s):
 aca2: F5             PUSH  AF
 aca3: DD 6E 02       LD    L,(IX+$02)
 aca6: DD 66 03       LD    H,(IX+$03)
@@ -21378,7 +21364,7 @@ acd3: 20 E9          JR    NZ,$ACBE
 
 acd5: C9             RET   
 
-acd6: DD 21 15 AD    LD    IX,$AD15
+acd6: DD 21 15 AD    LD    IX,DATA_USED_TO_TEST_ROM
 acda: 16 00          LD    D,#$00
 acdc: DD 6E 02       LD    L,(IX+$02)
 acdf: DD 66 03       LD    H,(IX+$03)
@@ -21412,61 +21398,23 @@ ad08: 7A             LD    A,D
 ad09: B7             OR    A,A
 ad0a: C8             RET   Z
 
-ad0b: DD 21 3C AD    LD    IX,$AD3C
-ad0f: CD A2 AC       CALL  $ACA2
+ad0b: DD 21 3C AD    LD    IX,DATA_USED_TO_DISPLAY_ROM_ERROR(S)
+ad0f: CD A2 AC       CALL  Print ROM error(s)
 ad12: F6 01          OR    A,#$01
 ad14: C9             RET   
 
-ad15: 00             NOP   
-ad16: 20 00          JR    NZ,$AD18
 
-ad18: 00             NOP   
-ad19: 78             LD    A,B
-ad1a: 01 00 20       LD    BC,$2000
-ad1d: 00             NOP   
-ad1e: 20 DC          JR    NZ,$ACFC
+*** 6 bytes: 2x size, 2x location, checksum (bit mapped) location
+DATA_USED_TO_TEST_ROM:
+ad15: 00 20 00 00 78 01 00 20 00 20 DC 02 00 20 00 40 
+ad25: DD 04 00 20 00 60 19 08 00 20 00 80 51 10 00 20 
+ad35: 00 A0 07 20 00 00 
 
-ad20: 02             LD    (BC),A
-ad21: 00             NOP   
-ad22: 20 00          JR    NZ,$AD24
-
-ad24: 40             LD    B,B
-ad25: DD 04          Illegal Opcode
-ad27: 00             NOP   
-ad28: 20 00          JR    NZ,$AD2A
-
-ad2a: 60             LD    H,B
-ad2b: 19             ADD   HL,DE
-ad2c: 08             EX    AF,AF'
-ad2d: 00             NOP   
-ad2e: 20 00          JR    NZ,$AD30
-
-ad30: 80             ADD   A,B
-ad31: 51             LD    D,C
-ad32: 10 00          DJNZ  $AD34
-
-ad34: 20 00          JR    NZ,$AD36
-
-ad36: A0             AND   A,B
-ad37: 07             RLCA  
-ad38: 20 00          JR    NZ,$AD3A
-
-ad3a: 00             NOP   
 ad3b: F9             LD    SP,HL
-ad3c: 4E             LD    C,(HL)
-ad3d: AD             XOR   A,L
-ad3e: D4 FD D8       CALL  NC,$D8FD
-ad41: FC 58 AD       CALL  M,D2_STRING
-ad44: 5C             LD    E,H
-ad45: AD             XOR   A,L
-ad46: 60             LD    H,B
-ad47: AD             XOR   A,L
-ad48: 64             LD    H,H
-ad49: AD             XOR   A,L
-ad4a: 68             LD    L,B
-ad4b: AD             XOR   A,L
-ad4c: 6C             LD    L,H
-ad4d: AD             XOR   A,L
+DATA_USED_TO_DISPLAY_ROM_ERROR(S):
+ad3c: 4E AD D4 FD D8 FC 58 AD 5C AD 60 AD 64 AD 68 AD 
+ad4c: 6C AD 
+
 ROM_ERROR_STRING:
 ad4e: ROM ERROR
 
@@ -21583,7 +21531,7 @@ ae17: B7             OR    A,A
 ae18: C8             RET   Z
 
 ae19: DD 21 58 AE    LD    IX,$AE58
-ae1d: CD A2 AC       CALL  $ACA2
+ae1d: CD A2 AC       CALL  Print ROM error(s)
 ae20: 06 60          LD    B,#$60
 ae22: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 ae25: 10 FB          DJNZ  $AE22
@@ -21780,7 +21728,7 @@ af15: 3A FF C7       LD    A,($C7FF)
 af18: B7             OR    A,A
 af19: C8             RET   Z
 
-af1a: DD 21 70 AC    LD    IX,$AC70
+af1a: DD 21 70 AC    LD    IX,DATA_USED_TO_TEST_RAM
 af1e: 11 08 00       LD    DE,$0008
 af21: 47             LD    B,A
 af22: DD 7E 07       LD    A,(IX+$07)

@@ -1,4 +1,4 @@
-In *nix (or WSL with *nix), type:
+# In *nix (or WSL with *nix), type:
 cd /mnt/c/Users/PCAdmin.SIERRA/Desktop/Franklin/ArcadeVideoGameHacking.git/Tron
 cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted.txt
 
@@ -54,10 +54,10 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       4 $40A5
       4 $0D10
       4 $0720
+      3 Print ROM error(s)
       3 PUT_GAME_SELECT_COUNTDOWN_DIGIT_MESSAGE_IN_Q2
       3 PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LC
       3 PROCESS_GAME_SELECT_COUNTDOWN_TIMER
-      3 $ACA2
       3 $99EA
       3 $9958
       3 $5535
@@ -236,12 +236,10 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 NZ,$0991
       1 NZ,$04FB
       1 NZ,$0402
-      1 NZ,$0200
       1 NC,IO_0
       1 NC,$FCFB
       1 NC,$FC00
       1 NC,$DF9F
-      1 NC,$D8FD
       1 NC,$A0F7
       1 NC,$A055
       1 NC,$9C29
@@ -266,7 +264,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 M,SCORE_REPORT_STRING2
       1 M,PLEASE_STRING
       1 M,GRID_BUGS___50_STRING
-      1 M,D2_STRING
       1 M,BASES_STRING
       1 M,$FE1C
       1 M,$FC9B
@@ -309,7 +306,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 M,$0818
       1 M,$0519
       1 M,$0402
-      1 M,$0400
       1 M,$011B
       1 C,$FEAF
       1 C,$FB39
