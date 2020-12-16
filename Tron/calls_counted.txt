@@ -6,7 +6,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
      43 RESET_WATCHDOG_UNTIL_C400_IS_ONE
      42 RETURN_C687-7_IF_NZ_IN_A
      30 INITIALIZE_SPRITES
-     26 CLEAR_BACKGROUND
+     28 CLEAR_BACKGROUND
      26 ADD_A_TO_HL_WITH_CARRY
      16 INCREASE_C40D_BY_4_AND_ADD_A_MESSAGE_TO_Q
      14 RETURN_C687-2_IF_NZ_IN_A
@@ -55,6 +55,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       4 $0D10
       4 $0720
       3 Print ROM error(s)
+      3 PUT_STRINGS_IN_MSG_Q_DEST=IX+0_SRC=IX+2_END_WHEN_SRC=0000
       3 PUT_GAME_SELECT_COUNTDOWN_DIGIT_MESSAGE_IN_Q2
       3 PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LC
       3 PROCESS_GAME_SELECT_COUNTDOWN_TIMER
@@ -66,15 +67,11 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       3 $47E2
       3 $47C7
       3 $4414
-      3 $1732
-      2 PO,$1101
+      2 ZERO_RAM_C000-C479
       2 PO,$0307
       2 P,$9D01
-      2 NZ,$E100
       2 NC,$4AFF
       2 M,IO_0
-      2 M,CREDITS_STRING2
-      2 M,COINS_FOR_STRING
       2 M,$FEA8
       2 M,$FE0C
       2 M,$9E9D
@@ -92,7 +89,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       2 $AAE6
       2 $A83E
       2 $A0B7
-      2 $7029
       2 $6F3B
       2 $66F5
       2 $64E8
@@ -123,147 +119,79 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       2 $051B
       1 ZERO_RAM_C000-C450
       1 Z,INITIALIZE_LEVEL?
-      1 Z,$F92F
       1 Z,$F8FC
       1 Z,$DE7C
       1 Z,$D5D6
-      1 Z,$D37F
       1 Z,$C5BE
-      1 Z,$BFED
-      1 Z,$BFD1
-      1 Z,$BFAB
-      1 Z,$B824
       1 Z,$8CFD
       1 Z,$673F
       1 Z,$62AD
       1 Z,$621D
       1 Z,$5841
-      1 Z,$4824
-      1 Z,$3FBE
       1 Z,$33FA
-      1 Z,$31FD
       1 Z,$31A1
       1 Z,$20CD
       1 Z,$1200
       1 Z,$0E32
       1 Z,$0E01
-      1 Z,$04A4
       1 UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE
       1 PRINT_OUT_MESSAGES_IN_QUEUES
-      1 PO,$E706
-      1 PO,$D3CE
-      1 PO,$B458
       1 PO,$AAA9
-      1 PO,$A97A
       1 PO,$A815
-      1 PO,$9013
-      1 PO,$83FD
       1 PO,$6F74
-      1 PO,$69E4
       1 PO,$67FD
-      1 PO,$51D6
-      1 PO,$50FD
-      1 PO,$3617
-      1 PO,$3233
       1 PO,$29AD
-      1 PO,$20E2
       1 PO,$1BD8
+      1 PO,$1101
       1 PO,$06C4
-      1 PO,$00A4
       1 PE,$F60A
-      1 PE,$EE9E
       1 PE,$CE55
       1 PE,$CCD8
-      1 PE,$BF54
       1 PE,$BCDE
       1 PE,$9CFD
-      1 PE,$8533
-      1 PE,$8472
-      1 PE,$7FD7
       1 PE,$5C5E
-      1 PE,$50FD
-      1 PE,$4FFF
       1 PE,$4F3C
-      1 PE,$3B55
-      1 PE,$2BE1
-      1 PE,$2136
       1 P,IO_0
       1 P,$FF0B
-      1 P,$FDFE
       1 P,$D041
-      1 P,$BFF0
-      1 P,$AD57
       1 P,$A59F
       1 P,$A4C0
       1 P,$9F7E
       1 P,$80FF
       1 P,$8000
-      1 P,$5B9D
       1 P,$4237
       1 P,$3837
       1 P,$2837
       1 P,$1838
       1 P,$10B8
       1 P,$066A
-      1 P,$0425
       1 OUTPUT_IO_TOWER_TIMER
-      1 NZ,$FD4A
-      1 NZ,$FD48
-      1 NZ,$FA73
-      1 NZ,$DFFB
+      1 NZ,$E100
       1 NZ,$DC98
       1 NZ,$DB21
-      1 NZ,$DAFF
-      1 NZ,$D8A8
       1 NZ,$D4B4
-      1 NZ,$C200
       1 NZ,$C129
       1 NZ,$A500
-      1 NZ,$9ADA
-      1 NZ,$9903
       1 NZ,$7CCE
       1 NZ,$66DF
       1 NZ,$5BFF
-      1 NZ,$5B40
-      1 NZ,$4B64
-      1 NZ,$4001
-      1 NZ,$30A6
       1 NZ,$290C
       1 NZ,$28B7
-      1 NZ,$10CC
-      1 NZ,$0B2A
       1 NZ,$0991
       1 NZ,$04FB
       1 NZ,$0402
       1 NC,IO_0
       1 NC,$FCFB
       1 NC,$FC00
-      1 NC,$DF9F
-      1 NC,$A0F7
-      1 NC,$A055
-      1 NC,$9C29
-      1 NC,$7BFF
-      1 NC,$7682
-      1 NC,$6081
-      1 NC,$5241
-      1 NC,$50FD
-      1 NC,$4064
-      1 NC,$2324
       1 NC,$1A97
       1 NC,$14C4
       1 NC,$0EC8
-      1 NC,$0941
       1 NC,$0700
       1 NC,$03F0
-      1 NC,$0051
-      1 NC,$0006
       1 MCP_PROCESS_DISK_POSITION(S)?
       1 M,YOUR_STRING
-      1 M,SETUP_OPTIONS_STRING
-      1 M,SCORE_REPORT_STRING2
       1 M,PLEASE_STRING
       1 M,GRID_BUGS___50_STRING
-      1 M,BASES_STRING
       1 M,$FE1C
       1 M,$FC9B
       1 M,$FA9A
@@ -274,28 +202,13 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 M,$F296
       1 M,$F195
       1 M,$F194
-      1 M,$EE8C
-      1 M,$E345
       1 M,$DCA4
       1 M,$D4FF
-      1 M,$CCB9
-      1 M,$C0BF
-      1 M,$BE7B
-      1 M,$BB4F
-      1 M,$AABD
-      1 M,$A73D
-      1 M,$A6FE
       1 M,$A6CE
       1 M,$97D8
       1 M,$76D2
       1 M,$7610
-      1 M,$6FBA
-      1 M,$4FD1
-      1 M,$3A17
       1 M,$2C00
-      1 M,$2BE7
-      1 M,$1080
-      1 M,$1071
       1 M,$0EF1
       1 M,$0C15
       1 M,$0C14
@@ -306,35 +219,21 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 M,$0519
       1 M,$0402
       1 M,$011B
-      1 C,$FEAF
-      1 C,$FB39
-      1 C,$EF9F
-      1 C,$EF7E
-      1 C,$CA92
+      1 CHECK_DATA_C4F0_TO_C657?
       1 C,$C006
       1 C,$B313
-      1 C,$9FBF
-      1 C,$98E4
-      1 C,$82CD
       1 C,$8040
-      1 C,$52FD
       1 C,$420D
       1 C,$3437
       1 C,$24B8
       1 C,$0F7F
       1 C,$0CCA
-      1 C,$0021
       1 ADD_MESSAGE_TO_Q2
-      1 $FCD9
       1 $F99B
-      1 $F8FF
-      1 $EF5D
-      1 $EEDF
       1 $EC4A
       1 $E7A7
       1 $C5CE
       1 $BD7F
-      1 $BACC
       1 $AF15
       1 $ABC3
       1 $ABB1
@@ -348,7 +247,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $818D
       1 $6881
       1 $6827
-      1 $67EF
       1 $6777
       1 $6760
       1 $674C
@@ -363,7 +261,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $6127
       1 $5F73
       1 $5F47
-      1 $5DC0
       1 $5AF1
       1 $5A27
       1 $59C2
@@ -375,7 +272,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $57F3
       1 $5751
       1 $56F4
-      1 $56C8
       1 $55DB
       1 $55D0
       1 $55C5
@@ -390,7 +286,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $4752
       1 $46CD
       1 $46CB
-      1 $46AE
       1 $45FF
       1 $456D
       1 $4531
@@ -448,8 +343,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $05F8
       1 $05C3
       1 $04F6
-      1 $041C
-      1 $040E
       1 $03D9
       1 $0358
       1 $02E3
