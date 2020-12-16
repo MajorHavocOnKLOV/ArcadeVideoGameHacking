@@ -627,15 +627,15 @@ ascii 1a09-1a12
 ascii 1a13-1a27
 ascii 1a28-1a3c
 ascii 1a3d-1a51
+
+data 1a59-1a88
+
 ascii 1a89-1a93
 ascii 1a94-1aa8
 ascii 1aa9-1abe
 ascii 1abf-1ad6
 ascii 1ad7-1ae9
 ascii 1aea-1b02
-
-data 1a59-1a88
-
 ascii 1b03-1b19
 ascii 1b1a-1b2a
 ascii 1b2b-1b41
@@ -967,12 +967,14 @@ ascii a404-a40d
 ascii a40e-a417
 ascii a418-a421
 ascii a422-a42b
+
+data a450-a461
+
 ascii a462-a46f
 ascii a470-a489
 ascii a48a-a49e
 ascii a49f-a4af
 
-data a450-a461
 data a556-a5f6
 
 data a5f7-a5f8
