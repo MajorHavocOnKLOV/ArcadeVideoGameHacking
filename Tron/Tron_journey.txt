@@ -144,15 +144,6 @@ MAME
 6F2D-6FB7? Set color RAMs in some way?
   6F35 - is another entry point
   
-ABD1-AC6E: Check RAM?
-
-- test RAM
-  ABFB - 00
-  ABFB - FF
-  AC1A - 00
-  AC38 - walking bits from 0 to 7
-- ?
-  AC5A - 00
   702A - 00 (fill C450-C400 with 00)
 - attract mode
   0E7D - set to 0 before starting game selection
