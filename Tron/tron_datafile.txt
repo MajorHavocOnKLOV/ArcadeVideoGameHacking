@@ -58,6 +58,7 @@ label 0b58 COPYRIGHT_MCMLXXXI_STRING
 label 0b6b WALT_DISNEY_PRODUCTIONS_STRING
 label 0b87 COPYRIGHT_MCMLXXXII_STRING
 label 0b9b BALLY_MIDWAY_MFG_CO_STRING
+label 0d52 READ_AND_PROCESS_INPUT_PORTS
 label 0baf ALL_RIGHTS_RESERVED_STRING
 label 101b PLEASE_STRING
 label 1022 ENTER_STRING
@@ -71,6 +72,7 @@ label 120c YOUR_SCORE_STRING
 label 1217 RANKING_IS_STRING
 label 1222 NOT_IN_THE_TOP_STRING
 label 1231 100_SCORES_STRING
+label 1558 PRINT_HIGH_SCORE_SCREEN
 label 1653 RANKINGS_STRING
 label 16ab POINT_VALUES_STRING
 label 16e7 TANKS______500_STRING
@@ -154,7 +156,7 @@ label 1f97 START_GAME
 label 20a5 VECTOR_OF_DIFFICULTY_TO_HARDNESS_MAPS_(STARTS_AT_20A7)
 label 2115 INITIALIZE_LEVEL?
 label 234A BACKGROUND_PICK_A_GAME
-label 2aca COLOR_PALETTE_FOR_?0 
+label 2aca COLOR_PALETTE_FOR_?0
 label 2c48 DATA_TO_2C4C?_USED_STARTING_AT_6F68
 label 2c4d 1000_BONUS_ALL_BLOCKS_HIT_STRING
 label 2c67 1000_FOR_ENTERING_CONE_STRING
@@ -190,8 +192,12 @@ label 5e9b CIRCLE_BEFORE_STRING
 label 5ea9 TIMER_EXPIRES_STRING
 label 5eb7 COLOR_PALETTE_FOR_?2 
 label 5f23 CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?
+label 5f73 HANDLE_JOYSTICK_INPUT?_TO_601F
 label 6065 INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
+label 6127 MOVE_SPIDERS?
+label 621d SET_SOME_VALUES_IN_C02X?
 label 6b39 JOYSTICK_INPUT_TABLE
+label 6b79 DATA_FOR_SETTING_UP_TRON_SPRITES?
 label 6f00 ADD_A_TO_HL_WITH_CARRY
 label 6f05 PSEUDO_RANDOM_VALUE_IN_C47A?
 label 6f17 RESET_WATCHDOG_UNTIL_C400_IS_ONE
@@ -477,13 +483,19 @@ label c426 VECTOR_OF_GAMES_TO_C42D
 label c42e NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_SHOTS_MAY_GO_TO_1???
 label c42f OTHER_PLAYER_DATA
 label c45f PLAYER_NUMBER
-label c466 NUMBER_OF_SCREEN_MESSAGES
+label c466 NUMBER_OF_SCREEN_MESSAGES_FROM_C4D6
 label c467 NUMBER_OF_SCREEN_MESSAGES_2_FROM_C4BE
+label c469 ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED1!
+label c46b ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED2!
 label c473 LEFT_COIN
 label c474 RIGHT_COIN
 label c47b IN_ATTRACT_MODE?
 label c47c NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2
-label C4be SCREEN_MESSAGE_QUEUE_2_TO_C4D5
+label c48e ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED3!
+label c4b8 SCREEN_DESTINATION?
+label c4ba SOURCE?
+label c4be SCREEN_MESSAGE_QUEUE_2_TO_C4D5
+label c4d6 SCREEN_MESSAGE_QUEUE_TO_CD60?
 label C4d8 SCREEN_MESSAGE_QUEUE
 label c4f0 ?_AND_HIGH_SCORE_INITIALS_AND_?_TO_C549
 label c4f6 DIFFICULTY_LEVEL
@@ -554,16 +566,28 @@ data 04ce-04f5
 ascii 0513-051a
 
 ; Print messages from two different message queue?
-commentline 06ca Count @C466 and data starting @C4D8
+commentline 06ca Count @C466 and data starting @C4D8. @C4D6 is next entry for Q
+commentline 06ca Each entry is 2 bytes destination & 2 bytes source
 
-commentline 06f5 Count @C467 and data starting @C4BE
+commentline 06f5 Count @C467 and data starting @C4BE. @C4BC is next entry for Q
+commentline 06f5 Each entry is 2 bytes destination & 2 bytes source
 
 ascii 0b58-0b6a
 ascii 0b6b-0b82
+
+data 0b83-0b86
+
 ascii 0b87-0b9a
 ascii 0b9b-0bae
 ascii 0baf-0bc2
+
+commentline 0d52 I/O byte 00, bit 4? (isn't it 7?) is trigger. 0 when trigger is pulled, 1 otherwise
+
+data 0dc3-0e0a
+
 ascii 0dfe-0e00
+
+data 0e55-0e5e
 
 ascii 101b-1021
 ascii 1022-1027
@@ -579,6 +603,10 @@ ascii 1222-1230
 ascii 1231-123b
 ascii 134e-1350
 ascii 1433-1435
+
+commentline 15c3 print out high scores
+commentline 161c print out user level (programming language)
+
 ascii 15e0-15e2
 ascii 1605-1607
 ascii 1653-165b
@@ -679,8 +707,11 @@ ascii 1de3-1deb
 ascii 1dec-1e05
 ascii 1e06-1e10
 
-commentline 1fc0 skip game instructions
+commentline 1fc0 if level > 0, skip game instructions
+commentline 1fc2 pick game instructions to print
 
+commentline 205c Finished level so set up for the next level (to 2097)
+commentline 2070 Increment user level (C422)
 commentline 20a3 This increment gives the next game an extra disk/shot! Is it a feature or a bug?
 
 commentline 20a7 Map of Difficulty level settings (picked by operator in settings) to how hard
@@ -700,6 +731,9 @@ data 2110-2114
 
 commentline 2162 show games on game selection screen
 
+commentline 2207 Modify game selection screen to disable completed and show type of game if already attempted
+commentline 2213 4x(3 bytes: ? ? ?). I think it's used to draw the sprites on the game selection screen
+
 data 226e-22b7
 comment 22b8 Is the data block at 22b8 correct?  What's it used for?
 data 22b8-2307
@@ -717,6 +751,7 @@ data 2310-2311
 data 2312-2313
 data 2314-2315
 data 2316-2317
+data 233e-2349
 
 ; hack to get label at 234A to print
 data 2346-2349
@@ -800,11 +835,16 @@ ascii 519c-51a9
 
 comment 5e6d if BC was 0, return.  Does this mean skip instructions?
 
+data 5e7e-5e8b
+
 ascii 5e8c-5e9a
 ascii 5e9b-5ea8
 ascii 5ea9-5eb6
 
 data 5eb7-5ed6
+
+commentline 5f73 IO:0000 - xxxBxxxx
+commentline 5f73 IO:0002 - xxxxDURL
 
 comment 5fb3 look at 6b39 for more info!
 
@@ -816,9 +856,15 @@ commentline 6b39 Table of 16x 4 bytes used by joystick direction input @5FB3. Th
 commentline 6b39 inputs (D,U,R,L,DR,DL,UR,UL).  All others (no input or invalid input) are set
 commentline 6b39 to all zeroes effectively giving you no input.
 data 6b39-6b78
+data 6b79-6eff
+
+commentline 6f20 This line is hit for every tick of the teletype (which strikes twice per character)
+commentline 6f2d Set color RAMs in some way?
+commentline 6f35 Another entry point to: Set color RAMs in some way?
 
 commentline 6fc7 Clear background screen (set graphic to 51 and attributes to 5E)
 commentline 6fff Add a message to the output queue (max of 6) DE is source and BC is destination
+commentline 6fff if Q is full, call RESET_WATCHDOG_UNTIL_C400_IS_ONE
 
 commentline 7049 Initialize sprites (X=0, picture=3F, Y=0, unused=0)
 
@@ -913,6 +959,7 @@ ascii 9deb-9dfa
 ascii 9dfb-9e09
 ascii 9e0a-9e1b
 
+data 9e1c-9e97
 data 9ee0-9f27
 
 ascii 9f28-9f3f
@@ -1094,6 +1141,9 @@ ascii ad60-ad63
 ascii ad64-ad67
 ascii ad68-ad6b
 ascii ad6c-ad6f
+
+data ae2a-ae2d
+
 ascii ae2e-ae3d
 ascii ae3e-ae4b
 ascii ae4c-ae57
