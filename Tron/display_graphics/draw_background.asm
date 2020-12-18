@@ -14,7 +14,7 @@ C71D: 57       ld   d,a
 C71E: 7A       ld   a,d
 C71F: 77       ld   (hl),a
 C720: 23       inc  hl
-C721: 36 51    ld   (hl),$51
+C721: 36 40    ld   (hl),$40
 C723: 23       inc  hl
 C724: 0B       dec  bc
 C725: 3C       inc  a
