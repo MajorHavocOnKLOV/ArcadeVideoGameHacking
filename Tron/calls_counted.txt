@@ -13,7 +13,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
      14 COPY_20_FROM_HL_TO_FF80
      14 ADD_A_MESSAGE_TO_Q
      13 ADD_MESSAGE_TO_Q
-     11 ZERO_RAM_C000-C418
+     12 ZERO_RAM_C000-C418
      10 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE
      10 PRINT_A_NULL_TERMINATED_ASCII_STRING_FROM_BC_TO_HL
      10 GET_TRIGGER_INPUT_FOR_SERVICE_MENU
@@ -29,7 +29,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       5 PE,$0E14
       5 $A077
       4 SET_C40D_TO_FDD0_AND_ADD_A_MESSAGE_TO_Q
-      4 NC,$EA01
       4 LC_ERASE_TRAIL_OF_DESTROYED_LC
       4 CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?
       4 $A079
@@ -68,6 +67,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       3 $4414
       2 ZERO_RAM_C000-C479
       2 SET_SOME_VALUES_IN_C02X?
+      2 NC,$EA01
       2 NC,$4AFF
       2 M,$1E1D
       2 LC_DRAW_A_TRAIL?
@@ -120,11 +120,11 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 Z,$5841
       1 Z,$33FA
       1 Z,$31A1
-      1 Z,$20CD
       1 Z,$1200
       1 Z,$0E32
       1 Z,$0E01
       1 UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE
+      1 READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS
       1 READ_AND_PROCESS_INPUT_PORTS
       1 PRINT_OUT_MESSAGES_IN_QUEUES
       1 PO,$AAA9
@@ -133,10 +133,8 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 PO,$67FD
       1 PO,$29AD
       1 PO,$1BD8
-      1 PO,$1101
-      1 PO,$06C4
+      1 PO,$0800
       1 PO,$0307
-      1 PE,$F60A
       1 PE,$CE55
       1 PE,$CCD8
       1 PE,$BCDE
@@ -156,13 +154,10 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 P,$2837
       1 P,$1838
       1 P,$10B8
-      1 P,$066A
-      1 OUTPUT_IO_TOWER_TIMER
-      1 NZ,$E100
+      1 OUTPUT_IO_TOWER_TIMER?/TELETYPE_PRINTING_TO_THE_SCREEN_UNTIL_NULL_BYTE?
       1 NZ,$DC98
       1 NZ,$DB21
       1 NZ,$D4B4
-      1 NZ,$C129
       1 NZ,$A500
       1 NZ,$7CCE
       1 NZ,$66DF
@@ -218,6 +213,8 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 M,$0158
       1 M,$011B
       1 HANDLE_JOYSTICK_INPUT?_TO_601F
+      1 GET_INPUT_FROM_JOYSTICK_TRIGGER_+?
+      1 DISPLAY_MCP_CONE_WITH_COPYRIGHTS_AND_NEXT_INSTRUCTIONS
       1 CHECK_DATA_C4F0_TO_C657?
       1 C,$8040
       1 C,$420D
@@ -235,7 +232,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $ABC3
       1 $ABB1
       1 $AB39
-      1 $A9D4
       1 $A4B0
       1 $A03D
       1 $9FBF
@@ -322,12 +318,10 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $0F00
       1 $0E6D
       1 $0D7C
-      1 $0D38
       1 $0D28
       1 $0C84
       1 $0C00
       1 $0BC3
-      1 $0AF1
       1 $09E4
       1 $08A0
       1 $07B0
@@ -338,5 +332,4 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $04F6
       1 $03D9
       1 $0358
-      1 $02E3
       1 $0289

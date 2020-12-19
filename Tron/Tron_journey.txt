@@ -75,13 +75,3 @@ f800 - ffff: mcr_state::mcr_90010_videoram_w
 
 MAME
 - getting the full ROMs was a pain.  Had to DL two different sets, combine them, rename a PROM, and then delete out unused files.  WHY?
-
-02E3-033F Get input from joystick trigger +?
-
-03C0 - copy from here into background RAM?
-
-0786-0824 Teletype printing to the screen until null byte.
-- FF byte has some special processing at 07CC
-- 00 byte falls to 07E7
-
-0D38-? Update tank shot sprite positions?  Or is it 456D?  Or is it 47c7?  Argh!!!!

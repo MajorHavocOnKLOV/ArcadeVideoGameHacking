@@ -9,8 +9,9 @@ IO_WATCHDOG_RESET EQU $00e0
 IO_UNKNOWN_WRITTEN_AT_INITIALIZATION EQU $00e8
 IO_CTC EQU $00f0
 COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_STRING EQU $006b
-COLOR_PALETTE_FOR_?6_10_BYTES_TO_01BA EQU $01ab
+COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA? EQU $01ab
 SERVICE_INTERRUPT_ROUTINE EQU $01cb
+GET_INPUT_FROM_JOYSTICK_TRIGGER_+? EQU $02e3
 STRING_IN_DE_TO_HL EQU $0401
 CHECK_DATA_C4F0_TO_C657? EQU $041c
 DEFAULT_HIGH_SCORE_TABLE EQU $04b0
@@ -27,14 +28,17 @@ CREDITS_STRING EQU $0513
 OUTPUT_TO_SOUND_LATCHES EQU $0557
 PRINT_OUT_MESSAGES_IN_QUEUES EQU $06ca
 PRINT_OUT_MESSAGES_IN_QUEUE_2 EQU $06f5
-OUTPUT_IO_TOWER_TIMER EQU $0792
+OUTPUT_IO_TOWER_TIMER?/TELETYPE_PRINTING_TO_THE_SCREEN_UNTIL_NULL_BYTE? EQU $0792
 UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE EQU $0825
+ATTRACT_MODE_LOOP EQU $0900
+DISPLAY_MCP_CONE_WITH_COPYRIGHTS_AND_NEXT_INSTRUCTIONS EQU $0af1
 COPYRIGHT_MCMLXXXI_STRING EQU $0b58
 WALT_DISNEY_PRODUCTIONS_STRING EQU $0b6b
 COPYRIGHT_MCMLXXXII_STRING EQU $0b87
 BALLY_MIDWAY_MFG_CO_STRING EQU $0b9b
 READ_AND_PROCESS_INPUT_PORTS EQU $0d52
 ALL_RIGHTS_RESERVED_STRING EQU $0baf
+READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS EQU $0d38
 PLEASE_STRING EQU $101b
 ENTER_STRING EQU $1022
 YOUR_STRING EQU $1028
@@ -127,11 +131,12 @@ WITH_THE_DISK_STRING EQU $1dbd
 THE_CONE_STRING EQU $1de3
 1000_BONUS_FOR_DESTROYING_STRING EQU $1dec
 ALL_BLOCKS_STRING EQU $1e06
+GS_MOVE_DOWN EQU $1f00
 START_GAME EQU $1f97
 VECTOR_OF_DIFFICULTY_TO_HARDNESS_MAPS_(STARTS_AT_20A7) EQU $20a5
 INITIALIZE_LEVEL? EQU $2115
 BACKGROUND_PICK_A_GAME EQU $234a
-COLOR_PALETTE_FOR_?0 EQU $2aca
+COLOR_PALETTE_1? EQU $2aca
 DATA_TO_2C4C?_USED_STARTING_AT_6F68 EQU $2c48
 1000_BONUS_ALL_BLOCKS_HIT_STRING EQU $2c4d
 1000_FOR_ENTERING_CONE_STRING EQU $2c67
@@ -162,10 +167,11 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC EQU $5551
 LC_DRAW_A_TRAIL? EQU $59e5
 PLAY_IO_TOWER EQU $5d00
 IO_TOWER_INSTRUCTIONS EQU $5e36
+IO_TOWER_STRING_DESTINATION_AND_SOURCE_LOCATIONS_00 EQU $5e7e
 ENTER_FLASHING_STRING EQU $5e8c
 CIRCLE_BEFORE_STRING EQU $5e9b
 TIMER_EXPIRES_STRING EQU $5ea9
-COLOR_PALETTE_FOR_?2  EQU $5eb7
+IO_TOWER_COLOR_PALETTE EQU $5eb7
 CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_? EQU $5f23
 HANDLE_JOYSTICK_INPUT?_TO_601F EQU $5f73
 INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER EQU $6065
@@ -198,12 +204,12 @@ RETURN_C687-7_IF_NZ_IN_A EQU $7159
 RETURN_C687-2_IF_NZ_IN_A EQU $7165
 BACKGROUND_TANK_GAME EQU $7200
 COLOR_PALETTE_FOR_TANKS_GAME EQU $7980
-?_DATA_USED_FOR_?2 EQU $79a0
-COLOR_PALETTE_FOR_?3  EQU $79c0
+COLOR_PALETTE_FOR_2? EQU $79a0
+IO_COLOR_PALETTE EQU $79c0
 BACKGROUND_IO_TOWER_GAME EQU $7a00
 BACKGROUND_LC EQU $8900
-COLOR_PALETTE_FOR_?4 EQU $9080
-COLOR_PALETTE_FOR_?5 EQU $90c0
+LC_COLOR_PALETTE EQU $9080
+COLOR_PALETTE_FOR_5? EQU $90c0
 BACKGROUND_TRAINING_FOR_LC EQU $9100
 GET_TRIGGER_INPUT_FOR_SERVICE_MENU EQU $998c
 ?_DATA_USED_FOR_?1 EQU $9bd8
@@ -402,8 +408,9 @@ ASSEMBLY_STRING EQU $b16e
 OS_STRING EQU $b177
 JCL_STRING EQU $b17a
 USER_STRING EQU $b17e
-MCP_TRON_LEGS-LC_TRAILS_TO_C1DF EQU $c000
+MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X EQU $c000
 MCP_ROWS_OF_BRICKS EQU $c001
+GS_DISK_Y EQU $c002
 MCP_TRON_X EQU $c007
 MCP_TRON_Y EQU $c009
 IO_TOWER_TIMER_VALUE_REVERSED_TO_C010 EQU $c00d
@@ -422,7 +429,9 @@ MCP_TOWER_Y EQU $c0dc
 MCP_TOWER_X EQU $c0dd
 MCP_BRICKS_REMAINING_COUNT EQU $c0e3
 NUMBER_OF_TANKS EQU $c14a
-NUMBER_OF_TANKS_ALSO? EQU $c159
+NUMBER_OF_TANKS_2 EQU $c159
+FIRST_NUMBER_FROM_4F7E EQU $c15b
+TANK_IF_HARDNESS>0X0B_SEE_COMMENT_AT_3A79 EQU $c15f
 COUNTDOWN_TIMER_SECONDS EQU $c402
 COUNTDOWN_TIMER_FRAMES EQU $c403
 MCP_DISK_NUMBER_BEING_PROCESSED EQU $c406
@@ -442,6 +451,7 @@ ATTEMPTED_GAMES_XXXXDURL EQU $c425
 VECTOR_OF_GAMES_TO_C42D EQU $c426
 NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_SHOTS_MAY_GO_TO_1??? EQU $c42e
 OTHER_PLAYER_DATA EQU $c42f
+GS_DIRECTION:1=DOWN,2=?,3=?,5=?,OTHER=? EQU $c45b
 PLAYER_NUMBER EQU $c45f
 NUMBER_OF_SCREEN_MESSAGES_FROM_C4D6 EQU $c466
 NUMBER_OF_SCREEN_MESSAGES_2_FROM_C4BE EQU $c467
@@ -707,7 +717,7 @@ IO_CTC:
 013a: 3E 55          LD    A,#$55
 013c: 32 7A C4       LD    ($C47A),A
 013f: 3E 01          LD    A,#$01
-0141: 21 AB 01       LD    HL,COLOR_PALETTE_FOR_?6_10_BYTES_TO_01BA
+0141: 21 AB 01       LD    HL,COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?
 0144: CD 2D 6F       CALL  COPY_10_FROM_HL_TO_FFC0
 0147: 32 60 C4       LD    ($C460),A
 014a: 3E 01          LD    A,#$01
@@ -748,9 +758,9 @@ IO_CTC:
 01a0: 0E 01          LD    C,#$01
 01a2: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 01a5: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
-01a8: C3 00 09       JP    $0900
+01a8: C3 00 09       JP    ATTRACT_MODE_LOOP
 
-COLOR_PALETTE_FOR_?6_10_BYTES_TO_01BA:
+COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?:
 01ab: 00 00 00 00 00 00 00 38 01 86 00 00 00 00 00 00 
 
 01bb: 00             NOP   
@@ -782,7 +792,7 @@ COLOR_PALETTE_FOR_?6_10_BYTES_TO_01BA:
 01dd: FB             EI    
 01de: CD C3 05       CALL  $05C3
 01e1: CD 4F 07       CALL  $074F
-01e4: CD 92 07       CALL  OUTPUT_IO_TOWER_TIMER
+01e4: CD 92 07       CALL  OUTPUT_IO_TOWER_TIMER?/TELETYPE_PRINTING_TO_THE_SCREEN_UNTIL_NULL_BYTE?
 01e7: CD F8 05       CALL  $05F8
 01ea: CD CA 06       CALL  PRINT_OUT_MESSAGES_IN_QUEUES
 01ed: CD B0 07       CALL  $07B0
@@ -835,7 +845,7 @@ COLOR_PALETTE_FOR_?6_10_BYTES_TO_01BA:
 0234: F5             PUSH  AF
 0235: E5             PUSH  HL
 0236: C5             PUSH  BC
-0237: CD E3 02       CALL  $02E3
+0237: CD E3 02       CALL  GET_INPUT_FROM_JOYSTICK_TRIGGER_+?
 023a: CD 58 03       CALL  $0358
 023d: CD D9 03       CALL  $03D9
 0240: 3A 01 C5       LD    A,(CREDITS)
@@ -943,6 +953,7 @@ COLOR_PALETTE_FOR_?6_10_BYTES_TO_01BA:
 02df: 32 05 C4       LD    ($C405),A
 02e2: C9             RET   
 
+GET_INPUT_FROM_JOYSTICK_TRIGGER_+?:
 02e3: 21 73 C4       LD    HL,LEFT_COIN
 02e6: DB 00          IN    A,($00)
 02e8: E6 01          AND   A,#$01
@@ -1679,17 +1690,9 @@ PRINT_OUT_MESSAGES_IN_QUEUE_2:
 0784: 77             LD    (HL),A
 0785: C9             RET   
 
-0786: 01 C0 01       LD    BC,$01C0
-0789: 00             NOP   
-078a: 00             NOP   
-078b: 18 00          JR    $078D
+0786: 01 C0 01 00 00 18 00 38 00 03 00 07 
 
-078d: 38 00          JR    C,$078F
-
-078f: 03             INC   BC
-0790: 00             NOP   
-0791: 07             RLCA  
-OUTPUT_IO_TOWER_TIMER:
+OUTPUT_IO_TOWER_TIMER?/TELETYPE_PRINTING_TO_THE_SCREEN_UNTIL_NULL_BYTE?:
 0792: 21 51 C4       LD    HL,$C451
 0795: 7E             LD    A,(HL)
 0796: B7             OR    A,A
@@ -1728,6 +1731,8 @@ OUTPUT_IO_TOWER_TIMER:
 07c8: FE FF          CP    A,#$FF
 07ca: 20 08          JR    NZ,$07D4
 
+
+*** FF byte has some special processing, for (c) only?
 07cc: 03             INC   BC
 07cd: 0A             LD    A,(BC)
 07ce: 77             LD    (HL),A
@@ -1748,6 +1753,9 @@ OUTPUT_IO_TOWER_TIMER:
 07e5: B7             OR    A,A
 07e6: C0             RET   NZ
 
+
+*** 00 byte falls here
+*** this data? Are the bounds right? Where is this used?
 07e7: 32 6B C4       LD    (ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED2!),A
 07ea: C9             RET   
 
@@ -1797,186 +1805,21 @@ UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE:
 0831: 09             ADD   HL,BC
 0832: 18 F4          JR    $0828
 
-0834: AF             XOR   A,A
-0835: A1             AND   A,C
-0836: 58             LD    E,B
-0837: D5             PUSH  DE
-0838: 0E A6          LD    C,#$A6
-083a: 58             LD    E,B
-083b: 29             ADD   HL,HL
-083c: E1             POP   HL
-083d: 85             ADD   A,L
-083e: C9             RET   
+0834: AF A1 58 D5 0E A6 58 29 E1 85 C9 51 7F 36 7F 97 
+0844: FA B0 B3 9C 84 65 15 86 9A 78 CF DE B2 FA 5F 1B 
+0854: 72 F8 7F 5B B9 8A B5 49 9F B2 C4 29 C1 E9 C7 0A 
+0864: AA 68 F6 04 78 58 F8 8D FA B8 EB E9 B1 C6 98 AE 
+0874: 78 D2 ED DE B8 90 25 62 A9 51 0A 8F 05 27 E4 C4 
+0884: 06 34 03 3B 85 87 13 42 24 26 F3 A1 AF 85 35 06 
+0894: ED A7 4E A0 55 2A 39 65 C0 E6 31 61 47 13 31 F9 
+08a4: 6B 87 A4 CD D4 A9 83 F5 05 82 63 74 87 A3 4D 25 
+08b4: 89 4C 6A 10 01 C5 DE 7C A7 49 56 1C 6E C9 0E DE 
+08c4: DE A9 CF EA 7E EE BD 17 76 77 0F 8F 79 3F EA 44 
+08d4: FA F8 89 1C BF F6 14 92 89 EC 0A F6 D8 F4 6A 06 
+08e4: 70 F3 5E 8A AB FF 98 63 6E 91 DA 1F 92 68 57 B7 
+08f4: 3A F8 D3 8B CA 00 CB 7B E3 9C D9 7F 
 
-083f: 51             LD    D,C
-0840: 7F             LD    A,A
-0841: 36 7F          LD    (HL),#$7F
-0843: 97             SUB   A,A
-0844: FA B0 B3       JP    M,$B3B0
-
-0847: 9C             SBC   A,H
-0848: 84             ADD   A,H
-0849: 65             LD    H,L
-084a: 15             DEC   D
-084b: 86             ADD   A,(HL)
-084c: 9A             SBC   A,D
-084d: 78             LD    A,B
-084e: CF             RST   $08
-
-084f: DE B2          SBC   A,#$B2
-0851: FA 5F 1B       JP    M,$1B5F
-
-0854: 72             LD    (HL),D
-0855: F8             RET   M
-
-0856: 7F             LD    A,A
-0857: 5B             LD    E,E
-0858: B9             CP    A,C
-0859: 8A             ADC   A,D
-085a: B5             OR    A,L
-085b: 49             LD    C,C
-085c: 9F             SBC   A,A
-085d: B2             OR    A,D
-085e: C4 29 C1       CALL  NZ,$C129
-0861: E9             JP    (HL)
-0862: C7             RST   $00
-
-0863: 0A             LD    A,(BC)
-0864: AA             XOR   A,D
-0865: 68             LD    L,B
-0866: F6 04          OR    A,#$04
-0868: 78             LD    A,B
-0869: 58             LD    E,B
-086a: F8             RET   M
-
-086b: 8D             ADC   A,L
-086c: FA B8 EB       JP    M,$EBB8
-
-086f: E9             JP    (HL)
-0870: B1             OR    A,C
-0871: C6 98          ADD   A,#$98
-0873: AE             XOR   A,(HL)
-0874: 78             LD    A,B
-0875: D2 ED DE       JP    NC,$DEED
-
-0878: B8             CP    A,B
-0879: 90             SUB   A,B
-087a: 25             DEC   H
-087b: 62             LD    H,D
-087c: A9             XOR   A,C
-087d: 51             LD    D,C
-087e: 0A             LD    A,(BC)
-087f: 8F             ADC   A,A
-0880: 05             DEC   B
-0881: 27             DAA   
-0882: E4 C4 06       CALL  PO,$06C4
-0885: 34             INC   (HL)
-0886: 03             INC   BC
-0887: 3B             DEC   SP
-0888: 85             ADD   A,L
-0889: 87             ADD   A,A
-088a: 13             INC   DE
-088b: 42             LD    B,D
-088c: 24             INC   H
-088d: 26 F3          LD    H,#$F3
-088f: A1             AND   A,C
-0890: AF             XOR   A,A
-0891: 85             ADD   A,L
-0892: 35             DEC   (HL)
-0893: 06 ED          LD    B,#$ED
-0895: A7             AND   A,A
-0896: 4E             LD    C,(HL)
-0897: A0             AND   A,B
-0898: 55             LD    D,L
-0899: 2A 39 65       LD    HL,($6539)
-089c: C0             RET   NZ
-
-089d: E6 31          AND   A,#$31
-089f: 61             LD    H,C
-08a0: 47             LD    B,A
-08a1: 13             INC   DE
-08a2: 31 F9 6B       LD    SP,$6BF9
-08a5: 87             ADD   A,A
-08a6: A4             AND   A,H
-08a7: CD D4 A9       CALL  $A9D4
-08aa: 83             ADD   A,E
-08ab: F5             PUSH  AF
-08ac: 05             DEC   B
-08ad: 82             ADD   A,D
-08ae: 63             LD    H,E
-08af: 74             LD    (HL),H
-08b0: 87             ADD   A,A
-08b1: A3             AND   A,E
-08b2: 4D             LD    C,L
-08b3: 25             DEC   H
-08b4: 89             ADC   A,C
-08b5: 4C             LD    C,H
-08b6: 6A             LD    L,D
-08b7: 10 01          DJNZ  $08BA
-
-08b9: C5             PUSH  BC
-08ba: DE 7C          SBC   A,#$7C
-08bc: A7             AND   A,A
-08bd: 49             LD    C,C
-08be: 56             LD    D,(HL)
-08bf: 1C             INC   E
-08c0: 6E             LD    L,(HL)
-08c1: C9             RET   
-
-08c2: 0E DE          LD    C,#$DE
-08c4: DE A9          SBC   A,#$A9
-08c6: CF             RST   $08
-
-08c7: EA 7E EE       JP    PE,$EE7E
-
-08ca: BD             CP    A,L
-08cb: 17             RLA   
-08cc: 76             HALT  
-
-08cd: 77             LD    (HL),A
-08ce: 0F             RRCA  
-08cf: 8F             ADC   A,A
-08d0: 79             LD    A,C
-08d1: 3F             CCF   
-08d2: EA 44 FA       JP    PE,$FA44
-
-08d5: F8             RET   M
-
-08d6: 89             ADC   A,C
-08d7: 1C             INC   E
-08d8: BF             CP    A,A
-08d9: F6 14          OR    A,#$14
-08db: 92             SUB   A,D
-08dc: 89             ADC   A,C
-08dd: EC 0A F6       CALL  PE,$F60A
-08e0: D8             RET   C
-
-08e1: F4 6A 06       CALL  P,$066A
-08e4: 70             LD    (HL),B
-08e5: F3             DI    
-08e6: 5E             LD    E,(HL)
-08e7: 8A             ADC   A,D
-08e8: AB             XOR   A,E
-08e9: FF             RST   $38
-
-08ea: 98             SBC   A,B
-08eb: 63             LD    H,E
-08ec: 6E             LD    L,(HL)
-08ed: 91             SUB   A,C
-08ee: DA 1F 92       JP    C,$921F
-
-08f1: 68             LD    L,B
-08f2: 57             LD    D,A
-08f3: B7             OR    A,A
-08f4: 3A F8 D3       LD    A,($D3F8)
-08f7: 8B             ADC   A,E
-08f8: CA 00 CB       JP    Z,$CB00
-
-08fb: 7B             LD    A,E
-08fc: E3             EX    (SP),HL
-08fd: 9C             SBC   A,H
-08fe: D9             EXX   
-08ff: 7F             LD    A,A
+ATTRACT_MODE_LOOP:
 0900: F3             DI    
 0901: 3A 76 C4       LD    A,($C476)
 0904: CB B7          RES   6,A
@@ -1990,7 +1833,7 @@ UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE:
 0914: CA 00 99       JP    Z,$9900
 
 0917: CD 49 70       CALL  INITIALIZE_SPRITES
-091a: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_?5
+091a: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_5?
 091d: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 0920: 3E 01          LD    A,#$01
 0922: 32 7B C4       LD    (IN_ATTRACT_MODE?),A
@@ -2004,7 +1847,7 @@ UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE:
 0933: CD 20 70       CALL  ZERO_RAM_C000-C418
 0936: 3E 01          LD    A,#$01
 0938: 32 65 C4       LD    ($C465),A
-093b: CD F1 0A       CALL  $0AF1
+093b: CD F1 0A       CALL  DISPLAY_MCP_CONE_WITH_COPYRIGHTS_AND_NEXT_INSTRUCTIONS
 093e: CD 49 70       CALL  INITIALIZE_SPRITES
 0941: CD C7 6F       CALL  CLEAR_BACKGROUND
 0944: 18 0D          JR    $0953
@@ -2017,7 +1860,7 @@ UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE:
 0953: CD 6D 0E       CALL  $0E6D
 0956: CD D1 1F       CALL  $1FD1
 0959: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
-095c: CD 38 0D       CALL  $0D38
+095c: CD 38 0D       CALL  READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS
 095f: CD 52 0D       CALL  READ_AND_PROCESS_INPUT_PORTS
 0962: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 0965: B7             OR    A,A
@@ -2025,11 +1868,11 @@ UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE:
 
 0968: 3A 01 C5       LD    A,(CREDITS)
 096b: B7             OR    A,A
-096c: C2 00 09       JP    NZ,$0900
+096c: C2 00 09       JP    NZ,ATTRACT_MODE_LOOP
 
 096f: 3A 7C C4       LD    A,(NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2)
 0972: B7             OR    A,A
-0973: C2 00 09       JP    NZ,$0900
+0973: C2 00 09       JP    NZ,ATTRACT_MODE_LOOP
 
 0976: 18 E1          JR    $0959
 
@@ -2044,7 +1887,7 @@ UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE:
 0987: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 098a: AF             XOR   A,A
 098b: 32 5A C4       LD    ($C45A),A
-098e: C3 00 09       JP    $0900
+098e: C3 00 09       JP    ATTRACT_MODE_LOOP
 
 0991: 0E 03          LD    C,#$03
 0993: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
@@ -2228,6 +2071,7 @@ UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE:
 
 0aee: C3 28 0D       JP    $0D28
 
+DISPLAY_MCP_CONE_WITH_COPYRIGHTS_AND_NEXT_INSTRUCTIONS:
 0af1: CD 10 0D       CALL  $0D10
 0af4: 11 6D B0       LD    DE,INSERT_1_COIN_STRING
 0af7: ED 4B 0D C4    LD    BC,($C40D)
@@ -2481,12 +2325,13 @@ ALL_RIGHTS_RESERVED_STRING:
 0d34: 32 1E C4       LD    (MAX_DISKS/SHOTS_AT_A_TIME),A
 0d37: C9             RET   
 
-0d38: 3A 5B C4       LD    A,($C45B)
+READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS:
+0d38: 3A 5B C4       LD    A,(GS_DIRECTION:1=DOWN,2=?,3=?,5=?,OTHER=?)
 0d3b: FE 03          CP    A,#$03
 0d3d: CA 00 2C       JP    Z,$2C00
 
 0d40: FE 01          CP    A,#$01
-0d42: CA 00 1F       JP    Z,$1F00
+0d42: CA 00 1F       JP    Z,GS_MOVE_DOWN
 
 0d45: FE 02          CP    A,#$02
 0d47: CA E0 3B       JP    Z,$3BE0
@@ -2517,7 +2362,7 @@ READ_AND_PROCESS_INPUT_PORTS:
 0d64: FE 08          CP    A,#$08
 0d66: 28 08          JR    Z,$0D70
 
-0d68: 3A 5B C4       LD    A,($C45B)
+0d68: 3A 5B C4       LD    A,(GS_DIRECTION:1=DOWN,2=?,3=?,5=?,OTHER=?)
 0d6b: FE 01          CP    A,#$01
 0d6d: C8             RET   Z
 
@@ -2570,10 +2415,12 @@ READ_AND_PROCESS_INPUT_PORTS:
 0dc3: 00 00 31 00 0C 31 00 18 31 00 24 31 0C 02 32 0C 
 0dd3: 0E 32 0C 1A 32 0C 26 32 1C 04 33 1C 10 33 1C 1C 
 0de3: 33 1C 28 33 2C 04 34 2C 10 34 2C 1C 34 2C 28 34 
-0df3: 3C 02 35 3C 0E 35 3C 1A 35 3C 26 35 48 00 36 48 
-0e03: 0C 36 48 18 36 48 24 36 
+0df3: 3C 02 35 3C 0E 35 3C 1A 35 3C 26 
 
-Error: missed a data line, count-1=0e0b,curdata=22,numdata=446,start=DFE, end=E00
+0dfe: 5H
+
+0e01: 36 48 0C 36 48 18 36 48 24 36 
+
 0e0b: 08             EX    AF,AF'
 0e0c: F4 38 18       CALL  P,$1838
 0e0f: F4 37 28       CALL  P,$2837
@@ -2768,7 +2615,7 @@ Error: missed a data line, count-1=0e0b,curdata=22,numdata=446,start=DFE, end=E0
 0f39: CD 20 70       CALL  ZERO_RAM_C000-C418
 0f3c: CD 49 70       CALL  INITIALIZE_SPRITES
 0f3f: CD C7 6F       CALL  CLEAR_BACKGROUND
-0f42: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_?5
+0f42: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_5?
 0f45: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 0f48: 11 BB B0       LD    DE,GAME_OVER_STRING
 0f4b: CD EE 6F       CALL  SET_C40D_TO_FDD0_AND_ADD_A_MESSAGE_TO_Q
@@ -2788,7 +2635,7 @@ Error: missed a data line, count-1=0e0b,curdata=22,numdata=446,start=DFE, end=E0
 0f6c: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 0f6f: 10 FB          DJNZ  $0F6C
 
-0f71: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+0f71: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 0f74: FE 0B          CP    A,#$0B
 0f76: DC 7F 0F       CALL  C,$0F7F
 0f79: CD 3F 13       CALL  $133F
@@ -3026,7 +2873,7 @@ END_STRING2:
 111c: C9             RET   
 
 111d: DD 21 1F C5    LD    IX,$C51F
-1121: 21 00 C0       LD    HL,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF
+1121: 21 00 C0       LD    HL,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
 1124: 3E 0A          LD    A,#$0A
 1126: 96             SUB   A,(HL)
 1127: 28 1A          JR    Z,$1143
@@ -3106,13 +2953,13 @@ END_STRING2:
 11b5: FE 65          CP    A,#$65
 11b7: 38 0F          JR    C,$11C8
 
-11b9: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF),A
+11b9: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
 11bc: 11 22 12       LD    DE,NOT_IN_THE_TOP_STRING
 11bf: CD F4 6F       CALL  INCREASE_C40D_BY_4_AND_ADD_A_MESSAGE_TO_Q
 11c2: 11 31 12       LD    DE,100_SCORES_STRING
 11c5: C3 F4 6F       JP    INCREASE_C40D_BY_4_AND_ADD_A_MESSAGE_TO_Q
 
-11c8: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF),A
+11c8: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
 11cb: 21 16 C4       LD    HL,$C416
 11ce: 06 03          LD    B,#$03
 11d0: 7E             LD    A,(HL)
@@ -3122,7 +2969,7 @@ END_STRING2:
 11d7: 10 F7          DJNZ  $11D0
 
 11d9: 21 05 C0       LD    HL,$C005
-11dc: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+11dc: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 11df: FE 64          CP    A,#$64
 11e1: 38 05          JR    C,$11E8
 
@@ -3673,7 +3520,7 @@ NOT_IN_THE_TOP_STRING:
 14fd: 2C             INC   L
 14fe: B8             CP    A,B
 14ff: 4B             LD    C,E
-1500: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_?5
+1500: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_5?
 1503: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 1506: CD 49 70       CALL  INITIALIZE_SPRITES
 1509: CD C7 6F       CALL  CLEAR_BACKGROUND
@@ -3792,7 +3639,7 @@ PRINT_HIGH_SCORE_SCREEN:
 15ba: 0E 03          LD    C,#$03
 15bc: 11 BF FF       LD    DE,$FFBF
 15bf: AF             XOR   A,A
-15c0: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF),A
+15c0: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
 
 *** print out high scores
 15c3: FD 7E 00       LD    A,(IY+$00)
@@ -3804,7 +3651,7 @@ PRINT_HIGH_SCORE_SCREEN:
 15d0: FE 30          CP    A,#$30
 15d2: 20 0D          JR    NZ,$15E1
 
-15d4: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+15d4: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 15d7: B7             OR    A,A
 15d8: 20 05          JR    NZ,$15DF
 
@@ -3827,7 +3674,7 @@ PRINT_HIGH_SCORE_SCREEN:
 15f0: FE 30          CP    A,#$30
 15f2: 20 12          JR    NZ,$1606
 
-15f4: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+15f4: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 15f7: B7             OR    A,A
 15f8: 20 0A          JR    NZ,$1604
 
@@ -3865,7 +3712,7 @@ PRINT_HIGH_SCORE_SCREEN:
 161c: DD 21 06 C5    LD    IX,$C506
 1620: 01 8C FA       LD    BC,$FA8C
 1623: 3E 0A          LD    A,#$0A
-1625: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF),A
+1625: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
 1628: DD 7E 00       LD    A,(IX+$00)
 162b: FE 0C          CP    A,#$0C
 162d: 38 02          JR    C,$1631
@@ -3884,7 +3731,7 @@ PRINT_HIGH_SCORE_SCREEN:
 1644: 03             INC   BC
 1645: 03             INC   BC
 1646: 03             INC   BC
-1647: 21 00 C0       LD    HL,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF
+1647: 21 00 C0       LD    HL,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
 164a: 35             DEC   (HL)
 164b: 20 DB          JR    NZ,$1628
 
@@ -4487,6 +4334,7 @@ ALL_BLOCKS_STRING:
 1efe: D0             RET   NC
 
 1eff: 04             INC   B
+GS_MOVE_DOWN:
 1f00: 2A 56 C4       LD    HL,($C456)
 1f03: 7C             LD    A,H
 1f04: B5             OR    A,L
@@ -4534,7 +4382,7 @@ ALL_BLOCKS_STRING:
 1f4d: FD 21 04 F0    LD    IY,MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
 1f51: DD 2A 58 C4    LD    IX,($C458)
 1f55: 06 02          LD    B,#$02
-1f57: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+1f57: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 1f5a: DD BE 00       CP    A,(IX+$00)
 1f5d: 28 07          JR    Z,$1F66
 
@@ -4543,9 +4391,9 @@ ALL_BLOCKS_STRING:
 
 1f63: 0E FF          LD    C,#$FF
 1f65: 81             ADD   A,C
-1f66: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF),A
+1f66: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
 1f69: FD 77 00       LD    (IY+$00),A
-1f6c: 3A 02 C0       LD    A,($C002)
+1f6c: 3A 02 C0       LD    A,(GS_DISK_Y)
 1f6f: DD BE 01       CP    A,(IX+$01)
 1f72: 28 07          JR    Z,$1F7B
 
@@ -4554,14 +4402,14 @@ ALL_BLOCKS_STRING:
 
 1f78: 0E FF          LD    C,#$FF
 1f7a: 81             ADD   A,C
-1f7b: 32 02 C0       LD    ($C002),A
+1f7b: 32 02 C0       LD    (GS_DISK_Y),A
 1f7e: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 1f81: FD 77 02       LD    (IY+$02),A
-1f84: 3A 02 C0       LD    A,($C002)
+1f84: 3A 02 C0       LD    A,(GS_DISK_Y)
 1f87: DD BE 01       CP    A,(IX+$01)
 1f8a: 20 08          JR    NZ,$1F94
 
-1f8c: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+1f8c: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 1f8f: DD BE 00       CP    A,(IX+$00)
 1f92: 28 03          JR    Z,START_GAME
 
@@ -4623,24 +4471,24 @@ START_GAME:
 1ff5: CD 49 70       CALL  INITIALIZE_SPRITES
 1ff8: 21 4A 23       LD    HL,BACKGROUND_PICK_A_GAME
 1ffb: CD 35 70       CALL  COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
-1ffe: 21 CA 2A       LD    HL,COLOR_PALETTE_FOR_?0
+1ffe: 21 CA 2A       LD    HL,COLOR_PALETTE_1?
 2001: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
-2004: 21 CA 2A       LD    HL,COLOR_PALETTE_FOR_?0
+2004: 21 CA 2A       LD    HL,COLOR_PALETTE_1?
 2007: DD 21 E0 FF    LD    IX,$FFE0
 200b: 06 10          LD    B,#$10
 200d: CD 3B 6F       CALL  $6F3B
 2010: CD 07 22       CALL  $2207
 2013: FD 21 04 F0    LD    IY,MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
 2017: 3E 80          LD    A,#$80
-2019: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF),A
+2019: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
 201c: FD 77 00       LD    (IY+$00),A
 201f: 3E A4          LD    A,#$A4
-2021: 32 02 C0       LD    ($C002),A
+2021: 32 02 C0       LD    (GS_DISK_Y),A
 2024: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 2027: FD 77 02       LD    (IY+$02),A
 202a: FD 36 01 06    LD    (IY+$01),#$06
 202e: 3E 01          LD    A,#$01
-2030: 32 5B C4       LD    ($C45B),A
+2030: 32 5B C4       LD    (GS_DIRECTION:1=DOWN,2=?,3=?,5=?,OTHER=?),A
 2033: CD AC 70       CALL  PUT_GAME_SELECT_COUNTDOWN_DIGIT_MESSAGE_IN_Q2
 2036: 3A 22 C4       LD    A,(USER_LEVEL)
 2039: FE 0C          CP    A,#$0C
@@ -4705,7 +4553,7 @@ START_GAME:
 
 2094: 3C             INC   A
 2095: 32 19 C4       LD    (HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?)),A
-2098: 3A 5B C4       LD    A,($C45B)
+2098: 3A 5B C4       LD    A,(GS_DIRECTION:1=DOWN,2=?,3=?,5=?,OTHER=?)
 209b: FE 04          CP    A,#$04
 209d: 3A 2E C4       LD    A,(NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_SHOTS_MAY_GO_TO_1???)
 20a0: 20 01          JR    NZ,$20A3
@@ -4816,11 +4664,11 @@ INITIALIZE_LEVEL?:
 217d: 21 B8 22       LD    HL,$22B8
 2180: 87             ADD   A,A
 2181: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
-2184: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+2184: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 2187: 86             ADD   A,(HL)
 2188: 47             LD    B,A
 2189: 23             INC   HL
-218a: 3A 02 C0       LD    A,($C002)
+218a: 3A 02 C0       LD    A,(GS_DISK_Y)
 218d: 86             ADD   A,(HL)
 218e: 4F             LD    C,A
 218f: C5             PUSH  BC
@@ -4897,10 +4745,10 @@ INITIALIZE_LEVEL?:
 
 21f4: C1             POP   BC
 21f5: 78             LD    A,B
-21f6: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF),A
+21f6: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
 21f9: 32 04 F0       LD    (MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)),A
 21fc: 79             LD    A,C
-21fd: 32 02 C0       LD    ($C002),A
+21fd: 32 02 C0       LD    (GS_DISK_Y),A
 2200: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 2203: 32 06 F0       LD    ($F006),A
 2206: C9             RET   
@@ -4977,10 +4825,17 @@ INITIALIZE_LEVEL?:
 226e: 00 00 01 00 04 00 09 00 10 00 19 00 24 00 31 00 
 227e: 40 00 51 00 64 00 79 00 90 00 A9 00 C4 00 E1 00 
 228e: 00 01 21 01 44 01 69 01 90 01 B9 01 E4 01 11 02 
-229e: 40 02 71 02 A4 02 D9 02 10 03 49 03 84 03 40 A4 
-22ae: 00 C0 A4 02 80 74 04 80 D4 06 
+229e: 40 02 71 02 A4 02 D9 02 10 03 49 03 84 03 
 
-22b8: 00 00 FF 00 01 00 00 00 00 FF FF FF 01 FF 00 00 ;Is the data block at 22b8 correct?  What's it used for?
+
+*** 4x3 bytes for auto game selection: disk X, disk Y,
+*** what to add to VECTOR_OF_GAMES to use correct 2310 data structure
+*** The X or Y position is checked against to start that game
+22ac: 40 A4 00 C0 A4 02 80 74 04 80 D4 06 
+
+
+*** Is the data block at 22b8 correct?  What's it used for?
+22b8: 00 00 FF 00 01 00 00 00 00 FF FF FF 01 FF 00 00 
 22c8: 00 01 FF 01 01 01 00 00 00 00 00 00 00 00 00 00 
 22d8: 00 B5 22 01 AC 22 02 AF 22 01 AC 22 04 B2 22 04 
 22e8: B2 22 04 B2 22 04 B2 22 08 B5 22 08 B5 22 08 B5 
@@ -4988,52 +4843,34 @@ INITIALIZE_LEVEL?:
 
 
 *** Used at 2115.  Set what game is at what quadrant?  Then 4x vector table.  Then 
-Error: missed a data line, count-1=2308,curdata=139,numdata=446,start=2304, end=2307
 2308: 10 23 16 23 1C 23 22 23 
 
-2310: 12 2D 
 
-2312: 28 23 
+*** Vector of games to quadrants at C426 points to these blocks of data
+*** 2x game location, 2x another data structure below, 2x instrcution location
+2310: 12 2D 28 23 7E 2C 
 
-2314: 7E 2C 
+2316: 00 5D 32 23 36 5E 
 
-2316: 00 5D 
+231c: 00 50 36 23 03 51 
 
-2318: 32 23 36       LD    ($3623),A
-231b: 5E             LD    E,(HL)
-231c: 00             NOP   
-231d: 50             LD    D,B
-231e: 36 23          LD    (HL),#$23
-2320: 03             INC   BC
-2321: 51             LD    D,C
-2322: 00             NOP   
-2323: 3A 3A 23       LD    A,($233A)
-2326: DF             RST   $18
+2322: 00 3A 3A 23 DF 3C 
 
-2327: 3C             INC   A
-2328: 00             NOP   
-2329: F0             RET   P
 
-232a: 39             ADD   HL,SP
-232b: F8             RET   M
+*** The start locations were pulled the data structures above (starting 2310)
+*** the end points were just entered one less than the starting point of the
+*** next data block, but looking at the data itself, this looks OK.
+2328: 00 F0 39 F8 00 31 08 00 36 00 
 
-232c: 00             NOP   
-232d: 31 08 00       LD    SP,$0008
-2330: 36 00          LD    (HL),#$00
-2332: 00             NOP   
-2333: 00             NOP   
-2334: 11 00 00       LD    DE,IO_0
-2337: 00             NOP   
-2338: 2F             CPL   
-2339: 00             NOP   
-233a: 00             NOP   
-233b: 00             NOP   
-233c: 08             EX    AF,AF'
-233d: 00             NOP   
+2332: 00 00 11 00 
+
+2336: 00 00 2F 00 
+
+233a: 00 00 08 00 
+
 233e: F2 40 A4 F4 C0 A4 E2 80 74 F6 80 D4 
 
 BACKGROUND_PICK_A_GAME:
-Error: missed a data line, count-1=234a,curdata=146,numdata=446,start=2346, end=2349
 234a: 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 4B 41 
 235a: 4B 41 4B 59 4B 5B 4B 5B 4B 5B 4B 5B 4B 5B 4B 5B 
 236a: 4B 5B 4B 5B 4B 5B 4B 5B 4B 5B 4B 5B 4B 5B 4B 5B 
@@ -5155,7 +4992,7 @@ Error: missed a data line, count-1=234a,curdata=146,numdata=446,start=2346, end=
 2aaa: 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 
 2aba: 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 4B 59 
 
-COLOR_PALETTE_FOR_?0:
+COLOR_PALETTE_1?:
 2aca: 00 00 01 48 00 10 00 10 00 18 00 21 01 7D 01 F4 
 2ada: 01 C3 01 CA 00 30 00 05 00 00 00 00 00 00 01 6D 
 
@@ -5512,7 +5349,7 @@ PLAY_MCP:
 2d15: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 2d18: CD 20 70       CALL  ZERO_RAM_C000-C418
 2d1b: 3E 03          LD    A,#$03
-2d1d: 32 5B C4       LD    ($C45B),A
+2d1d: 32 5B C4       LD    (GS_DIRECTION:1=DOWN,2=?,3=?,5=?,OTHER=?),A
 2d20: 3E 01          LD    A,#$01
 2d22: 32 08 C4       LD    ($C408),A
 2d25: CD 49 70       CALL  INITIALIZE_SPRITES
@@ -5769,7 +5606,7 @@ PLAY_MCP:
 2eca: 3A 0B C0       LD    A,($C00B)
 2ecd: 21 0D C0       LD    HL,IO_TOWER_TIMER_VALUE_REVERSED_TO_C010
 2ed0: B6             OR    A,(HL)
-2ed1: 21 00 C0       LD    HL,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF
+2ed1: 21 00 C0       LD    HL,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
 2ed4: 28 06          JR    Z,$2EDC
 
 2ed6: 35             DEC   (HL)
@@ -5866,7 +5703,7 @@ PLAY_MCP:
 2f96: B7             OR    A,A
 2f97: 20 05          JR    NZ,$2F9E
 
-2f99: 21 02 C0       LD    HL,$C002
+2f99: 21 02 C0       LD    HL,GS_DISK_Y
 2f9c: 35             DEC   (HL)
 2f9d: C0             RET   NZ
 
@@ -5894,7 +5731,7 @@ PLAY_MCP:
 2fc6: 0E 27          LD    C,#$27
 2fc8: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 2fcb: 3E 80          LD    A,#$80
-2fcd: 32 02 C0       LD    ($C002),A
+2fcd: 32 02 C0       LD    (GS_DISK_Y),A
 2fd0: 3E 00          LD    A,#$00
 2fd2: 32 04 F0       LD    (MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)),A
 2fd5: 32 08 F0       LD    ($F008),A
@@ -7418,7 +7255,7 @@ PLAY_TANKS:
 3a00: CD 20 70       CALL  ZERO_RAM_C000-C418
 3a03: CD 49 70       CALL  INITIALIZE_SPRITES
 3a06: 3E 02          LD    A,#$02
-3a08: 32 5B C4       LD    ($C45B),A
+3a08: 32 5B C4       LD    (GS_DIRECTION:1=DOWN,2=?,3=?,5=?,OTHER=?),A
 3a0b: 3E 10          LD    A,#$10
 3a0d: 32 4E C1       LD    ($C14E),A
 3a10: 21 00 72       LD    HL,BACKGROUND_TANK_GAME
@@ -7431,6 +7268,8 @@ PLAY_TANKS:
 3a23: 22 48 C1       LD    ($C148),HL
 3a26: 3E 01          LD    A,#$01
 3a28: 32 08 C4       LD    ($C408),A
+
+*** Set up shots (up to 4) in sprites 3-6 (F00C-F01B)
 3a2b: 3A 1E C4       LD    A,(MAX_DISKS/SHOTS_AT_A_TIME)
 3a2e: 4F             LD    C,A
 3a2f: 06 00          LD    B,#$00
@@ -7466,6 +7305,10 @@ PLAY_TANKS:
 3a75: FE 0B          CP    A,#$0B
 3a77: 38 05          JR    C,$3A7E
 
+
+*** If hardness above 0x0B (11), subtract 5 from hardness until hardness for this g
+*** is =< 0x0B. Increment C for each subtraction. Cap C at 4. Multiply C times 32 
+*** and place into C15F
 3a79: D6 05          SUB   A,#$05
 3a7b: 0C             INC   C
 3a7c: 18 F7          JR    $3A75
@@ -7484,19 +7327,21 @@ PLAY_TANKS:
 3a91: CB 27          SLA   A
 3a93: CB 27          SLA   A
 3a95: CB 27          SLA   A
-3a97: 32 5F C1       LD    ($C15F),A
+3a97: 32 5F C1       LD    (TANK_IF_HARDNESS>0X0B_SEE_COMMENT_AT_3A79),A
 3a9a: 7E             LD    A,(HL)
-3a9b: 32 5B C1       LD    ($C15B),A
+3a9b: 32 5B C1       LD    (FIRST_NUMBER_FROM_4F7E),A
 3a9e: 23             INC   HL
 3a9f: 7E             LD    A,(HL)
 3aa0: E6 7F          AND   A,#$7F
 3aa2: 32 4A C1       LD    (NUMBER_OF_TANKS),A
-3aa5: 32 59 C1       LD    (NUMBER_OF_TANKS_ALSO?),A
+3aa5: 32 59 C1       LD    (NUMBER_OF_TANKS_2),A
 3aa8: 4F             LD    C,A
 3aa9: 7E             LD    A,(HL)
 3aaa: E6 80          AND   A,#$80
 3aac: 28 02          JR    Z,$3AB0
 
+
+*** If bit 7 in number of tanks is set, C15C=0x35
 3aae: 3E 35          LD    A,#$35
 3ab0: 32 5C C1       LD    ($C15C),A
 3ab3: 06 00          LD    B,#$00
@@ -7599,7 +7444,7 @@ PLAY_TANKS:
 3b72: 0D             DEC   C
 3b73: C2 C3 3A       JP    NZ,$3AC3
 
-3b76: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_ALSO?)
+3b76: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_2)
 3b79: 4F             LD    C,A
 3b7a: 21 44 F0       LD    HL,$F044
 3b7d: FD 21 08 C1    LD    IY,$C108
@@ -7621,7 +7466,7 @@ PLAY_TANKS:
 3ba0: 0D             DEC   C
 3ba1: 20 DE          JR    NZ,$3B81
 
-3ba3: 21 00 C0       LD    HL,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF
+3ba3: 21 00 C0       LD    HL,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
 3ba6: 3E 61          LD    A,#$61
 3ba8: 77             LD    (HL),A
 3ba9: C6 08          ADD   A,#$08
@@ -7687,7 +7532,7 @@ PLAY_TANKS:
 3c1d: 18 2C          JR    $3C4B
 
 3c1f: 21 5E C1       LD    HL,$C15E
-3c22: 3A 5F C1       LD    A,($C15F)
+3c22: 3A 5F C1       LD    A,(TANK_IF_HARDNESS>0X0B_SEE_COMMENT_AT_3A79)
 3c25: 86             ADD   A,(HL)
 3c26: 77             LD    (HL),A
 3c27: DC 0D 42       CALL  C,$420D
@@ -7713,12 +7558,12 @@ PLAY_TANKS:
 3c48: CD A8 3C       CALL  $3CA8
 3c4b: CD 6D 45       CALL  $456D
 3c4e: 21 5A C1       LD    HL,$C15A
-3c51: 3A 5B C1       LD    A,($C15B)
+3c51: 3A 5B C1       LD    A,(FIRST_NUMBER_FROM_4F7E)
 3c54: 86             ADD   A,(HL)
 3c55: 77             LD    (HL),A
 3c56: DC 90 4B       CALL  C,$4B90
 3c59: 21 5E C1       LD    HL,$C15E
-3c5c: 3A 5F C1       LD    A,($C15F)
+3c5c: 3A 5F C1       LD    A,(TANK_IF_HARDNESS>0X0B_SEE_COMMENT_AT_3A79)
 3c5f: 86             ADD   A,(HL)
 3c60: 77             LD    (HL),A
 3c61: DC 90 4B       CALL  C,$4B90
@@ -7732,7 +7577,7 @@ PLAY_TANKS:
 3c6f: 21 2C 01       LD    HL,$012C
 3c72: 22 48 C1       LD    ($C148),HL
 3c75: DD 21 51 C0    LD    IX,INFO_FOR_TANK_GAME_SEE_3ABF_TO_C05A
-3c79: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_ALSO?)
+3c79: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_2)
 3c7c: 47             LD    B,A
 3c7d: 11 20 00       LD    DE,$0020
 3c80: DD 7E 07       LD    A,(IX+$07)
@@ -7797,7 +7642,7 @@ TANKS_INSTRUCTIONS:
 3cef: 32 05 C4       LD    ($C405),A
 3cf2: 3E 01          LD    A,#$01
 3cf4: 32 08 C4       LD    ($C408),A
-3cf7: 21 00 C0       LD    HL,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF
+3cf7: 21 00 C0       LD    HL,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
 3cfa: 3E 61          LD    A,#$61
 3cfc: 77             LD    (HL),A
 3cfd: C6 08          ADD   A,#$08
@@ -8009,13 +7854,13 @@ ENEMY_TANKS_STRING:
 3e20: 28 03          JR    Z,$3E25
 
 3e22: 32 50 C1       LD    ($C150),A
-3e25: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+3e25: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 3e28: 47             LD    B,A
 3e29: 3A 03 C0       LD    A,($C003)
 3e2c: 80             ADD   A,B
 3e2d: 81             ADD   A,C
 3e2e: 47             LD    B,A
-3e2f: 3A 02 C0       LD    A,($C002)
+3e2f: 3A 02 C0       LD    A,(GS_DISK_Y)
 3e32: 4F             LD    C,A
 3e33: 3A 05 C0       LD    A,($C005)
 3e36: 81             ADD   A,C
@@ -8082,7 +7927,7 @@ ENEMY_TANKS_STRING:
 3e9c: 78             LD    A,B
 3e9d: 21 03 C0       LD    HL,$C003
 3ea0: 96             SUB   A,(HL)
-3ea1: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF),A
+3ea1: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
 3ea4: C6 08          ADD   A,#$08
 3ea6: 47             LD    B,A
 3ea7: 3A 06 C0       LD    A,($C006)
@@ -8092,7 +7937,7 @@ ENEMY_TANKS_STRING:
 3eae: 92             SUB   A,D
 3eaf: 21 05 C0       LD    HL,$C005
 3eb2: 96             SUB   A,(HL)
-3eb3: 32 02 C0       LD    ($C002),A
+3eb3: 32 02 C0       LD    (GS_DISK_Y),A
 3eb6: C6 08          ADD   A,#$08
 3eb8: 4F             LD    C,A
 3eb9: CD A5 40       CALL  $40A5
@@ -8165,7 +8010,7 @@ ENEMY_TANKS_STRING:
 3f3a: 4F             LD    C,A
 3f3b: C3 B8 6F       JP    PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 
-3f3e: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_ALSO?)
+3f3e: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_2)
 3f41: 11 20 00       LD    DE,$0020
 3f44: DD 21 31 C0    LD    IX,$C031
 3f48: 4F             LD    C,A
@@ -8176,7 +8021,7 @@ ENEMY_TANKS_STRING:
 
 3f51: DD 7E 05       LD    A,(IX+$05)
 3f54: 32 10 C0       LD    ($C010),A
-3f57: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+3f57: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 3f5a: 21 03 C0       LD    HL,$C003
 3f5d: 86             ADD   A,(HL)
 3f5e: 47             LD    B,A
@@ -8193,7 +8038,7 @@ ENEMY_TANKS_STRING:
 
 3f72: DD 7E 06       LD    A,(IX+$06)
 3f75: 32 10 C0       LD    ($C010),A
-3f78: 3A 02 C0       LD    A,($C002)
+3f78: 3A 02 C0       LD    A,(GS_DISK_Y)
 3f7b: 21 05 C0       LD    HL,$C005
 3f7e: 86             ADD   A,(HL)
 3f7f: 47             LD    B,A
@@ -8562,24 +8407,24 @@ ENEMY_TANKS_STRING:
 40cf: C9             RET   
 
 40d0: 21 04 F0       LD    HL,MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
-40d3: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+40d3: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 40d6: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 40d9: 77             LD    (HL),A
 40da: 23             INC   HL
 40db: 3A 01 C0       LD    A,(MCP_ROWS_OF_BRICKS)
 40de: 77             LD    (HL),A
 40df: 23             INC   HL
-40e0: 3A 02 C0       LD    A,($C002)
+40e0: 3A 02 C0       LD    A,(GS_DISK_Y)
 40e3: C6 04          ADD   A,#$04
 40e5: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 40e8: 77             LD    (HL),A
 40e9: C9             RET   
 
-40ea: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+40ea: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 40ed: FE 81          CP    A,#$81
 40ef: 20 33          JR    NZ,$4124
 
-40f1: 3A 02 C0       LD    A,($C002)
+40f1: 3A 02 C0       LD    A,(GS_DISK_Y)
 40f4: FE 7E          CP    A,#$7E
 40f6: 28 04          JR    Z,$40FC
 
@@ -8598,10 +8443,10 @@ ENEMY_TANKS_STRING:
 410b: 24             INC   H
 410c: 6F             LD    L,A
 410d: 7E             LD    A,(HL)
-410e: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF),A
+410e: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
 4111: 23             INC   HL
 4112: 7E             LD    A,(HL)
-4113: 32 02 C0       LD    ($C002),A
+4113: 32 02 C0       LD    (GS_DISK_Y),A
 4116: 23             INC   HL
 4117: 7E             LD    A,(HL)
 4118: F5             PUSH  AF
@@ -8870,7 +8715,7 @@ ENEMY_TANKS_STRING:
 420b: E8             RET   PE
 
 420c: 00             NOP   
-420d: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_ALSO?)
+420d: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_2)
 4210: 4F             LD    C,A
 4211: DD 21 31 C0    LD    IX,$C031
 4215: 11 20 00       LD    DE,$0020
@@ -8974,7 +8819,7 @@ ENEMY_TANKS_STRING:
 42cd: FE 01          CP    A,#$01
 42cf: 20 28          JR    NZ,$42F9
 
-42d1: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+42d1: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 42d4: D6 10          SUB   A,#$10
 42d6: DD BE 00       CP    A,(IX+$00)
 42d9: 38 28          JR    C,$4303
@@ -8998,7 +8843,7 @@ ENEMY_TANKS_STRING:
 42f5: DD 77 0E       LD    (IX+$0E),A
 42f8: C9             RET   
 
-42f9: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+42f9: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 42fc: C6 10          ADD   A,#$10
 42fe: DD BE 00       CP    A,(IX+$00)
 4301: 38 D8          JR    C,$42DB
@@ -9007,7 +8852,7 @@ ENEMY_TANKS_STRING:
 4306: 38 D3          JR    C,$42DB
 
 4308: CD 43 44       CALL  $4443
-430b: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+430b: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 430e: DD 96 00       SUB   A,(IX+$00)
 4311: 30 01          JR    NC,$4314
 
@@ -9028,7 +8873,7 @@ ENEMY_TANKS_STRING:
 4328: 18 1E          JR    $4348
 
 432a: 06 01          LD    B,#$01
-432c: 3A 02 C0       LD    A,($C002)
+432c: 3A 02 C0       LD    A,(GS_DISK_Y)
 432f: DD BE 02       CP    A,(IX+$02)
 4332: 30 14          JR    NC,$4348
 
@@ -9039,7 +8884,7 @@ ENEMY_TANKS_STRING:
 433a: 28 EE          JR    Z,$432A
 
 433c: 06 FF          LD    B,#$FF
-433e: 3A 02 C0       LD    A,($C002)
+433e: 3A 02 C0       LD    A,(GS_DISK_Y)
 4341: DD BE 02       CP    A,(IX+$02)
 4344: 30 02          JR    NC,$4348
 
@@ -9081,7 +8926,7 @@ ENEMY_TANKS_STRING:
 437c: FE 01          CP    A,#$01
 437e: 20 28          JR    NZ,$43A8
 
-4380: 3A 02 C0       LD    A,($C002)
+4380: 3A 02 C0       LD    A,(GS_DISK_Y)
 4383: D6 10          SUB   A,#$10
 4385: DD BE 02       CP    A,(IX+$02)
 4388: 38 28          JR    C,$43B2
@@ -9105,7 +8950,7 @@ ENEMY_TANKS_STRING:
 43a4: DD 77 0E       LD    (IX+$0E),A
 43a7: C9             RET   
 
-43a8: 3A 02 C0       LD    A,($C002)
+43a8: 3A 02 C0       LD    A,(GS_DISK_Y)
 43ab: C6 10          ADD   A,#$10
 43ad: DD BE 02       CP    A,(IX+$02)
 43b0: 38 D8          JR    C,$438A
@@ -9114,7 +8959,7 @@ ENEMY_TANKS_STRING:
 43b5: 38 D3          JR    C,$438A
 
 43b7: CD 14 44       CALL  $4414
-43ba: 3A 02 C0       LD    A,($C002)
+43ba: 3A 02 C0       LD    A,(GS_DISK_Y)
 43bd: DD 96 02       SUB   A,(IX+$02)
 43c0: 30 01          JR    NC,$43C3
 
@@ -9135,7 +8980,7 @@ ENEMY_TANKS_STRING:
 43d7: 18 1A          JR    $43F3
 
 43d9: 06 FF          LD    B,#$FF
-43db: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+43db: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 43de: DD BE 00       CP    A,(IX+$00)
 43e1: 30 10          JR    NC,$43F3
 
@@ -9143,7 +8988,7 @@ ENEMY_TANKS_STRING:
 43e5: 18 0C          JR    $43F3
 
 43e7: 06 01          LD    B,#$01
-43e9: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+43e9: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 43ec: DD BE 00       CP    A,(IX+$00)
 43ef: 30 02          JR    NC,$43F3
 
@@ -9230,7 +9075,7 @@ ENEMY_TANKS_STRING:
 4485: 20 03          JR    NZ,$448A
 
 4487: 01 00 00       LD    BC,IO_0
-448a: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_ALSO?)
+448a: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_2)
 448d: 6F             LD    L,A
 448e: 11 20 00       LD    DE,$0020
 4491: FD 21 31 C0    LD    IY,$C031
@@ -9597,7 +9442,7 @@ ENEMY_TANKS_STRING:
 46f3: E1             POP   HL
 46f4: C9             RET   
 
-46f5: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_ALSO?)
+46f5: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_2)
 46f8: E5             PUSH  HL
 46f9: 11 20 00       LD    DE,$0020
 46fc: DD 21 31 C0    LD    IX,$C031
@@ -9632,7 +9477,7 @@ ENEMY_TANKS_STRING:
 4729: E1             POP   HL
 472a: C9             RET   
 
-472b: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+472b: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 472e: E5             PUSH  HL
 472f: 21 03 C0       LD    HL,$C003
 4732: 86             ADD   A,(HL)
@@ -9646,7 +9491,7 @@ ENEMY_TANKS_STRING:
 *** 47b8-47c6 looks like data, not sure for what though ...
 473b: 38 11          JR    C,$474E        ;Invincibility TANK Game = 18 (JR *) (bullet collision?)
 
-473d: 3A 02 C0       LD    A,($C002)
+473d: 3A 02 C0       LD    A,(GS_DISK_Y)
 4740: 21 05 C0       LD    HL,$C005
 4743: 86             ADD   A,(HL)
 4744: B9             CP    A,C
@@ -9793,14 +9638,14 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 4848: B7             OR    A,A
 4849: 28 35          JR    Z,$4880
 
-484b: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+484b: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 484e: 4F             LD    C,A
 484f: 3A 0B C0       LD    A,($C00B)
 4852: 81             ADD   A,C
 4853: DD 86 00       ADD   A,(IX+$00)
 4856: DD 77 00       LD    (IX+$00),A
 4859: DD 36 01 00    LD    (IX+$01),#$00
-485d: 3A 02 C0       LD    A,($C002)
+485d: 3A 02 C0       LD    A,(GS_DISK_Y)
 4860: 4F             LD    C,A
 4861: 3A 0C C0       LD    A,($C00C)
 4864: 81             ADD   A,C
@@ -10108,7 +9953,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 49ee: 24             INC   H
 49ef: 6F             LD    L,A
 49f0: DD 21 08 F0    LD    IX,$F008
-49f4: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+49f4: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 49f7: 47             LD    B,A
 49f8: 3A 0B C0       LD    A,($C00B)
 49fb: 80             ADD   A,B
@@ -10116,7 +9961,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 49fd: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 4a00: DD 77 00       LD    (IX+$00),A
 4a03: 23             INC   HL
-4a04: 3A 02 C0       LD    A,($C002)
+4a04: 3A 02 C0       LD    A,(GS_DISK_Y)
 4a07: 47             LD    B,A
 4a08: 3A 0C C0       LD    A,($C00C)
 4a0b: 80             ADD   A,B
@@ -10162,7 +10007,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 
 4a53: C9             RET   
 
-4a54: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_ALSO?)
+4a54: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_2)
 4a57: 4F             LD    C,A
 4a58: DD 21 31 C0    LD    IX,$C031
 4a5c: 11 20 00       LD    DE,$0020
@@ -10184,7 +10029,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 4a78: DD BE 15       CP    A,(IX+$15)
 4a7b: 20 77          JR    NZ,$4AF4
 
-4a7d: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+4a7d: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 4a80: DD BE 00       CP    A,(IX+$00)
 4a83: 38 16          JR    C,$4A9B
 
@@ -10194,7 +10039,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 
 4a8c: DD 46 00       LD    B,(IX+$00)
 4a8f: CD F9 4A       CALL  $4AF9
-4a92: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+4a92: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 4a95: BE             CP    A,(HL)
 4a96: DC FF 4A       CALL  C,$4AFF
 4a99: 18 59          JR    $4AF4
@@ -10205,7 +10050,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 
 4aa2: DD 46 00       LD    B,(IX+$00)
 4aa5: CD F9 4A       CALL  $4AF9
-4aa8: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+4aa8: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 4aab: 2B             DEC   HL
 4aac: BE             CP    A,(HL)
 4aad: D4 FF 4A       CALL  NC,$4AFF
@@ -10220,7 +10065,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 4abc: DD BE 13       CP    A,(IX+$13)
 4abf: 20 33          JR    NZ,$4AF4
 
-4ac1: 3A 02 C0       LD    A,($C002)
+4ac1: 3A 02 C0       LD    A,(GS_DISK_Y)
 4ac4: DD BE 02       CP    A,(IX+$02)
 4ac7: 38 16          JR    C,$4ADF
 
@@ -10230,7 +10075,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 
 4ad0: DD 46 02       LD    B,(IX+$02)
 4ad3: CD F9 4A       CALL  $4AF9
-4ad6: 3A 02 C0       LD    A,($C002)
+4ad6: 3A 02 C0       LD    A,(GS_DISK_Y)
 4ad9: BE             CP    A,(HL)
 4ada: DC FF 4A       CALL  C,$4AFF
 4add: 18 15          JR    $4AF4
@@ -10241,7 +10086,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 
 4ae6: DD 46 02       LD    B,(IX+$02)
 4ae9: CD F9 4A       CALL  $4AF9
-4aec: 3A 02 C0       LD    A,($C002)
+4aec: 3A 02 C0       LD    A,(GS_DISK_Y)
 4aef: 2B             DEC   HL
 4af0: BE             CP    A,(HL)
 4af1: D4 FF 4A       CALL  NC,$4AFF
@@ -10327,7 +10172,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 4b8e: 08             EX    AF,AF'
 4b8f: FF             RST   $38
 
-4b90: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_ALSO?)
+4b90: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_2)
 4b93: 4F             LD    C,A
 4b94: FD 21 08 C1    LD    IY,$C108
 4b98: 11 09 00       LD    DE,$0009
@@ -10859,6 +10704,7 @@ TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE:
 
 
 *** tank A hardness data
+*** at 57ba
 4f42: D0 88 28 00 01 0E 0E 01 FF 00 18 08 28 00 01 0E 
 4f52: 0E 02 01 00 30 08 E8 00 01 0E 0E 01 01 00 E8 88 
 4f62: E8 00 01 0E 0E 02 FF 00 B8 88 70 00 01 0E 0E 02 
@@ -10950,11 +10796,11 @@ TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA:
 4fff: 6F             LD    L,A
 PLAY_LC:
 5000: CD 49 70       CALL  INITIALIZE_SPRITES
-5003: 21 80 90       LD    HL,COLOR_PALETTE_FOR_?4
+5003: 21 80 90       LD    HL,LC_COLOR_PALETTE
 5006: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 5009: CD 20 70       CALL  ZERO_RAM_C000-C418
 500c: 3E 05          LD    A,#$05
-500e: 32 5B C4       LD    ($C45B),A
+500e: 32 5B C4       LD    (GS_DIRECTION:1=DOWN,2=?,3=?,5=?,OTHER=?),A
 5011: 21 00 89       LD    HL,BACKGROUND_LC
 5014: CD 35 70       CALL  COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
 5017: 3E 01          LD    A,#$01
@@ -11087,7 +10933,7 @@ LC_INSTRUCTIONS:
 5103: 21 00 91       LD    HL,BACKGROUND_TRAINING_FOR_LC
 5106: CD 35 70       CALL  COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
 5109: CD 49 70       CALL  INITIALIZE_SPRITES
-510c: 21 80 90       LD    HL,COLOR_PALETTE_FOR_?4
+510c: 21 80 90       LD    HL,LC_COLOR_PALETTE
 510f: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 5112: 3E 01          LD    A,#$01
 5114: 32 65 C4       LD    ($C465),A
@@ -12358,7 +12204,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 59c6: ED 52          SBC   HL,DE
 59c8: CB 3C          SRL   H
 59ca: CB 1D          RR    L
-59cc: 11 00 C0       LD    DE,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF
+59cc: 11 00 C0       LD    DE,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
 59cf: CB 3C          SRL   H
 59d1: CB 1D          RR    L
 59d3: 38 08          JR    C,$59DD
@@ -12398,7 +12244,7 @@ LC_DRAW_A_TRAIL?:
 59fe: 10 FA          DJNZ  $59FA
 
 5a00: 09             ADD   HL,BC
-5a01: 11 00 C0       LD    DE,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF
+5a01: 11 00 C0       LD    DE,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
 5a04: CB 3C          SRL   H
 5a06: CB 1D          RR    L
 5a08: 38 08          JR    C,$5A12
@@ -12617,175 +12463,19 @@ LC_DRAW_A_TRAIL?:
 5b5f: DD 19          ADD   IX,DE
 5b61: C9             RET   
 
-5b62: C8             RET   Z
+5b62: C8 40 55 41 5B 45 5B 41 5B 43 5B 47 57 41 55 41 
+5b72: 59 43 59 47 59 45 59 41 C8 40 51 41 C9 44 C9 40 
+5b82: C9 42 C9 46 57 41 51 41 52 47 52 43 52 41 52 45 
+5b92: CA 40 56 41 5C 45 5C 41 5C 43 5C 47 58 41 56 41 
+5ba2: 5A 43 5A 47 5A 45 5A 41 CA 40 53 41 CB 44 CB 40 
+5bb2: CB 42 CB 46 58 41 53 41 54 47 54 43 54 41 54 45 
+5bc2: 00 00 01 00 04 00 09 00 10 00 19 00 24 00 31 00 
+5bd2: 40 00 51 00 64 00 79 00 90 00 A9 00 C4 00 E1 00 
+5be2: 00 01 21 01 44 01 69 01 90 01 B9 01 E4 01 11 02 
+5bf2: 40 02 71 02 A4 02 D9 02 10 03 49 03 84 03 C1 03 
+5c02: 00 01 01 02 03 03 02 03 03 01 63 02 03 63 01 05 
+5c12: 04 04 03 00 63 05 02 63 00 01 00 00 00 00 00 
 
-5b63: 40             LD    B,B
-5b64: 55             LD    D,L
-5b65: 41             LD    B,C
-5b66: 5B             LD    E,E
-5b67: 45             LD    B,L
-5b68: 5B             LD    E,E
-5b69: 41             LD    B,C
-5b6a: 5B             LD    E,E
-5b6b: 43             LD    B,E
-5b6c: 5B             LD    E,E
-5b6d: 47             LD    B,A
-5b6e: 57             LD    D,A
-5b6f: 41             LD    B,C
-5b70: 55             LD    D,L
-5b71: 41             LD    B,C
-5b72: 59             LD    E,C
-5b73: 43             LD    B,E
-5b74: 59             LD    E,C
-5b75: 47             LD    B,A
-5b76: 59             LD    E,C
-5b77: 45             LD    B,L
-5b78: 59             LD    E,C
-5b79: 41             LD    B,C
-5b7a: C8             RET   Z
-
-5b7b: 40             LD    B,B
-5b7c: 51             LD    D,C
-5b7d: 41             LD    B,C
-5b7e: C9             RET   
-
-5b7f: 44             LD    B,H
-5b80: C9             RET   
-
-5b81: 40             LD    B,B
-5b82: C9             RET   
-
-5b83: 42             LD    B,D
-5b84: C9             RET   
-
-5b85: 46             LD    B,(HL)
-5b86: 57             LD    D,A
-5b87: 41             LD    B,C
-5b88: 51             LD    D,C
-5b89: 41             LD    B,C
-5b8a: 52             LD    D,D
-5b8b: 47             LD    B,A
-5b8c: 52             LD    D,D
-5b8d: 43             LD    B,E
-5b8e: 52             LD    D,D
-5b8f: 41             LD    B,C
-5b90: 52             LD    D,D
-5b91: 45             LD    B,L
-5b92: CA 40 56       JP    Z,$5640
-
-5b95: 41             LD    B,C
-5b96: 5C             LD    E,H
-5b97: 45             LD    B,L
-5b98: 5C             LD    E,H
-5b99: 41             LD    B,C
-5b9a: 5C             LD    E,H
-5b9b: 43             LD    B,E
-5b9c: 5C             LD    E,H
-5b9d: 47             LD    B,A
-5b9e: 58             LD    E,B
-5b9f: 41             LD    B,C
-5ba0: 56             LD    D,(HL)
-5ba1: 41             LD    B,C
-5ba2: 5A             LD    E,D
-5ba3: 43             LD    B,E
-5ba4: 5A             LD    E,D
-5ba5: 47             LD    B,A
-5ba6: 5A             LD    E,D
-5ba7: 45             LD    B,L
-5ba8: 5A             LD    E,D
-5ba9: 41             LD    B,C
-5baa: CA 40 53       JP    Z,$5340
-
-5bad: 41             LD    B,C
-5bae: CB 44          BIT   0,H
-5bb0: CB 40          BIT   0,B
-5bb2: CB 42          BIT   0,D
-5bb4: CB 46          BIT   0,(HL)
-5bb6: 58             LD    E,B
-5bb7: 41             LD    B,C
-5bb8: 53             LD    D,E
-5bb9: 41             LD    B,C
-5bba: 54             LD    D,H
-5bbb: 47             LD    B,A
-5bbc: 54             LD    D,H
-5bbd: 43             LD    B,E
-5bbe: 54             LD    D,H
-5bbf: 41             LD    B,C
-5bc0: 54             LD    D,H
-5bc1: 45             LD    B,L
-5bc2: 00             NOP   
-5bc3: 00             NOP   
-5bc4: 01 00 04       LD    BC,$0400
-5bc7: 00             NOP   
-5bc8: 09             ADD   HL,BC
-5bc9: 00             NOP   
-5bca: 10 00          DJNZ  $5BCC
-
-5bcc: 19             ADD   HL,DE
-5bcd: 00             NOP   
-5bce: 24             INC   H
-5bcf: 00             NOP   
-5bd0: 31 00 40       LD    SP,$4000
-5bd3: 00             NOP   
-5bd4: 51             LD    D,C
-5bd5: 00             NOP   
-5bd6: 64             LD    H,H
-5bd7: 00             NOP   
-5bd8: 79             LD    A,C
-5bd9: 00             NOP   
-5bda: 90             SUB   A,B
-5bdb: 00             NOP   
-5bdc: A9             XOR   A,C
-5bdd: 00             NOP   
-5bde: C4 00 E1       CALL  NZ,$E100
-5be1: 00             NOP   
-5be2: 00             NOP   
-5be3: 01 21 01       LD    BC,$0121
-5be6: 44             LD    B,H
-5be7: 01 69 01       LD    BC,$0169
-5bea: 90             SUB   A,B
-5beb: 01 B9 01       LD    BC,$01B9
-5bee: E4 01 11       CALL  PO,$1101
-5bf1: 02             LD    (BC),A
-5bf2: 40             LD    B,B
-5bf3: 02             LD    (BC),A
-5bf4: 71             LD    (HL),C
-5bf5: 02             LD    (BC),A
-5bf6: A4             AND   A,H
-5bf7: 02             LD    (BC),A
-5bf8: D9             EXX   
-5bf9: 02             LD    (BC),A
-5bfa: 10 03          DJNZ  $5BFF
-
-5bfc: 49             LD    C,C
-5bfd: 03             INC   BC
-5bfe: 84             ADD   A,H
-5bff: 03             INC   BC
-5c00: C1             POP   BC
-5c01: 03             INC   BC
-5c02: 00             NOP   
-5c03: 01 01 02       LD    BC,$0201
-5c06: 03             INC   BC
-5c07: 03             INC   BC
-5c08: 02             LD    (BC),A
-5c09: 03             INC   BC
-5c0a: 03             INC   BC
-5c0b: 01 63 02       LD    BC,$0263
-5c0e: 03             INC   BC
-5c0f: 63             LD    H,E
-5c10: 01 05 04       LD    BC,$0405
-5c13: 04             INC   B
-5c14: 03             INC   BC
-5c15: 00             NOP   
-5c16: 63             LD    H,E
-5c17: 05             DEC   B
-5c18: 02             LD    (BC),A
-5c19: 63             LD    H,E
-5c1a: 00             NOP   
-5c1b: 01 00 00       LD    BC,IO_0
-5c1e: 00             NOP   
-5c1f: 00             NOP   
-5c20: 00             NOP   
 5c21: 06 60          LD    B,#$60
 5c23: 00             NOP   
 5c24: 00             NOP   
@@ -12974,12 +12664,12 @@ LC_DRAW_A_TRAIL?:
 PLAY_IO_TOWER:
 5d00: CD 20 70       CALL  ZERO_RAM_C000-C418
 5d03: 3E 04          LD    A,#$04
-5d05: 32 5B C4       LD    ($C45B),A
+5d05: 32 5B C4       LD    (GS_DIRECTION:1=DOWN,2=?,3=?,5=?,OTHER=?),A
 5d08: 3E 01          LD    A,#$01
 5d0a: 32 08 C4       LD    ($C408),A
 5d0d: 21 00 7A       LD    HL,BACKGROUND_IO_TOWER_GAME
 5d10: CD 35 70       CALL  COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
-5d13: 21 C0 79       LD    HL,COLOR_PALETTE_FOR_?3 
+5d13: 21 C0 79       LD    HL,IO_COLOR_PALETTE
 5d16: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 5d19: 21 C6 68       LD    HL,$68C6
 5d1c: DD 21 E0 FF    LD    IX,$FFE0
@@ -13142,22 +12832,24 @@ IO_TOWER_INSTRUCTIONS:
 5e3b: 32 08 C4       LD    ($C408),A
 5e3e: 21 00 7A       LD    HL,BACKGROUND_IO_TOWER_GAME
 5e41: CD 35 70       CALL  COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
-5e44: 21 B7 5E       LD    HL,COLOR_PALETTE_FOR_?2 
+5e44: 21 B7 5E       LD    HL,IO_TOWER_COLOR_PALETTE
 5e47: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 5e4a: CD 49 70       CALL  INITIALIZE_SPRITES
-5e4d: 21 B7 5E       LD    HL,COLOR_PALETTE_FOR_?2 
+5e4d: 21 B7 5E       LD    HL,IO_TOWER_COLOR_PALETTE
 5e50: CD 1D 62       CALL  SET_SOME_VALUES_IN_C02X?
 5e53: 21 79 6B       LD    HL,DATA_FOR_SETTING_UP_TRON_SPRITES?
 5e56: 22 2E C0       LD    ($C02E),HL
 5e59: CD 65 60       CALL  INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
 5e5c: 3E 01          LD    A,#$01
 5e5e: 32 5E C4       LD    ($C45E),A
-5e61: DD 21 7E 5E    LD    IX,$5E7E
+5e61: DD 21 7E 5E    LD    IX,IO_TOWER_STRING_DESTINATION_AND_SOURCE_LOCATIONS_00
 5e65: DD 4E 00       LD    C,(IX+$00)
 5e68: DD 46 01       LD    B,(IX+$01)
 5e6b: 78             LD    A,B
 5e6c: B1             OR    A,C
-5e6d: C8             RET   Z              ;if BC was 0, return.  Does this mean skip instructions?
+
+*** if BC was 0, return.  Does this mean skip instructions?
+5e6d: C8             RET   Z
 
 5e6e: DD 5E 02       LD    E,(IX+$02)
 5e71: DD 56 03       LD    D,(IX+$03)
@@ -13166,6 +12858,7 @@ IO_TOWER_INSTRUCTIONS:
 5e7a: DD 19          ADD   IX,DE
 5e7c: 18 E7          JR    $5E65
 
+IO_TOWER_STRING_DESTINATION_AND_SOURCE_LOCATIONS_00:
 5e7e: CC FD 8C 5E CE FD 9B 5E D0 FD A9 5E 00 00 
 
 ENTER_FLASHING_STRING:
@@ -13177,7 +12870,7 @@ CIRCLE_BEFORE_STRING:
 TIMER_EXPIRES_STRING:
 5ea9: TIMER EXPIRES
 
-COLOR_PALETTE_FOR_?2 :
+IO_TOWER_COLOR_PALETTE:
 5eb7: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 5ec7: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 
@@ -13747,7 +13440,7 @@ SET_SOME_VALUES_IN_C02X?:
 62ac: C9             RET   
 
 62ad: 3A 26 C0       LD    A,(IO_TRON_X)
-62b0: 21 00 C0       LD    HL,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF
+62b0: 21 00 C0       LD    HL,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
 62b3: 96             SUB   A,(HL)
 62b4: 30 07          JR    NC,$62BD
 
@@ -13790,7 +13483,7 @@ SET_SOME_VALUES_IN_C02X?:
 62f1: 00             NOP   
 62f2: FD 21 2C F0    LD    IY,$F02C
 62f6: 21 03 C0       LD    HL,$C003
-62f9: 3A 02 C0       LD    A,($C002)
+62f9: 3A 02 C0       LD    A,(GS_DISK_Y)
 62fc: FD 77 00       LD    (IY+$00),A
 62ff: 3A 04 C0       LD    A,($C004)
 6302: 47             LD    B,A
@@ -13830,7 +13523,7 @@ SET_SOME_VALUES_IN_C02X?:
 6338: B9             CP    A,C
 6339: D0             RET   NC
 
-633a: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+633a: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 633d: 32 28 F0       LD    (MCP_BLOCKS_TOP_LEFT_MOVING_DOWN_AND_WRAP_TO_TOP_RIGHT_TO_F09F),A
 6340: 3A 01 C0       LD    A,(MCP_ROWS_OF_BRICKS)
 6343: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
@@ -14435,7 +14128,7 @@ SET_SOME_VALUES_IN_C02X?:
 679d: E5             PUSH  HL
 679e: 21 E2 68       LD    HL,$68E2
 67a1: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
-67a4: 11 00 C0       LD    DE,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF
+67a4: 11 00 C0       LD    DE,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
 67a7: ED A0          LDI   
 67a9: ED A0          LDI   
 67ab: ED A0          LDI   
@@ -15476,7 +15169,7 @@ RETURN_C687-7_IF_NZ_IN_A:
 
 *** Return C687 in A.  If non-zero, subtract 2.  Do not affect other registers.
 RETURN_C687-2_IF_NZ_IN_A:
-7165: C5             PUSH  BC
+7165: C5             PUSH  BC             ;to get the code at 9900 to disassemble correctly
 7166: 47             LD    B,A
 7167: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
 716a: B7             OR    A,A
@@ -15726,11 +15419,11 @@ COLOR_PALETTE_FOR_TANKS_GAME:
 7980: 00 00 01 C2 01 C0 01 E0 00 38 00 10 00 87 01 F8 
 7990: 00 10 00 A8 00 80 01 00 00 3F 00 DB 00 03 01 FF 
 
-?_DATA_USED_FOR_?2:
+COLOR_PALETTE_FOR_2?:
 79a0: 00 00 00 2B 01 80 00 18 00 00 01 C0 01 C2 01 C5 
 79b0: 00 00 00 7E 01 FF 00 0F 00 00 00 08 00 38 00 38 
 
-COLOR_PALETTE_FOR_?3 :
+IO_COLOR_PALETTE:
 79c0: 00 00 00 09 01 D8 00 08 01 F4 01 FC 00 51 01 F0 
 79d0: 00 30 01 E0 00 30 00 05 01 00 01 00 01 2B 01 6D 
 
@@ -17901,59 +17594,38 @@ BACKGROUND_LC:
 9060: 62 41 62 41 62 41 62 41 62 41 62 41 62 41 62 41 
 9070: 62 41 62 41 62 41 62 41 62 41 62 41 62 41 62 41 
 
-COLOR_PALETTE_FOR_?4:
-9080: 00 00 01 C6 01 C3 01 C0 00 9B 00 E4 00 08 00 4D 
-9090: 00 00 00 7C 00 52 00 9B 00 22 00 08 00 18 00 00 
+LC_COLOR_PALETTE:
+9080: 00             NOP   
+9081: 00             NOP   
+9082: 01 C6 01       LD    BC,$01C6
+9085: C3 01 C0       JP    MCP_ROWS_OF_BRICKS
 
-90a0: 00             NOP   
-90a1: 00             NOP   
-90a2: 00             NOP   
-90a3: 2B             DEC   HL
-90a4: 01 80 00       LD    BC,$0080
-90a7: 18 01          JR    $90AA
+9088: 00             NOP   
+9089: 9B             SBC   A,E
+908a: 00             NOP   
+908b: E4 00 08       CALL  PO,$0800
+908e: 00             NOP   
+908f: 4D             LD    C,L
+9090: 00             NOP   
+9091: 00             NOP   
+9092: 00             NOP   
+9093: 7C             LD    A,H
+9094: 00             NOP   
+9095: 52             LD    D,D
+9096: 00             NOP   
+9097: 9B             SBC   A,E
+9098: 00             NOP   
+9099: 22 00 08       LD    ($0800),HL
+909c: 00             NOP   
+909d: 18 00          JR    $909F
 
-90a9: D4 01 EA       CALL  NC,$EA01
-90ac: 01 C2 01       LD    BC,$01C2
-90af: C5             PUSH  BC
-90b0: 00             NOP   
-90b1: 04             INC   B
-90b2: 00             NOP   
-90b3: 7E             LD    A,(HL)
-90b4: 01 FF 00       LD    BC,$00FF
-90b7: 0F             RRCA  
-90b8: 00             NOP   
-90b9: 00             NOP   
-90ba: 00             NOP   
-90bb: 08             EX    AF,AF'
-90bc: 00             NOP   
-90bd: 28 00          JR    Z,$90BF
-
-90bf: 38 00          JR    C,$90C1
-
-90c1: 00 00 00 01 C0 01 E0 00 38 00 10 00 87 01 F8 00 
-90d1: 3C 00 A8 00 80 01 00 00 3F 00 DB 00 03 01 FF 
-
-90e0: 00             NOP   
-90e1: 00             NOP   
-90e2: 00             NOP   
-90e3: 2B             DEC   HL
-90e4: 01 80 00       LD    BC,$0080
-90e7: 18 01          JR    $90EA
-
-90e9: D4 01 EA       CALL  NC,$EA01
-90ec: 01 C2 01       LD    BC,$01C2
-90ef: C5             PUSH  BC
-90f0: 00             NOP   
-90f1: 04             INC   B
-90f2: 00             NOP   
-90f3: 7E             LD    A,(HL)
-90f4: 01 FF 00       LD    BC,$00FF
-90f7: 0F             RRCA  
-90f8: 00             NOP   
-90f9: 00             NOP   
-90fa: 00             NOP   
-90fb: 08             EX    AF,AF'
-90fc: 00 28 00 38 
+909f: 00             NOP   
+90a0: 00 00 00 2B 01 80 00 18 01 D4 01 EA 01 C2 01 C5 
+90b0: 00 04 00 7E 01 FF 00 0F 00 00 00 08 00 28 00 38 
+90c0: 00 00 00 00 01 C0 01 E0 00 38 00 10 00 87 01 F8 
+90d0: 00 3C 00 A8 00 80 01 00 00 3F 00 DB 00 03 01 FF 
+90e0: 00 00 00 2B 01 80 00 18 01 D4 01 EA 01 C2 01 C5 
+90f0: 00 04 00 7E 01 FF 00 0F 00 00 00 08 00 28 00 38 
 
 BACKGROUND_TRAINING_FOR_LC:
 9100: BE 50 BE 50 BE 50 BE 50 62 41 62 41 62 41 62 41 
@@ -18176,14 +17848,15 @@ BACKGROUND_TRAINING_FOR_LC:
 98fc: 50             LD    D,B
 98fd: 45             LD    B,L
 98fe: 6C             LD    L,H
-98ff: CC CD 20       CALL  Z,$20CD
-9902: 70             LD    (HL),B
+98ff: CC 
+
+9900: CD 20 70       CALL  ZERO_RAM_C000-C418
 9903: 3E 78          LD    A,#$78
 9905: 32 6E C4       LD    ($C46E),A
 9908: 21 06 9A       LD    HL,$9A06
-990b: 22 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF),HL
+990b: 22 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),HL
 990e: 3E 18          LD    A,#$18
-9910: 32 02 C0       LD    ($C002),A
+9910: 32 02 C0       LD    (GS_DISK_Y),A
 9913: AF             XOR   A,A
 9914: 32 7B C4       LD    (IN_ATTRACT_MODE?),A
 9917: 32 65 C4       LD    ($C465),A
@@ -18196,7 +17869,7 @@ BACKGROUND_TRAINING_FOR_LC:
 9927: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 992a: CD C7 6F       CALL  CLEAR_BACKGROUND
 992d: CD A4 99       CALL  $99A4
-9930: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+9930: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 9934: DD 7E 07       LD    A,(IX+$07)
 9937: 32 05 F0       LD    ($F005),A
 993a: CD CA 99       CALL  $99CA
@@ -18214,13 +17887,13 @@ BACKGROUND_TRAINING_FOR_LC:
 9953: CD EA 99       CALL  $99EA
 9956: 18 A8          JR    $9900
 
-9958: 21 02 C0       LD    HL,$C002
+9958: 21 02 C0       LD    HL,GS_DISK_Y
 995b: 35             DEC   (HL)
 995c: C0             RET   NZ
 
 995d: 36 18          LD    (HL),#$18
 995f: 21 03 C0       LD    HL,$C003
-9962: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+9962: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 9966: DB 02          IN    A,($02)
 9968: 2F             CPL   
 9969: E6 04          AND   A,#$04
@@ -18273,7 +17946,7 @@ GET_TRIGGER_INPUT_FOR_SERVICE_MENU:
 99a1: F6 01          OR    A,#$01
 99a3: C9             RET   
 
-99a4: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+99a4: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 99a8: DD 6E 00       LD    L,(IX+$00)
 99ab: DD 66 01       LD    H,(IX+$01)
 99ae: E5             PUSH  HL
@@ -18291,7 +17964,7 @@ GET_TRIGGER_INPUT_FOR_SERVICE_MENU:
 99c6: DD 19          ADD   IX,DE
 99c8: 18 E7          JR    $99B1
 
-99ca: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+99ca: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 99ce: DD 6E 02       LD    L,(IX+$02)
 99d1: DD 66 03       LD    H,(IX+$03)
 99d4: 16 00          LD    D,#$00
@@ -18307,7 +17980,7 @@ GET_TRIGGER_INPUT_FOR_SERVICE_MENU:
 99e6: DD 77 02       LD    (IX+$02),A
 99e9: C9             RET   
 
-99ea: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+99ea: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 99ee: DD 6E 04       LD    L,(IX+$04)
 99f1: DD 66 05       LD    H,(IX+$05)
 99f4: 16 00          LD    D,#$00
@@ -18374,7 +18047,7 @@ HIT_FIRE_BUTTON_FOR_TEST_STRING:
 9b12: HIT FIRE BUTTON FOR TEST
 
 9b2b: 21 D8 9B       LD    HL,?_DATA_USED_FOR_?1
-9b2e: 22 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF),HL
+9b2e: 22 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),HL
 9b31: 21 50 9E       LD    HL,$9E50
 9b34: 22 06 C0       LD    ($C006),HL
 9b37: 3E 18          LD    A,#$18
@@ -18386,7 +18059,7 @@ HIT_FIRE_BUTTON_FOR_TEST_STRING:
 9b46: 0E 02          LD    C,#$02
 9b48: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 9b4b: CD A4 99       CALL  $99A4
-9b4e: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+9b4e: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 9b52: DD 7E 07       LD    A,(IX+$07)
 9b55: 32 05 F0       LD    ($F005),A
 9b58: 3A 05 C0       LD    A,($C005)
@@ -18442,7 +18115,7 @@ HIT_FIRE_BUTTON_FOR_TEST_STRING:
 9ba9: 3E 02          LD    A,#$02
 9bab: 32 03 C0       LD    ($C003),A
 9bae: 3A 03 C0       LD    A,($C003)
-9bb1: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+9bb1: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 9bb5: DD BE 06       CP    A,(IX+$06)
 9bb8: 30 13          JR    NC,$9BCD
 
@@ -18571,7 +18244,7 @@ SELECT_A_SOUND_STRING:
 9e8c: 37 1E 00 16 08 00 3C 14 FF 3F 14 40 
 
 9e98: 21 E0 9E       LD    HL,$9EE0
-9e9b: 22 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF),HL
+9e9b: 22 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),HL
 9e9e: 3E 18          LD    A,#$18
 9ea0: AF             XOR   A,A
 9ea1: 32 03 C0       LD    ($C003),A
@@ -18581,7 +18254,7 @@ SELECT_A_SOUND_STRING:
 9ead: 0E 02          LD    C,#$02
 9eaf: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 9eb2: CD A4 99       CALL  $99A4
-9eb5: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+9eb5: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 9eb9: DD 7E 07       LD    A,(IX+$07)
 9ebc: 32 05 F0       LD    ($F005),A
 9ebf: CD BF 9F       CALL  $9FBF
@@ -18720,12 +18393,8 @@ a069: FD 21 71 A0    LD    IY,$A071
 a06d: CD 3D A0       CALL  $A03D
 a070: C9             RET   
 
-a071: 10 27          DJNZ  $A09A
+a071: 10 27 64 00 01 00 1E 00 
 
-a073: 64             LD    H,H
-a074: 00             NOP   
-a075: 01 00 1E       LD    BC,$1E00
-a078: 00             NOP   
 a079: 7B             LD    A,E
 a07a: B7             OR    A,A
 a07b: 7E             LD    A,(HL)
@@ -18953,11 +18622,11 @@ a367: CD 49 70       CALL  INITIALIZE_SPRITES
 a36a: 0E 02          LD    C,#$02
 a36c: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 a36f: 21 AD A3       LD    HL,$A3AD
-a372: 22 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF),HL
+a372: 22 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),HL
 a375: AF             XOR   A,A
 a376: 32 03 C0       LD    ($C003),A
 a379: CD A4 99       CALL  $99A4
-a37c: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+a37c: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 a380: DD 7E 07       LD    A,(IX+$07)
 a383: 32 05 F0       LD    ($F005),A
 a386: 0E 1A          LD    C,#$1A
@@ -19195,7 +18864,6 @@ BUY_IN_ALLOWED_STRING:
 a674: BUY IN ALLOWED
 
 NO_BUY_IN_STRING:
-Error: missed a data line, count-1=a683,curdata=327,numdata=446,start=A681, end=A682
 a683: NO BUY IN     
 
 a692: DC FD 
@@ -19225,7 +18893,6 @@ a6e7: E2 FD
 a6e9: 2 COIN METERS
 
 1_COIN_METER_STRING:
-Error: missed a data line, count-1=a6f7,curdata=339,numdata=446,start=A6F5, end=A6F6
 a6f7: 1 COIN METER 
 
 a705: E4 FD 
@@ -19602,9 +19269,9 @@ aae9: CD 49 70       CALL  INITIALIZE_SPRITES
 aaec: DD 21 70 AC    LD    IX,DATA_USED_TO_TEST_RAM
 aaf0: CD C3 AB       CALL  $ABC3
 aaf3: F5             PUSH  AF
-aaf4: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_?5
+aaf4: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_5?
 aaf7: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
-aafa: 21 AB 01       LD    HL,COLOR_PALETTE_FOR_?6_10_BYTES_TO_01BA
+aafa: 21 AB 01       LD    HL,COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?
 aafd: CD 2D 6F       CALL  COPY_10_FROM_HL_TO_FFC0
 ab00: CD B1 AB       CALL  $ABB1
 ab03: F1             POP   AF
@@ -19698,9 +19365,9 @@ ab97: 5F             LD    E,A
 ab98: FE 21          CP    A,#$21
 ab9a: C2 3F AB       JP    NZ,$AB3F
 
-ab9d: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_?5
+ab9d: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_5?
 aba0: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
-aba3: 21 AB 01       LD    HL,COLOR_PALETTE_FOR_?6_10_BYTES_TO_01BA
+aba3: 21 AB 01       LD    HL,COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?
 aba6: C3 2D 6F       JP    COPY_10_FROM_HL_TO_FFC0
 
 aba9: 00 00 01 C0 00 38 00 07 
@@ -19981,7 +19648,7 @@ ad96: 20 05          JR    NZ,$AD9D
 ad98: CD 8C 99       CALL  GET_TRIGGER_INPUT_FOR_SERVICE_MENU
 ad9b: 28 F2          JR    Z,$AD8F
 
-ad9d: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_?5
+ad9d: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_5?
 ada0: C3 35 6F       JP    COPY_20_FROM_HL_TO_FF80
 
 ada3: 0E 02          LD    C,#$02

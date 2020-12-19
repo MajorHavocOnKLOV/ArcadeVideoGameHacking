@@ -20,6 +20,36 @@
 ;   as such, and an error will be printed.  If this is the case, mark the line before the data as data also.
 
 ; LC = Light Cycle
+; GS = Game Selection
+
+; Order of screens in attract mode:
+;  MCP cone with copyrights
+;  Text screen(s)
+;  Game selection
+;  Game play
+
+; Order of text screens:
+;  Rankings (High Scores)
+;  Point Values
+;  Map of Game Grid 1 & 2
+;  Tank
+;  MCP 1 & 2
+;  IO Tower 1 & 2
+;  Light Cyles
+
+; Direction of games selected: Down, Up, Left, Right
+
+; Attract mode actions in game:
+;  Light Cycles: move up, slow
+;  MCP: Fire (as fast as possible)
+;  IO Tower: Move up and left while firing.  Enter MCP cone after 402, if Tron still alive
+;  Tank: Fire (as fast as possible), rotating turret counter-clockwise, moving (until can't go any further)
+;    up, right, down, left and repeat until someone dies
+
+; Possible bugs:
+; 1) Upon completion of the IO Tower game, the max disks/shots is one greater than it should be for just the next game!
+; 2) The tank is 1 pixel too far right when moving up/down
+; 3) The enemy tank shot has a stray pixel in the bottom row near the right side
 
 label 0000 IO_0
 label 0001 IO_1
@@ -33,8 +63,9 @@ label 00E8 IO_UNKNOWN_WRITTEN_AT_INITIALIZATION
 label 00F0 IO_CTC
 
 label 006b COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_STRING
-label 01ab COLOR_PALETTE_FOR_?6_10_BYTES_TO_01BA
+label 01ab COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?
 label 01cb SERVICE_INTERRUPT_ROUTINE
+label 02e3 GET_INPUT_FROM_JOYSTICK_TRIGGER_+?
 label 0401 STRING_IN_DE_TO_HL
 label 041c CHECK_DATA_C4F0_TO_C657?
 label 04b0 DEFAULT_HIGH_SCORE_TABLE
@@ -52,14 +83,20 @@ label 0513 CREDITS_STRING
 label 0557 OUTPUT_TO_SOUND_LATCHES
 label 06ca PRINT_OUT_MESSAGES_IN_QUEUES
 label 06f5 PRINT_OUT_MESSAGES_IN_QUEUE_2
-label 0792 OUTPUT_IO_TOWER_TIMER
+label 0792 OUTPUT_IO_TOWER_TIMER?/TELETYPE_PRINTING_TO_THE_SCREEN_UNTIL_NULL_BYTE?
 label 0825 UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE
+
+label 0900 ATTRACT_MODE_LOOP
+
+label 0af1 DISPLAY_MCP_CONE_WITH_COPYRIGHTS_AND_NEXT_INSTRUCTIONS
+
 label 0b58 COPYRIGHT_MCMLXXXI_STRING
 label 0b6b WALT_DISNEY_PRODUCTIONS_STRING
 label 0b87 COPYRIGHT_MCMLXXXII_STRING
 label 0b9b BALLY_MIDWAY_MFG_CO_STRING
 label 0d52 READ_AND_PROCESS_INPUT_PORTS
 label 0baf ALL_RIGHTS_RESERVED_STRING
+label 0d38 READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS
 label 101b PLEASE_STRING
 label 1022 ENTER_STRING
 label 1028 YOUR_STRING
@@ -152,11 +189,12 @@ label 1dcb 1000_BONUS_FOR_ENTERING_STRING
 label 1de3 THE_CONE_STRING
 label 1dec 1000_BONUS_FOR_DESTROYING_STRING
 label 1e06 ALL_BLOCKS_STRING
+label 1f00 GS_MOVE_DOWN
 label 1f97 START_GAME
 label 20a5 VECTOR_OF_DIFFICULTY_TO_HARDNESS_MAPS_(STARTS_AT_20A7)
 label 2115 INITIALIZE_LEVEL?
 label 234A BACKGROUND_PICK_A_GAME
-label 2aca COLOR_PALETTE_FOR_?0
+label 2aca COLOR_PALETTE_1?
 label 2c48 DATA_TO_2C4C?_USED_STARTING_AT_6F68
 label 2c4d 1000_BONUS_ALL_BLOCKS_HIT_STRING
 label 2c67 1000_FOR_ENTERING_CONE_STRING
@@ -187,10 +225,11 @@ label 5551 LC_ERASE_TRAIL_OF_DESTROYED_LC
 label 59e5 LC_DRAW_A_TRAIL?
 label 5d00 PLAY_IO_TOWER
 label 5e36 IO_TOWER_INSTRUCTIONS
+label 5e7e IO_TOWER_STRING_DESTINATION_AND_SOURCE_LOCATIONS_00
 label 5e8c ENTER_FLASHING_STRING
 label 5e9b CIRCLE_BEFORE_STRING
 label 5ea9 TIMER_EXPIRES_STRING
-label 5eb7 COLOR_PALETTE_FOR_?2 
+label 5eb7 IO_TOWER_COLOR_PALETTE
 label 5f23 CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?
 label 5f73 HANDLE_JOYSTICK_INPUT?_TO_601F
 label 6065 INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
@@ -223,12 +262,12 @@ label 7159 RETURN_C687-7_IF_NZ_IN_A
 label 7165 RETURN_C687-2_IF_NZ_IN_A
 label 7200 BACKGROUND_TANK_GAME
 label 7980 COLOR_PALETTE_FOR_TANKS_GAME
-label 79a0 ?_DATA_USED_FOR_?2
-label 79c0 COLOR_PALETTE_FOR_?3 
+label 79a0 COLOR_PALETTE_FOR_2?
+label 79c0 IO_COLOR_PALETTE
 label 7a00 BACKGROUND_IO_TOWER_GAME
 label 8900 BACKGROUND_LC
-label 9080 COLOR_PALETTE_FOR_?4
-label 90c0 COLOR_PALETTE_FOR_?5
+label 9080 LC_COLOR_PALETTE
+label 90c0 COLOR_PALETTE_FOR_5?
 label 9100 BACKGROUND_TRAINING_FOR_LC
 label 998c GET_TRIGGER_INPUT_FOR_SERVICE_MENU
 
@@ -439,8 +478,9 @@ label b17e USER_STRING
 ;
 ; c000 LC_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY
 ; c000 MCP 00-03 legs open, 04-04 legs closed
-label c000 MCP_TRON_LEGS-LC_TRAILS_TO_C1DF
+label c000 MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
 label c001 MCP_ROWS_OF_BRICKS
+label c002 GS_DISK_Y
 label c007 MCP_TRON_X
 label c009 MCP_TRON_Y
 label c00d IO_TOWER_TIMER_VALUE_REVERSED_TO_C010
@@ -459,8 +499,9 @@ label c0dc MCP_TOWER_Y
 label c0dd MCP_TOWER_X
 label c0e3 MCP_BRICKS_REMAINING_COUNT
 label c14a NUMBER_OF_TANKS
-label c159 NUMBER_OF_TANKS_ALSO?
-
+label c159 NUMBER_OF_TANKS_2
+label c15b FIRST_NUMBER_FROM_4F7E
+label c15f TANK_IF_HARDNESS>0X0B_SEE_COMMENT_AT_3A79
 label c402 COUNTDOWN_TIMER_SECONDS
 label c403 COUNTDOWN_TIMER_FRAMES
 label c406 MCP_DISK_NUMBER_BEING_PROCESSED
@@ -482,6 +523,7 @@ label c425 ATTEMPTED_GAMES_XXXXDURL
 label c426 VECTOR_OF_GAMES_TO_C42D
 label c42e NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_SHOTS_MAY_GO_TO_1???
 label c42f OTHER_PLAYER_DATA
+label c45b GS_DIRECTION:1=DOWN,2=?,3=?,5=?,OTHER=?
 label c45f PLAYER_NUMBER
 label c466 NUMBER_OF_SCREEN_MESSAGES_FROM_C4D6
 label c467 NUMBER_OF_SCREEN_MESSAGES_2_FROM_C4BE
@@ -572,6 +614,14 @@ commentline 06ca Each entry is 2 bytes destination & 2 bytes source
 commentline 06f5 Count @C467 and data starting @C4BE. @C4BC is next entry for Q
 commentline 06f5 Each entry is 2 bytes destination & 2 bytes source
 
+data 0786-0791
+
+commentline 07cc FF byte has some special processing, for (c) only?
+commentline 07e7 00 byte falls here
+
+commentline Is this data? Are the bounds right? Where is this used?
+data 0834-08ff
+
 ascii 0b58-0b6a
 ascii 0b6b-0b82
 
@@ -583,9 +633,9 @@ ascii 0baf-0bc2
 
 commentline 0d52 I/O byte 00, bit 4? (isn't it 7?) is trigger. 0 when trigger is pulled, 1 otherwise
 
-data 0dc3-0e0a
-
+data 0dc3-0dfd
 ascii 0dfe-0e00
+data 0e01-0e0a
 
 data 0e55-0e5e
 
@@ -734,27 +784,41 @@ commentline 2162 show games on game selection screen
 commentline 2207 Modify game selection screen to disable completed and show type of game if already attempted
 commentline 2213 4x(3 bytes: ? ? ?). I think it's used to draw the sprites on the game selection screen
 
-data 226e-22b7
-comment 22b8 Is the data block at 22b8 correct?  What's it used for?
+data 226e-22ab
+
+commentline 22ac 4x3 bytes for auto game selection: disk X, disk Y,
+commentline 22ac what to add to VECTOR_OF_GAMES to use correct 2310 data structure
+commentline 22ac The X or Y position is checked against to start that game
+data 22ac-22b7
+commentline 22b8 Is the data block at 22b8 correct?  What's it used for?
 data 22b8-2307
 
-; 2310
-; 2316
-; 231c
-; 2322
-
-; hack to print 2308
-data 2304-2307
 commentline 2308 Used at 2115.  Set what game is at what quadrant?  Then 4x vector table.  Then 
 data 2308-230F
-data 2310-2311
-data 2312-2313
-data 2314-2315
-data 2316-2317
+; This doesn't seem right
+;data 2310-2311
+;data 2312-2313
+;data 2314-2315
+;data 2316-2317
+
+commentline 2310 Vector of games to quadrants at C426 points to these blocks of data
+commentline 2310 2x game location, 2x another data structure below, 2x instrcution location
+data 2310-2315
+data 2316-231b
+data 231c-2321
+data 2322-2327
+
+commentline 2328 The start locations were pulled the data structures above (starting 2310)
+commentline 2328 the end points were just entered one less than the starting point of the
+commentline 2328 next data block, but looking at the data itself, this looks OK.
+data 2328-2331
+data 2332-2335
+data 2336-2339
+data 233a-233d
+
+
 data 233e-2349
 
-; hack to get label at 234A to print
-data 2346-2349
 data 234A-2AC9
 
 data 2aca-2ae9
@@ -790,9 +854,16 @@ data 3926-3945
 commentline 3966 Data for setting up MCP cone game. 10x4 plugged into C0E5-9? Direction! Number of blocks? Vector to other data?
 data 3966-398c
 
+commentline 3a2b Set up shots (up to 4) in sprites 3-6 (F00C-F01B)
+
+commentline 3a79 If hardness above 0x0B (11), subtract 5 from hardness until hardness for this game
+commentline 3a79 is =< 0x0B. Increment C for each subtraction. Cap C at 4. Multiply C times 32 
+commentline 3a79 and place into C15F
 
 ascii 3d35-3d40
 ascii 3d41-3d4c
+
+commentline 3aae If bit 7 in number of tanks is set, C15C=0x35
 
 comment 3f91 Invincibility TANK Game = 18 (JR *) (tank collision?)
 comment 473b Invincibility TANK Game = 18 (JR *) (bullet collision?)
@@ -833,7 +904,10 @@ ascii 5182-518b
 ascii 518c-519b
 ascii 519c-51a9
 
-comment 5e6d if BC was 0, return.  Does this mean skip instructions?
+commentline used at 57ba
+data 5b62-5c20
+
+commentline 5e6d if BC was 0, return.  Does this mean skip instructions?
 
 data 5e7e-5e8b
 
@@ -904,13 +978,12 @@ data 79e0-79ff
 data 7a00-817F
 data 8900-907F
 
-data 9080-909f
+data 90a0-90ff
 
-data 90C0-90df
-
-; hack to get label at 9100 to print
-data 90fc-90ff
 data 9100-987F
+
+comment Just to get the code at 9900 to disassemble correctly
+data 98ff-98ff
 
 data 9a11-9a2d
 data 9a2e-9a5f
@@ -973,6 +1046,8 @@ ascii 9f94-9f9a
 ascii 9f9b-9fa6
 ascii 9fa7-9fb3
 ascii 9fb4-9fb8
+
+data a071-a078
 
 data a120-a151
 
@@ -1046,7 +1121,7 @@ data a667-a668
 ascii a669-a671
 data a672-a673
 ascii a674-a682
-data a681-a682
+;data a681-a682
 ascii a683-a691
 data a692-a693
 ascii a694-a6a5
@@ -1060,7 +1135,7 @@ ascii a6cd-a6d9
 ascii a6da-a6e6
 data a6e7-a6e8
 ascii a6e9-a6f6
-data a6f5-a6f6
+;data a6f5-a6f6
 ascii a6f7-a704
 data a705-a706
 ascii a707-a70f
