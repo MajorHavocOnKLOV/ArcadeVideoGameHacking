@@ -175,10 +175,10 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 NC,$03F0
       1 MOVE_SPIDERS?
       1 MCP_PROCESS_DISK_POSITION(S)?
-      1 M,YOUR_STRING
-      1 M,PLEASE_STRING
+      1 M,YOUR_S
+      1 M,PLEASE_S
       1 M,IO_0
-      1 M,GRID_BUGS___50_STRING
+      1 M,GRID_BUGS___50_S
       1 M,$FEA8
       1 M,$FE1C
       1 M,$FE0C
