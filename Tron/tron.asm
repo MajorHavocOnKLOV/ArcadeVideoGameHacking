@@ -153,6 +153,9 @@ PLAY_TANKS EQU $3a00
 TANKS_INSTRUCTIONS EQU $3cdf
 DESTROY_ALL_STRING EQU $3d35
 ENEMY_TANKS_STRING EQU $3d41
+TANK_JOYSTICK_INPUT_TABLE? EQU $3d4d
+TANKS_DATA_FOR_x_STARTS_AT_4066 EQU $4063
+TANKS_DATA_FOR_x_STARTS_AT_46FF EQU $46fb
 COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE? EQU $47a7
 TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA EQU $4f7e
 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE EQU $4d77
@@ -408,13 +411,14 @@ ASSEMBLY_STRING EQU $b16e
 OS_STRING EQU $b177
 JCL_STRING EQU $b17a
 USER_STRING EQU $b17e
-MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X EQU $c000
-MCP_ROWS_OF_BRICKS EQU $c001
-GS_DISK_Y EQU $c002
-MCP_TRON_X EQU $c007
-MCP_TRON_Y EQU $c009
+TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X EQU $c000
+TANK_PIC_OR_MCP_ROWS_OF_BRICKS EQU $c001
+TANK_Y_OR_GS_DISK_Y EQU $c002
+MCP_TRON_X_TANKS_DATA_VECTOR_x_1 EQU $c007
+MCP_TRON_Y_TANKS_DATA_VECTOR_x_2 EQU $c009
 IO_TOWER_TIMER_VALUE_REVERSED_TO_C010 EQU $c00d
 INFINITE_TIME_CHEAT EQU $c00e
+TANKS_SHOTS_IN_RAM_STARTS_AT_C020 EQU $c010
 MCP_DISK_DATA_TO_C02F/IO_TOWER_TIMER_DIGITS_TO_C019 EQU $c012
 IO_TOWER_INCREMENTS_19_TO_1E_FOR_EACH_DISK_THROWN EQU $c022
 IO_TOWER_TRIGGER_DEBOUNCE? EQU $c023
@@ -423,13 +427,14 @@ IO_TRON_X EQU $c026
 IO_TRON_Y EQU $c028
 JOYSTICK_INPUT_ARRAY_TO_C02C EQU $c029
 MCP_DATA_TO_C0D9? EQU $c03a
-INFO_FOR_TANK_GAME_SEE_3ABF_TO_C05A EQU $c051
+INFO_FOR_TANK_GAME_SEE_3ABF_TO_C05A_FOR_A_SINGLE_TANK EQU $c051
 MCP_POSITION_OF_BLOCKS_0_TO_F EQU $c062
 MCP_TOWER_Y EQU $c0dc
 MCP_TOWER_X EQU $c0dd
 MCP_BRICKS_REMAINING_COUNT EQU $c0e3
+TANKS_ENEMY_SHOTS_IN_RAM_AT_C111? EQU $c108
 NUMBER_OF_TANKS EQU $c14a
-NUMBER_OF_TANKS_2 EQU $c159
+TANKS_NUMBER_OF_ENEMY_SHOTS? EQU $c159
 FIRST_NUMBER_FROM_4F7E EQU $c15b
 TANK_IF_HARDNESS>0X0B_SEE_COMMENT_AT_3A79 EQU $c15f
 COUNTDOWN_TIMER_SECONDS EQU $c402
@@ -476,9 +481,11 @@ HIGH_SCORES_DIGITS_3BYTES_BCD EQU $c52c
 FLIP_SCREEN_IF_VALUE_IS_01 EQU $c687
 NVRAM EQU $c000
 SPRITE_RAM EQU $f000
-MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM) EQU $f004
+TANK_OR_MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM) EQU $f004
+TANK_SHOTS_F00C_TO_F01B(SPRITES_3_TO_6) EQU $f00c
 DISK_1_TO_3/MAYBE_SHOTS_TOO? EQU $f018
 MCP_BLOCKS_TOP_LEFT_MOVING_DOWN_AND_WRAP_TO_TOP_RIGHT_TO_F09F EQU $f028
+TANKS_ENEMY_SHOTS? EQU $f044
 MCP_TOWER_TO_F133 EQU $f0a0
 VIDEO_RAM_TO_FF7F EQU $f800
 SCRATCH_RAM_TO_FFFF EQU $ff80
@@ -2173,7 +2180,7 @@ ALL_RIGHTS_RESERVED_STRING:
 
 0c0a: CD 49 70       CALL  INITIALIZE_SPRITES
 0c0d: CD C7 6F       CALL  CLEAR_BACKGROUND
-0c10: FD 21 04 F0    LD    IY,MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
+0c10: FD 21 04 F0    LD    IY,TANK_OR_MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
 0c14: 3E 01          LD    A,#$01
 0c16: 32 65 C4       LD    ($C465),A
 0c19: CD 10 0D       CALL  $0D10
@@ -2393,7 +2400,7 @@ READ_AND_PROCESS_INPUT_PORTS:
 0d9d: 10 E9          DJNZ  $0D88
 
 0d9f: 06 18          LD    B,#$18
-0da1: FD 21 04 F0    LD    IY,MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
+0da1: FD 21 04 F0    LD    IY,TANK_OR_MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
 0da5: 21 C3 0D       LD    HL,$0DC3
 0da8: 3E 56          LD    A,#$56
 0daa: 86             ADD   A,(HL)
@@ -2635,7 +2642,7 @@ READ_AND_PROCESS_INPUT_PORTS:
 0f6c: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 0f6f: 10 FB          DJNZ  $0F6C
 
-0f71: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+0f71: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 0f74: FE 0B          CP    A,#$0B
 0f76: DC 7F 0F       CALL  C,$0F7F
 0f79: CD 3F 13       CALL  $133F
@@ -2668,7 +2675,7 @@ READ_AND_PROCESS_INPUT_PORTS:
 0faf: FE 5B          CP    A,#$5B
 0fb1: 38 F6          JR    C,$0FA9
 
-0fb3: FD 21 04 F0    LD    IY,MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
+0fb3: FD 21 04 F0    LD    IY,TANK_OR_MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
 0fb7: FD 36 00 28    LD    (IY+$00),#$28
 0fbb: 3E 10          LD    A,#$10
 0fbd: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
@@ -2683,14 +2690,14 @@ READ_AND_PROCESS_INPUT_PORTS:
 0fd6: 32 04 C0       LD    ($C004),A
 0fd9: FD 21 DE FC    LD    IY,$FCDE
 0fdd: 21 50 01       LD    HL,$0150
-0fe0: 22 01 C0       LD    (MCP_ROWS_OF_BRICKS),HL
+0fe0: 22 01 C0       LD    (TANK_PIC_OR_MCP_ROWS_OF_BRICKS),HL
 0fe3: CD 3C 12       CALL  $123C
 0fe6: CD 40 10       CALL  $1040
 0fe9: 06 04          LD    B,#$04
 0feb: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 0fee: 10 FB          DJNZ  $0FEB
 
-0ff0: 2A 01 C0       LD    HL,(MCP_ROWS_OF_BRICKS)
+0ff0: 2A 01 C0       LD    HL,(TANK_PIC_OR_MCP_ROWS_OF_BRICKS)
 0ff3: 2B             DEC   HL
 0ff4: 7C             LD    A,H
 0ff5: B5             OR    A,L
@@ -2873,7 +2880,7 @@ END_STRING2:
 111c: C9             RET   
 
 111d: DD 21 1F C5    LD    IX,$C51F
-1121: 21 00 C0       LD    HL,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
+1121: 21 00 C0       LD    HL,TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
 1124: 3E 0A          LD    A,#$0A
 1126: 96             SUB   A,(HL)
 1127: 28 1A          JR    Z,$1143
@@ -2953,13 +2960,13 @@ END_STRING2:
 11b5: FE 65          CP    A,#$65
 11b7: 38 0F          JR    C,$11C8
 
-11b9: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
+11b9: 32 00 C0       LD    (TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
 11bc: 11 22 12       LD    DE,NOT_IN_THE_TOP_STRING
 11bf: CD F4 6F       CALL  INCREASE_C40D_BY_4_AND_ADD_A_MESSAGE_TO_Q
 11c2: 11 31 12       LD    DE,100_SCORES_STRING
 11c5: C3 F4 6F       JP    INCREASE_C40D_BY_4_AND_ADD_A_MESSAGE_TO_Q
 
-11c8: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
+11c8: 32 00 C0       LD    (TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
 11cb: 21 16 C4       LD    HL,$C416
 11ce: 06 03          LD    B,#$03
 11d0: 7E             LD    A,(HL)
@@ -2969,7 +2976,7 @@ END_STRING2:
 11d7: 10 F7          DJNZ  $11D0
 
 11d9: 21 05 C0       LD    HL,$C005
-11dc: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+11dc: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 11df: FE 64          CP    A,#$64
 11e1: 38 05          JR    C,$11E8
 
@@ -3639,7 +3646,7 @@ PRINT_HIGH_SCORE_SCREEN:
 15ba: 0E 03          LD    C,#$03
 15bc: 11 BF FF       LD    DE,$FFBF
 15bf: AF             XOR   A,A
-15c0: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
+15c0: 32 00 C0       LD    (TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
 
 *** print out high scores
 15c3: FD 7E 00       LD    A,(IY+$00)
@@ -3651,7 +3658,7 @@ PRINT_HIGH_SCORE_SCREEN:
 15d0: FE 30          CP    A,#$30
 15d2: 20 0D          JR    NZ,$15E1
 
-15d4: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+15d4: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 15d7: B7             OR    A,A
 15d8: 20 05          JR    NZ,$15DF
 
@@ -3674,7 +3681,7 @@ PRINT_HIGH_SCORE_SCREEN:
 15f0: FE 30          CP    A,#$30
 15f2: 20 12          JR    NZ,$1606
 
-15f4: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+15f4: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 15f7: B7             OR    A,A
 15f8: 20 0A          JR    NZ,$1604
 
@@ -3712,7 +3719,7 @@ PRINT_HIGH_SCORE_SCREEN:
 161c: DD 21 06 C5    LD    IX,$C506
 1620: 01 8C FA       LD    BC,$FA8C
 1623: 3E 0A          LD    A,#$0A
-1625: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
+1625: 32 00 C0       LD    (TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
 1628: DD 7E 00       LD    A,(IX+$00)
 162b: FE 0C          CP    A,#$0C
 162d: 38 02          JR    C,$1631
@@ -3731,7 +3738,7 @@ PRINT_HIGH_SCORE_SCREEN:
 1644: 03             INC   BC
 1645: 03             INC   BC
 1646: 03             INC   BC
-1647: 21 00 C0       LD    HL,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
+1647: 21 00 C0       LD    HL,TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
 164a: 35             DEC   (HL)
 164b: 20 DB          JR    NZ,$1628
 
@@ -3745,7 +3752,7 @@ RANKINGS_STRING:
 165f: 11 AB 16       LD    DE,POINT_VALUES_STRING
 1662: CD FF 6F       CALL  ADD_A_MESSAGE_TO_Q
 1665: DD 21 B8 16    LD    IX,$16B8
-1669: FD 21 04 F0    LD    IY,MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
+1669: FD 21 04 F0    LD    IY,TANK_OR_MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
 166d: DD 7E 00       LD    A,(IX+$00)
 1670: B7             OR    A,A
 1671: CA 35 15       JP    Z,$1535
@@ -4379,10 +4386,10 @@ GS_MOVE_DOWN:
 1f4b: 77             LD    (HL),A
 1f4c: C9             RET   
 
-1f4d: FD 21 04 F0    LD    IY,MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
+1f4d: FD 21 04 F0    LD    IY,TANK_OR_MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
 1f51: DD 2A 58 C4    LD    IX,($C458)
 1f55: 06 02          LD    B,#$02
-1f57: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+1f57: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 1f5a: DD BE 00       CP    A,(IX+$00)
 1f5d: 28 07          JR    Z,$1F66
 
@@ -4391,9 +4398,9 @@ GS_MOVE_DOWN:
 
 1f63: 0E FF          LD    C,#$FF
 1f65: 81             ADD   A,C
-1f66: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
+1f66: 32 00 C0       LD    (TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
 1f69: FD 77 00       LD    (IY+$00),A
-1f6c: 3A 02 C0       LD    A,(GS_DISK_Y)
+1f6c: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 1f6f: DD BE 01       CP    A,(IX+$01)
 1f72: 28 07          JR    Z,$1F7B
 
@@ -4402,14 +4409,14 @@ GS_MOVE_DOWN:
 
 1f78: 0E FF          LD    C,#$FF
 1f7a: 81             ADD   A,C
-1f7b: 32 02 C0       LD    (GS_DISK_Y),A
+1f7b: 32 02 C0       LD    (TANK_Y_OR_GS_DISK_Y),A
 1f7e: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 1f81: FD 77 02       LD    (IY+$02),A
-1f84: 3A 02 C0       LD    A,(GS_DISK_Y)
+1f84: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 1f87: DD BE 01       CP    A,(IX+$01)
 1f8a: 20 08          JR    NZ,$1F94
 
-1f8c: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+1f8c: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 1f8f: DD BE 00       CP    A,(IX+$00)
 1f92: 28 03          JR    Z,START_GAME
 
@@ -4478,12 +4485,12 @@ START_GAME:
 200b: 06 10          LD    B,#$10
 200d: CD 3B 6F       CALL  $6F3B
 2010: CD 07 22       CALL  $2207
-2013: FD 21 04 F0    LD    IY,MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
+2013: FD 21 04 F0    LD    IY,TANK_OR_MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
 2017: 3E 80          LD    A,#$80
-2019: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
+2019: 32 00 C0       LD    (TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
 201c: FD 77 00       LD    (IY+$00),A
 201f: 3E A4          LD    A,#$A4
-2021: 32 02 C0       LD    (GS_DISK_Y),A
+2021: 32 02 C0       LD    (TANK_Y_OR_GS_DISK_Y),A
 2024: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 2027: FD 77 02       LD    (IY+$02),A
 202a: FD 36 01 06    LD    (IY+$01),#$06
@@ -4664,11 +4671,11 @@ INITIALIZE_LEVEL?:
 217d: 21 B8 22       LD    HL,$22B8
 2180: 87             ADD   A,A
 2181: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
-2184: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+2184: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 2187: 86             ADD   A,(HL)
 2188: 47             LD    B,A
 2189: 23             INC   HL
-218a: 3A 02 C0       LD    A,(GS_DISK_Y)
+218a: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 218d: 86             ADD   A,(HL)
 218e: 4F             LD    C,A
 218f: C5             PUSH  BC
@@ -4745,10 +4752,10 @@ INITIALIZE_LEVEL?:
 
 21f4: C1             POP   BC
 21f5: 78             LD    A,B
-21f6: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
-21f9: 32 04 F0       LD    (MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)),A
+21f6: 32 00 C0       LD    (TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
+21f9: 32 04 F0       LD    (TANK_OR_MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)),A
 21fc: 79             LD    A,C
-21fd: 32 02 C0       LD    (GS_DISK_Y),A
+21fd: 32 02 C0       LD    (TANK_Y_OR_GS_DISK_Y),A
 2200: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 2203: 32 06 F0       LD    ($F006),A
 2206: C9             RET   
@@ -5328,7 +5335,7 @@ MCP_INSTRUCTIONS:
 
 2ce2: CD D9 2F       CALL  $2FD9
 2ce5: 21 7A 36       LD    HL,$367A
-2ce8: 22 10 C0       LD    ($C010),HL
+2ce8: 22 10 C0       LD    (TANKS_SHOTS_IN_RAM_STARTS_AT_C020),HL
 2ceb: C3 AD 2E       JP    $2EAD
 
 2cee: CC FC F8       CALL  Z,$F8FC
@@ -5362,7 +5369,7 @@ PLAY_MCP:
 *** Each row has 16 bricks
 *** Register c contains 1C, 1E, or 1F (why? visibility of bricks?)
 *** C0E3 ends up with the total number of bricks (C001*0x10)
-2d33: 21 01 C0       LD    HL,MCP_ROWS_OF_BRICKS
+2d33: 21 01 C0       LD    HL,TANK_PIC_OR_MCP_ROWS_OF_BRICKS
 2d36: 36 03          LD    (HL),#$03
 2d38: 0E 1C          LD    C,#$1C
 2d3a: B7             OR    A,A
@@ -5397,7 +5404,7 @@ PLAY_MCP:
 2d6b: 21 3A C0       LD    HL,MCP_DATA_TO_C0D9?
 2d6e: 3A E6 C0       LD    A,($C0E6)
 2d71: 57             LD    D,A
-2d72: 3A 01 C0       LD    A,(MCP_ROWS_OF_BRICKS)
+2d72: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BRICKS)
 2d75: 47             LD    B,A
 2d76: AF             XOR   A,A
 2d77: 82             ADD   A,D
@@ -5418,7 +5425,7 @@ PLAY_MCP:
 2d8c: 11 04 00       LD    DE,IO_4
 2d8f: DD 21 63 C0    LD    IX,$C063
 2d93: 06 1E          LD    B,#$1E
-2d95: 3A 01 C0       LD    A,(MCP_ROWS_OF_BRICKS)
+2d95: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BRICKS)
 2d98: 0E 05          LD    C,#$05
 2d9a: DD 36 03 80    LD    (IX+$03),#$80
 2d9e: D6 01          SUB   A,#$01
@@ -5501,7 +5508,7 @@ PLAY_MCP:
 
 *** MCP: Tron has gone too far right. Set him to E7 x
 2e21: 3E E7          LD    A,#$E7
-2e23: 32 07 C0       LD    (MCP_TRON_X),A
+2e23: 32 07 C0       LD    (MCP_TRON_X_TANKS_DATA_VECTOR_x_1),A
 2e26: 2A 08 C0       LD    HL,($C008)
 2e29: ED 5B 0C C0    LD    DE,($C00C)
 2e2d: 19             ADD   HL,DE
@@ -5517,7 +5524,7 @@ PLAY_MCP:
 2e3c: D0             RET   NC
 
 2e3d: 3E 25          LD    A,#$25
-2e3f: 32 09 C0       LD    (MCP_TRON_Y),A
+2e3f: 32 09 C0       LD    (MCP_TRON_Y_TANKS_DATA_VECTOR_x_2),A
 2e42: C9             RET   
 
 2e43: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
@@ -5544,7 +5551,7 @@ PLAY_MCP:
 2e61: 19             ADD   HL,DE
 2e62: 11 7A 36       LD    DE,$367A
 2e65: 19             ADD   HL,DE
-2e66: 22 10 C0       LD    ($C010),HL
+2e66: 22 10 C0       LD    (TANKS_SHOTS_IN_RAM_STARTS_AT_C020),HL
 2e69: C9             RET   
 
 2e6a: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
@@ -5592,12 +5599,12 @@ PLAY_MCP:
 2ea7: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 2eaa: C3 D6 30       JP    $30D6
 
-2ead: DD 2A 10 C0    LD    IX,($C010)
-2eb1: 3A 07 C0       LD    A,(MCP_TRON_X)
-2eb4: 32 04 F0       LD    (MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)),A
+2ead: DD 2A 10 C0    LD    IX,(TANKS_SHOTS_IN_RAM_STARTS_AT_C020)
+2eb1: 3A 07 C0       LD    A,(MCP_TRON_X_TANKS_DATA_VECTOR_x_1)
+2eb4: 32 04 F0       LD    (TANK_OR_MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)),A
 2eb7: 32 08 F0       LD    ($F008),A
 2eba: 47             LD    B,A
-2ebb: 3A 09 C0       LD    A,(MCP_TRON_Y)
+2ebb: 3A 09 C0       LD    A,(MCP_TRON_Y_TANKS_DATA_VECTOR_x_2)
 2ebe: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 2ec1: 4F             LD    C,A
 2ec2: 32 06 F0       LD    ($F006),A
@@ -5606,7 +5613,7 @@ PLAY_MCP:
 2eca: 3A 0B C0       LD    A,($C00B)
 2ecd: 21 0D C0       LD    HL,IO_TOWER_TIMER_VALUE_REVERSED_TO_C010
 2ed0: B6             OR    A,(HL)
-2ed1: 21 00 C0       LD    HL,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
+2ed1: 21 00 C0       LD    HL,TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
 2ed4: 28 06          JR    Z,$2EDC
 
 2ed6: 35             DEC   (HL)
@@ -5639,7 +5646,7 @@ PLAY_MCP:
 2f0f: CB 86          RES   0,(HL)
 2f11: 78             LD    A,B
 2f12: DD 86 08       ADD   A,(IX+$08)
-2f15: 32 0C F0       LD    ($F00C),A
+2f15: 32 0C F0       LD    (TANK_SHOTS_F00C_TO_F01B(SPRITES_3_TO_6)),A
 2f18: 79             LD    A,C
 2f19: DD 86 09       ADD   A,(IX+$09)
 2f1c: 32 0E F0       LD    ($F00E),A
@@ -5651,7 +5658,7 @@ PLAY_MCP:
 
 2f2b: 78             LD    A,B
 2f2c: DD 86 05       ADD   A,(IX+$05)
-2f2f: 32 0C F0       LD    ($F00C),A
+2f2f: 32 0C F0       LD    (TANK_SHOTS_F00C_TO_F01B(SPRITES_3_TO_6)),A
 2f32: 79             LD    A,C
 2f33: DD 86 06       ADD   A,(IX+$06)
 2f36: 32 0E F0       LD    ($F00E),A
@@ -5688,7 +5695,7 @@ PLAY_MCP:
 2f78: AF             XOR   A,A
 2f79: 32 08 C4       LD    ($C408),A
 2f7c: 3E 00          LD    A,#$00
-2f7e: 32 0C F0       LD    ($F00C),A
+2f7e: 32 0C F0       LD    (TANK_SHOTS_F00C_TO_F01B(SPRITES_3_TO_6)),A
 2f81: 32 14 F0       LD    ($F014),A
 2f84: 32 18 F0       LD    (DISK_1_TO_3/MAYBE_SHOTS_TOO?),A
 2f87: 0E 30          LD    C,#$30
@@ -5703,7 +5710,7 @@ PLAY_MCP:
 2f96: B7             OR    A,A
 2f97: 20 05          JR    NZ,$2F9E
 
-2f99: 21 02 C0       LD    HL,GS_DISK_Y
+2f99: 21 02 C0       LD    HL,TANK_Y_OR_GS_DISK_Y
 2f9c: 35             DEC   (HL)
 2f9d: C0             RET   NZ
 
@@ -5731,16 +5738,16 @@ PLAY_MCP:
 2fc6: 0E 27          LD    C,#$27
 2fc8: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 2fcb: 3E 80          LD    A,#$80
-2fcd: 32 02 C0       LD    (GS_DISK_Y),A
+2fcd: 32 02 C0       LD    (TANK_Y_OR_GS_DISK_Y),A
 2fd0: 3E 00          LD    A,#$00
-2fd2: 32 04 F0       LD    (MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)),A
+2fd2: 32 04 F0       LD    (TANK_OR_MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)),A
 2fd5: 32 08 F0       LD    ($F008),A
 2fd8: C9             RET   
 
 2fd9: 3E 80          LD    A,#$80
-2fdb: 32 07 C0       LD    (MCP_TRON_X),A
+2fdb: 32 07 C0       LD    (MCP_TRON_X_TANKS_DATA_VECTOR_x_1),A
 2fde: 3E C0          LD    A,#$C0
-2fe0: 32 09 C0       LD    (MCP_TRON_Y),A
+2fe0: 32 09 C0       LD    (MCP_TRON_Y_TANKS_DATA_VECTOR_x_2),A
 2fe3: 3E 80          LD    A,#$80
 2fe5: 32 05 C0       LD    ($C005),A
 2fe8: AF             XOR   A,A
@@ -5749,7 +5756,7 @@ PLAY_MCP:
 
 2fed: 3A DD C0       LD    A,(MCP_TOWER_X)
 2ff0: C6 24          ADD   A,#$24
-2ff2: 21 07 C0       LD    HL,MCP_TRON_X
+2ff2: 21 07 C0       LD    HL,MCP_TRON_X_TANKS_DATA_VECTOR_x_1
 2ff5: BE             CP    A,(HL)
 2ff6: 28 06          JR    Z,$2FFE
 
@@ -5761,7 +5768,7 @@ PLAY_MCP:
 2ffd: 35             DEC   (HL)
 2ffe: 3A DC C0       LD    A,(MCP_TOWER_Y)
 3001: D6 20          SUB   A,#$20
-3003: 21 09 C0       LD    HL,MCP_TRON_Y
+3003: 21 09 C0       LD    HL,MCP_TRON_Y_TANKS_DATA_VECTOR_x_2
 3006: BE             CP    A,(HL)
 3007: 28 01          JR    Z,$300A
 
@@ -5883,7 +5890,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 30ee: 18 EE          JR    $30DE
 
 30f0: FD E5          PUSH  IY
-30f2: FD 2A 10 C0    LD    IY,($C010)
+30f2: FD 2A 10 C0    LD    IY,(TANKS_SHOTS_IN_RAM_STARTS_AT_C020)
 30f6: FD 6E 0F       LD    L,(IY+$0F)
 30f9: FD 66 10       LD    H,(IY+$10)
 30fc: DD 74 05       LD    (IX+$05),H
@@ -5894,12 +5901,12 @@ MCP_PROCESS_DISK_POSITION(S)?:
 3108: F2 0D 31       JP    P,$310D
 
 310b: 3E FF          LD    A,#$FF
-310d: 21 07 C0       LD    HL,MCP_TRON_X
+310d: 21 07 C0       LD    HL,MCP_TRON_X_TANKS_DATA_VECTOR_x_1
 3110: 86             ADD   A,(HL)
 3111: DD 77 01       LD    (IX+$01),A
 3114: DD 36 00 00    LD    (IX+$00),#$00
 3118: 47             LD    B,A
-3119: 3A 09 C0       LD    A,(MCP_TRON_Y)
+3119: 3A 09 C0       LD    A,(MCP_TRON_Y_TANKS_DATA_VECTOR_x_2)
 311c: C6 FD          ADD   A,#$FD
 311e: FD 6E 11       LD    L,(IY+$11)
 3121: FD 66 12       LD    H,(IY+$12)
@@ -5916,7 +5923,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 3144: FD 36 01 07    LD    (IY+$01),#$07
 3148: C9             RET   
 
-3149: 3A 07 C0       LD    A,(MCP_TRON_X)
+3149: 3A 07 C0       LD    A,(MCP_TRON_X_TANKS_DATA_VECTOR_x_1)
 314c: DD 96 01       SUB   A,(IX+$01)
 314f: 30 08          JR    NC,$3159
 
@@ -5929,7 +5936,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 3159: FE 11          CP    A,#$11
 315b: 30 1C          JR    NC,$3179
 
-315d: 3A 09 C0       LD    A,(MCP_TRON_Y)
+315d: 3A 09 C0       LD    A,(MCP_TRON_Y_TANKS_DATA_VECTOR_x_2)
 3160: DD 96 03       SUB   A,(IX+$03)
 3163: 30 08          JR    NC,$316D
 
@@ -6128,7 +6135,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 
 32d5: C9             RET   
 
-32d6: 3A 07 C0       LD    A,(MCP_TRON_X)
+32d6: 3A 07 C0       LD    A,(MCP_TRON_X_TANKS_DATA_VECTOR_x_1)
 32d9: 21 DD C0       LD    HL,MCP_TOWER_X
 32dc: BE             CP    A,(HL)
 32dd: 30 03          JR    NC,$32E2
@@ -6213,7 +6220,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 3381: FD 21 28 F0    LD    IY,MCP_BLOCKS_TOP_LEFT_MOVING_DOWN_AND_WRAP_TO_TOP_RIGHT_TO_F09F
 3385: 21 59 35       LD    HL,MCP_BRICKS_DATA_TO_35B2
 3388: AF             XOR   A,A
-3389: 32 01 C0       LD    (MCP_ROWS_OF_BRICKS),A
+3389: 32 01 C0       LD    (TANK_PIC_OR_MCP_ROWS_OF_BRICKS),A
 338c: DD CB 03 7E    BIT   7,(IX+$03)
 3390: 28 43          JR    Z,$33D5
 
@@ -6260,7 +6267,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 33e7: FD 19          ADD   IY,DE
 33e9: 11 04 00       LD    DE,IO_4
 33ec: DD 19          ADD   IX,DE
-33ee: 3A 01 C0       LD    A,(MCP_ROWS_OF_BRICKS)
+33ee: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BRICKS)
 33f1: 3C             INC   A
 33f2: FE 05          CP    A,#$05
 33f4: 38 01          JR    C,$33F7
@@ -6272,7 +6279,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 
 33fa: 3A DC C0       LD    A,(MCP_TOWER_Y)
 33fd: 4F             LD    C,A
-33fe: 3A 09 C0       LD    A,(MCP_TRON_Y)
+33fe: 3A 09 C0       LD    A,(MCP_TRON_Y_TANKS_DATA_VECTOR_x_2)
 3401: C6 18          ADD   A,#$18
 3403: B9             CP    A,C
 3404: 30 1E          JR    NC,$3424
@@ -6296,7 +6303,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 3429: FE F8          CP    A,#$F8
 342b: 30 05          JR    NC,$3432
 
-342d: 21 09 C0       LD    HL,MCP_TRON_Y
+342d: 21 09 C0       LD    HL,MCP_TRON_Y_TANKS_DATA_VECTOR_x_2
 3430: BE             CP    A,(HL)
 3431: D8             RET   C
 
@@ -6307,7 +6314,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 343f: B7             OR    A,A
 3440: 28 32          JR    Z,$3474
 
-3442: 3A 07 C0       LD    A,(MCP_TRON_X)
+3442: 3A 07 C0       LD    A,(MCP_TRON_X_TANKS_DATA_VECTOR_x_1)
 3445: DD 96 00       SUB   A,(IX+$00)
 3448: 30 08          JR    NC,$3452
 
@@ -6324,7 +6331,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 345b: B9             CP    A,C
 345c: 38 16          JR    C,$3474
 
-345e: 3A 09 C0       LD    A,(MCP_TRON_Y)
+345e: 3A 09 C0       LD    A,(MCP_TRON_Y_TANKS_DATA_VECTOR_x_2)
 3461: DD 96 01       SUB   A,(IX+$01)
 3464: 30 09          JR    NC,$346F
 
@@ -6442,7 +6449,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 3539: C1             POP   BC
 353a: DD 36 02 02    LD    (IX+$02),#$02
 353e: DD 36 03 81    LD    (IX+$03),#$81
-3542: 3A 01 C0       LD    A,(MCP_ROWS_OF_BRICKS)
+3542: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BRICKS)
 3545: 21 4F 35       LD    HL,$354F
 3548: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 354b: 4E             LD    C,(HL)
@@ -7273,9 +7280,9 @@ PLAY_TANKS:
 3a2b: 3A 1E C4       LD    A,(MAX_DISKS/SHOTS_AT_A_TIME)
 3a2e: 4F             LD    C,A
 3a2f: 06 00          LD    B,#$00
-3a31: 21 0C F0       LD    HL,$F00C
+3a31: 21 0C F0       LD    HL,TANK_SHOTS_F00C_TO_F01B(SPRITES_3_TO_6)
 3a34: 11 10 00       LD    DE,$0010
-3a37: FD 21 01 C0    LD    IY,MCP_ROWS_OF_BRICKS
+3a37: FD 21 01 C0    LD    IY,TANK_PIC_OR_MCP_ROWS_OF_BRICKS
 3a3b: FD 19          ADD   IY,DE
 3a3d: FD 36 00 00    LD    (IY+$00),#$00
 3a41: FD 36 08 00    LD    (IY+$08),#$00
@@ -7306,9 +7313,9 @@ PLAY_TANKS:
 3a77: 38 05          JR    C,$3A7E
 
 
-*** If hardness above 0x0B (11), subtract 5 from hardness until hardness for this g
-*** is =< 0x0B. Increment C for each subtraction. Cap C at 4. Multiply C times 32 
-*** and place into C15F
+*** If hardness above 0x0B (11), subtract 5 from hardness until hardness for
+*** this game is =< 0x0B. Increment C for each subtraction. Cap C at 4.
+*** Multiply C times 32 and place into C15F
 3a79: D6 05          SUB   A,#$05
 3a7b: 0C             INC   C
 3a7c: 18 F7          JR    $3A75
@@ -7334,7 +7341,7 @@ PLAY_TANKS:
 3a9f: 7E             LD    A,(HL)
 3aa0: E6 7F          AND   A,#$7F
 3aa2: 32 4A C1       LD    (NUMBER_OF_TANKS),A
-3aa5: 32 59 C1       LD    (NUMBER_OF_TANKS_2),A
+3aa5: 32 59 C1       LD    (TANKS_NUMBER_OF_ENEMY_SHOTS?),A
 3aa8: 4F             LD    C,A
 3aa9: 7E             LD    A,(HL)
 3aaa: E6 80          AND   A,#$80
@@ -7352,7 +7359,7 @@ PLAY_TANKS:
 3ab9: D5             PUSH  DE
 3aba: FD E1          POP   IY
 3abc: 21 2C F0       LD    HL,$F02C
-3abf: DD 21 51 C0    LD    IX,INFO_FOR_TANK_GAME_SEE_3ABF_TO_C05A
+3abf: DD 21 51 C0    LD    IX,INFO_FOR_TANK_GAME_SEE_3ABF_TO_C05A_FOR_A_SINGLE_TANK
 3ac3: FD 7E 00       LD    A,(IY+$00)
 3ac6: DD 77 00       LD    (IX+$00),A
 3ac9: FD 7E 01       LD    A,(IY+$01)
@@ -7444,10 +7451,13 @@ PLAY_TANKS:
 3b72: 0D             DEC   C
 3b73: C2 C3 3A       JP    NZ,$3AC3
 
-3b76: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_2)
+
+*** Setup of enemy tank shots
+*** Sprite is explosion and X=0 and Y=4?
+3b76: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_SHOTS?)
 3b79: 4F             LD    C,A
-3b7a: 21 44 F0       LD    HL,$F044
-3b7d: FD 21 08 C1    LD    IY,$C108
+3b7a: 21 44 F0       LD    HL,TANKS_ENEMY_SHOTS?
+3b7d: FD 21 08 C1    LD    IY,TANKS_ENEMY_SHOTS_IN_RAM_AT_C111?
 3b81: 11 09 00       LD    DE,$0009
 3b84: FD 19          ADD   IY,DE
 3b86: FD 36 07 00    LD    (IY+$07),#$00
@@ -7466,7 +7476,7 @@ PLAY_TANKS:
 3ba0: 0D             DEC   C
 3ba1: 20 DE          JR    NZ,$3B81
 
-3ba3: 21 00 C0       LD    HL,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
+3ba3: 21 00 C0       LD    HL,TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
 3ba6: 3E 61          LD    A,#$61
 3ba8: 77             LD    (HL),A
 3ba9: C6 08          ADD   A,#$08
@@ -7487,8 +7497,8 @@ PLAY_TANKS:
 3bbf: 23             INC   HL
 3bc0: 36 0E          LD    (HL),#$0E
 3bc2: CD A5 40       CALL  $40A5
-3bc5: 22 07 C0       LD    (MCP_TRON_X),HL
-3bc8: ED 43 09 C0    LD    (MCP_TRON_Y),BC
+3bc5: 22 07 C0       LD    (MCP_TRON_X_TANKS_DATA_VECTOR_x_1),HL
+3bc8: ED 43 09 C0    LD    (MCP_TRON_Y_TANKS_DATA_VECTOR_x_2),BC
 3bcc: CD D0 40       CALL  $40D0
 3bcf: 3E 35          LD    A,#$35
 3bd1: 32 50 C1       LD    ($C150),A
@@ -7576,8 +7586,8 @@ PLAY_TANKS:
 
 3c6f: 21 2C 01       LD    HL,$012C
 3c72: 22 48 C1       LD    ($C148),HL
-3c75: DD 21 51 C0    LD    IX,INFO_FOR_TANK_GAME_SEE_3ABF_TO_C05A
-3c79: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_2)
+3c75: DD 21 51 C0    LD    IX,INFO_FOR_TANK_GAME_SEE_3ABF_TO_C05A_FOR_A_SINGLE_TANK
+3c79: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_SHOTS?)
 3c7c: 47             LD    B,A
 3c7d: 11 20 00       LD    DE,$0020
 3c80: DD 7E 07       LD    A,(IX+$07)
@@ -7610,7 +7620,7 @@ PLAY_TANKS:
 3cab: 35             DEC   (HL)
 3cac: C0             RET   NZ
 
-3cad: FD 21 04 F0    LD    IY,MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
+3cad: FD 21 04 F0    LD    IY,TANK_OR_MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
 3cb1: FD 7E 01       LD    A,(IY+$01)
 3cb4: FE 03          CP    A,#$03
 3cb6: 28 06          JR    Z,$3CBE
@@ -7642,7 +7652,7 @@ TANKS_INSTRUCTIONS:
 3cef: 32 05 C4       LD    ($C405),A
 3cf2: 3E 01          LD    A,#$01
 3cf4: 32 08 C4       LD    ($C408),A
-3cf7: 21 00 C0       LD    HL,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
+3cf7: 21 00 C0       LD    HL,TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
 3cfa: 3E 61          LD    A,#$61
 3cfc: 77             LD    (HL),A
 3cfd: C6 08          ADD   A,#$08
@@ -7663,8 +7673,8 @@ TANKS_INSTRUCTIONS:
 3d13: 23             INC   HL
 3d14: 36 0E          LD    (HL),#$0E
 3d16: CD A5 40       CALL  $40A5
-3d19: 22 07 C0       LD    (MCP_TRON_X),HL
-3d1c: ED 43 09 C0    LD    (MCP_TRON_Y),BC
+3d19: 22 07 C0       LD    (MCP_TRON_X_TANKS_DATA_VECTOR_x_1),HL
+3d1c: ED 43 09 C0    LD    (MCP_TRON_Y_TANKS_DATA_VECTOR_x_2),BC
 3d20: CD D0 40       CALL  $40D0
 3d23: 11 35 3D       LD    DE,DESTROY_ALL_STRING
 3d26: 01 CC FD       LD    BC,$FDCC
@@ -7679,111 +7689,19 @@ DESTROY_ALL_STRING:
 ENEMY_TANKS_STRING:
 3d41: ENEMY TANKS
 
-3d4d: 00             NOP   
-3d4e: 00             NOP   
-3d4f: 00             NOP   
-3d50: 00             NOP   
-3d51: 00             NOP   
-3d52: 00             NOP   
-3d53: 00             NOP   
-3d54: 00             NOP   
-3d55: FF             RST   $38
+TANK_JOYSTICK_INPUT_TABLE?:
+3d4d: 00 00 00 00 00 00 00 00 FF 00 8A 03 00 2B 00 00 
+3d5d: 01 00 0A 00 00 2B 00 00 00 00 00 00 00 00 00 00 
+3d6d: 00 FF 0B 02 02 35 00 00 02 00 20 40 10 00 00 00 
+3d7d: 02 00 20 40 08 00 00 00 00 00 00 00 00 00 00 00 
+3d8d: 00 01 4B 02 FE 35 00 00 02 00 40 20 10 00 00 00 
+3d9d: 02 00 40 20 08 00 00 00 08 20 40 10 10 20 40 08 
+3dad: 20 10 08 40 40 10 08 20 
 
-3d56: 00             NOP   
-3d57: 8A             ADC   A,D
-3d58: 03             INC   BC
-3d59: 00             NOP   
-3d5a: 2B             DEC   HL
-3d5b: 00             NOP   
-3d5c: 00             NOP   
-3d5d: 01 00 0A       LD    BC,$0A00
-3d60: 00             NOP   
-3d61: 00             NOP   
-3d62: 2B             DEC   HL
-3d63: 00             NOP   
-3d64: 00             NOP   
-3d65: 00             NOP   
-3d66: 00             NOP   
-3d67: 00             NOP   
-3d68: 00             NOP   
-3d69: 00             NOP   
-3d6a: 00             NOP   
-3d6b: 00             NOP   
-3d6c: 00             NOP   
-3d6d: 00             NOP   
-3d6e: FF             RST   $38
+3db5: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
+3db8: B7             OR    A,A
+3db9: 28 1F          JR    Z,$3DDA
 
-3d6f: 0B             DEC   BC
-3d70: 02             LD    (BC),A
-3d71: 02             LD    (BC),A
-3d72: 35             DEC   (HL)
-3d73: 00             NOP   
-3d74: 00             NOP   
-3d75: 02             LD    (BC),A
-3d76: 00             NOP   
-3d77: 20 40          JR    NZ,$3DB9
-
-3d79: 10 00          DJNZ  $3D7B
-
-3d7b: 00             NOP   
-3d7c: 00             NOP   
-3d7d: 02             LD    (BC),A
-3d7e: 00             NOP   
-3d7f: 20 40          JR    NZ,$3DC1
-
-3d81: 08             EX    AF,AF'
-3d82: 00             NOP   
-3d83: 00             NOP   
-3d84: 00             NOP   
-3d85: 00             NOP   
-3d86: 00             NOP   
-3d87: 00             NOP   
-3d88: 00             NOP   
-3d89: 00             NOP   
-3d8a: 00             NOP   
-3d8b: 00             NOP   
-3d8c: 00             NOP   
-3d8d: 00             NOP   
-3d8e: 01 4B 02       LD    BC,$024B
-3d91: FE 35          CP    A,#$35
-3d93: 00             NOP   
-3d94: 00             NOP   
-3d95: 02             LD    (BC),A
-3d96: 00             NOP   
-3d97: 40             LD    B,B
-3d98: 20 10          JR    NZ,$3DAA
-
-3d9a: 00             NOP   
-3d9b: 00             NOP   
-3d9c: 00             NOP   
-3d9d: 02             LD    (BC),A
-3d9e: 00             NOP   
-3d9f: 40             LD    B,B
-3da0: 20 08          JR    NZ,$3DAA
-
-3da2: 00             NOP   
-3da3: 00             NOP   
-3da4: 00             NOP   
-3da5: 08             EX    AF,AF'
-3da6: 20 40          JR    NZ,$3DE8
-
-3da8: 10 10          DJNZ  $3DBA
-
-3daa: 20 40          JR    NZ,$3DEC
-
-3dac: 08             EX    AF,AF'
-3dad: 20 10          JR    NZ,$3DBF
-
-3daf: 08             EX    AF,AF'
-3db0: 40             LD    B,B
-3db1: 40             LD    B,B
-3db2: 10 08          DJNZ  $3DBC
-
-3db4: 20 3A          JR    NZ,$3DF0
-
-3db6: 7B             LD    A,E
-3db7: C4 B7 28       CALL  NZ,$28B7
-3dba: 1F             RRA   
 3dbb: 21 55 C1       LD    HL,$C155
 3dbe: 34             INC   (HL)
 3dbf: 7E             LD    A,(HL)
@@ -7823,7 +7741,7 @@ ENEMY_TANKS_STRING:
 3df4: CB 27          SLA   A
 3df6: CB 27          SLA   A
 3df8: 32 4D C1       LD    ($C14D),A
-3dfb: 21 4D 3D       LD    HL,$3D4D
+3dfb: 21 4D 3D       LD    HL,TANK_JOYSTICK_INPUT_TABLE?
 3dfe: 85             ADD   A,L
 3dff: 30 01          JR    NC,$3E02
 
@@ -7854,13 +7772,13 @@ ENEMY_TANKS_STRING:
 3e20: 28 03          JR    Z,$3E25
 
 3e22: 32 50 C1       LD    ($C150),A
-3e25: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+3e25: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 3e28: 47             LD    B,A
 3e29: 3A 03 C0       LD    A,($C003)
 3e2c: 80             ADD   A,B
 3e2d: 81             ADD   A,C
 3e2e: 47             LD    B,A
-3e2f: 3A 02 C0       LD    A,(GS_DISK_Y)
+3e2f: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 3e32: 4F             LD    C,A
 3e33: 3A 05 C0       LD    A,($C005)
 3e36: 81             ADD   A,C
@@ -7927,7 +7845,7 @@ ENEMY_TANKS_STRING:
 3e9c: 78             LD    A,B
 3e9d: 21 03 C0       LD    HL,$C003
 3ea0: 96             SUB   A,(HL)
-3ea1: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
+3ea1: 32 00 C0       LD    (TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
 3ea4: C6 08          ADD   A,#$08
 3ea6: 47             LD    B,A
 3ea7: 3A 06 C0       LD    A,($C006)
@@ -7937,17 +7855,17 @@ ENEMY_TANKS_STRING:
 3eae: 92             SUB   A,D
 3eaf: 21 05 C0       LD    HL,$C005
 3eb2: 96             SUB   A,(HL)
-3eb3: 32 02 C0       LD    (GS_DISK_Y),A
+3eb3: 32 02 C0       LD    (TANK_Y_OR_GS_DISK_Y),A
 3eb6: C6 08          ADD   A,#$08
 3eb8: 4F             LD    C,A
 3eb9: CD A5 40       CALL  $40A5
-3ebc: 22 07 C0       LD    (MCP_TRON_X),HL
-3ebf: ED 43 09 C0    LD    (MCP_TRON_Y),BC
+3ebc: 22 07 C0       LD    (MCP_TRON_X_TANKS_DATA_VECTOR_x_1),HL
+3ebf: ED 43 09 C0    LD    (MCP_TRON_Y_TANKS_DATA_VECTOR_x_2),BC
 3ec3: CD EA 40       CALL  $40EA
 3ec6: DA F8 3D       JP    C,$3DF8
 
 3ec9: 3A 0F C0       LD    A,($C00F)
-3ecc: 32 01 C0       LD    (MCP_ROWS_OF_BRICKS),A
+3ecc: 32 01 C0       LD    (TANK_PIC_OR_MCP_ROWS_OF_BRICKS),A
 3ecf: CD 21 3F       CALL  $3F21
 3ed2: CD D0 40       CALL  $40D0
 3ed5: 3A 0D C0       LD    A,(IO_TOWER_TIMER_VALUE_REVERSED_TO_C010)
@@ -8010,46 +7928,25 @@ ENEMY_TANKS_STRING:
 3f3a: 4F             LD    C,A
 3f3b: C3 B8 6F       JP    PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 
-3f3e: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_2)
-3f41: 11 20 00       LD    DE,$0020
-3f44: DD 21 31 C0    LD    IX,$C031
-3f48: 4F             LD    C,A
-3f49: DD 19          ADD   IX,DE
-3f4b: DD 7E 00       LD    A,(IX+$00)
-3f4e: B7             OR    A,A
-3f4f: 28 45          JR    Z,$3F96
+3f3e: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_SHOTS?)
+3f41: 11 20 00 DD 21 31 C0 
 
-3f51: DD 7E 05       LD    A,(IX+$05)
-3f54: 32 10 C0       LD    ($C010),A
-3f57: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
-3f5a: 21 03 C0       LD    HL,$C003
-3f5d: 86             ADD   A,(HL)
-3f5e: 47             LD    B,A
-3f5f: DD 7E 03       LD    A,(IX+$03)
-3f62: DD 86 00       ADD   A,(IX+$00)
-3f65: 21 04 C0       LD    HL,$C004
-3f68: 90             SUB   A,B
-3f69: 30 04          JR    NC,$3F6F
+3f48: 4F DD 19 DD 7E 00 B7 28 45 DD 7E 05 32 10 C0 
 
-3f6b: 2F             CPL   
-3f6c: 21 10 C0       LD    HL,$C010
-3f6f: BE             CP    A,(HL)
-3f70: 30 24          JR    NC,$3F96
+3f57: 3A 00 C0 21 03 C0 86 47 DD 
 
-3f72: DD 7E 06       LD    A,(IX+$06)
-3f75: 32 10 C0       LD    ($C010),A
-3f78: 3A 02 C0       LD    A,(GS_DISK_Y)
-3f7b: 21 05 C0       LD    HL,$C005
-3f7e: 86             ADD   A,(HL)
-3f7f: 47             LD    B,A
-3f80: DD 7E 04       LD    A,(IX+$04)
-3f83: DD 86 02       ADD   A,(IX+$02)
-3f86: 21 06 C0       LD    HL,$C006
-3f89: 90             SUB   A,B
-3f8a: 30 04          JR    NC,$3F90
+3f60: 7E 03 DD 86 00 21 04 
 
-3f8c: 2F             CPL   
-3f8d: 21 10 C0       LD    HL,$C010
+3f67: C0 90 30 04 2F 21 10 C0 
+
+3f6f: BE 30 24 DD 7E 06 32 10 C0 
+
+3f78: 3A 02 C0 21 05 C0 86 47 DD 7E 04 DD 86 02 21 
+
+3f87: 06 C0 90 30 04 2F 21 10 
+
+3f8f: C0 
+
 3f90: BE             CP    A,(HL)
 3f91: 30 03          JR    NC,$3F96       ;Invincibility TANK Game = 18 (JR *) (tank collision?)
 
@@ -8060,8 +7957,13 @@ ENEMY_TANKS_STRING:
 
 3f99: C9             RET   
 
-3f9a: 00             NOP   
-3f9b: 28 E0          JR    Z,$3F7D
+
+*** 18? data blocks used by tanks
+3f9a: 00 
+
+3f9b: 28 
+
+3f9c: E0             RET   PO
 
 3f9d: E8             RET   PE
 
@@ -8215,7 +8117,7 @@ ENEMY_TANKS_STRING:
 400f: F8             RET   M
 
 4010: 00             NOP   
-4011: 28 50          JR    Z,$4063
+4011: 28 50          JR    Z,TANKS_DATA_FOR_x_STARTS_AT_4066
 
 4013: 58             LD    E,B
 4014: 68             LD    L,B
@@ -8324,6 +8226,9 @@ ENEMY_TANKS_STRING:
 
 4064: 00             NOP   
 4065: 00             NOP   
+
+*** 18?x3 bytes: ?, vector to other data (they look like variable size 00 terminate
+*** This data structure is used at 40C9. It's BIG but I'm not sure where it ends
 4066: 18 9A          JR    $4002
 
 4068: 3F             CCF   
@@ -8386,7 +8291,7 @@ ENEMY_TANKS_STRING:
 
 40a3: 65             LD    H,L
 40a4: 40             LD    B,B
-40a5: DD 21 63 40    LD    IX,$4063
+40a5: DD 21 63 40    LD    IX,TANKS_DATA_FOR_x_STARTS_AT_4066
 40a9: 11 03 00       LD    DE,IO_3
 40ac: DD 19          ADD   IX,DE
 40ae: DD 7E 00       LD    A,(IX+$00)
@@ -8406,25 +8311,27 @@ ENEMY_TANKS_STRING:
 40cc: DD 46 03       LD    B,(IX+$03)
 40cf: C9             RET   
 
-40d0: 21 04 F0       LD    HL,MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
-40d3: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+
+*** Update position and pic of tank (from C000 to C002)
+40d0: 21 04 F0       LD    HL,TANK_OR_MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
+40d3: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 40d6: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 40d9: 77             LD    (HL),A
 40da: 23             INC   HL
-40db: 3A 01 C0       LD    A,(MCP_ROWS_OF_BRICKS)
+40db: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BRICKS)
 40de: 77             LD    (HL),A
 40df: 23             INC   HL
-40e0: 3A 02 C0       LD    A,(GS_DISK_Y)
+40e0: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 40e3: C6 04          ADD   A,#$04
 40e5: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 40e8: 77             LD    (HL),A
 40e9: C9             RET   
 
-40ea: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+40ea: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 40ed: FE 81          CP    A,#$81
 40ef: 20 33          JR    NZ,$4124
 
-40f1: 3A 02 C0       LD    A,(GS_DISK_Y)
+40f1: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 40f4: FE 7E          CP    A,#$7E
 40f6: 28 04          JR    Z,$40FC
 
@@ -8443,10 +8350,10 @@ ENEMY_TANKS_STRING:
 410b: 24             INC   H
 410c: 6F             LD    L,A
 410d: 7E             LD    A,(HL)
-410e: 32 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
+410e: 32 00 C0       LD    (TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),A
 4111: 23             INC   HL
 4112: 7E             LD    A,(HL)
-4113: 32 02 C0       LD    (GS_DISK_Y),A
+4113: 32 02 C0       LD    (TANK_Y_OR_GS_DISK_Y),A
 4116: 23             INC   HL
 4117: 7E             LD    A,(HL)
 4118: F5             PUSH  AF
@@ -8715,7 +8622,7 @@ ENEMY_TANKS_STRING:
 420b: E8             RET   PE
 
 420c: 00             NOP   
-420d: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_2)
+420d: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_SHOTS?)
 4210: 4F             LD    C,A
 4211: DD 21 31 C0    LD    IX,$C031
 4215: 11 20 00       LD    DE,$0020
@@ -8819,7 +8726,7 @@ ENEMY_TANKS_STRING:
 42cd: FE 01          CP    A,#$01
 42cf: 20 28          JR    NZ,$42F9
 
-42d1: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+42d1: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 42d4: D6 10          SUB   A,#$10
 42d6: DD BE 00       CP    A,(IX+$00)
 42d9: 38 28          JR    C,$4303
@@ -8843,7 +8750,7 @@ ENEMY_TANKS_STRING:
 42f5: DD 77 0E       LD    (IX+$0E),A
 42f8: C9             RET   
 
-42f9: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+42f9: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 42fc: C6 10          ADD   A,#$10
 42fe: DD BE 00       CP    A,(IX+$00)
 4301: 38 D8          JR    C,$42DB
@@ -8852,7 +8759,7 @@ ENEMY_TANKS_STRING:
 4306: 38 D3          JR    C,$42DB
 
 4308: CD 43 44       CALL  $4443
-430b: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+430b: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 430e: DD 96 00       SUB   A,(IX+$00)
 4311: 30 01          JR    NC,$4314
 
@@ -8873,7 +8780,7 @@ ENEMY_TANKS_STRING:
 4328: 18 1E          JR    $4348
 
 432a: 06 01          LD    B,#$01
-432c: 3A 02 C0       LD    A,(GS_DISK_Y)
+432c: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 432f: DD BE 02       CP    A,(IX+$02)
 4332: 30 14          JR    NC,$4348
 
@@ -8884,7 +8791,7 @@ ENEMY_TANKS_STRING:
 433a: 28 EE          JR    Z,$432A
 
 433c: 06 FF          LD    B,#$FF
-433e: 3A 02 C0       LD    A,(GS_DISK_Y)
+433e: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 4341: DD BE 02       CP    A,(IX+$02)
 4344: 30 02          JR    NC,$4348
 
@@ -8926,7 +8833,7 @@ ENEMY_TANKS_STRING:
 437c: FE 01          CP    A,#$01
 437e: 20 28          JR    NZ,$43A8
 
-4380: 3A 02 C0       LD    A,(GS_DISK_Y)
+4380: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 4383: D6 10          SUB   A,#$10
 4385: DD BE 02       CP    A,(IX+$02)
 4388: 38 28          JR    C,$43B2
@@ -8950,7 +8857,7 @@ ENEMY_TANKS_STRING:
 43a4: DD 77 0E       LD    (IX+$0E),A
 43a7: C9             RET   
 
-43a8: 3A 02 C0       LD    A,(GS_DISK_Y)
+43a8: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 43ab: C6 10          ADD   A,#$10
 43ad: DD BE 02       CP    A,(IX+$02)
 43b0: 38 D8          JR    C,$438A
@@ -8959,7 +8866,7 @@ ENEMY_TANKS_STRING:
 43b5: 38 D3          JR    C,$438A
 
 43b7: CD 14 44       CALL  $4414
-43ba: 3A 02 C0       LD    A,(GS_DISK_Y)
+43ba: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 43bd: DD 96 02       SUB   A,(IX+$02)
 43c0: 30 01          JR    NC,$43C3
 
@@ -8980,7 +8887,7 @@ ENEMY_TANKS_STRING:
 43d7: 18 1A          JR    $43F3
 
 43d9: 06 FF          LD    B,#$FF
-43db: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+43db: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 43de: DD BE 00       CP    A,(IX+$00)
 43e1: 30 10          JR    NC,$43F3
 
@@ -8988,7 +8895,7 @@ ENEMY_TANKS_STRING:
 43e5: 18 0C          JR    $43F3
 
 43e7: 06 01          LD    B,#$01
-43e9: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+43e9: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 43ec: DD BE 00       CP    A,(IX+$00)
 43ef: 30 02          JR    NC,$43F3
 
@@ -9075,7 +8982,7 @@ ENEMY_TANKS_STRING:
 4485: 20 03          JR    NZ,$448A
 
 4487: 01 00 00       LD    BC,IO_0
-448a: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_2)
+448a: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_SHOTS?)
 448d: 6F             LD    L,A
 448e: 11 20 00       LD    DE,$0020
 4491: FD 21 31 C0    LD    IY,$C031
@@ -9209,7 +9116,7 @@ ENEMY_TANKS_STRING:
 
 456d: 3A 1E C4       LD    A,(MAX_DISKS/SHOTS_AT_A_TIME)
 4570: 47             LD    B,A
-4571: FD 21 01 C0    LD    IY,MCP_ROWS_OF_BRICKS
+4571: FD 21 01 C0    LD    IY,TANK_PIC_OR_MCP_ROWS_OF_BRICKS
 4575: 11 10 00       LD    DE,$0010
 4578: FD 19          ADD   IY,DE
 457a: FD 7E 0E       LD    A,(IY+$0E)
@@ -9442,7 +9349,7 @@ ENEMY_TANKS_STRING:
 46f3: E1             POP   HL
 46f4: C9             RET   
 
-46f5: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_2)
+46f5: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_SHOTS?)
 46f8: E5             PUSH  HL
 46f9: 11 20 00       LD    DE,$0020
 46fc: DD 21 31 C0    LD    IX,$C031
@@ -9477,7 +9384,7 @@ ENEMY_TANKS_STRING:
 4729: E1             POP   HL
 472a: C9             RET   
 
-472b: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+472b: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 472e: E5             PUSH  HL
 472f: 21 03 C0       LD    HL,$C003
 4732: 86             ADD   A,(HL)
@@ -9491,7 +9398,7 @@ ENEMY_TANKS_STRING:
 *** 47b8-47c6 looks like data, not sure for what though ...
 473b: 38 11          JR    C,$474E        ;Invincibility TANK Game = 18 (JR *) (bullet collision?)
 
-473d: 3A 02 C0       LD    A,(GS_DISK_Y)
+473d: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 4740: 21 05 C0       LD    HL,$C005
 4743: 86             ADD   A,(HL)
 4744: B9             CP    A,C
@@ -9632,20 +9539,20 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 4838: 3A 1E C4       LD    A,(MAX_DISKS/SHOTS_AT_A_TIME)
 483b: 47             LD    B,A
 483c: 11 10 00       LD    DE,$0010
-483f: DD 21 01 C0    LD    IX,MCP_ROWS_OF_BRICKS
+483f: DD 21 01 C0    LD    IX,TANK_PIC_OR_MCP_ROWS_OF_BRICKS
 4843: DD 19          ADD   IX,DE
 4845: DD 7E 09       LD    A,(IX+$09)
 4848: B7             OR    A,A
 4849: 28 35          JR    Z,$4880
 
-484b: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+484b: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 484e: 4F             LD    C,A
 484f: 3A 0B C0       LD    A,($C00B)
 4852: 81             ADD   A,C
 4853: DD 86 00       ADD   A,(IX+$00)
 4856: DD 77 00       LD    (IX+$00),A
 4859: DD 36 01 00    LD    (IX+$01),#$00
-485d: 3A 02 C0       LD    A,(GS_DISK_Y)
+485d: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 4860: 4F             LD    C,A
 4861: 3A 0C C0       LD    A,($C00C)
 4864: 81             ADD   A,C
@@ -9953,7 +9860,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 49ee: 24             INC   H
 49ef: 6F             LD    L,A
 49f0: DD 21 08 F0    LD    IX,$F008
-49f4: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+49f4: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 49f7: 47             LD    B,A
 49f8: 3A 0B C0       LD    A,($C00B)
 49fb: 80             ADD   A,B
@@ -9961,7 +9868,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 49fd: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 4a00: DD 77 00       LD    (IX+$00),A
 4a03: 23             INC   HL
-4a04: 3A 02 C0       LD    A,(GS_DISK_Y)
+4a04: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 4a07: 47             LD    B,A
 4a08: 3A 0C C0       LD    A,($C00C)
 4a0b: 80             ADD   A,B
@@ -9975,7 +9882,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 4a1a: 3A 1E C4       LD    A,(MAX_DISKS/SHOTS_AT_A_TIME)
 4a1d: 47             LD    B,A
 4a1e: 11 10 00       LD    DE,$0010
-4a21: DD 21 01 C0    LD    IX,MCP_ROWS_OF_BRICKS
+4a21: DD 21 01 C0    LD    IX,TANK_PIC_OR_MCP_ROWS_OF_BRICKS
 4a25: DD 19          ADD   IX,DE
 4a27: DD 7E 08       LD    A,(IX+$08)
 4a2a: B7             OR    A,A
@@ -10007,7 +9914,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 
 4a53: C9             RET   
 
-4a54: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_2)
+4a54: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_SHOTS?)
 4a57: 4F             LD    C,A
 4a58: DD 21 31 C0    LD    IX,$C031
 4a5c: 11 20 00       LD    DE,$0020
@@ -10020,7 +9927,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 4a6b: B7             OR    A,A
 4a6c: 20 44          JR    NZ,$4AB2
 
-4a6e: 2A 09 C0       LD    HL,(MCP_TRON_Y)
+4a6e: 2A 09 C0       LD    HL,(MCP_TRON_Y_TANKS_DATA_VECTOR_x_2)
 4a71: 7D             LD    A,L
 4a72: DD BE 14       CP    A,(IX+$14)
 4a75: 20 7D          JR    NZ,$4AF4
@@ -10029,7 +9936,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 4a78: DD BE 15       CP    A,(IX+$15)
 4a7b: 20 77          JR    NZ,$4AF4
 
-4a7d: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+4a7d: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 4a80: DD BE 00       CP    A,(IX+$00)
 4a83: 38 16          JR    C,$4A9B
 
@@ -10039,7 +9946,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 
 4a8c: DD 46 00       LD    B,(IX+$00)
 4a8f: CD F9 4A       CALL  $4AF9
-4a92: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+4a92: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 4a95: BE             CP    A,(HL)
 4a96: DC FF 4A       CALL  C,$4AFF
 4a99: 18 59          JR    $4AF4
@@ -10050,13 +9957,13 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 
 4aa2: DD 46 00       LD    B,(IX+$00)
 4aa5: CD F9 4A       CALL  $4AF9
-4aa8: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+4aa8: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 4aab: 2B             DEC   HL
 4aac: BE             CP    A,(HL)
 4aad: D4 FF 4A       CALL  NC,$4AFF
 4ab0: 18 42          JR    $4AF4
 
-4ab2: 2A 07 C0       LD    HL,(MCP_TRON_X)
+4ab2: 2A 07 C0       LD    HL,(MCP_TRON_X_TANKS_DATA_VECTOR_x_1)
 4ab5: 7D             LD    A,L
 4ab6: DD BE 12       CP    A,(IX+$12)
 4ab9: 20 39          JR    NZ,$4AF4
@@ -10065,7 +9972,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 4abc: DD BE 13       CP    A,(IX+$13)
 4abf: 20 33          JR    NZ,$4AF4
 
-4ac1: 3A 02 C0       LD    A,(GS_DISK_Y)
+4ac1: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 4ac4: DD BE 02       CP    A,(IX+$02)
 4ac7: 38 16          JR    C,$4ADF
 
@@ -10075,7 +9982,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 
 4ad0: DD 46 02       LD    B,(IX+$02)
 4ad3: CD F9 4A       CALL  $4AF9
-4ad6: 3A 02 C0       LD    A,(GS_DISK_Y)
+4ad6: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 4ad9: BE             CP    A,(HL)
 4ada: DC FF 4A       CALL  C,$4AFF
 4add: 18 15          JR    $4AF4
@@ -10086,7 +9993,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 
 4ae6: DD 46 02       LD    B,(IX+$02)
 4ae9: CD F9 4A       CALL  $4AF9
-4aec: 3A 02 C0       LD    A,(GS_DISK_Y)
+4aec: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 4aef: 2B             DEC   HL
 4af0: BE             CP    A,(HL)
 4af1: D4 FF 4A       CALL  NC,$4AFF
@@ -10172,9 +10079,9 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 4b8e: 08             EX    AF,AF'
 4b8f: FF             RST   $38
 
-4b90: 3A 59 C1       LD    A,(NUMBER_OF_TANKS_2)
+4b90: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_SHOTS?)
 4b93: 4F             LD    C,A
-4b94: FD 21 08 C1    LD    IY,$C108
+4b94: FD 21 08 C1    LD    IY,TANKS_ENEMY_SHOTS_IN_RAM_AT_C111?
 4b98: 11 09 00       LD    DE,$0009
 4b9b: FD 19          ADD   IY,DE
 4b9d: FD 7E 07       LD    A,(IY+$07)
@@ -10239,7 +10146,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 4c05: CD 70 4B       CALL  $4B70
 4c08: C9             RET   
 
-4c09: 21 04 F0       LD    HL,MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
+4c09: 21 04 F0       LD    HL,TANK_OR_MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
 4c0c: 23             INC   HL
 4c0d: 36 00          LD    (HL),#$00
 4c0f: 21 4C C1       LD    HL,$C14C
@@ -10642,6 +10549,9 @@ TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE:
 4d9c: 18 F4          JR    $4D92
 
 
+*** This data is copied to C051!
+*** number of tanks x 10 bytes
+*** 10 bytes: X, picture, Y, ?, ?, ?, ?, ?, ?, ?
 *** tank 0 hardness data
 4d9e: E8 88 E8 00 01 0E 0E 01 FF 00 
 
@@ -10939,7 +10849,7 @@ LC_INSTRUCTIONS:
 5114: 32 65 C4       LD    ($C465),A
 5117: 3E 01          LD    A,#$01
 5119: 32 08 C4       LD    ($C408),A
-511c: FD 21 04 F0    LD    IY,MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
+511c: FD 21 04 F0    LD    IY,TANK_OR_MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
 5120: 3E 75          LD    A,#$75
 5122: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 5125: FD 77 00       LD    (IY+$00),A
@@ -12101,7 +12011,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 
 5900: C9             RET   
 
-5901: DD 21 04 F0    LD    IX,MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
+5901: DD 21 04 F0    LD    IX,TANK_OR_MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
 5905: 3A 03 C2       LD    A,($C203)
 5908: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 590b: DD 77 00       LD    (IX+$00),A
@@ -12204,7 +12114,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 59c6: ED 52          SBC   HL,DE
 59c8: CB 3C          SRL   H
 59ca: CB 1D          RR    L
-59cc: 11 00 C0       LD    DE,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
+59cc: 11 00 C0       LD    DE,TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
 59cf: CB 3C          SRL   H
 59d1: CB 1D          RR    L
 59d3: 38 08          JR    C,$59DD
@@ -12244,7 +12154,7 @@ LC_DRAW_A_TRAIL?:
 59fe: 10 FA          DJNZ  $59FA
 
 5a00: 09             ADD   HL,BC
-5a01: 11 00 C0       LD    DE,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
+5a01: 11 00 C0       LD    DE,TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
 5a04: CB 3C          SRL   H
 5a06: CB 1D          RR    L
 5a08: 38 08          JR    C,$5A12
@@ -12701,7 +12611,7 @@ PLAY_IO_TOWER:
 5d53: 28 07          JR    Z,$5D5C
 
 5d55: 3E 01          LD    A,#$01
-5d57: 32 10 C0       LD    ($C010),A
+5d57: 32 10 C0       LD    (TANKS_SHOTS_IN_RAM_STARTS_AT_C020),A
 5d5a: 18 05          JR    $5D61
 
 5d5c: 3E 05          LD    A,#$05
@@ -12709,7 +12619,7 @@ PLAY_IO_TOWER:
 5d61: 3E 01          LD    A,#$01
 5d63: 32 0C C0       LD    ($C00C),A
 5d66: 3E 2D          LD    A,#$2D
-5d68: 32 07 C0       LD    (MCP_TRON_X),A
+5d68: 32 07 C0       LD    (MCP_TRON_X_TANKS_DATA_VECTOR_x_1),A
 5d6b: CD 23 5F       CALL  CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?
 5d6e: 21 79 6B       LD    HL,DATA_FOR_SETTING_UP_TRON_SPRITES?
 5d71: 22 2E C0       LD    ($C02E),HL
@@ -12721,7 +12631,7 @@ PLAY_IO_TOWER:
 5d7f: E6 06          AND   A,#$06
 5d81: C2 F2 62       JP    NZ,$62F2
 
-5d84: 21 07 C0       LD    HL,MCP_TRON_X
+5d84: 21 07 C0       LD    HL,MCP_TRON_X_TANKS_DATA_VECTOR_x_1
 5d87: 7E             LD    A,(HL)
 5d88: B7             OR    A,A
 5d89: 28 02          JR    Z,$5D8D
@@ -12927,7 +12837,7 @@ IO_TOWER_COLOR_PALETTE:
 CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?:
 5f23: 21 12 C0       LD    HL,MCP_DISK_DATA_TO_C02F/IO_TOWER_TIMER_DIGITS_TO_C019
 5f26: 22 54 C4       LD    ($C454),HL
-5f29: 11 10 C0       LD    DE,$C010
+5f29: 11 10 C0       LD    DE,TANKS_SHOTS_IN_RAM_STARTS_AT_C020
 5f2c: 06 04          LD    B,#$04
 5f2e: 1A             LD    A,(DE)
 5f2f: C6 30          ADD   A,#$30
@@ -13122,7 +13032,7 @@ HANDLE_JOYSTICK_INPUT?_TO_601F:
 INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 6065: DD 2A 2E C0    LD    IX,($C02E)
 6069: 3A 26 C0       LD    A,(IO_TRON_X)
-606c: 32 04 F0       LD    (MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)),A
+606c: 32 04 F0       LD    (TANK_OR_MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)),A
 606f: 32 08 F0       LD    ($F008),A
 6072: 47             LD    B,A
 6073: 3A 28 C0       LD    A,(IO_TRON_Y)
@@ -13172,7 +13082,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 60ce: CB 86          RES   0,(HL)
 60d0: 78             LD    A,B
 60d1: DD 86 08       ADD   A,(IX+$08)
-60d4: 32 0C F0       LD    ($F00C),A
+60d4: 32 0C F0       LD    (TANK_SHOTS_F00C_TO_F01B(SPRITES_3_TO_6)),A
 60d7: 79             LD    A,C
 60d8: DD 86 09       ADD   A,(IX+$09)
 60db: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
@@ -13185,7 +13095,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 
 60ed: 78             LD    A,B
 60ee: DD 86 05       ADD   A,(IX+$05)
-60f1: 32 0C F0       LD    ($F00C),A
+60f1: 32 0C F0       LD    (TANK_SHOTS_F00C_TO_F01B(SPRITES_3_TO_6)),A
 60f4: 79             LD    A,C
 60f5: DD 86 06       ADD   A,(IX+$06)
 60f8: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
@@ -13304,7 +13214,7 @@ MOVE_SPIDERS?:
 61b8: AF             XOR   A,A
 61b9: 32 08 C4       LD    ($C408),A
 61bc: 3E 00          LD    A,#$00
-61be: 32 0C F0       LD    ($F00C),A
+61be: 32 0C F0       LD    (TANK_SHOTS_F00C_TO_F01B(SPRITES_3_TO_6)),A
 61c1: 32 14 F0       LD    ($F014),A
 61c4: 32 18 F0       LD    (DISK_1_TO_3/MAYBE_SHOTS_TOO?),A
 61c7: 0E 30          LD    C,#$30
@@ -13351,7 +13261,7 @@ MOVE_SPIDERS?:
 620f: 3E 80          LD    A,#$80
 6211: 32 20 C0       LD    ($C020),A
 6214: 3E 00          LD    A,#$00
-6216: 32 04 F0       LD    (MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)),A
+6216: 32 04 F0       LD    (TANK_OR_MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)),A
 6219: 32 08 F0       LD    ($F008),A
 621c: C9             RET   
 
@@ -13440,7 +13350,7 @@ SET_SOME_VALUES_IN_C02X?:
 62ac: C9             RET   
 
 62ad: 3A 26 C0       LD    A,(IO_TRON_X)
-62b0: 21 00 C0       LD    HL,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
+62b0: 21 00 C0       LD    HL,TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
 62b3: 96             SUB   A,(HL)
 62b4: 30 07          JR    NC,$62BD
 
@@ -13454,7 +13364,7 @@ SET_SOME_VALUES_IN_C02X?:
 62bf: D0             RET   NC
 
 62c0: 3A 28 C0       LD    A,(IO_TRON_Y)
-62c3: 21 01 C0       LD    HL,MCP_ROWS_OF_BRICKS
+62c3: 21 01 C0       LD    HL,TANK_PIC_OR_MCP_ROWS_OF_BRICKS
 62c6: 96             SUB   A,(HL)
 62c7: 30 07          JR    NC,$62D0
 
@@ -13483,11 +13393,11 @@ SET_SOME_VALUES_IN_C02X?:
 62f1: 00             NOP   
 62f2: FD 21 2C F0    LD    IY,$F02C
 62f6: 21 03 C0       LD    HL,$C003
-62f9: 3A 02 C0       LD    A,(GS_DISK_Y)
+62f9: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 62fc: FD 77 00       LD    (IY+$00),A
 62ff: 3A 04 C0       LD    A,($C004)
 6302: 47             LD    B,A
-6303: 3A 01 C0       LD    A,(MCP_ROWS_OF_BRICKS)
+6303: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BRICKS)
 6306: 4F             LD    C,A
 6307: FE 80          CP    A,#$80
 6309: 38 1B          JR    C,$6326
@@ -13523,9 +13433,9 @@ SET_SOME_VALUES_IN_C02X?:
 6338: B9             CP    A,C
 6339: D0             RET   NC
 
-633a: 3A 00 C0       LD    A,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+633a: 3A 00 C0       LD    A,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 633d: 32 28 F0       LD    (MCP_BLOCKS_TOP_LEFT_MOVING_DOWN_AND_WRAP_TO_TOP_RIGHT_TO_F09F),A
-6340: 3A 01 C0       LD    A,(MCP_ROWS_OF_BRICKS)
+6340: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BRICKS)
 6343: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 6346: 32 2A F0       LD    ($F02A),A
 6349: 3E 0C          LD    A,#$0C
@@ -14027,7 +13937,7 @@ SET_SOME_VALUES_IN_C02X?:
 66e8: CA 19 66       JP    Z,$6619
 
 66eb: FD 34 01       INC   (IY+$01)
-66ee: 3A 09 C0       LD    A,(MCP_TRON_Y)
+66ee: 3A 09 C0       LD    A,(MCP_TRON_Y_TANKS_DATA_VECTOR_x_2)
 66f1: DD 77 08       LD    (IX+$08),A
 66f4: C9             RET   
 
@@ -14072,7 +13982,7 @@ SET_SOME_VALUES_IN_C02X?:
 6736: 10 DA          DJNZ  $6712
 
 6738: DD CB 0A 8E    RES   1,(IX+$0A)
-673c: 3A 09 C0       LD    A,(MCP_TRON_Y)
+673c: 3A 09 C0       LD    A,(MCP_TRON_Y_TANKS_DATA_VECTOR_x_2)
 673f: DD 77 08       LD    (IX+$08),A
 6742: FD E1          POP   IY
 6744: FD 36 01 0E    LD    (IY+$01),#$0E
@@ -14128,7 +14038,7 @@ SET_SOME_VALUES_IN_C02X?:
 679d: E5             PUSH  HL
 679e: 21 E2 68       LD    HL,$68E2
 67a1: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
-67a4: 11 00 C0       LD    DE,MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
+67a4: 11 00 C0       LD    DE,TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
 67a7: ED A0          LDI   
 67a9: ED A0          LDI   
 67ab: ED A0          LDI   
@@ -14146,7 +14056,7 @@ SET_SOME_VALUES_IN_C02X?:
 
 67c0: 78             LD    A,B
 67c1: 3C             INC   A
-67c2: 32 09 C0       LD    (MCP_TRON_Y),A
+67c2: 32 09 C0       LD    (MCP_TRON_Y_TANKS_DATA_VECTOR_x_2),A
 67c5: 23             INC   HL
 67c6: 7E             LD    A,(HL)
 67c7: 23             INC   HL
@@ -17598,7 +17508,7 @@ LC_COLOR_PALETTE:
 9080: 00             NOP   
 9081: 00             NOP   
 9082: 01 C6 01       LD    BC,$01C6
-9085: C3 01 C0       JP    MCP_ROWS_OF_BRICKS
+9085: C3 01 C0       JP    TANK_PIC_OR_MCP_ROWS_OF_BRICKS
 
 9088: 00             NOP   
 9089: 9B             SBC   A,E
@@ -17854,9 +17764,9 @@ BACKGROUND_TRAINING_FOR_LC:
 9903: 3E 78          LD    A,#$78
 9905: 32 6E C4       LD    ($C46E),A
 9908: 21 06 9A       LD    HL,$9A06
-990b: 22 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),HL
+990b: 22 00 C0       LD    (TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),HL
 990e: 3E 18          LD    A,#$18
-9910: 32 02 C0       LD    (GS_DISK_Y),A
+9910: 32 02 C0       LD    (TANK_Y_OR_GS_DISK_Y),A
 9913: AF             XOR   A,A
 9914: 32 7B C4       LD    (IN_ATTRACT_MODE?),A
 9917: 32 65 C4       LD    ($C465),A
@@ -17869,7 +17779,7 @@ BACKGROUND_TRAINING_FOR_LC:
 9927: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 992a: CD C7 6F       CALL  CLEAR_BACKGROUND
 992d: CD A4 99       CALL  $99A4
-9930: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+9930: DD 2A 00 C0    LD    IX,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 9934: DD 7E 07       LD    A,(IX+$07)
 9937: 32 05 F0       LD    ($F005),A
 993a: CD CA 99       CALL  $99CA
@@ -17887,13 +17797,13 @@ BACKGROUND_TRAINING_FOR_LC:
 9953: CD EA 99       CALL  $99EA
 9956: 18 A8          JR    $9900
 
-9958: 21 02 C0       LD    HL,GS_DISK_Y
+9958: 21 02 C0       LD    HL,TANK_Y_OR_GS_DISK_Y
 995b: 35             DEC   (HL)
 995c: C0             RET   NZ
 
 995d: 36 18          LD    (HL),#$18
 995f: 21 03 C0       LD    HL,$C003
-9962: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+9962: DD 2A 00 C0    LD    IX,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 9966: DB 02          IN    A,($02)
 9968: 2F             CPL   
 9969: E6 04          AND   A,#$04
@@ -17946,7 +17856,7 @@ GET_TRIGGER_INPUT_FOR_SERVICE_MENU:
 99a1: F6 01          OR    A,#$01
 99a3: C9             RET   
 
-99a4: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+99a4: DD 2A 00 C0    LD    IX,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 99a8: DD 6E 00       LD    L,(IX+$00)
 99ab: DD 66 01       LD    H,(IX+$01)
 99ae: E5             PUSH  HL
@@ -17964,7 +17874,7 @@ GET_TRIGGER_INPUT_FOR_SERVICE_MENU:
 99c6: DD 19          ADD   IX,DE
 99c8: 18 E7          JR    $99B1
 
-99ca: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+99ca: DD 2A 00 C0    LD    IX,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 99ce: DD 6E 02       LD    L,(IX+$02)
 99d1: DD 66 03       LD    H,(IX+$03)
 99d4: 16 00          LD    D,#$00
@@ -17972,7 +17882,7 @@ GET_TRIGGER_INPUT_FOR_SERVICE_MENU:
 99d9: 5F             LD    E,A
 99da: 19             ADD   HL,DE
 99db: 19             ADD   HL,DE
-99dc: DD 21 04 F0    LD    IX,MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
+99dc: DD 21 04 F0    LD    IX,TANK_OR_MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
 99e0: 7E             LD    A,(HL)
 99e1: DD 77 00       LD    (IX+$00),A
 99e4: 23             INC   HL
@@ -17980,7 +17890,7 @@ GET_TRIGGER_INPUT_FOR_SERVICE_MENU:
 99e6: DD 77 02       LD    (IX+$02),A
 99e9: C9             RET   
 
-99ea: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+99ea: DD 2A 00 C0    LD    IX,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 99ee: DD 6E 04       LD    L,(IX+$04)
 99f1: DD 66 05       LD    H,(IX+$05)
 99f4: 16 00          LD    D,#$00
@@ -18047,7 +17957,7 @@ HIT_FIRE_BUTTON_FOR_TEST_STRING:
 9b12: HIT FIRE BUTTON FOR TEST
 
 9b2b: 21 D8 9B       LD    HL,?_DATA_USED_FOR_?1
-9b2e: 22 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),HL
+9b2e: 22 00 C0       LD    (TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),HL
 9b31: 21 50 9E       LD    HL,$9E50
 9b34: 22 06 C0       LD    ($C006),HL
 9b37: 3E 18          LD    A,#$18
@@ -18059,7 +17969,7 @@ HIT_FIRE_BUTTON_FOR_TEST_STRING:
 9b46: 0E 02          LD    C,#$02
 9b48: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 9b4b: CD A4 99       CALL  $99A4
-9b4e: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+9b4e: DD 2A 00 C0    LD    IX,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 9b52: DD 7E 07       LD    A,(IX+$07)
 9b55: 32 05 F0       LD    ($F005),A
 9b58: 3A 05 C0       LD    A,($C005)
@@ -18115,7 +18025,7 @@ HIT_FIRE_BUTTON_FOR_TEST_STRING:
 9ba9: 3E 02          LD    A,#$02
 9bab: 32 03 C0       LD    ($C003),A
 9bae: 3A 03 C0       LD    A,($C003)
-9bb1: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+9bb1: DD 2A 00 C0    LD    IX,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 9bb5: DD BE 06       CP    A,(IX+$06)
 9bb8: 30 13          JR    NC,$9BCD
 
@@ -18244,7 +18154,7 @@ SELECT_A_SOUND_STRING:
 9e8c: 37 1E 00 16 08 00 3C 14 FF 3F 14 40 
 
 9e98: 21 E0 9E       LD    HL,$9EE0
-9e9b: 22 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),HL
+9e9b: 22 00 C0       LD    (TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),HL
 9e9e: 3E 18          LD    A,#$18
 9ea0: AF             XOR   A,A
 9ea1: 32 03 C0       LD    ($C003),A
@@ -18254,7 +18164,7 @@ SELECT_A_SOUND_STRING:
 9ead: 0E 02          LD    C,#$02
 9eaf: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 9eb2: CD A4 99       CALL  $99A4
-9eb5: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+9eb5: DD 2A 00 C0    LD    IX,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 9eb9: DD 7E 07       LD    A,(IX+$07)
 9ebc: 32 05 F0       LD    ($F005),A
 9ebf: CD BF 9F       CALL  $9FBF
@@ -18622,11 +18532,11 @@ a367: CD 49 70       CALL  INITIALIZE_SPRITES
 a36a: 0E 02          LD    C,#$02
 a36c: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 a36f: 21 AD A3       LD    HL,$A3AD
-a372: 22 00 C0       LD    (MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),HL
+a372: 22 00 C0       LD    (TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X),HL
 a375: AF             XOR   A,A
 a376: 32 03 C0       LD    ($C003),A
 a379: CD A4 99       CALL  $99A4
-a37c: DD 2A 00 C0    LD    IX,(MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
+a37c: DD 2A 00 C0    LD    IX,(TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X)
 a380: DD 7E 07       LD    A,(IX+$07)
 a383: 32 05 F0       LD    ($F005),A
 a386: 0E 1A          LD    C,#$1A
@@ -18712,7 +18622,7 @@ HIT_TILT_TO_EXIT_STRING:
 a49f: HIT TILT TO EXIT
 
 a4b0: DD 21 56 A5    LD    IX,$A556
-a4b4: FD 21 09 C0    LD    IY,MCP_TRON_Y
+a4b4: FD 21 09 C0    LD    IY,MCP_TRON_Y_TANKS_DATA_VECTOR_x_2
 a4b8: DD 7E 00       LD    A,(IX+$00)
 a4bb: B7             OR    A,A
 a4bc: FA 52 A5       JP    M,$A552
@@ -18934,7 +18844,7 @@ a756: 11 06 00       LD    DE,$0006
 a759: DD 19          ADD   IX,DE
 a75b: 18 EF          JR    $A74C
 
-a75d: FD 21 04 F0    LD    IY,MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
+a75d: FD 21 04 F0    LD    IY,TANK_OR_MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
 a761: FD 36 00 28    LD    (IY+$00),#$28
 a765: FD 36 01 06    LD    (IY+$01),#$06
 a769: DD 21 94 A9    LD    IX,$A994
@@ -18978,7 +18888,7 @@ a7ab: DD 7E 00       LD    A,(IX+$00)
 a7ae: DD 7E 00       LD    A,(IX+$00)
 a7b1: FD 77 02       LD    (IY+$02),A
 a7b4: AF             XOR   A,A
-a7b5: 32 09 C0       LD    (MCP_TRON_Y),A
+a7b5: 32 09 C0       LD    (MCP_TRON_Y_TANKS_DATA_VECTOR_x_2),A
 a7b8: DB 00          IN    A,($00)
 a7ba: E6 04          AND   A,#$04
 a7bc: 20 27          JR    NZ,$A7E5
@@ -19015,7 +18925,7 @@ a7e7: E6 08          AND   A,#$08
 a7e9: 28 06          JR    Z,$A7F1
 
 a7eb: AF             XOR   A,A
-a7ec: 32 09 C0       LD    (MCP_TRON_Y),A
+a7ec: 32 09 C0       LD    (MCP_TRON_Y_TANKS_DATA_VECTOR_x_2),A
 a7ef: 18 3A          JR    $A82B
 
 a7f1: DD 7E 00       LD    A,(IX+$00)
@@ -19052,13 +18962,13 @@ a819: 28 10          JR    Z,$A82B
 a81b: 23             INC   HL
 a81c: 35             DEC   (HL)
 a81d: CD 3E A8       CALL  $A83E
-a820: 3A 09 C0       LD    A,(MCP_TRON_Y)
+a820: 3A 09 C0       LD    A,(MCP_TRON_Y_TANKS_DATA_VECTOR_x_2)
 a823: FE 04          CP    A,#$04
 a825: 30 04          JR    NC,$A82B
 
 a827: 3C             INC   A
-a828: 32 09 C0       LD    (MCP_TRON_Y),A
-a82b: 3A 09 C0       LD    A,(MCP_TRON_Y)
+a828: 32 09 C0       LD    (MCP_TRON_Y_TANKS_DATA_VECTOR_x_2),A
+a82b: 3A 09 C0       LD    A,(MCP_TRON_Y_TANKS_DATA_VECTOR_x_2)
 a82e: 06 06          LD    B,#$06
 a830: FE 03          CP    A,#$03
 a832: 38 02          JR    C,$A836

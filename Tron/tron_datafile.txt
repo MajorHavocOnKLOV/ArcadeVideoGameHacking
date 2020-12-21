@@ -211,6 +211,9 @@ label 3a00 PLAY_TANKS
 label 3cdf TANKS_INSTRUCTIONS
 label 3d35 DESTROY_ALL_STRING
 label 3d41 ENEMY_TANKS_STRING
+label 3d4d TANK_JOYSTICK_INPUT_TABLE?
+label 4063 TANKS_DATA_FOR_x_STARTS_AT_4066
+label 46fb TANKS_DATA_FOR_x_STARTS_AT_46FF
 label 47a7 COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?
 label 4f7e TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA
 label 4d77 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE
@@ -478,13 +481,14 @@ label b17e USER_STRING
 ;
 ; c000 LC_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY
 ; c000 MCP 00-03 legs open, 04-04 legs closed
-label c000 MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
-label c001 MCP_ROWS_OF_BRICKS
-label c002 GS_DISK_Y
-label c007 MCP_TRON_X
-label c009 MCP_TRON_Y
+label c000 TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
+label c001 TANK_PIC_OR_MCP_ROWS_OF_BRICKS
+label c002 TANK_Y_OR_GS_DISK_Y
+label c007 MCP_TRON_X_TANKS_DATA_VECTOR_x_1
+label c009 MCP_TRON_Y_TANKS_DATA_VECTOR_x_2
 label c00d IO_TOWER_TIMER_VALUE_REVERSED_TO_C010
 label c00e INFINITE_TIME_CHEAT
+label c010 TANKS_SHOTS_IN_RAM_STARTS_AT_C020
 label c012 MCP_DISK_DATA_TO_C02F/IO_TOWER_TIMER_DIGITS_TO_C019
 label c022 IO_TOWER_INCREMENTS_19_TO_1E_FOR_EACH_DISK_THROWN
 label c023 IO_TOWER_TRIGGER_DEBOUNCE?
@@ -493,13 +497,14 @@ label c026 IO_TRON_X
 label c028 IO_TRON_Y
 label c029 JOYSTICK_INPUT_ARRAY_TO_C02C
 label c03a MCP_DATA_TO_C0D9?
-label c051 INFO_FOR_TANK_GAME_SEE_3ABF_TO_C05A
+label c051 INFO_FOR_TANK_GAME_SEE_3ABF_TO_C05A_FOR_A_SINGLE_TANK
 label c062 MCP_POSITION_OF_BLOCKS_0_TO_F
 label c0dc MCP_TOWER_Y
 label c0dd MCP_TOWER_X
 label c0e3 MCP_BRICKS_REMAINING_COUNT
+label c108 TANKS_ENEMY_SHOTS_IN_RAM_AT_C111?
 label c14a NUMBER_OF_TANKS
-label c159 NUMBER_OF_TANKS_2
+label c159 TANKS_NUMBER_OF_ENEMY_SHOTS?
 label c15b FIRST_NUMBER_FROM_4F7E
 label c15f TANK_IF_HARDNESS>0X0B_SEE_COMMENT_AT_3A79
 label c402 COUNTDOWN_TIMER_SECONDS
@@ -562,9 +567,11 @@ label C000 NVRAM
 ; label e800 VIDEO_RAM_MIRROR
 
 label F000 SPRITE_RAM
-label F004 MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
+label F004 TANK_OR_MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
+label F00C TANK_SHOTS_F00C_TO_F01B(SPRITES_3_TO_6)
 label f018 DISK_1_TO_3/MAYBE_SHOTS_TOO?
 label f028 MCP_BLOCKS_TOP_LEFT_MOVING_DOWN_AND_WRAP_TO_TOP_RIGHT_TO_F09F
+label f044 TANKS_ENEMY_SHOTS?
 label f0a0 MCP_TOWER_TO_F133
 ; label F200 SPRITE_RAM_M5
 ; label F400 SPRITE_RAM_M6
@@ -856,21 +863,63 @@ data 3966-398c
 
 commentline 3a2b Set up shots (up to 4) in sprites 3-6 (F00C-F01B)
 
-commentline 3a79 If hardness above 0x0B (11), subtract 5 from hardness until hardness for this game
-commentline 3a79 is =< 0x0B. Increment C for each subtraction. Cap C at 4. Multiply C times 32 
-commentline 3a79 and place into C15F
-
-ascii 3d35-3d40
-ascii 3d41-3d4c
+commentline 3a79 If hardness above 0x0B (11), subtract 5 from hardness until hardness for
+commentline 3a79 this game is =< 0x0B. Increment C for each subtraction. Cap C at 4.
+commentline 3a79 Multiply C times 32 and place into C15F
 
 commentline 3aae If bit 7 in number of tanks is set, C15C=0x35
 
+commentline 3b76 Setup of enemy tank shots
+commentline 3b76 Sprite is explosion and X=0 and Y=4?
+
+ascii 3d35-3d40
+ascii 3d41-3d4c
+data 3d4d-3db4
+
 comment 3f91 Invincibility TANK Game = 18 (JR *) (tank collision?)
+
+; This might not be right.  Used by data blocks starting at 4066
+commentline 3f9a 18? data blocks used by tanks
+data 3f3f-3f47
+data 3f48-3f56
+data 3f57-3f5f
+data 3f60-3f66
+data 3f67-3f6e
+data 3f6f-3f77
+data 3f78-3f86
+data 3f87-3f8e
+data 3f8f-3f8f
+data 3f9a-3f9a
+data 3f9b-3f3e
+
+commentline 4066 18?x3 bytes: ?, vector to other data (they look like variable size 00 terminated data blocks)
+;data 4066-40a4
+
+commentline 4066 This data structure is used at 40C9. It's BIG but I'm not sure where it ends
+;data 4066-4d7a
+
+commentline 40d0 Update position and pic of tank (from C000 to C002)
+
+; Another data structure may start at 4088
+; data 409f-
+; data 40af-
+; data 40b8-
+; data 40c7-
+; data 40d0-
+; data 40df-
+; data 40e8-
+; data 40f7-
+; data 40ff-
+; data 40dd-
+
 comment 473b Invincibility TANK Game = 18 (JR *) (bullet collision?)
 
 commentline ? 47b8-47c6 looks like data, not sure for what though ...
 data 47b8-47c6
 
+commentline 4d9e This data is copied to C051!
+commentline 4d9e number of tanks x 10 bytes
+commentline 4d9e 10 bytes: X, picture, Y, ?, ?, ?, ?, ?, ?, ?
 commentline 4d9e tank 0 hardness data
 data 4d9e-4da7
 commentline 4da8 tank 1 hardness data

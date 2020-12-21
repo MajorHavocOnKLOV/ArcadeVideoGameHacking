@@ -163,7 +163,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 NZ,$66DF
       1 NZ,$5BFF
       1 NZ,$290C
-      1 NZ,$28B7
       1 NZ,$0991
       1 NZ,$04FB
       1 NZ,$0402
