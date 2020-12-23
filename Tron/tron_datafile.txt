@@ -19,8 +19,9 @@
 ; o if a DATA/ASCII area is preceded by what Z80dasm thinks is code that continues into the DATA/ASCII area, the data will not be marked
 ;   as such, and an error will be printed.  If this is the case, mark the line before the data as data also.
 
-; LC = Light Cycle
 ; GS = Game Selection
+; LC = Light Cycle
+; IO = IO Tower/Grid Bugs/Spiders/Circle
 
 ; Order of screens in attract mode:
 ;  MCP cone with copyrights
@@ -51,16 +52,17 @@
 ; 2) The tank is 1 pixel too far right when moving up/down
 ; 3) The enemy tank shot has a stray pixel in the bottom row near the right side
 
-label 0000 IO_0
-label 0001 IO_1
-label 0002 IO_2
-label 0003 IO_3
-label 0004 IO_4
-label 0007 IO_AUDIO_STATUS
-label 001C IO_AUDIO_LATCHES
-label 00E0 IO_WATCHDOG_RESET
-label 00E8 IO_UNKNOWN_WRITTEN_AT_INITIALIZATION
-label 00F0 IO_CTC
+; IN/OUT instructions apparently don't look up labels: TODO
+; label 0000 IO_0
+; label 0001 IO_1
+; label 0002 IO_2
+; label 0003 IO_3
+; label 0004 IO_4
+; label 0007 IO_AUDIO_STATUS
+; label 001C IO_AUDIO_LATCHES
+; label 00E0 IO_WATCHDOG_RESET
+; label 00E8 IO_UNKNOWN_WRITTEN_AT_INITIALIZATION
+; label 00F0 IO_CTC
 
 label 006b COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S
 label 01ab COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?
@@ -81,12 +83,16 @@ label 04c8 MJ_S
 label 04cb JJ_S
 label 0513 CREDITS_S
 label 0557 OUTPUT_TO_SOUND_LATCHES
+label 05c3 ROTATE_MCP_BLOCK_COLORS
+label 05EC MCP_BLOCKS_COLOR_POSITIONS_LEFT_TO_RIGHT
 label 06ca PRINT_OUT_MESSAGES_IN_QUEUES
 label 06f5 PRINT_OUT_MESSAGES_IN_QUEUE_2
 label 0792 OUTPUT_IO_TOWER_TIMER?/TELETYPE_PRINTING_TO_THE_SCREEN_UNTIL_NULL_BYTE?
 label 0825 UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE
 
 label 0900 ATTRACT_MODE_LOOP
+
+label 0d7c DRAW_ATTRACT_MCP_CONE
 
 label 0af1 DISPLAY_MCP_CONE_WITH_COPYRIGHTS_AND_NEXT_INSTRUCTIONS
 
@@ -97,18 +103,22 @@ label 0b9b BALLY_MIDWAY_MFG_CO_S
 label 0d52 READ_AND_PROCESS_INPUT_PORTS
 label 0baf ALL_RIGHTS_RESERVED_S
 label 0d38 READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS
+label 0e32 SHOULD_I_UPDATE_CONE_COLOR?
+label 0e55 MCP_ATTRACT_COLORS?
 label 101b PLEASE_S
 label 1022 ENTER_S
 label 1028 YOUR_S
 label 102d INITIALS_S
 label 1036 ERASE_S
 label 103c END_S
-label 10ed ERASE_S2
-label 10f5 END_S2
+label 10ed ERASE2_S
+label 10f5 END2_S
 label 120c YOUR_SCORE_S
 label 1217 RANKING_IS_S
 label 1222 NOT_IN_THE_TOP_S
 label 1231 100_SCORES_S
+label 1500 PICK_WHICH_INSTRUCTIONS_TO_PRINT
+label 1538 SUBROUTINE_THAT_DOES_WHAT?
 label 1558 PRINT_HIGH_SCORE_SCREEN
 label 1653 RANKINGS_S
 label 16ab POINT_VALUES_S
@@ -140,7 +150,7 @@ label 193d DATA_3?
 label 1971 TANK_GAME_S
 label 197b PLAYER____RED_TANK_S
 label 198e JOYSTICK__MOVES_TANK_S
-label 19a3 TRIGGER___FIRES_DISK_S3
+label 19a3 TRIGGER___FIRES_DISK3_S
 label 19b8 KNOB______AIMS_DISK_S
 label 19cc DESTROY_ALL_ENEMY_TANKS_S
 label 19e4 EACH_ENEMY_MUST_BE_S
@@ -153,7 +163,7 @@ label 1a89 CYCLE_GAME_S
 label 1a94 PLAYER____BLUE_CYCLE_S
 label 1aa9 JOYSTICK__MOVES_CYCLE_S
 label 1abf TRIGGER___SPEED_CONTROL_S
-label 1ad7 KNOB______NOT_USED_S2
+label 1ad7 KNOB______NOT_USED2_S
 label 1aea TOUCHING_A_WALL_OR_LIGHT_S
 label 1b03 TRACE_DESTROYS_A_CYCLE_S
 label 1b1a MAKE_LIGHT_PATHS_S
@@ -164,7 +174,7 @@ label 1bc2 IO_TOWER_GAME_S
 label 1bd0 PLAYER___TRON_S
 label 1bde JOYSTICK__MOVES_TRON_S
 label 1bf3 TRIGGER___FIRES_DISK_S
-label 1c08 KNOB______AIMS_DISK_S2
+label 1c08 KNOB______AIMS_DISK2_S
 label 1c1c ENTER_THE_IO_TOWER_S
 label 1c2f BEFORE_THE_TIMER_S
 label 1c40 EXPIRES_S
@@ -177,9 +187,9 @@ label 1c98 WHEN_THE_PLAYER_S
 label 1ca8 ENTERS_THE_TOWER_S
 label 1d0e MCP_GAME_S
 label 1d17 PLAYER____TRON_S
-label 1d26 JOYSTICK__MOVES_TRON_S2
-label 1d3b TRIGGER___FIRES_DISK_S2
-label 1d50 KNOB______AIMS_DISK_S3
+label 1d26 JOYSTICK__MOVES_TRON2_S
+label 1d3b TRIGGER___FIRES_DISK2_S
+label 1d50 KNOB______AIMS_DISK3_S
 label 1d64 ENTER_THE_MASTER_CONTROL_S
 label 1d7d PROGRAM_CONE_WITHOUT_S
 label 1d92 TOUCHING_A_BLOCK_S
@@ -191,10 +201,11 @@ label 1dec 1000_BONUS_FOR_DESTROYING_S
 label 1e06 ALL_BLOCKS_S
 label 1f00 GS_MOVE_DOWN
 label 1f97 START_GAME
+label 1fd1 DRAW_GAME_SELECT_SCREEN?
 label 20a5 VECTOR_OF_DIFFICULTY_TO_HARDNESS_MAPS_(STARTS_AT_20A7)
 label 2115 INITIALIZE_LEVEL?
 label 234A BACKGROUND_PICK_A_GAME
-label 2aca COLOR_PALETTE_1?
+label 2aca GS_COLOR_PALETTE
 label 2c48 DATA_TO_2C4C?_USED_STARTING_AT_6F68
 label 2c4d 1000_BONUS_ALL_BLOCKS_HIT_S
 label 2c67 1000_FOR_ENTERING_CONE_S
@@ -205,7 +216,7 @@ label 2d12 PLAY_MCP
 label 3025 MCP_PROCESS_DISK_POSITION(S)?
 label 3559 MCP_BRICKS_DATA_TO_35B2
 label 35b3 MCP_CONE_RELATIVEX_RELATIVEY_SPRITE_NUMBER_TO_35D9
-label 3926 COLOR_PALETTE_ALL_ZEROS(USED_BY_MCP)
+label 3926 MCP_COLOR_PALETTE_ALL_ZEROS
 label 3966 DATA_FOR_MCP_SETUP_TO_398C
 label 3a00 PLAY_TANKS
 label 3cdf TANKS_INSTRUCTIONS
@@ -220,7 +231,7 @@ label 4d77 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE
 label 5000 PLAY_LC
 label 5103 LC_INSTRUCTIONS
 label 5167 AVOID_HITTING_S
-label 5175 LIGHT_TRACES_S2
+label 5175 LIGHT_TRACES2_S
 label 5182 AND_WALLS_S
 label 518c USE_TRIGGER_FOR_S
 label 519c SPEED_CONTROL_S
@@ -264,7 +275,7 @@ label 70cd GAME_SELECT_COUNTDOWN_DIGITS
 label 7159 RETURN_C687-7_IF_NZ_IN_A
 label 7165 RETURN_C687-2_IF_NZ_IN_A
 label 7200 BACKGROUND_TANK_GAME
-label 7980 COLOR_PALETTE_FOR_TANKS_GAME
+label 7980 TANK_COLOR_PALETTE
 label 79a0 COLOR_PALETTE_FOR_2?
 label 79c0 IO_COLOR_PALETTE
 label 7a00 BACKGROUND_IO_TOWER_GAME
@@ -330,7 +341,7 @@ label 9f94 BUY_IN_S
 label 9f9b TIME_REPORT_S
 label 9fa7 SCORE_REPORT_S
 label 9fb4 EXIT_S
-label a152 TIME_REPORT_S2
+label a152 TIME_REPORT2_S
 label a15e 0_TO_30_SEC_S
 label a16a 30_TO_60_SEC_S
 label a177 60_TO_90_SEC_S
@@ -342,7 +353,7 @@ label a1bb 4_TO_5_MIN_S
 label a1c6 5_TO_6_MIN_S
 label a1d1 OVER_6_MIN_S
 label a1dc HIT_FIRE_BUTTON_TO_EXIT_S
-label a28b SCORE_REPORT_S2
+label a28b SCORE_REPORT2_S
 label a298 0_TO_5000_PTS_S
 label a2a6 5000_TO_10000_PTS_S
 label a2b8 10000_TO_20000_PTS_S
@@ -389,15 +400,15 @@ label a71e PL2_LEFT_S
 label a729 PL2_UP_S
 label a732 PL2_DOWN_S
 label a8bd SETUP_OPTIONS_S
-label a8cb COIN_CHUTE_1_S2
+label a8cb COIN_CHUTE_12_S
 label a8d8 COINS_FOR_S
-label a8e2 CREDITS_S2
-label a8ea COIN_CHUTE_2_S2
+label a8e2 CREDITS2_S
+label a8ea COIN_CHUTE_22_S
 label a8f7 CREDITS_FOR_S
 label a903 BASES_S
 label a909 1ST_EXTRA_BASE_AT_S
 label a91b 000_POINTS_S
-label a926 EXIT_S2
+label a926 EXIT2_S
 label a92b USE_JOYSTICK_UP_AND_S
 label a93f DOWN_TO_POSITION_CURSOR_S
 label a957 USE_1_AND_2_PLAYER_S
@@ -406,7 +417,7 @@ label a97b OPTIONS_S
 label a983 DIFFICULTY_LEVEL_S
 label aab2 HIT_FIRE_BUTTON_S
 label aac2 TO_CONTINUE_S
-label aace HIT_FIRE_BUTTON_S2
+label aace HIT_FIRE_BUTTON2_S
 label aade TO_EXIT_S
 label ab1d DATA_USED_TO_DISPLAY_RAM_ERROR(S)
 label ab27 RAM_ERROR_S
@@ -439,7 +450,7 @@ label b004 2ND_S
 label b008 PLAYER_1_UP_S
 label b014 PLAYER_2_UP_S
 label b020 PLAYER_1_S
-label b029 EMPTY_S2
+label b029 EMPTY2_S
 label b02d HISCORE_S
 label b035 TO_START_GAME_S
 label b043 TO_CONTINUE_GAME_S
@@ -452,12 +463,12 @@ label b095 CREDITS_PER_PLAYER_S
 label b0a9 OR_PUSH_S
 label b0b1 2_PLAYERS_S
 label b0bb GAME_OVER_S
-label b0c5 EMPTY_S3
+label b0c5 EMPTY3_S
 label b0cf BONUS_BASES_AWARDED_S
 label b0e3 AT_10000_POINTS_S
 label b0f3 PRESS_FIRE_BUTTON_S
 label b105 FOR_DIRECTIONS_S
-label b114 PLAYER_1_S2
+label b114 PLAYER_12_S
 label b11d PLAYER_2_S
 label b126 VECTOR_OF_USER_LEVEL_STRINGS
 label b13e RPG_S
@@ -481,7 +492,7 @@ label b17e USER_S
 ;
 ; c000 LC_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY
 ; c000 MCP 00-03 legs open, 04-04 legs closed
-label c000 TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF-GS_DISK_X
+label c000 CPU_RAM_OR_GS_DISK_X_TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF
 label c001 TANK_PIC_OR_MCP_ROWS_OF_BRICKS
 label c002 TANK_Y_OR_GS_DISK_Y
 label c007 MCP_TRON_X_TANKS_DATA_VECTOR_x_1
@@ -509,6 +520,8 @@ label c15b FIRST_NUMBER_FROM_4F7E
 label c15f TANK_IF_HARDNESS>0X0B_SEE_COMMENT_AT_3A79
 label c402 COUNTDOWN_TIMER_SECONDS
 label c403 COUNTDOWN_TIMER_FRAMES
+label c40f ATTRACT_MCP_ROTATE_COLORS_IF_NON_ZERO
+label c410 MCP_BLOCKS_COLOR_VECTOR_POINTER_0E55
 label c406 MCP_DISK_NUMBER_BEING_PROCESSED
 label c419 HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?)
 label c41a PLAYING_HOW_LONG_NOW_TO_C41C
@@ -530,6 +543,7 @@ label c42e NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_SHOTS_MAY_GO_TO_1???
 label c42f OTHER_PLAYER_DATA
 label c45b GS_DIRECTION:1=DOWN,2=?,3=?,5=?,OTHER=?
 label c45f PLAYER_NUMBER
+label c461 WHICH_INSTRUCTIONS_TO_DISPLAY?_VECTOR_LIST_AT_1527?
 label c466 NUMBER_OF_SCREEN_MESSAGES_FROM_C4D6
 label c467 NUMBER_OF_SCREEN_MESSAGES_2_FROM_C4BE
 label c469 ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED1!
@@ -567,19 +581,23 @@ label C000 NVRAM
 ; label e800 VIDEO_RAM_MIRROR
 
 label F000 SPRITE_RAM
-label F004 TANK_OR_MCP_TRON_AND_DISK_TO_F027(TORSO,LEGS,LEFT_ARM,DISK_IN_HAND,RIGHT_ARM)
+label F004 TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT
+label F008 TANK_TURRET_OR_LC_ENEMIES
 label F00C TANK_SHOTS_F00C_TO_F01B(SPRITES_3_TO_6)
-label f018 DISK_1_TO_3/MAYBE_SHOTS_TOO?
+label f018 IO_OR_MCP_OR_TANK_DISKS_OR_SHOTS_1_TO_4
 label f028 MCP_BLOCKS_TOP_LEFT_MOVING_DOWN_AND_WRAP_TO_TOP_RIGHT_TO_F09F
-label f044 TANKS_ENEMY_SHOTS?
+label f02c TANK_ENEMIES
+label f030 IO_GRID_BUGS
+label f044 TANK_ENEMY_SHOTS
+label f060 TANK_HITS_ON_ENEMIES
 label f0a0 MCP_TOWER_TO_F133
 ; label F200 SPRITE_RAM_M5
 ; label F400 SPRITE_RAM_M6
 ; label F600 SPRITE_RAM_M7
 
-label f800 VIDEO_RAM_TO_FF7F
+label f800 BACKGROUND_VIDEO_RAM_TO_FF7F
 
-label ff80 SCRATCH_RAM_TO_FFFF
+label ff80 COLOR_RAM_TO_FFFF
 
 org 0000
 commentline 0000 Dissasembly of the Tron 8/9 ROMs used by MAME (labelled as tron)
@@ -614,6 +632,11 @@ data 04ce-04f5
 
 ascii 0513-051a
 
+commentline 05e4 Color RAM: If bit 8 is not set, write to even address. If bit 8 is set
+commentline 05e4 inc to next address to write to odd address in order to make A1 high!
+
+data 05ec-05f7
+
 ; Print messages from two different message queue?
 commentline 06ca Count @C466 and data starting @C4D8. @C4D6 is next entry for Q
 commentline 06ca Each entry is 2 bytes destination & 2 bytes source
@@ -640,11 +663,22 @@ ascii 0baf-0bc2
 
 commentline 0d52 I/O byte 00, bit 4? (isn't it 7?) is trigger. 0 when trigger is pulled, 1 otherwise
 
+commentline 0d7c Draw MCP cone tip to sprites 16-30? (0x10-0x1C?)
+commentline 0d9f Draw MCP blocks to sprites 1-24 (0x01-0x18)
+
+commentline 0dc3 24x3 bytes: X, Y, picture (0x56 is added to X and 0x80 to Y)
 data 0dc3-0dfd
 ascii 0dfe-0e00
 data 0e01-0e0a
 
-data 0e55-0e5e
+commentline 0e0b 13x3 bytes: X, Y, picture (0x56 is added to X and 0x80 to Y)
+data 0e0b-0e31
+
+commentline 0e55 These are color WORDS!  If bit 8 is set, write the color to the next byte up
+commentline 0e55 to set the A0 line high which sets bit 8 in the color WORD RAM.
+commentline 0e55 See Bally/Midway's MCR II System manual top-right corner of page MCR-6
+commentline 0e55 for more information.
+data 0e55-0e60
 
 ascii 101b-1021
 ascii 1022-1027
@@ -661,11 +695,16 @@ ascii 1231-123b
 ascii 134e-1350
 ascii 1433-1435
 
+data 1527-1534
+
 commentline 15c3 print out high scores
-commentline 161c print out user level (programming language)
 
 ascii 15e0-15e2
+
 ascii 1605-1607
+
+commentline 161c print out user level (programming language)
+
 ascii 1653-165b
 ascii 16ab-16b7
 ascii 16d7-16d9
@@ -765,7 +804,7 @@ ascii 1dec-1e05
 ascii 1e06-1e10
 
 commentline 1fc0 if level > 0, skip game instructions
-commentline 1fc2 pick game instructions to print
+commentline 1fc2 pick GS instructions to print
 
 commentline 205c Finished level so set up for the next level (to 2097)
 commentline 2070 Increment user level (C422)
@@ -984,6 +1023,7 @@ data 6b79-6eff
 commentline 6f20 This line is hit for every tick of the teletype (which strikes twice per character)
 commentline 6f2d Set color RAMs in some way?
 commentline 6f35 Another entry point to: Set color RAMs in some way?
+commentline 6f3e Color RAM: if bit 8 of word set, write to odd byte. Else, write to even byte
 
 commentline 6fc7 Clear background screen (set graphic to 51 and attributes to 5E)
 commentline 6fff Add a message to the output queue (max of 6) DE is source and BC is destination
