@@ -87,6 +87,7 @@ label 05c3 ROTATE_MCP_BLOCK_COLORS
 label 05EC MCP_BLOCKS_COLOR_POSITIONS_LEFT_TO_RIGHT
 label 06ca PRINT_OUT_MESSAGES_IN_QUEUES
 label 06f5 PRINT_OUT_MESSAGES_IN_QUEUE_2
+label 074f TANK_UPDATE_COLOR_CYCLING
 label 0792 OUTPUT_IO_TOWER_TIMER?/TELETYPE_PRINTING_TO_THE_SCREEN_UNTIL_NULL_BYTE?
 label 0825 UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE
 
@@ -644,6 +645,8 @@ commentline 06ca Each entry is 2 bytes destination & 2 bytes source
 commentline 06f5 Count @C467 and data starting @C4BE. @C4BC is next entry for Q
 commentline 06f5 Each entry is 2 bytes destination & 2 bytes source
 
+commentline 0775 Color RAM: if bit 8 is set, write to odd byte. Else write to even byte.
+
 data 0786-0791
 
 commentline 07cc FF byte has some special processing, for (c) only?
@@ -1067,7 +1070,9 @@ data 79e0-79ff
 data 7a00-817F
 data 8900-907F
 
-data 90a0-90ff
+data 90a0-90bf
+data 90c0-90df
+data 90e0-90ff
 
 data 9100-987F
 

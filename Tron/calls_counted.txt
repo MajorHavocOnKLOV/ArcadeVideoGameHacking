@@ -124,6 +124,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 Z,$1200
       1 Z,$0E01
       1 UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE
+      1 TANK_UPDATE_COLOR_CYCLING
       1 ROTATE_MCP_BLOCK_COLORS
       1 READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS
       1 READ_AND_PROCESS_INPUT_PORTS
@@ -318,7 +319,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $09E4
       1 $08A0
       1 $07B0
-      1 $074F
       1 $06BB
       1 $05F8
       1 $04F6
