@@ -120,8 +120,9 @@ label 1222 NOT_IN_THE_TOP_S
 label 1231 100_SCORES_S
 label 1500 PICK_WHICH_INSTRUCTIONS_TO_PRINT
 label 1538 SUBROUTINE_THAT_DOES_WHAT?
-label 1558 PRINT_HIGH_SCORE_SCREEN
+label 1558 DISPLAY_RANKINGS_SCREEN
 label 1653 RANKINGS_S
+label 165c DISPLAY_POINT_VALUES_SCREEN
 label 16ab POINT_VALUES_S
 label 16e7 TANKS______500_S
 label 16f6 GRID_BUGS___50_S
@@ -129,6 +130,7 @@ label 1705 CYCLES_____500_S
 label 1714 MCP_BLOCKS__25_S
 label 1723 BIT_______5000_S
 label 1732 PUT_STRINGS_IN_MSG_Q_DEST=IX+0_SRC=IX+2_END_WHEN_SRC=0000
+label 1755 DISPLAY_MAP_OF_GAME_GRID_SCREENS
 label 17ba MAP_OF_GAME_GRID_S
 label 17cb PLAYER____DOT_S
 label 17d9 JOYSTICK__MOVES_DOT_S
@@ -147,6 +149,7 @@ label 18df OF_A_GAME_IN_AN_AREA_THE_S
 label 18f8 AREA_CAN_NOT_BE_REENTERED_S
 label 1912 UNTIL_ALL_AREAS_HAVE_BEEN_S
 label 192c CONQUERED_S
+label 1936 DISPLAY_TANK_GAME_SCREEN
 label 193d DATA_3?
 label 1971 TANK_GAME_S
 label 197b PLAYER____RED_TANK_S
@@ -160,6 +163,8 @@ label 1a09 DESTROYED_S
 label 1a13 1ST_HIT___100_POINTS_S
 label 1a28 2ND_HIT___300_POINTS_S
 label 1a3d 3RD_HIT___500_POINTS_S
+label 1a52 DISPLAY_CYCLE_GAME_SCREEN
+label 1bc2 IO_TOWER_GAME_S
 label 1a89 CYCLE_GAME_S
 label 1a94 PLAYER____BLUE_CYCLE_S
 label 1aa9 JOYSTICK__MOVES_CYCLE_S
@@ -171,6 +176,7 @@ label 1b1a MAKE_LIGHT_PATHS_S
 label 1b2b WHICH_FORCE_THE_YELLOW_S
 label 1b42 CYCLES_INTO_THE_WALLS_AND_S
 label 1b5c LIGHT_TRACES_S
+label 1b69 DISPLAY_IO_TOWER_GAME_SCREENS
 label 1bc2 IO_TOWER_GAME_S
 label 1bd0 PLAYER___TRON_S
 label 1bde JOYSTICK__MOVES_TRON_S
@@ -186,6 +192,7 @@ label 1c72 THE_TIMER_VALUE_IS_S
 label 1c85 AWARDED_AS_A_BONUS_S
 label 1c98 WHEN_THE_PLAYER_S
 label 1ca8 ENTERS_THE_TOWER_S
+label 1cb9 DISPLAY_MCP_GAME_SCREENS
 label 1d0e MCP_GAME_S
 label 1d17 PLAYER____TRON_S
 label 1d26 JOYSTICK__MOVES_TRON2_S
@@ -718,7 +725,12 @@ ascii 1714-1722
 ascii 1723-1731
 
 data 1766-1787
-data 1788-17b9
+
+comment 17b8 Is this data?
+data 1788-1789
+data 178a-17b7
+comment 17b8 Is this data?
+data 17b8-17b9
 
 ascii 17ba-17ca
 ascii 17cb-17d8
@@ -755,7 +767,8 @@ ascii 1a13-1a27
 ascii 1a28-1a3c
 ascii 1a3d-1a51
 
-data 1a59-1a88
+data 1a59-1a86
+data 1a87-1a88
 
 ascii 1a89-1a93
 ascii 1a94-1aa8
@@ -769,8 +782,10 @@ ascii 1b2b-1b41
 ascii 1b42-1b5b
 ascii 1b5c-1b68
 
-data 1b7a-1b9d
-data 1b9e-1bc1
+data 1b7a-1b9b
+data 1b9c-1b9d
+data 1b9e-1bbf
+data 1bc0-1bc1
 
 ascii 1bc2-1bcf
 ascii 1bd0-1bdd
@@ -788,8 +803,10 @@ ascii 1c85-1c97
 ascii 1c98-1ca7
 ascii 1ca8-1cb8
 
-data 1cca-1ced
-data 1cee-1d0d
+data 1cca-1ceb
+data 1cec-1ced
+data 1cee-1d0b
+data 1d0c-1d0d
 
 ascii 1d0e-1d16
 ascii 1d17-1d25
