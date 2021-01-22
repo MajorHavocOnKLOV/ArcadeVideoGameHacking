@@ -183,6 +183,18 @@
     </script>
   </cheat>
 
+  <cheat desc="Never Ending Level"> <!-- By Franklin Bowen, Maryland, USA -->
+    <script state="on">
+      <action>temp0 =maincpu.mb@2058</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mb@2058=b6</action>
+    </script>
+    <script state="off">
+      <action>maincpu.mb@2058=temp0 </action>
+    </script>
+  </cheat>
+
   <cheat desc="Skip RAM/ROM Check">
     <script state="on">
       <action>temp0 =maincpu.mb@ABC3</action>
