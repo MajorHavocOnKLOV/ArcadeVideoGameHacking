@@ -161,9 +161,10 @@ DESTROY_ALL_S EQU $3d35
 ENEMY_TANKS_S EQU $3d41
 TANK_JOYSTICK_INPUT_TABLE? EQU $3d4d
 TANKS_DATA_FOR_x_STARTS_AT_4066 EQU $4063
+TANK_UPDATE_POSITION EQU $40ea
+TANK_WARP EQU $40fc
 TANKS_DATA_FOR_x_STARTS_AT_46FF EQU $46fb
 COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE? EQU $47a7
-TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA EQU $4f7e
 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE EQU $4d77
 PLAY_LC EQU $5000
 LC_INSTRUCTIONS EQU $5103
@@ -189,7 +190,7 @@ SET_SOME_VALUES_IN_C02X? EQU $621d
 JOYSTICK_INPUT_TABLE EQU $6b39
 DATA_FOR_SETTING_UP_TRON_SPRITES? EQU $6b79
 ADD_A_TO_HL_WITH_CARRY EQU $6f00
-PSEUDO_RANDOM_VALUE_IN_C47A? EQU $6f05
+PSEUDO_RANDOM_VALUE_IN_A_AND_C47A EQU $6f05
 RESET_WATCHDOG_UNTIL_C400_IS_ONE EQU $6f17
 COPY_10_FROM_HL_TO_FFC0 EQU $6f2d
 COPY_20_FROM_HL_TO_FF80 EQU $6f35
@@ -438,6 +439,11 @@ MCP_POSITION_OF_BLOCKS_0_TO_F EQU $c062
 MCP_TOWER_Y EQU $c0dc
 MCP_TOWER_X EQU $c0dd
 MCP_BRICKS_REMAINING_COUNT EQU $c0e3
+MCP_DATA_1 EQU $c0e5
+MCP_DATA_2 EQU $c0e6
+MCP_DATA_3 EQU $c0e7
+MCP_DATA_4 EQU $c0e8
+MCP_DIRECTION EQU $c0e9
 TANKS_ENEMY_SHOTS_IN_RAM_AT_C111? EQU $c108
 NUMBER_OF_TANKS EQU $c14a
 TANKS_NUMBER_OF_ENEMY_SHOTS? EQU $c159
@@ -473,6 +479,7 @@ ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED1! EQU $c469
 ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED2! EQU $c46b
 LEFT_COIN EQU $c473
 RIGHT_COIN EQU $c474
+PSEUDO_RANDOM_VALUE_LAST_GENERATED EQU $c47a
 IN_ATTRACT_MODE? EQU $c47b
 NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2 EQU $c47c
 ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED3! EQU $c48e
@@ -724,10 +731,10 @@ COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S:
 
 012f: CD 1C 04       CALL  CHECK_DATA_C4F0_TO_C657?
 0132: ED 5E          IM    2
-0134: 21 7A C4       LD    HL,$C47A
+0134: 21 7A C4       LD    HL,PSEUDO_RANDOM_VALUE_LAST_GENERATED
 0137: CD 29 70       CALL  ZERO_RAM_C000-C479
 013a: 3E 55          LD    A,#$55
-013c: 32 7A C4       LD    ($C47A),A
+013c: 32 7A C4       LD    (PSEUDO_RANDOM_VALUE_LAST_GENERATED),A
 013f: 3E 01          LD    A,#$01
 0141: 21 AB 01       LD    HL,COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?
 0144: CD 2D 6F       CALL  COPY_10_FROM_HL_TO_FFC0
@@ -4606,7 +4613,7 @@ INITIALIZE_LEVEL?:
 211e: ED B0          LDIR  
 2120: 06 04          LD    B,#$04
 2122: DD 21 26 C4    LD    IX,VECTOR_OF_GAMES_TO_C42D
-2126: CD 05 6F       CALL  PSEUDO_RANDOM_VALUE_IN_C47A?
+2126: CD 05 6F       CALL  PSEUDO_RANDOM_VALUE_IN_A_AND_C47A
 2129: CB 3F          SRL   A
 212b: CB 3F          SRL   A
 212d: E6 03          AND   A,#$03
@@ -5380,6 +5387,8 @@ PLAY_MCP:
 2d41: FE 0A          CP    A,#$0A
 2d43: 38 08          JR    C,$2D4D
 
+
+*** Ensure Hardness for MCP is below $0A
 2d45: D6 06          SUB   A,#$06
 2d47: 36 05          LD    (HL),#$05
 2d49: 0E 1F          LD    C,#$1F
@@ -5390,19 +5399,19 @@ PLAY_MCP:
 2d4f: 21 66 39       LD    HL,DATA_FOR_MCP_SETUP_TO_398C
 2d52: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 2d55: 7E             LD    A,(HL)
-2d56: 32 E9 C0       LD    ($C0E9),A
+2d56: 32 E9 C0       LD    (MCP_DIRECTION),A
 2d59: 23             INC   HL
 2d5a: 7E             LD    A,(HL)
-2d5b: 32 E6 C0       LD    ($C0E6),A
+2d5b: 32 E6 C0       LD    (MCP_DATA_2),A
 2d5e: 23             INC   HL
 2d5f: 5E             LD    E,(HL)
 2d60: 16 00          LD    D,#$00
-2d62: ED 53 E7 C0    LD    ($C0E7),DE
+2d62: ED 53 E7 C0    LD    (MCP_DATA_3),DE
 2d66: 23             INC   HL
 2d67: 7E             LD    A,(HL)
-2d68: 32 E5 C0       LD    ($C0E5),A
+2d68: 32 E5 C0       LD    (MCP_DATA_1),A
 2d6b: 21 3A C0       LD    HL,MCP_DATA_TO_C0D9?
-2d6e: 3A E6 C0       LD    A,($C0E6)
+2d6e: 3A E6 C0       LD    A,(MCP_DATA_2)
 2d71: 57             LD    D,A
 2d72: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BRICKS)
 2d75: 47             LD    B,A
@@ -5442,7 +5451,7 @@ PLAY_MCP:
 
 2db0: 18 E3          JR    $2D95
 
-2db2: 3A E5 C0       LD    A,($C0E5)
+2db2: 3A E5 C0       LD    A,(MCP_DATA_1)
 2db5: 32 DE C0       LD    ($C0DE),A
 2db8: C3 D9 2F       JP    $2FD9
 
@@ -5977,9 +5986,9 @@ MCP_PROCESS_DISK_POSITION(S)?:
 31a4: 35             DEC   (HL)
 31a5: C0             RET   NZ
 
-31a6: 3A E5 C0       LD    A,($C0E5)
+31a6: 3A E5 C0       LD    A,(MCP_DATA_1)
 31a9: 77             LD    (HL),A
-31aa: 3A E9 C0       LD    A,($C0E9)
+31aa: 3A E9 C0       LD    A,(MCP_DIRECTION)
 31ad: B7             OR    A,A
 31ae: 20 18          JR    NZ,$31C8
 
@@ -5987,7 +5996,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 31b3: CD FA 31       CALL  $31FA
 31b6: 21 62 C0       LD    HL,MCP_POSITION_OF_BLOCKS_0_TO_F
 31b9: 34             INC   (HL)
-31ba: 3A E6 C0       LD    A,($C0E6)
+31ba: 3A E6 C0       LD    A,(MCP_DATA_2)
 31bd: 3D             DEC   A
 31be: BE             CP    A,(HL)
 31bf: 30 02          JR    NC,$31C3
@@ -6002,12 +6011,12 @@ MCP_PROCESS_DISK_POSITION(S)?:
 31d1: 35             DEC   (HL)
 31d2: F2 DA 31       JP    P,$31DA
 
-31d5: 3A E6 C0       LD    A,($C0E6)
+31d5: 3A E6 C0       LD    A,(MCP_DATA_2)
 31d8: 3D             DEC   A
 31d9: 77             LD    (HL),A
 31da: CD A7 32       CALL  $32A7
 31dd: 3A 62 C0       LD    A,(MCP_POSITION_OF_BLOCKS_0_TO_F)
-31e0: 21 E6 C0       LD    HL,$C0E6
+31e0: 21 E6 C0       LD    HL,MCP_DATA_2
 31e3: 96             SUB   A,(HL)
 31e4: ED 44          NEG   
 31e6: 87             ADD   A,A
@@ -6051,7 +6060,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 3231: D6 05          SUB   A,#$05
 3233: F2 3A 32       JP    P,$323A
 
-3236: 21 E6 C0       LD    HL,$C0E6
+3236: 21 E6 C0       LD    HL,MCP_DATA_2
 3239: 86             ADD   A,(HL)
 323a: 21 3A C0       LD    HL,MCP_DATA_TO_C0D9?
 323d: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
@@ -6116,7 +6125,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 32ae: D6 05          SUB   A,#$05
 32b0: F2 B7 32       JP    P,$32B7
 
-32b3: 21 E6 C0       LD    HL,$C0E6
+32b3: 21 E6 C0       LD    HL,MCP_DATA_2
 32b6: 86             ADD   A,(HL)
 32b7: 21 3A C0       LD    HL,MCP_DATA_TO_C0D9?
 32ba: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
@@ -6158,7 +6167,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 32f5: E6 02          AND   A,#$02
 32f7: 20 0D          JR    NZ,$3306
 
-32f9: ED 5B E7 C0    LD    DE,($C0E7)
+32f9: ED 5B E7 C0    LD    DE,(MCP_DATA_3)
 32fd: 7C             LD    A,H
 32fe: FE F8          CP    A,#$F8
 3300: 30 04          JR    NC,$3306
@@ -7161,13 +7170,12 @@ MCP_COLOR_PALETTE_ALL_ZEROS:
 DATA_FOR_MCP_SETUP_TO_398C:
 3966: 00 10 32 20 00 18 28 20 00 20 24 20 01 28 28 18 
 3976: 00 28 32 10 01 28 60 40 00 28 C0 0E 01 28 60 0E 
-3986: 01 28 C0 0E 01 28 32 
+3986: 01 28 C0 0E 01 28 32 10 
 
-398d: 10 C2          DJNZ  $3951
+398e: C2 F0 E4       JP    NZ,$E4F0
 
-398f: F0             RET   P
-
-3990: E4 AD 29       CALL  PO,$29AD
+3991: AD             XOR   A,L
+3992: 29             ADD   HL,HL
 3993: 0E F1          LD    C,#$F1
 3995: 81             ADD   A,C
 3996: EF             RST   $28
@@ -7322,7 +7330,7 @@ PLAY_TANKS:
 
 3a7e: 87             ADD   A,A
 3a7f: 87             ADD   A,A
-3a80: 21 7E 4F       LD    HL,TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA
+3a80: 21 7E 4F       LD    HL,$4F7E
 3a83: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 3a86: 79             LD    A,C
 3a87: FE 04          CP    A,#$04
@@ -7861,7 +7869,7 @@ TANK_JOYSTICK_INPUT_TABLE?:
 3eb9: CD A5 40       CALL  $40A5
 3ebc: 22 07 C0       LD    (MCP_TRON_X_TANKS_DATA_VECTOR_x_1),HL
 3ebf: ED 43 09 C0    LD    (MCP_TRON_Y_TANKS_DATA_VECTOR_x_2),BC
-3ec3: CD EA 40       CALL  $40EA
+3ec3: CD EA 40       CALL  TANK_UPDATE_POSITION
 3ec6: DA F8 3D       JP    C,$3DF8
 
 3ec9: 3A 0F C0       LD    A,($C00F)
@@ -8327,18 +8335,20 @@ TANK_JOYSTICK_INPUT_TABLE?:
 40e8: 77             LD    (HL),A
 40e9: C9             RET   
 
+TANK_UPDATE_POSITION:
 40ea: 3A 00 C0       LD    A,(CPU_RAM_OR_GS_DISK_X_TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
 40ed: FE 81          CP    A,#$81
 40ef: 20 33          JR    NZ,$4124
 
 40f1: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 40f4: FE 7E          CP    A,#$7E
-40f6: 28 04          JR    Z,$40FC
+40f6: 28 04          JR    Z,TANK_WARP
 
 40f8: FE 91          CP    A,#$91
 40fa: 20 28          JR    NZ,$4124
 
-40fc: CD 05 6F       CALL  PSEUDO_RANDOM_VALUE_IN_C47A?
+TANK_WARP:
+40fc: CD 05 6F       CALL  PSEUDO_RANDOM_VALUE_IN_A_AND_C47A
 40ff: E6 0F          AND   A,#$0F
 4101: 47             LD    B,A
 4102: CB 27          SLA   A
@@ -8773,7 +8783,7 @@ TANK_JOYSTICK_INPUT_TABLE?:
 
 431f: 30 17          JR    NC,$4338
 
-4321: CD 05 6F       CALL  PSEUDO_RANDOM_VALUE_IN_C47A?
+4321: CD 05 6F       CALL  PSEUDO_RANDOM_VALUE_IN_A_AND_C47A
 4324: E6 02          AND   A,#$02
 4326: 3D             DEC   A
 4327: 47             LD    B,A
@@ -8880,7 +8890,7 @@ TANK_JOYSTICK_INPUT_TABLE?:
 
 43ce: 30 17          JR    NC,$43E7
 
-43d0: CD 05 6F       CALL  PSEUDO_RANDOM_VALUE_IN_C47A?
+43d0: CD 05 6F       CALL  PSEUDO_RANDOM_VALUE_IN_A_AND_C47A
 43d3: E6 02          AND   A,#$02
 43d5: 3D             DEC   A
 43d6: 47             LD    B,A
@@ -10614,60 +10624,22 @@ TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE:
 
 
 *** tank A hardness data
-*** at 57ba
 4f42: D0 88 28 00 01 0E 0E 01 FF 00 18 08 28 00 01 0E 
 4f52: 0E 02 01 00 30 08 E8 00 01 0E 0E 01 01 00 E8 88 
 4f62: E8 00 01 0E 0E 02 FF 00 B8 88 70 00 01 0E 0E 02 
 4f72: FF 00 B8 88 A0 00 01 0E 0E 02 FF 00 
 
-TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA:
 4f7e: 80 01 9E 4D 90 02 A8 4D A0 03 BC 4D B0 04 DA 4D 
 4f8e: C0 04 02 4E D0 86 06 4F E0 05 66 4E F0 06 98 4E 
 4f9e: FF 05 D4 4E FF 86 2A 4E FF 06 42 4F 
 
-4faa: 31 A0 40       LD    SP,$40A0
-4fad: 31 48 20       LD    SP,$2048
-4fb0: E9             JP    (HL)
-4fb1: A0             AND   A,B
-4fb2: 10 61          DJNZ  $5015
 
-4fb4: B8             CP    A,B
-4fb5: 08             EX    AF,AF'
-4fb6: 61             LD    H,C
-4fb7: 38 40          JR    C,$4FF9
+*** Tank warp locations (X, picture, Y) 16x3
+*** at 57ba
+4faa: 31 A0 40 31 48 20 E9 A0 10 61 B8 08 61 38 40 19 
+4fba: 8A 20 48 28 10 31 B8 08 B9 80 40 B9 48 20 BA D0 
+4fca: 10 31 58 08 31 88 40 D1 A0 20 69 D0 10 8C E8 08 
 
-4fb9: 19             ADD   HL,DE
-4fba: 8A             ADC   A,D
-4fbb: 20 48          JR    NZ,$5005
-
-4fbd: 28 10          JR    Z,$4FCF
-
-4fbf: 31 B8 08       LD    SP,$08B8
-4fc2: B9             CP    A,C
-4fc3: 80             ADD   A,B
-4fc4: 40             LD    B,B
-4fc5: B9             CP    A,C
-4fc6: 48             LD    C,B
-4fc7: 20 BA          JR    NZ,$4F83
-
-4fc9: D0             RET   NC
-
-4fca: 10 31          DJNZ  $4FFD
-
-4fcc: 58             LD    E,B
-4fcd: 08             EX    AF,AF'
-4fce: 31 88 40       LD    SP,$4088
-4fd1: D1             POP   DE
-4fd2: A0             AND   A,B
-4fd3: 20 69          JR    NZ,$503E
-
-4fd5: D0             RET   NC
-
-4fd6: 10 8C          DJNZ  $4F64
-
-4fd8: E8             RET   PE
-
-4fd9: 08             EX    AF,AF'
 4fda: EF             RST   $28
 
 4fdb: FF             RST   $38
@@ -14026,13 +13998,13 @@ SET_SOME_VALUES_IN_C02X?:
 6786: E6 80          AND   A,#$80
 6788: 28 26          JR    Z,$67B0
 
-678a: CD 05 6F       CALL  PSEUDO_RANDOM_VALUE_IN_C47A?
+678a: CD 05 6F       CALL  PSEUDO_RANDOM_VALUE_IN_A_AND_C47A
 678d: E6 08          AND   A,#$08
 678f: 28 1F          JR    Z,$67B0
 
 6791: 3E 02          LD    A,#$02
 6793: 32 04 C0       LD    ($C004),A
-6796: CD 05 6F       CALL  PSEUDO_RANDOM_VALUE_IN_C47A?
+6796: CD 05 6F       CALL  PSEUDO_RANDOM_VALUE_IN_A_AND_C47A
 6799: CB 3F          SRL   A
 679b: E6 0C          AND   A,#$0C
 679d: E5             PUSH  HL
@@ -14700,8 +14672,8 @@ ADD_A_TO_HL_WITH_CARRY:
 6f03: 24             INC   H
 6f04: C9             RET   
 
-PSEUDO_RANDOM_VALUE_IN_C47A?:
-6f05: 3A 7A C4       LD    A,($C47A)
+PSEUDO_RANDOM_VALUE_IN_A_AND_C47A:
+6f05: 3A 7A C4       LD    A,(PSEUDO_RANDOM_VALUE_LAST_GENERATED)
 6f08: 07             RLCA  
 6f09: 30 02          JR    NC,$6F0D
 
@@ -14711,7 +14683,7 @@ PSEUDO_RANDOM_VALUE_IN_C47A?:
 6f0f: ED 5F          LD    A,R
 6f11: A8             XOR   A,B
 6f12: C1             POP   BC
-6f13: 32 7A C4       LD    ($C47A),A
+6f13: 32 7A C4       LD    (PSEUDO_RANDOM_VALUE_LAST_GENERATED),A
 6f16: C9             RET   
 
 RESET_WATCHDOG_UNTIL_C400_IS_ONE:
@@ -19084,7 +19056,7 @@ a9f4: 8C 16 0A BC C5 25 35 F4 25 04 44 05
 aa00: F3             DI    
 aa01: CD E6 AA       CALL  $AAE6
 aa04: F5             PUSH  AF
-aa05: 21 7A C4       LD    HL,$C47A
+aa05: 21 7A C4       LD    HL,PSEUDO_RANDOM_VALUE_LAST_GENERATED
 aa08: CD 29 70       CALL  ZERO_RAM_C000-C479
 aa0b: 21 D8 C4       LD    HL,SCREEN_MESSAGE_QUEUE
 aa0e: 22 D6 C4       LD    (SCREEN_MESSAGE_QUEUE_TO_CD60?),HL

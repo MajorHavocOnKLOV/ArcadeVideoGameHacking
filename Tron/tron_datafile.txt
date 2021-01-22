@@ -25,11 +25,11 @@
 
 ; Order of screens in attract mode:
 ;  MCP cone with copyrights
-;  Text screen(s)
+;  Instruction screen(s)
 ;  Game selection
 ;  Game play
 
-; Order of text screens:
+; Order of instruction screens:
 ;  Rankings (High Scores)
 ;  Point Values
 ;  Map of Game Grid 1 & 2
@@ -232,9 +232,11 @@ label 3d35 DESTROY_ALL_S
 label 3d41 ENEMY_TANKS_S
 label 3d4d TANK_JOYSTICK_INPUT_TABLE?
 label 4063 TANKS_DATA_FOR_x_STARTS_AT_4066
+label 40ea TANK_UPDATE_POSITION
+label 40fc TANK_WARP
 label 46fb TANKS_DATA_FOR_x_STARTS_AT_46FF
 label 47a7 COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?
-label 4f7e TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA
+; label 4f7e TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA
 label 4d77 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE
 label 5000 PLAY_LC
 label 5103 LC_INSTRUCTIONS
@@ -260,7 +262,7 @@ label 621d SET_SOME_VALUES_IN_C02X?
 label 6b39 JOYSTICK_INPUT_TABLE
 label 6b79 DATA_FOR_SETTING_UP_TRON_SPRITES?
 label 6f00 ADD_A_TO_HL_WITH_CARRY
-label 6f05 PSEUDO_RANDOM_VALUE_IN_C47A?
+label 6f05 PSEUDO_RANDOM_VALUE_IN_A_AND_C47A
 label 6f17 RESET_WATCHDOG_UNTIL_C400_IS_ONE
 label 6f2d COPY_10_FROM_HL_TO_FFC0
 label 6f35 COPY_20_FROM_HL_TO_FF80
@@ -521,6 +523,11 @@ label c062 MCP_POSITION_OF_BLOCKS_0_TO_F
 label c0dc MCP_TOWER_Y
 label c0dd MCP_TOWER_X
 label c0e3 MCP_BRICKS_REMAINING_COUNT
+label c0e5 MCP_DATA_1
+label c0e6 MCP_DATA_2
+label c0e7 MCP_DATA_3
+label c0e8 MCP_DATA_4
+label c0e9 MCP_DIRECTION
 label c108 TANKS_ENEMY_SHOTS_IN_RAM_AT_C111?
 label c14a NUMBER_OF_TANKS
 label c159 TANKS_NUMBER_OF_ENEMY_SHOTS?
@@ -558,6 +565,7 @@ label c469 ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED1!
 label c46b ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED2!
 label c473 LEFT_COIN
 label c474 RIGHT_COIN
+label c47a PSEUDO_RANDOM_VALUE_LAST_GENERATED
 label c47b IN_ATTRACT_MODE?
 label c47c NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2
 label c48e ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED3!
@@ -901,6 +909,7 @@ commentline 2d33 MCP info: C001 gets number of rows (3,4,or 5 based on hardness 
 commentline 2d33 Each row has 16 bricks
 commentline 2d33 Register c contains 1C, 1E, or 1F (why? visibility of bricks?)
 commentline 2d33 C0E3 ends up with the total number of bricks (C001*0x10)
+commentline 2d45 Ensure Hardness for MCP is below $0A
 
 commentline 2d82 Set MCP tower at 40x and 56y
 commentline 2e19 MCP: Tron has gone too far left. Set him to 21 x
@@ -918,7 +927,7 @@ data 35b3-35d9
 data 3926-3945
 
 commentline 3966 Data for setting up MCP cone game. 10x4 plugged into C0E5-9? Direction! Number of blocks? Vector to other data?
-data 3966-398c
+data 3966-398d
 
 commentline 3a2b Set up shots (up to 4) in sprites 3-6 (F00C-F01B)
 
@@ -1005,6 +1014,9 @@ data 4f42-4f7d
 ; commentline 4f7e Tank game setup data. 11x4 bytes: ?, number of tanks, vector to level setup data
 
 data 4f7e-4fa9
+
+commentline 4faa Tank warp locations (X, picture, Y) 16x3
+data 4faa-4fd9
 
 ascii 5167-5174
 ascii 5175-5181

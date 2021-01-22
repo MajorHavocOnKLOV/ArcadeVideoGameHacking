@@ -19,7 +19,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
      10 GET_TRIGGER_INPUT_FOR_SERVICE_MENU
       9 $5AC9
       8 $5A1A
-      6 PSEUDO_RANDOM_VALUE_IN_C47A?
+      6 PSEUDO_RANDOM_VALUE_IN_A_AND_C47A
       6 PE,$0E01
       6 COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
       6 $A069
@@ -124,6 +124,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 Z,$1200
       1 Z,$0E01
       1 UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE
+      1 TANK_UPDATE_POSITION
       1 TANK_UPDATE_COLOR_CYCLING
       1 ROTATE_MCP_BLOCK_COLORS
       1 READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS
@@ -133,7 +134,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 PO,$A815
       1 PO,$6F74
       1 PO,$67FD
-      1 PO,$29AD
       1 PO,$1BD8
       1 PO,$0800
       1 PO,$0307
@@ -278,7 +278,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $4531
       1 $4508
       1 $42B3
-      1 $40EA
       1 $3F21
       1 $3DB5
       1 $3CA8
