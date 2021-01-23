@@ -150,6 +150,8 @@ MCP_INSTRUCTIONS EQU $2c7e
 TRY_TO_ENTER_S EQU $2cf8
 THE_MCP_CONE_S EQU $2d05
 PLAY_MCP EQU $2d12
+MCP_ROTATE_RIGHT EQU $31b0
+MCP_ROTATE_LEFT EQU $31c8
 MCP_PROCESS_DISK_POSITION(S)? EQU $3025
 MCP_BRICKS_DATA_TO_35B2 EQU $3559
 MCP_CONE_RELATIVEX_RELATIVEY_SPRITE_NUMBER_TO_35D9 EQU $35b3
@@ -439,11 +441,10 @@ MCP_POSITION_OF_BLOCKS_0_TO_F EQU $c062
 MCP_TOWER_Y EQU $c0dc
 MCP_TOWER_X EQU $c0dd
 MCP_BRICKS_REMAINING_COUNT EQU $c0e3
-MCP_DATA_1 EQU $c0e5
-MCP_DATA_2 EQU $c0e6
-MCP_DATA_3 EQU $c0e7
-MCP_DATA_4 EQU $c0e8
-MCP_DIRECTION EQU $c0e9
+MCP_ROTATION_SPEED_LOWER_IS_FASTER EQU $c0e5
+MCP_NUMBER_OF_COLORS EQU $c0e6
+MCP_Y_SPEED_LOWER_IS_SLOWER EQU $c0e7
+MCP_DIRECTION_0_IS_RIGHT EQU $c0e9
 TANKS_ENEMY_SHOTS_IN_RAM_AT_C111? EQU $c108
 NUMBER_OF_TANKS EQU $c14a
 TANKS_NUMBER_OF_ENEMY_SHOTS? EQU $c159
@@ -5399,19 +5400,19 @@ PLAY_MCP:
 2d4f: 21 66 39       LD    HL,DATA_FOR_MCP_SETUP_TO_398C
 2d52: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 2d55: 7E             LD    A,(HL)
-2d56: 32 E9 C0       LD    (MCP_DIRECTION),A
+2d56: 32 E9 C0       LD    (MCP_DIRECTION_0_IS_RIGHT),A
 2d59: 23             INC   HL
 2d5a: 7E             LD    A,(HL)
-2d5b: 32 E6 C0       LD    (MCP_DATA_2),A
+2d5b: 32 E6 C0       LD    (MCP_NUMBER_OF_COLORS),A
 2d5e: 23             INC   HL
 2d5f: 5E             LD    E,(HL)
 2d60: 16 00          LD    D,#$00
-2d62: ED 53 E7 C0    LD    (MCP_DATA_3),DE
+2d62: ED 53 E7 C0    LD    (MCP_Y_SPEED_LOWER_IS_SLOWER),DE
 2d66: 23             INC   HL
 2d67: 7E             LD    A,(HL)
-2d68: 32 E5 C0       LD    (MCP_DATA_1),A
+2d68: 32 E5 C0       LD    (MCP_ROTATION_SPEED_LOWER_IS_FASTER),A
 2d6b: 21 3A C0       LD    HL,MCP_DATA_TO_C0D9?
-2d6e: 3A E6 C0       LD    A,(MCP_DATA_2)
+2d6e: 3A E6 C0       LD    A,(MCP_NUMBER_OF_COLORS)
 2d71: 57             LD    D,A
 2d72: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BRICKS)
 2d75: 47             LD    B,A
@@ -5451,7 +5452,7 @@ PLAY_MCP:
 
 2db0: 18 E3          JR    $2D95
 
-2db2: 3A E5 C0       LD    A,(MCP_DATA_1)
+2db2: 3A E5 C0       LD    A,(MCP_ROTATION_SPEED_LOWER_IS_FASTER)
 2db5: 32 DE C0       LD    ($C0DE),A
 2db8: C3 D9 2F       JP    $2FD9
 
@@ -5986,17 +5987,18 @@ MCP_PROCESS_DISK_POSITION(S)?:
 31a4: 35             DEC   (HL)
 31a5: C0             RET   NZ
 
-31a6: 3A E5 C0       LD    A,(MCP_DATA_1)
+31a6: 3A E5 C0       LD    A,(MCP_ROTATION_SPEED_LOWER_IS_FASTER)
 31a9: 77             LD    (HL),A
-31aa: 3A E9 C0       LD    A,(MCP_DIRECTION)
+31aa: 3A E9 C0       LD    A,(MCP_DIRECTION_0_IS_RIGHT)
 31ad: B7             OR    A,A
-31ae: 20 18          JR    NZ,$31C8
+31ae: 20 18          JR    NZ,MCP_ROTATE_LEFT
 
+MCP_ROTATE_RIGHT:
 31b0: CD 13 32       CALL  $3213
 31b3: CD FA 31       CALL  $31FA
 31b6: 21 62 C0       LD    HL,MCP_POSITION_OF_BLOCKS_0_TO_F
 31b9: 34             INC   (HL)
-31ba: 3A E6 C0       LD    A,(MCP_DATA_2)
+31ba: 3A E6 C0       LD    A,(MCP_NUMBER_OF_COLORS)
 31bd: 3D             DEC   A
 31be: BE             CP    A,(HL)
 31bf: 30 02          JR    NC,$31C3
@@ -6005,18 +6007,19 @@ MCP_PROCESS_DISK_POSITION(S)?:
 31c3: CD 42 32       CALL  $3242
 31c6: 18 15          JR    $31DD
 
+MCP_ROTATE_LEFT:
 31c8: CD 81 32       CALL  $3281
 31cb: CD 68 32       CALL  $3268
 31ce: 21 62 C0       LD    HL,MCP_POSITION_OF_BLOCKS_0_TO_F
 31d1: 35             DEC   (HL)
 31d2: F2 DA 31       JP    P,$31DA
 
-31d5: 3A E6 C0       LD    A,(MCP_DATA_2)
+31d5: 3A E6 C0       LD    A,(MCP_NUMBER_OF_COLORS)
 31d8: 3D             DEC   A
 31d9: 77             LD    (HL),A
 31da: CD A7 32       CALL  $32A7
 31dd: 3A 62 C0       LD    A,(MCP_POSITION_OF_BLOCKS_0_TO_F)
-31e0: 21 E6 C0       LD    HL,MCP_DATA_2
+31e0: 21 E6 C0       LD    HL,MCP_NUMBER_OF_COLORS
 31e3: 96             SUB   A,(HL)
 31e4: ED 44          NEG   
 31e6: 87             ADD   A,A
@@ -6060,7 +6063,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 3231: D6 05          SUB   A,#$05
 3233: F2 3A 32       JP    P,$323A
 
-3236: 21 E6 C0       LD    HL,MCP_DATA_2
+3236: 21 E6 C0       LD    HL,MCP_NUMBER_OF_COLORS
 3239: 86             ADD   A,(HL)
 323a: 21 3A C0       LD    HL,MCP_DATA_TO_C0D9?
 323d: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
@@ -6125,7 +6128,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 32ae: D6 05          SUB   A,#$05
 32b0: F2 B7 32       JP    P,$32B7
 
-32b3: 21 E6 C0       LD    HL,MCP_DATA_2
+32b3: 21 E6 C0       LD    HL,MCP_NUMBER_OF_COLORS
 32b6: 86             ADD   A,(HL)
 32b7: 21 3A C0       LD    HL,MCP_DATA_TO_C0D9?
 32ba: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
@@ -6167,7 +6170,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 32f5: E6 02          AND   A,#$02
 32f7: 20 0D          JR    NZ,$3306
 
-32f9: ED 5B E7 C0    LD    DE,(MCP_DATA_3)
+32f9: ED 5B E7 C0    LD    DE,(MCP_Y_SPEED_LOWER_IS_SLOWER)
 32fd: 7C             LD    A,H
 32fe: FE F8          CP    A,#$F8
 3300: 30 04          JR    NC,$3306
@@ -6488,7 +6491,13 @@ MCP_CONE_RELATIVEX_RELATIVEY_SPRITE_NUMBER_TO_35D9:
 35c3: E8 38 20 E8 37 30 E8 37 3C E8 B8 18 DC 38 28 DC 
 35d3: 37 34 DC B8 24 D0 39 
 
-35da: 01 C0 00       LD    BC,$00C0
+
+*** MCP colors?
+35da: 01 
+
+35db: C0             RET   NZ
+
+35dc: 00             NOP   
 35dd: 38 00          JR    C,$35DF
 
 35df: 07             RLCA  
@@ -7166,7 +7175,9 @@ MCP_COLOR_PALETTE_ALL_ZEROS:
 
 3965: 3F             CCF   
 
-*** Data for setting up MCP cone game. 10x4 plugged into C0E5-9? Direction! Number 
+*** Data for setting up MCP cone game.
+*** 10x4 (direction, number of colors?, Y speed, rotation speed)
+*** plugged into C0E9, 6, 7, 5
 DATA_FOR_MCP_SETUP_TO_398C:
 3966: 00 10 32 20 00 18 28 20 00 20 24 20 01 28 28 18 
 3976: 00 28 32 10 01 28 60 40 00 28 C0 0E 01 28 60 0E 

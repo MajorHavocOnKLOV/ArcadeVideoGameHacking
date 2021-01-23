@@ -221,6 +221,8 @@ label 2c7e MCP_INSTRUCTIONS
 label 2cf8 TRY_TO_ENTER_S
 label 2d05 THE_MCP_CONE_S
 label 2d12 PLAY_MCP
+label 31b0 MCP_ROTATE_RIGHT
+label 31c8 MCP_ROTATE_LEFT
 label 3025 MCP_PROCESS_DISK_POSITION(S)?
 label 3559 MCP_BRICKS_DATA_TO_35B2
 label 35b3 MCP_CONE_RELATIVEX_RELATIVEY_SPRITE_NUMBER_TO_35D9
@@ -523,11 +525,11 @@ label c062 MCP_POSITION_OF_BLOCKS_0_TO_F
 label c0dc MCP_TOWER_Y
 label c0dd MCP_TOWER_X
 label c0e3 MCP_BRICKS_REMAINING_COUNT
-label c0e5 MCP_DATA_1
-label c0e6 MCP_DATA_2
-label c0e7 MCP_DATA_3
-label c0e8 MCP_DATA_4
-label c0e9 MCP_DIRECTION
+label c0e5 MCP_ROTATION_SPEED_LOWER_IS_FASTER
+label c0e6 MCP_NUMBER_OF_COLORS
+label c0e7 MCP_Y_SPEED_LOWER_IS_SLOWER
+;label c0e8 MCP_DATA_4
+label c0e9 MCP_DIRECTION_0_IS_RIGHT
 label c108 TANKS_ENEMY_SHOTS_IN_RAM_AT_C111?
 label c14a NUMBER_OF_TANKS
 label c159 TANKS_NUMBER_OF_ENEMY_SHOTS?
@@ -924,9 +926,14 @@ data 3559-35b2
 
 data 35b3-35d9
 
+commentline 35da MCP colors?
+data 35da-35da
+
 data 3926-3945
 
-commentline 3966 Data for setting up MCP cone game. 10x4 plugged into C0E5-9? Direction! Number of blocks? Vector to other data?
+commentline 3966 Data for setting up MCP cone game.
+commentline 3966 10x4 (direction, number of colors?, Y speed, rotation speed)
+commentline 3966 plugged into C0E9, 6, 7, 5
 data 3966-398d
 
 commentline 3a2b Set up shots (up to 4) in sprites 3-6 (F00C-F01B)
