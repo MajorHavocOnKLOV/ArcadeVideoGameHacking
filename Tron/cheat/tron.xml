@@ -106,18 +106,6 @@
   </cheat>
   -->
 
-  <cheat desc="Disable ROM check"> <!-- By Franklin Bowen, Maryland, USA -->
-    <script state="on">
-      <action>temp0 =maincpu.mb@acea</action>
-    </script>
-    <script state="run">
-      <action>maincpu.mb@acea=18</action>
-    </script>
-    <script state="off">
-      <action>maincpu.mb@acea=temp0 </action>
-    </script>
-  </cheat>
-
   <cheat desc="Keep MCP cone at current X">
   <!-- By Franklin Bowen, Maryland, USA -->
   <!-- This technically blocks Tron from hitting the wall of the cone, but it works -->
