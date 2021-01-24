@@ -212,6 +212,7 @@ label 1f97 START_GAME
 label 1fd1 DRAW_GAME_SELECT_SCREEN?
 label 20a5 VECTOR_OF_DIFFICULTY_TO_HARDNESS_MAPS_(STARTS_AT_20A7)
 label 2115 INITIALIZE_LEVEL?
+label 2207 DRAW_SPRITES_FOR_GAME_SELECTION_SCREEN
 label 234A BACKGROUND_PICK_A_GAME
 label 2aca GS_COLOR_PALETTE
 label 2c48 DATA_TO_2C4C?_USED_STARTING_AT_6F68
@@ -227,7 +228,7 @@ label 3025 MCP_PROCESS_DISK_POSITION(S)?
 label 3559 MCP_BRICKS_DATA_TO_35B2
 label 35b3 MCP_CONE_RELATIVEX_RELATIVEY_SPRITE_NUMBER_TO_35D9
 label 3926 MCP_COLOR_PALETTE_ALL_ZEROS
-label 3966 DATA_FOR_MCP_SETUP_TO_398C
+label 3966 DATA_FOR_MCP_SETUP_TO_398D
 label 3a00 PLAY_TANKS
 label 3cdf TANKS_INSTRUCTIONS
 label 3d35 DESTROY_ALL_S
@@ -238,8 +239,8 @@ label 40ea TANK_UPDATE_POSITION
 label 40fc TANK_WARP
 label 46fb TANKS_DATA_FOR_x_STARTS_AT_46FF
 label 47a7 COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?
-; label 4f7e TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA
 label 4d77 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE
+label 4f7e TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA
 label 5000 PLAY_LC
 label 5103 LC_INSTRUCTIONS
 label 5167 AVOID_HITTING_S
@@ -878,21 +879,28 @@ data 2308-230F
 ;data 2316-2317
 
 commentline 2310 Vector of games to quadrants at C426 points to these blocks of data
-commentline 2310 2x game location, 2x another data structure below, 2x instrcution location
+commentline 2310 3 vectors: game start, draw sprite(s) for game selection , instructions
+commentline 2310 MCP
 data 2310-2315
+commentline 2316 IO Tower (Grid Bugs)
 data 2316-231b
+commentline 231c LC
 data 231c-2321
+commentline 2322 Tank
 data 2322-2327
 
-commentline 2328 The start locations were pulled the data structures above (starting 2310)
-commentline 2328 the end points were just entered one less than the starting point of the
-commentline 2328 next data block, but looking at the data itself, this looks OK.
+commentline 2328 X offset, Y offset, picture, 00 end otherwise loop to next sprite
+commentline 2328 Draw MCP for game selection screen (3 sprites!  The others are just 1 sprite)
 data 2328-2331
+commentline 2332 Draw Grid Bug (IO Tower) for game selection screen
 data 2332-2335
+commentline 2336 Draw LC for game selection screen
 data 2336-2339
+commentline 233a Draw Tank for game selection screen
 data 233a-233d
 
-
+commentline 233e Locations to draw sprites on game selection screen (LRUD)
+commentline 233e 4x: ?, X, Y
 data 233e-2349
 
 data 234A-2AC9

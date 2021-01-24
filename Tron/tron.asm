@@ -141,6 +141,7 @@ START_GAME EQU $1f97
 DRAW_GAME_SELECT_SCREEN? EQU $1fd1
 VECTOR_OF_DIFFICULTY_TO_HARDNESS_MAPS_(STARTS_AT_20A7) EQU $20a5
 INITIALIZE_LEVEL? EQU $2115
+DRAW_SPRITES_FOR_GAME_SELECTION_SCREEN EQU $2207
 BACKGROUND_PICK_A_GAME EQU $234a
 GS_COLOR_PALETTE EQU $2aca
 DATA_TO_2C4C?_USED_STARTING_AT_6F68 EQU $2c48
@@ -156,7 +157,7 @@ MCP_PROCESS_DISK_POSITION(S)? EQU $3025
 MCP_BRICKS_DATA_TO_35B2 EQU $3559
 MCP_CONE_RELATIVEX_RELATIVEY_SPRITE_NUMBER_TO_35D9 EQU $35b3
 MCP_COLOR_PALETTE_ALL_ZEROS EQU $3926
-DATA_FOR_MCP_SETUP_TO_398C EQU $3966
+DATA_FOR_MCP_SETUP_TO_398D EQU $3966
 PLAY_TANKS EQU $3a00
 TANKS_INSTRUCTIONS EQU $3cdf
 DESTROY_ALL_S EQU $3d35
@@ -168,6 +169,7 @@ TANK_WARP EQU $40fc
 TANKS_DATA_FOR_x_STARTS_AT_46FF EQU $46fb
 COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE? EQU $47a7
 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE EQU $4d77
+TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA EQU $4f7e
 PLAY_LC EQU $5000
 LC_INSTRUCTIONS EQU $5103
 AVOID_HITTING_S EQU $5167
@@ -4492,7 +4494,7 @@ DRAW_GAME_SELECT_SCREEN?:
 2007: DD 21 E0 FF    LD    IX,$FFE0
 200b: 06 10          LD    B,#$10
 200d: CD 3B 6F       CALL  $6F3B
-2010: CD 07 22       CALL  $2207
+2010: CD 07 22       CALL  DRAW_SPRITES_FOR_GAME_SELECTION_SCREEN
 2013: FD 21 04 F0    LD    IY,TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT
 2017: 3E 80          LD    A,#$80
 2019: 32 00 C0       LD    (CPU_RAM_OR_GS_DISK_X_TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF),A
@@ -4770,6 +4772,7 @@ INITIALIZE_LEVEL?:
 
 
 *** Modify game selection screen to disable completed and show type of game if alre
+DRAW_SPRITES_FOR_GAME_SELECTION_SCREEN:
 2207: 3A 25 C4       LD    A,(ATTEMPTED_GAMES_XXXXDURL)
 220a: 47             LD    B,A
 220b: 3A 23 C4       LD    A,(COMPLETED_GAMES_XXXXDURL)
@@ -4862,27 +4865,42 @@ INITIALIZE_LEVEL?:
 
 
 *** Vector of games to quadrants at C426 points to these blocks of data
-*** 2x game location, 2x another data structure below, 2x instrcution location
+*** 3 vectors: game start, draw sprite(s) for game selection , instructions
+*** MCP
 2310: 12 2D 28 23 7E 2C 
 
+
+*** IO Tower (Grid Bugs)
 2316: 00 5D 32 23 36 5E 
 
+
+*** LC
 231c: 00 50 36 23 03 51 
 
+
+*** Tank
 2322: 00 3A 3A 23 DF 3C 
 
 
-*** The start locations were pulled the data structures above (starting 2310)
-*** the end points were just entered one less than the starting point of the
-*** next data block, but looking at the data itself, this looks OK.
+*** X offset, Y offset, picture, 00 end otherwise loop to next sprite
+*** Draw MCP for game selection screen (3 sprites!  The others are just 1 sprite)
 2328: 00 F0 39 F8 00 31 08 00 36 00 
 
+
+*** Draw Grid Bug (IO Tower) for game selection screen
 2332: 00 00 11 00 
 
+
+*** Draw LC for game selection screen
 2336: 00 00 2F 00 
 
+
+*** Draw Tank for game selection screen
 233a: 00 00 08 00 
 
+
+*** Locations to draw sprites on game selection screen (LRUD)
+*** 4x: ?, X, Y
 233e: F2 40 A4 F4 C0 A4 E2 80 74 F6 80 D4 
 
 BACKGROUND_PICK_A_GAME:
@@ -5397,7 +5415,7 @@ PLAY_MCP:
 
 2d4d: 87             ADD   A,A
 2d4e: 87             ADD   A,A
-2d4f: 21 66 39       LD    HL,DATA_FOR_MCP_SETUP_TO_398C
+2d4f: 21 66 39       LD    HL,DATA_FOR_MCP_SETUP_TO_398D
 2d52: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 2d55: 7E             LD    A,(HL)
 2d56: 32 E9 C0       LD    (MCP_DIRECTION_0_IS_RIGHT),A
@@ -7178,7 +7196,7 @@ MCP_COLOR_PALETTE_ALL_ZEROS:
 *** Data for setting up MCP cone game.
 *** 10x4 (direction, number of colors?, Y speed, rotation speed)
 *** plugged into C0E9, 6, 7, 5
-DATA_FOR_MCP_SETUP_TO_398C:
+DATA_FOR_MCP_SETUP_TO_398D:
 3966: 00 10 32 20 00 18 28 20 00 20 24 20 01 28 28 18 
 3976: 00 28 32 10 01 28 60 40 00 28 C0 0E 01 28 60 0E 
 3986: 01 28 C0 0E 01 28 32 10 
@@ -7341,7 +7359,7 @@ PLAY_TANKS:
 
 3a7e: 87             ADD   A,A
 3a7f: 87             ADD   A,A
-3a80: 21 7E 4F       LD    HL,$4F7E
+3a80: 21 7E 4F       LD    HL,TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA
 3a83: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 3a86: 79             LD    A,C
 3a87: FE 04          CP    A,#$04
@@ -10640,6 +10658,7 @@ TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE:
 4f62: E8 00 01 0E 0E 02 FF 00 B8 88 70 00 01 0E 0E 02 
 4f72: FF 00 B8 88 A0 00 01 0E 0E 02 FF 00 
 
+TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA:
 4f7e: 80 01 9E 4D 90 02 A8 4D A0 03 BC 4D B0 04 DA 4D 
 4f8e: C0 04 02 4E D0 86 06 4F E0 05 66 4E F0 06 98 4E 
 4f9e: FF 05 D4 4E FF 86 2A 4E FF 06 42 4F 

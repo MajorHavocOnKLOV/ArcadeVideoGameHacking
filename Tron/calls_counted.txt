@@ -211,6 +211,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 M,$0000
       1 HANDLE_JOYSTICK_INPUT?_TO_601F
       1 GET_INPUT_FROM_JOYSTICK_TRIGGER_+?
+      1 DRAW_SPRITES_FOR_GAME_SELECTION_SCREEN
       1 DRAW_GAME_SELECT_SCREEN?
       1 DRAW_ATTRACT_MCP_CONE
       1 DISPLAY_MCP_CONE_WITH_COPYRIGHTS_AND_NEXT_INSTRUCTIONS
@@ -300,7 +301,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $2E43
       1 $2DDF
       1 $2DBB
-      1 $2207
       1 $204F
       1 $1545
       1 $133F
