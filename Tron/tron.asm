@@ -136,7 +136,10 @@ WITH_THE_DISK_S EQU $1dbd
 THE_CONE_S EQU $1de3
 1000_BONUS_FOR_DESTROYING_S EQU $1dec
 ALL_BLOCKS_S EQU $1e06
-GS_MOVE_DOWN EQU $1f00
+GS_DO_? EQU $1f00
+GS_NO_DIRECTION_CHOSEN_YET EQU $1f0f
+GS_DIRECTION_CHOSEN EQU $1f4d
+GS_TIMER_EXPIRED_AUTO_SELECT_GAME_DURL EQU $1f1f
 START_GAME EQU $1f97
 DRAW_GAME_SELECT_SCREEN? EQU $1fd1
 VECTOR_OF_DIFFICULTY_TO_HARDNESS_MAPS_(STARTS_AT_20A7) EQU $20a5
@@ -2345,7 +2348,7 @@ READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS:
 0d3d: CA 00 2C       JP    Z,$2C00
 
 0d40: FE 01          CP    A,#$01
-0d42: CA 00 1F       JP    Z,GS_MOVE_DOWN
+0d42: CA 00 1F       JP    Z,GS_DO_?
 
 0d45: FE 02          CP    A,#$02
 0d47: CA E0 3B       JP    Z,$3BE0
@@ -4350,7 +4353,7 @@ ALL_BLOCKS_S:
 1efe: D0             RET   NC
 
 1eff: 04             INC   B
-GS_MOVE_DOWN:
+GS_DO_?:
 1f00: 2A 56 C4       LD    HL,($C456)
 1f03: 7C             LD    A,H
 1f04: B5             OR    A,L
@@ -4358,17 +4361,19 @@ GS_MOVE_DOWN:
 
 1f08: 3A 24 C4       LD    A,(DIRECTION_CHOSEN_8D4U2R1L)
 1f0b: B7             OR    A,A
-1f0c: C2 4D 1F       JP    NZ,$1F4D
+1f0c: C2 4D 1F       JP    NZ,GS_DIRECTION_CHOSEN
 
+GS_NO_DIRECTION_CHOSEN_YET:
 1f0f: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 1f12: B7             OR    A,A
-1f13: 20 0A          JR    NZ,$1F1F
+1f13: 20 0A          JR    NZ,GS_TIMER_EXPIRED_AUTO_SELECT_GAME_DURL
 
 1f15: CD 9F 70       CALL  PROCESS_GAME_SELECT_COUNTDOWN_TIMER
 1f18: 3A 02 C4       LD    A,(COUNTDOWN_TIMER_SECONDS)
 1f1b: B7             OR    A,A
 1f1c: C2 67 21       JP    NZ,$2167
 
+GS_TIMER_EXPIRED_AUTO_SELECT_GAME_DURL:
 1f1f: 3A 23 C4       LD    A,(COMPLETED_GAMES_XXXXDURL)
 1f22: 21 D8 22       LD    HL,$22D8
 1f25: 47             LD    B,A
@@ -4395,6 +4400,7 @@ GS_MOVE_DOWN:
 1f4b: 77             LD    (HL),A
 1f4c: C9             RET   
 
+GS_DIRECTION_CHOSEN:
 1f4d: FD 21 04 F0    LD    IY,TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT
 1f51: DD 2A 58 C4    LD    IX,($C458)
 1f55: 06 02          LD    B,#$02
@@ -4840,6 +4846,8 @@ DRAW_SPRITES_FOR_GAME_SELECTION_SCREEN:
 
 226a: 2A 58 C4       LD    HL,($C458)
 226d: E9             JP    (HL)
+
+*** Data used at 21a8 and 21b4
 226e: 00 00 01 00 04 00 09 00 10 00 19 00 24 00 31 00 
 227e: 40 00 51 00 64 00 79 00 90 00 A9 00 C4 00 E1 00 
 228e: 00 01 21 01 44 01 69 01 90 01 B9 01 E4 01 11 02 
@@ -4852,9 +4860,16 @@ DRAW_SPRITES_FOR_GAME_SELECTION_SCREEN:
 22ac: 40 A4 00 C0 A4 02 80 74 04 80 D4 06 
 
 
-*** Is the data block at 22b8 correct?  What's it used for?
+*** Data used at 217d
 22b8: 00 00 FF 00 01 00 00 00 00 FF FF FF 01 FF 00 00 
 22c8: 00 01 FF 01 01 01 00 00 00 00 00 00 00 00 00 00 
+
+
+*** 15x3: Direction, vector to data
+*** Vectors are: 22b5, 22ac, 22af, 22b2
+*** Data used at 1f22
+*** I have a hard time understanding why use 15 data structures
+*** to point to 4 data structures of directions.  Anyone know?
 22d8: 00 B5 22 01 AC 22 02 AF 22 01 AC 22 04 B2 22 04 
 22e8: B2 22 04 B2 22 04 B2 22 08 B5 22 08 B5 22 08 B5 
 22f8: 22 08 B5 22 08 B5 22 08 B5 22 08 B5 22 08 B5 22 

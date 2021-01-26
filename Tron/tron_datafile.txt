@@ -207,7 +207,10 @@ label 1dcb 1000_BONUS_FOR_ENTERING_S
 label 1de3 THE_CONE_S
 label 1dec 1000_BONUS_FOR_DESTROYING_S
 label 1e06 ALL_BLOCKS_S
-label 1f00 GS_MOVE_DOWN
+label 1f00 GS_DO_?
+label 1f0f GS_NO_DIRECTION_CHOSEN_YET
+label 1f4d GS_DIRECTION_CHOSEN
+label 1f1f GS_TIMER_EXPIRED_AUTO_SELECT_GAME_DURL
 label 1f97 START_GAME
 label 1fd1 DRAW_GAME_SELECT_SCREEN?
 label 20a5 VECTOR_OF_DIFFICULTY_TO_HARDNESS_MAPS_(STARTS_AT_20A7)
@@ -861,14 +864,23 @@ commentline 2162 show games on game selection screen
 commentline 2207 Modify game selection screen to disable completed and show type of game if already attempted
 commentline 2213 4x(3 bytes: ? ? ?). I think it's used to draw the sprites on the game selection screen
 
+commentline 226e Data used at 21a8 and 21b4
 data 226e-22ab
 
 commentline 22ac 4x3 bytes for auto game selection: disk X, disk Y,
 commentline 22ac what to add to VECTOR_OF_GAMES to use correct 2310 data structure
 commentline 22ac The X or Y position is checked against to start that game
 data 22ac-22b7
-commentline 22b8 Is the data block at 22b8 correct?  What's it used for?
-data 22b8-2307
+commentline 22b8 Data used at 217d
+data 22b8-22d7
+
+
+commentline 22d8 15x3: Direction, vector to data
+commentline 22d8 Vectors are: 22b5, 22ac, 22af, 22b2
+commentline 22d8 Data used at 1f22
+commentline 22d8 I have a hard time understanding why use 15 data structures
+commentline 22d8 to point to 4 data structures of directions.  Anyone know?
+data 22d8-2307
 
 commentline 2308 Used at 2115.  Set what game is at what quadrant?  Then 4x vector table.  Then 
 data 2308-230F
