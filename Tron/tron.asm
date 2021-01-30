@@ -1,7 +1,7 @@
-duplicate label: IO_TOWER_GAME_S
 COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S EQU $006b
 COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA? EQU $01ab
 SERVICE_INTERRUPT_ROUTINE EQU $01cb
+TANK_ROTATE_TURRET? EQU $0289
 GET_INPUT_FROM_JOYSTICK_TRIGGER_+? EQU $02e3
 STRING_IN_DE_TO_HL EQU $0401
 CHECK_DATA_C4F0_TO_C657? EQU $041c
@@ -94,7 +94,6 @@ DESTROYED_S EQU $1a09
 2ND_HIT___300_POINTS_S EQU $1a28
 3RD_HIT___500_POINTS_S EQU $1a3d
 DISPLAY_CYCLE_GAME_SCREEN EQU $1a52
-IO_TOWER_GAME_S EQU $1bc2
 CYCLE_GAME_S EQU $1a89
 PLAYER____BLUE_CYCLE_S EQU $1a94
 JOYSTICK__MOVES_CYCLE_S EQU $1aa9
@@ -107,6 +106,7 @@ WHICH_FORCE_THE_YELLOW_S EQU $1b2b
 CYCLES_INTO_THE_WALLS_AND_S EQU $1b42
 LIGHT_TRACES_S EQU $1b5c
 DISPLAY_IO_TOWER_GAME_SCREENS EQU $1b69
+IO_TOWER_GAME_S EQU $1bc2
 PLAYER___TRON_S EQU $1bd0
 JOYSTICK__MOVES_TRON_S EQU $1bde
 TRIGGER___FIRES_DISK_S EQU $1bf3
@@ -157,7 +157,16 @@ PLAY_MCP EQU $2d12
 MCP_ROTATE_RIGHT EQU $31b0
 MCP_ROTATE_LEFT EQU $31c8
 MCP_PROCESS_DISK_POSITION(S)? EQU $3025
-MCP_BRICKS_DATA_TO_35B2 EQU $3559
+MCP_DISK_END_FLIGHT EQU $317e
+MCP_DRAW_CONE EQU $3308
+MCP_DRAW_WALLS EQU $3331
+MCP_HIDE_SPRITES_33_AND_34 EQU $3363
+MCP_DRAW_BLOCKS EQU $337b
+MCP_HIDE_SPRITE_GOING_OFF_BOTTOM_OF_SCREEN EQU $33af
+MCP_PROCESS_HIT_BLOCK EQU $352a
+MCP_BLOCK_HIT_AUDIO EQU $354f
+MCP_BLOCK_DATA_TO_PROCESS_HIT EQU $3554
+MCP_BLOCKS_DATA_TO_35B2 EQU $3559
 MCP_CONE_RELATIVEX_RELATIVEY_SPRITE_NUMBER_TO_35D9 EQU $35b3
 MCP_COLOR_PALETTE_ALL_ZEROS EQU $3926
 DATA_FOR_MCP_SETUP_TO_398D EQU $3966
@@ -166,15 +175,26 @@ TANKS_INSTRUCTIONS EQU $3cdf
 DESTROY_ALL_S EQU $3d35
 ENEMY_TANKS_S EQU $3d41
 TANK_JOYSTICK_INPUT_TABLE? EQU $3d4d
+TANK_PROCESS_CONTROLS_INPUT EQU $3db5
 TANKS_DATA_FOR_x_STARTS_AT_4066 EQU $4063
+TANK_UPDATE_POSITION_AND_PIC_OF_TANK_FROM_C000_TO_C002 EQU $40d0
 TANK_UPDATE_POSITION EQU $40ea
 TANK_WARP EQU $40fc
+TANK_DATA_FOR_? EQU $4145
+TANK_PROCESS_ENEMY_TANKS_ON_STARTUP_SOMEHOW?_USES_IX EQU $4414
 TANKS_DATA_FOR_x_STARTS_AT_46FF EQU $46fb
+TANK_POSITION_THE_ONE_AT_IX EQU $47e2
 COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE? EQU $47a7
+DATA_TO_49C7_USED_AT_49C8 EQU $4884
+TANK_TURRET_DRAW EQU $49c8
+TANK_BULLET?_DRAW_USES_IY EQU $4b70
+TANK_DATA_FOR?_USED_AT_4BBB EQU $4b8d
+TANK_DATA_FOR?_STARTS_AT_4CFF EQU $4cfb
 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE EQU $4d77
 TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA EQU $4f7e
 PLAY_LC EQU $5000
 LC_INSTRUCTIONS EQU $5103
+LC_INSTRUCTION_STRINGS_SOURCE_AND_DESTINATION_DATA EQU $5151
 AVOID_HITTING_S EQU $5167
 LIGHT_TRACES2_S EQU $5175
 AND_WALLS_S EQU $5182
@@ -193,7 +213,8 @@ CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_? EQU $5f23
 HANDLE_JOYSTICK_INPUT?_TO_601F EQU $5f73
 INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER EQU $6065
 MOVE_SPIDERS? EQU $6127
-SET_SOME_VALUES_IN_C02X? EQU $621d
+IO_OR_MCP?_SET_TRON_INITIAL_POSITION_AND_ROTATION EQU $621d
+DATA_TO_?_USED_AT_5D19 EQU $68c6
 JOYSTICK_INPUT_TABLE EQU $6b39
 DATA_FOR_SETTING_UP_TRON_SPRITES? EQU $6b79
 ADD_A_TO_HL_WITH_CARRY EQU $6f00
@@ -228,6 +249,7 @@ BACKGROUND_LC EQU $8900
 LC_COLOR_PALETTE EQU $9080
 COLOR_PALETTE_FOR_5? EQU $90c0
 BACKGROUND_TRAINING_FOR_LC EQU $9100
+DATA_TO_?_USED_AT_6954 EQU $9884
 GET_TRIGGER_INPUT_FOR_SERVICE_MENU EQU $998c
 ?_DATA_USED_FOR_?1 EQU $9bd8
 SOUND_TEST_STRINGS_VECTORSET_DESTINATION_AND_SOURCE_30X EQU $9c14
@@ -426,14 +448,17 @@ OS_S EQU $b177
 JCL_S EQU $b17a
 USER_S EQU $b17e
 CPU_RAM_OR_GS_DISK_X_TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF EQU $c000
-TANK_PIC_OR_MCP_ROWS_OF_BRICKS EQU $c001
+TANK_PIC_OR_MCP_ROWS_OF_BLOCKS EQU $c001
 TANK_Y_OR_GS_DISK_Y EQU $c002
 MCP_TRON_X_TANKS_DATA_VECTOR_x_1 EQU $c007
 MCP_TRON_Y_TANKS_DATA_VECTOR_x_2 EQU $c009
 IO_TOWER_TIMER_VALUE_REVERSED_TO_C010 EQU $c00d
 INFINITE_TIME_CHEAT EQU $c00e
-TANKS_SHOTS_IN_RAM_STARTS_AT_C020 EQU $c010
-MCP_DISK_DATA_TO_C02F/IO_TOWER_TIMER_DIGITS_TO_C019 EQU $c012
+TANKS_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020 EQU $c010
+MCP_DISK_1_DATA/IO_TOWER_TIMER_DIGITS_TO_C019 EQU $c012
+MCP_DISK_2_DATA EQU $c01c
+MCP_DISK_3_DATA EQU $c026
+MCP_DISK_4_DATA EQU $c030
 IO_TOWER_INCREMENTS_19_TO_1E_FOR_EACH_DISK_THROWN EQU $c022
 IO_TOWER_TRIGGER_DEBOUNCE? EQU $c023
 IO_TOWER_ALWAYS_80? EQU $c024
@@ -445,27 +470,31 @@ INFO_FOR_TANK_GAME_SEE_3ABF_TO_C05A_FOR_A_SINGLE_TANK EQU $c051
 MCP_POSITION_OF_BLOCKS_0_TO_F EQU $c062
 MCP_TOWER_Y EQU $c0dc
 MCP_TOWER_X EQU $c0dd
-MCP_BRICKS_REMAINING_COUNT EQU $c0e3
+MCP_BLOCKS_REMAINING_COUNT EQU $c0e3
 MCP_ROTATION_SPEED_LOWER_IS_FASTER EQU $c0e5
-MCP_NUMBER_OF_COLORS EQU $c0e6
+MCP_BLOCKS_PER_ROW EQU $c0e6
 MCP_Y_SPEED_LOWER_IS_SLOWER EQU $c0e7
 MCP_DIRECTION_0_IS_RIGHT EQU $c0e9
-TANKS_ENEMY_SHOTS_IN_RAM_AT_C111? EQU $c108
+TANKS_ENEMY_BULLETS_IN_RAM_AT_C111? EQU $c108
 NUMBER_OF_TANKS EQU $c14a
-TANKS_NUMBER_OF_ENEMY_SHOTS? EQU $c159
+TANKS_NUMBER_OF_ENEMY_BULLETS? EQU $c159
 FIRST_NUMBER_FROM_4F7E EQU $c15b
 TANK_IF_HARDNESS>0X0B_SEE_COMMENT_AT_3A79 EQU $c15f
 COUNTDOWN_TIMER_SECONDS EQU $c402
 COUNTDOWN_TIMER_FRAMES EQU $c403
+TANK_SPINNER_LAST_INPUT EQU $c404
+MCP_TRON_ARM_OR_TANK_TURRET_ROTATION EQU $c405
 ATTRACT_MCP_ROTATE_COLORS_IF_NON_ZERO EQU $c40f
 MCP_BLOCKS_COLOR_VECTOR_POINTER_0E55 EQU $c410
 MCP_DISK_NUMBER_BEING_PROCESSED EQU $c406
+MCP_SPRITE_BLOCK_HIT_BY_DISK EQU $c409
+MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK EQU $c40b
 HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?) EQU $c419
 PLAYING_HOW_LONG_NOW_TO_C41C EQU $c41a
 CURRENT_PLAYER_DATA_BYTE_02 EQU $c41b
 CURRENT_PLAYER_DATA_BYTE_03 EQU $c41c
-REMAINING_DISKS/SHOTS_AT_A_TIME EQU $c41d
-MAX_DISKS/SHOTS_AT_A_TIME EQU $c41e
+REMAINING_DISKS_AT_A_TIME EQU $c41d
+MAX_DISKS_AT_A_TIME EQU $c41e
 LIVES_REMAINING EQU $c41f
 CURRENT_PLAYER_DATA_BYTE_07 EQU $c420
 CURRENT_PLAYER_DATA_BYTE_08 EQU $c421
@@ -474,7 +503,7 @@ COMPLETED_GAMES_XXXXDURL EQU $c423
 DIRECTION_CHOSEN_8D4U2R1L EQU $c424
 ATTEMPTED_GAMES_XXXXDURL EQU $c425
 VECTOR_OF_GAMES_TO_C42D EQU $c426
-NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_SHOTS_MAY_GO_TO_1??? EQU $c42e
+NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_DISKS_MAY_GO_TO_1??? EQU $c42e
 OTHER_PLAYER_DATA EQU $c42f
 GS_DIRECTION:1=DOWN,2=?,3=?,5=?,OTHER=? EQU $c45b
 PLAYER_NUMBER EQU $c45f
@@ -505,12 +534,15 @@ NVRAM EQU $c000
 SPRITE_RAM EQU $f000
 TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT EQU $f004
 TANK_TURRET_OR_LC_ENEMIES EQU $f008
-TANK_SHOTS_F00C_TO_F01B(SPRITES_3_TO_6) EQU $f00c
-IO_OR_MCP_OR_TANK_DISKS_OR_SHOTS_1_TO_4 EQU $f018
+TANK_DISKS_F00C_TO_F01B(SPRITES_3_TO_6) EQU $f00c
+IO_OR_MCP_OR_TANK_DISKS_1_TO_4 EQU $f018
+IO_OR_MCP_OR_TANK_DISKS_2 EQU $f01c
+IO_OR_MCP_OR_TANK_DISKS_3 EQU $f020
+IO_OR_MCP_OR_TANK_DISKS_4 EQU $f024
 MCP_BLOCKS_TOP_LEFT_MOVING_DOWN_AND_WRAP_TO_TOP_RIGHT_TO_F09F EQU $f028
 TANK_ENEMIES EQU $f02c
 IO_GRID_BUGS EQU $f030
-TANK_ENEMY_SHOTS EQU $f044
+TANK_ENEMY_BULLETS EQU $f044
 TANK_HITS_ON_ENEMIES EQU $f060
 MCP_TOWER_TO_F133 EQU $f0a0
 BACKGROUND_VIDEO_RAM_TO_FF7F EQU $f800
@@ -649,7 +681,7 @@ COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S:
 00b7: 18 80          JR    $0039
 
 00b9: 50             LD    D,B
-00ba: CC 1D 62       CALL  Z,SET_SOME_VALUES_IN_C02X?
+00ba: CC 1D 62       CALL  Z,IO_OR_MCP?_SET_TRON_INITIAL_POSITION_AND_ROTATION
 00bd: 3C             INC   A
 00be: C6 E8          ADD   A,#$E8
 00c0: 76             HALT  
@@ -879,7 +911,7 @@ COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?:
 
 0247: 3E 09          LD    A,#$09
 0249: 32 01 C5       LD    (CREDITS),A
-024c: CD 89 02       CALL  $0289
+024c: CD 89 02       CALL  TANK_ROTATE_TURRET?
 024f: DB 00          IN    A,($00)
 0251: E6 20          AND   A,#$20
 0253: 20 2E          JR    NZ,$0283
@@ -917,6 +949,12 @@ COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?:
 0286: FB             EI    
 0287: ED 4D          RETI  
 
+
+*** Get spinner value.  Subtract from last. Store last spinner value to C404
+*** And ???
+*** Update spinner value: 0 is right, increases counter clockwise to 0x23
+*** (#36 )
+TANK_ROTATE_TURRET?:
 0289: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
 028c: B7             OR    A,A
 028d: 0E 01          LD    C,#$01
@@ -926,7 +964,7 @@ COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?:
 0293: ED 78          IN    A,(C)
 0295: E6 7F          AND   A,#$7F
 0297: 47             LD    B,A
-0298: 21 04 C4       LD    HL,$C404
+0298: 21 04 C4       LD    HL,TANK_SPINNER_LAST_INPUT
 029b: 96             SUB   A,(HL)
 029c: 70             LD    (HL),B
 029d: FE C0          CP    A,#$C0
@@ -943,7 +981,7 @@ COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?:
 02b0: 86             ADD   A,(HL)
 02b1: 47             LD    B,A
 02b2: B7             OR    A,A
-02b3: 3A 05 C4       LD    A,($C405)
+02b3: 3A 05 C4       LD    A,(MCP_TRON_ARM_OR_TANK_TURRET_ROTATION)
 02b6: 4F             LD    C,A
 02b7: F2 CB 02       JP    P,$02CB
 
@@ -970,12 +1008,14 @@ COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?:
 02d5: FE 24          CP    A,#$24
 02d7: 38 F2          JR    C,$02CB
 
+
+*** Tank (only?) turret rotation overflow (0x24) so set to 0
 02d9: 0E 00          LD    C,#$00
 02db: 18 EE          JR    $02CB
 
 02dd: 77             LD    (HL),A
 02de: 79             LD    A,C
-02df: 32 05 C4       LD    ($C405),A
+02df: 32 05 C4       LD    (MCP_TRON_ARM_OR_TANK_TURRET_ROTATION),A
 02e2: C9             RET   
 
 GET_INPUT_FROM_JOYSTICK_TRIGGER_+?:
@@ -1168,6 +1208,8 @@ STRING_IN_DE_TO_HL:
 0407: FE 20          CP    A,#$20
 0409: 20 09          JR    NZ,$0414
 
+
+*** Handle a space character (0x20 or 32)
 040b: 3E 5E          LD    A,#$5E
 040d: 36 5E          LD    (HL),#$5E
 040f: 23             INC   HL
@@ -2338,8 +2380,8 @@ ALL_RIGHTS_RESERVED_S:
 0d2b: 35             DEC   (HL)
 0d2c: 3E 01          LD    A,#$01
 0d2e: 32 08 C4       LD    ($C408),A
-0d31: 3A 2E C4       LD    A,(NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_SHOTS_MAY_GO_TO_1???)
-0d34: 32 1E C4       LD    (MAX_DISKS/SHOTS_AT_A_TIME),A
+0d31: 3A 2E C4       LD    A,(NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_DISKS_MAY_GO_TO_1???)
+0d34: 32 1E C4       LD    (MAX_DISKS_AT_A_TIME),A
 0d37: C9             RET   
 
 READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS:
@@ -2392,7 +2434,7 @@ READ_AND_PROCESS_INPUT_PORTS:
 0d7b: C9             RET   
 
 
-*** Draw MCP cone tip to sprites 16-30? (0x10-0x1C?)
+*** Draw MCP cone tip to sprites 25-37 (0x19-0x25)
 DRAW_ATTRACT_MCP_CONE:
 0d7c: FD 21 64 F0    LD    IY,$F064
 0d80: 21 0B 0E       LD    HL,$0E0B
@@ -2435,7 +2477,8 @@ DRAW_ATTRACT_MCP_CONE:
 0dc2: C9             RET   
 
 
-*** 24x3 bytes: X, Y, picture (0x56 is added to X and 0x80 to Y)
+*** 24x3 bytes: relative X, relative Y, picture
+*** (0x56 is added to X and 0x80 to Y)
 0dc3: 00 00 31 00 0C 31 00 18 31 00 24 31 0C 02 32 0C 
 0dd3: 0E 32 0C 1A 32 0C 26 32 1C 04 33 1C 10 33 1C 1C 
 0de3: 33 1C 28 33 2C 04 34 2C 10 34 2C 1C 34 2C 28 34 
@@ -2510,8 +2553,8 @@ MCP_ATTRACT_COLORS?:
 
 0e98: CD 15 21       CALL  INITIALIZE_LEVEL?
 0e9b: 3E 01          LD    A,#$01
-0e9d: 32 2E C4       LD    (NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_SHOTS_MAY_GO_TO_1???),A
-0ea0: 32 1E C4       LD    (MAX_DISKS/SHOTS_AT_A_TIME),A
+0e9d: 32 2E C4       LD    (NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_DISKS_MAY_GO_TO_1???),A
+0ea0: 32 1E C4       LD    (MAX_DISKS_AT_A_TIME),A
 0ea3: 21 19 C4       LD    HL,HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?)
 0ea6: 11 2F C4       LD    DE,OTHER_PLAYER_DATA
 0ea9: 01 16 00       LD    BC,$0016
@@ -2594,7 +2637,7 @@ MCP_ATTRACT_COLORS?:
 0f12: 28 03          JR    Z,$0F17
 
 0f14: 21 4B C4       LD    HL,$C44B
-0f17: 22 0B C4       LD    ($C40B),HL
+0f17: 22 0B C4       LD    (MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK),HL
 0f1a: 11 F7 C4       LD    DE,HIGH_SCORES_DIGITS
 0f1d: 06 06          LD    B,#$06
 0f1f: 1A             LD    A,(DE)
@@ -2609,7 +2652,7 @@ MCP_ATTRACT_COLORS?:
 
 0f29: 18 0E          JR    $0F39
 
-0f2b: 2A 0B C4       LD    HL,($C40B)
+0f2b: 2A 0B C4       LD    HL,(MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK)
 0f2e: 11 F7 C4       LD    DE,HIGH_SCORES_DIGITS
 0f31: 06 06          LD    B,#$06
 0f33: 7E             LD    A,(HL)
@@ -2689,14 +2732,14 @@ MCP_ATTRACT_COLORS?:
 0fd6: 32 04 C0       LD    ($C004),A
 0fd9: FD 21 DE FC    LD    IY,$FCDE
 0fdd: 21 50 01       LD    HL,$0150
-0fe0: 22 01 C0       LD    (TANK_PIC_OR_MCP_ROWS_OF_BRICKS),HL
+0fe0: 22 01 C0       LD    (TANK_PIC_OR_MCP_ROWS_OF_BLOCKS),HL
 0fe3: CD 3C 12       CALL  $123C
 0fe6: CD 40 10       CALL  $1040
 0fe9: 06 04          LD    B,#$04
 0feb: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 0fee: 10 FB          DJNZ  $0FEB
 
-0ff0: 2A 01 C0       LD    HL,(TANK_PIC_OR_MCP_ROWS_OF_BRICKS)
+0ff0: 2A 01 C0       LD    HL,(TANK_PIC_OR_MCP_ROWS_OF_BLOCKS)
 0ff3: 2B             DEC   HL
 0ff4: 7C             LD    A,H
 0ff5: B5             OR    A,L
@@ -4440,8 +4483,8 @@ GS_DIRECTION_CHOSEN:
 1f96: C9             RET   
 
 START_GAME:
-1f97: 3A 1E C4       LD    A,(MAX_DISKS/SHOTS_AT_A_TIME)
-1f9a: 32 1D C4       LD    (REMAINING_DISKS/SHOTS_AT_A_TIME),A
+1f97: 3A 1E C4       LD    A,(MAX_DISKS_AT_A_TIME)
+1f9a: 32 1D C4       LD    (REMAINING_DISKS_AT_A_TIME),A
 1f9d: DD 7E 02       LD    A,(IX+$02)
 1fa0: 21 26 C4       LD    HL,VECTOR_OF_GAMES_TO_C42D
 1fa3: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
@@ -4537,7 +4580,7 @@ DRAW_GAME_SELECT_SCREEN?:
 
 *** Finished level so set up for the next level (to 2097)
 205c: CD 15 21       CALL  INITIALIZE_LEVEL?
-205f: 21 2E C4       LD    HL,NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_SHOTS_MAY_GO_TO_1???
+205f: 21 2E C4       LD    HL,NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_DISKS_MAY_GO_TO_1???
 2062: 7E             LD    A,(HL)
 2063: FE 03          CP    A,#$03
 2065: 28 01          JR    Z,$2068
@@ -4578,13 +4621,13 @@ DRAW_GAME_SELECT_SCREEN?:
 2095: 32 19 C4       LD    (HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?)),A
 2098: 3A 5B C4       LD    A,(GS_DIRECTION:1=DOWN,2=?,3=?,5=?,OTHER=?)
 209b: FE 04          CP    A,#$04
-209d: 3A 2E C4       LD    A,(NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_SHOTS_MAY_GO_TO_1???)
+209d: 3A 2E C4       LD    A,(NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_DISKS_MAY_GO_TO_1???)
 20a0: 20 01          JR    NZ,$20A3
 
 20a2: 3C             INC   A
 
-*** This increment gives the next game an extra disk/shot! Is it a feature or a bug
-20a3: 32 1E C4       LD    (MAX_DISKS/SHOTS_AT_A_TIME),A
+*** This increment gives the next game an extra disk! Is it a feature or a bug?
+20a3: 32 1E C4       LD    (MAX_DISKS_AT_A_TIME),A
 20a6: C9             RET   
 
 
@@ -5044,246 +5087,27 @@ GS_COLOR_PALETTE:
 2aca: 00 00 01 48 00 10 00 10 00 18 00 21 01 7D 01 F4 
 2ada: 01 C3 01 CA 00 30 00 05 00 00 00 00 00 00 01 6D 
 
-2aea: 00             NOP   
-2aeb: 00             NOP   
-2aec: 00             NOP   
-2aed: 28 01          JR    Z,$2AF0
 
-2aef: 80             ADD   A,B
-2af0: 00             NOP   
-2af1: 18 01          JR    $2AF4
+*** Appears to be data to 2BFF?
+2aea: 00 00 00 28 01 80 00 18 01 D4 01 EA 01 C2 01 C5 
+2afa: 00 04 00 7E 01 FF 01 78 00 00 00 08 00 28 01 C0 
+2b0a: 36 BB 58 BA 18 79 26 48 2B FA 28 78 A7 1E 46 11 
+2b1a: 68 70 12 58 F1 12 7E D1 71 38 B0 8C 7A 31 F2 70 
+2b2a: 3F 26 7E 86 78 5A 62 0C 18 50 78 74 00 78 60 51 
+2b3a: 3E B2 29 1A 32 5E 22 E2 68 7A BF B2 78 77 18 7A 
+2b4a: F9 FE A8 3E D8 EE 58 5A EC 3C 4F 52 BD 46 52 7D 
+2b5a: DA 5E 73 7A 5C 20 3E 18 18 70 60 5A 43 D2 B0 D0 
+2b6a: BB 3E 67 1E 73 F9 AA FC 10 76 02 6A 74 BA 6C F8 
+2b7a: 77 FE EA BA BA 7E 83 CD C9 87 89 43 DB BE AB 74 
+2b8a: B1 F7 01 C0 F5 9F 85 C1 EE 89 61 CB C5 0D 93 89 
+2b9a: BF 8F C3 61 F6 E1 44 63 FB D5 C5 87 E1 8D 94 5F 
+2baa: 87 A0 AB 1A C5 AE B0 87 8A 4D C0 C5 95 D6 D7 85 
+2bba: 94 83 EF 8C F1 AF 13 83 CD 8D 81 8D 1D 81 20 CB 
+2bca: C5 0F C1 28 02 3F C7 97 3F 05 8F 27 CF 88 BF 87 
+2bda: C5 C6 67 81 CD A7 E7 A5 5F C3 55 15 87 B7 7A 8A 
+2bea: CF C7 99 2D 23 87 E9 17 65 53 C5 6D C3 C4 25 0F 
+2bfa: 8D D7 ED A7 85 AD 
 
-2af3: D4 01 EA       CALL  NC,$EA01
-2af6: 01 C2 01       LD    BC,$01C2
-2af9: C5             PUSH  BC
-2afa: 00             NOP   
-2afb: 04             INC   B
-2afc: 00             NOP   
-2afd: 7E             LD    A,(HL)
-2afe: 01 FF 01       LD    BC,$01FF
-2b01: 78             LD    A,B
-2b02: 00             NOP   
-2b03: 00             NOP   
-2b04: 00             NOP   
-2b05: 08             EX    AF,AF'
-2b06: 00             NOP   
-2b07: 28 01          JR    Z,$2B0A
-
-2b09: C0             RET   NZ
-
-2b0a: 36 BB          LD    (HL),#$BB
-2b0c: 58             LD    E,B
-2b0d: BA             CP    A,D
-2b0e: 18 79          JR    $2B89
-
-2b10: 26 48          LD    H,#$48
-2b12: 2B             DEC   HL
-2b13: FA 28 78       JP    M,$7828
-
-2b16: A7             AND   A,A
-2b17: 1E 46          LD    E,#$46
-2b19: 11 68 70       LD    DE,$7068
-2b1c: 12             LD    (DE),A
-2b1d: 58             LD    E,B
-2b1e: F1             POP   AF
-2b1f: 12             LD    (DE),A
-2b20: 7E             LD    A,(HL)
-2b21: D1             POP   DE
-2b22: 71             LD    (HL),C
-2b23: 38 B0          JR    C,$2AD5
-
-2b25: 8C             ADC   A,H
-2b26: 7A             LD    A,D
-2b27: 31 F2 70       LD    SP,$70F2
-2b2a: 3F             CCF   
-2b2b: 26 7E          LD    H,#$7E
-2b2d: 86             ADD   A,(HL)
-2b2e: 78             LD    A,B
-2b2f: 5A             LD    E,D
-2b30: 62             LD    H,D
-2b31: 0C             INC   C
-2b32: 18 50          JR    $2B84
-
-2b34: 78             LD    A,B
-2b35: 74             LD    (HL),H
-2b36: 00             NOP   
-2b37: 78             LD    A,B
-2b38: 60             LD    H,B
-2b39: 51             LD    D,C
-2b3a: 3E B2          LD    A,#$B2
-2b3c: 29             ADD   HL,HL
-2b3d: 1A             LD    A,(DE)
-2b3e: 32 5E 22       LD    ($225E),A
-2b41: E2 68 7A       JP    PO,$7A68
-
-2b44: BF             CP    A,A
-2b45: B2             OR    A,D
-2b46: 78             LD    A,B
-2b47: 77             LD    (HL),A
-2b48: 18 7A          JR    $2BC4
-
-2b4a: F9             LD    SP,HL
-2b4b: FE A8          CP    A,#$A8
-2b4d: 3E D8          LD    A,#$D8
-2b4f: EE 58          XOR   A,#$58
-2b51: 5A             LD    E,D
-2b52: EC 3C 4F       CALL  PE,$4F3C
-2b55: 52             LD    D,D
-2b56: BD             CP    A,L
-2b57: 46             LD    B,(HL)
-2b58: 52             LD    D,D
-2b59: 7D             LD    A,L
-2b5a: DA 5E 73       JP    C,$735E
-
-2b5d: 7A             LD    A,D
-2b5e: 5C             LD    E,H
-2b5f: 20 3E          JR    NZ,$2B9F
-
-2b61: 18 18          JR    $2B7B
-
-2b63: 70             LD    (HL),B
-2b64: 60             LD    H,B
-2b65: 5A             LD    E,D
-2b66: 43             LD    B,E
-2b67: D2 B0 D0       JP    NC,$D0B0
-
-2b6a: BB             CP    A,E
-2b6b: 3E 67          LD    A,#$67
-2b6d: 1E 73          LD    E,#$73
-2b6f: F9             LD    SP,HL
-2b70: AA             XOR   A,D
-2b71: FC 10 76       CALL  M,$7610
-2b74: 02             LD    (BC),A
-2b75: 6A             LD    L,D
-2b76: 74             LD    (HL),H
-2b77: BA             CP    A,D
-2b78: 6C             LD    L,H
-2b79: F8             RET   M
-
-2b7a: 77             LD    (HL),A
-2b7b: FE EA          CP    A,#$EA
-2b7d: BA             CP    A,D
-2b7e: BA             CP    A,D
-2b7f: 7E             LD    A,(HL)
-2b80: 83             ADD   A,E
-2b81: CD C9 87       CALL  $87C9
-2b84: 89             ADC   A,C
-2b85: 43             LD    B,E
-2b86: DB BE          IN    A,($BE)
-2b88: AB             XOR   A,E
-2b89: 74             LD    (HL),H
-2b8a: B1             OR    A,C
-2b8b: F7             RST   $30
-
-2b8c: 01 C0 F5       LD    BC,$F5C0
-2b8f: 9F             SBC   A,A
-2b90: 85             ADD   A,L
-2b91: C1             POP   BC
-2b92: EE 89          XOR   A,#$89
-2b94: 61             LD    H,C
-2b95: CB C5          SET   0,L
-2b97: 0D             DEC   C
-2b98: 93             SUB   A,E
-2b99: 89             ADC   A,C
-2b9a: BF             CP    A,A
-2b9b: 8F             ADC   A,A
-2b9c: C3 61 F6       JP    $F661
-
-2b9f: E1             POP   HL
-2ba0: 44             LD    B,H
-2ba1: 63             LD    H,E
-2ba2: FB             EI    
-2ba3: D5             PUSH  DE
-2ba4: C5             PUSH  BC
-2ba5: 87             ADD   A,A
-2ba6: E1             POP   HL
-2ba7: 8D             ADC   A,L
-2ba8: 94             SUB   A,H
-2ba9: 5F             LD    E,A
-2baa: 87             ADD   A,A
-2bab: A0             AND   A,B
-2bac: AB             XOR   A,E
-2bad: 1A             LD    A,(DE)
-2bae: C5             PUSH  BC
-2baf: AE             XOR   A,(HL)
-2bb0: B0             OR    A,B
-2bb1: 87             ADD   A,A
-2bb2: 8A             ADC   A,D
-2bb3: 4D             LD    C,L
-2bb4: C0             RET   NZ
-
-2bb5: C5             PUSH  BC
-2bb6: 95             SUB   A,L
-2bb7: D6 D7          SUB   A,#$D7
-2bb9: 85             ADD   A,L
-2bba: 94             SUB   A,H
-2bbb: 83             ADD   A,E
-2bbc: EF             RST   $28
-
-2bbd: 8C             ADC   A,H
-2bbe: F1             POP   AF
-2bbf: AF             XOR   A,A
-2bc0: 13             INC   DE
-2bc1: 83             ADD   A,E
-2bc2: CD 8D 81       CALL  $818D
-2bc5: 8D             ADC   A,L
-2bc6: 1D             DEC   E
-2bc7: 81             ADD   A,C
-2bc8: 20 CB          JR    NZ,$2B95
-
-2bca: C5             PUSH  BC
-2bcb: 0F             RRCA  
-2bcc: C1             POP   BC
-2bcd: 28 02          JR    Z,$2BD1
-
-2bcf: 3F             CCF   
-2bd0: C7             RST   $00
-
-2bd1: 97             SUB   A,A
-2bd2: 3F             CCF   
-2bd3: 05             DEC   B
-2bd4: 8F             ADC   A,A
-2bd5: 27             DAA   
-2bd6: CF             RST   $08
-
-2bd7: 88             ADC   A,B
-2bd8: BF             CP    A,A
-2bd9: 87             ADD   A,A
-2bda: C5             PUSH  BC
-2bdb: C6 67          ADD   A,#$67
-2bdd: 81             ADD   A,C
-2bde: CD A7 E7       CALL  $E7A7
-2be1: A5             AND   A,L
-2be2: 5F             LD    E,A
-2be3: C3 55 15       JP    $1555
-
-2be6: 87             ADD   A,A
-2be7: B7             OR    A,A
-2be8: 7A             LD    A,D
-2be9: 8A             ADC   A,D
-2bea: CF             RST   $08
-
-2beb: C7             RST   $00
-
-2bec: 99             SBC   A,C
-2bed: 2D             DEC   L
-2bee: 23             INC   HL
-2bef: 87             ADD   A,A
-2bf0: E9             JP    (HL)
-2bf1: 17             RLA   
-2bf2: 65             LD    H,L
-2bf3: 53             LD    D,E
-2bf4: C5             PUSH  BC
-2bf5: 6D             LD    L,L
-2bf6: C3 C4 25       JP    $25C4
-
-2bf9: 0F             RRCA  
-2bfa: 8D             ADC   A,L
-2bfb: D7             RST   $10
-
-2bfc: ED A7          Illegal Opcode
-2bfe: 85             ADD   A,L
-2bff: AD             XOR   A,L
 2c00: CD BB 2D       CALL  $2DBB
 2c03: CD 25 30       CALL  MCP_PROCESS_DISK_POSITION(S)?
 2c06: CD 8B 31       CALL  $318B
@@ -5291,7 +5115,7 @@ GS_COLOR_PALETTE:
 2c0c: E6 02          AND   A,#$02
 2c0e: C0             RET   NZ
 
-2c0f: 3A E3 C0       LD    A,(MCP_BRICKS_REMAINING_COUNT)
+2c0f: 3A E3 C0       LD    A,(MCP_BLOCKS_REMAINING_COUNT)
 2c12: B7             OR    A,A
 2c13: C0             RET   NZ
 
@@ -5376,7 +5200,7 @@ MCP_INSTRUCTIONS:
 
 2ce2: CD D9 2F       CALL  $2FD9
 2ce5: 21 7A 36       LD    HL,$367A
-2ce8: 22 10 C0       LD    (TANKS_SHOTS_IN_RAM_STARTS_AT_C020),HL
+2ce8: 22 10 C0       LD    (TANKS_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020),HL
 2ceb: C3 AD 2E       JP    $2EAD
 
 2cee: CC FC F8       CALL  Z,$F8FC
@@ -5407,10 +5231,10 @@ PLAY_MCP:
 2d30: 3A 19 C4       LD    A,(HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?))
 
 *** MCP info: C001 gets number of rows (3,4,or 5 based on hardness 0,1-10,11+)
-*** Each row has 16 bricks
-*** Register c contains 1C, 1E, or 1F (why? visibility of bricks?)
-*** C0E3 ends up with the total number of bricks (C001*0x10)
-2d33: 21 01 C0       LD    HL,TANK_PIC_OR_MCP_ROWS_OF_BRICKS
+*** Each row has C0E6 number of blocks
+*** Register c contains 1C, 1E, or 1F (why? visibility of blocks?)
+*** C0E3 ends up with the total number of blocks (C001*0x10)
+2d33: 21 01 C0       LD    HL,TANK_PIC_OR_MCP_ROWS_OF_BLOCKS
 2d36: 36 03          LD    (HL),#$03
 2d38: 0E 1C          LD    C,#$1C
 2d3a: B7             OR    A,A
@@ -5436,7 +5260,7 @@ PLAY_MCP:
 2d56: 32 E9 C0       LD    (MCP_DIRECTION_0_IS_RIGHT),A
 2d59: 23             INC   HL
 2d5a: 7E             LD    A,(HL)
-2d5b: 32 E6 C0       LD    (MCP_NUMBER_OF_COLORS),A
+2d5b: 32 E6 C0       LD    (MCP_BLOCKS_PER_ROW),A
 2d5e: 23             INC   HL
 2d5f: 5E             LD    E,(HL)
 2d60: 16 00          LD    D,#$00
@@ -5445,15 +5269,15 @@ PLAY_MCP:
 2d67: 7E             LD    A,(HL)
 2d68: 32 E5 C0       LD    (MCP_ROTATION_SPEED_LOWER_IS_FASTER),A
 2d6b: 21 3A C0       LD    HL,MCP_DATA_TO_C0D9?
-2d6e: 3A E6 C0       LD    A,(MCP_NUMBER_OF_COLORS)
+2d6e: 3A E6 C0       LD    A,(MCP_BLOCKS_PER_ROW)
 2d71: 57             LD    D,A
-2d72: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BRICKS)
+2d72: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BLOCKS)
 2d75: 47             LD    B,A
 2d76: AF             XOR   A,A
 2d77: 82             ADD   A,D
 2d78: 10 FD          DJNZ  $2D77
 
-2d7a: 32 E3 C0       LD    (MCP_BRICKS_REMAINING_COUNT),A
+2d7a: 32 E3 C0       LD    (MCP_BLOCKS_REMAINING_COUNT),A
 2d7d: 42             LD    B,D
 2d7e: 71             LD    (HL),C
 2d7f: 23             INC   HL
@@ -5465,10 +5289,14 @@ PLAY_MCP:
 2d84: 32 DD C0       LD    (MCP_TOWER_X),A
 2d87: 3E 40          LD    A,#$40
 2d89: 32 DC C0       LD    (MCP_TOWER_Y),A
+
+*** Fill $05x$1E of RAM $C063-C0DB with $80 or $00.  Why?
+*** Column (6) x Row (5) x 4: 4= X, Y, ?, ? (starts as 80.  Lowest bit set when hit
+*** If a row is empty, the 4 bytes for it are all 00
 2d8c: 11 04 00       LD    DE,$0004
 2d8f: DD 21 63 C0    LD    IX,$C063
 2d93: 06 1E          LD    B,#$1E
-2d95: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BRICKS)
+2d95: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BLOCKS)
 2d98: 0E 05          LD    C,#$05
 2d9a: DD 36 03 80    LD    (IX+$03),#$80
 2d9e: D6 01          SUB   A,#$01
@@ -5485,6 +5313,8 @@ PLAY_MCP:
 
 2db0: 18 E3          JR    $2D95
 
+
+*** 
 2db2: 3A E5 C0       LD    A,(MCP_ROTATION_SPEED_LOWER_IS_FASTER)
 2db5: 32 DE C0       LD    ($C0DE),A
 2db8: C3 D9 2F       JP    $2FD9
@@ -5575,7 +5405,7 @@ PLAY_MCP:
 2e47: 3E 19          LD    A,#$19
 2e49: 20 0A          JR    NZ,$2E55
 
-2e4b: 3A 05 C4       LD    A,($C405)
+2e4b: 3A 05 C4       LD    A,(MCP_TRON_ARM_OR_TANK_TURRET_ROTATION)
 2e4e: B7             OR    A,A
 2e4f: 28 04          JR    Z,$2E55
 
@@ -5594,7 +5424,7 @@ PLAY_MCP:
 2e61: 19             ADD   HL,DE
 2e62: 11 7A 36       LD    DE,$367A
 2e65: 19             ADD   HL,DE
-2e66: 22 10 C0       LD    (TANKS_SHOTS_IN_RAM_STARTS_AT_C020),HL
+2e66: 22 10 C0       LD    (TANKS_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020),HL
 2e69: C9             RET   
 
 2e6a: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
@@ -5630,7 +5460,7 @@ PLAY_MCP:
 
 2e94: 3E 04          LD    A,#$04
 2e96: 32 03 C0       LD    ($C003),A
-2e99: 21 1D C4       LD    HL,REMAINING_DISKS/SHOTS_AT_A_TIME
+2e99: 21 1D C4       LD    HL,REMAINING_DISKS_AT_A_TIME
 2e9c: 7E             LD    A,(HL)
 2e9d: B7             OR    A,A
 2e9e: C8             RET   Z
@@ -5642,7 +5472,7 @@ PLAY_MCP:
 2ea7: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 2eaa: C3 D6 30       JP    $30D6
 
-2ead: DD 2A 10 C0    LD    IX,(TANKS_SHOTS_IN_RAM_STARTS_AT_C020)
+2ead: DD 2A 10 C0    LD    IX,(TANKS_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020)
 2eb1: 3A 07 C0       LD    A,(MCP_TRON_X_TANKS_DATA_VECTOR_x_1)
 2eb4: 32 04 F0       LD    (TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT),A
 2eb7: 32 08 F0       LD    (TANK_TURRET_OR_LC_ENEMIES),A
@@ -5689,7 +5519,7 @@ PLAY_MCP:
 2f0f: CB 86          RES   0,(HL)
 2f11: 78             LD    A,B
 2f12: DD 86 08       ADD   A,(IX+$08)
-2f15: 32 0C F0       LD    (TANK_SHOTS_F00C_TO_F01B(SPRITES_3_TO_6)),A
+2f15: 32 0C F0       LD    (TANK_DISKS_F00C_TO_F01B(SPRITES_3_TO_6)),A
 2f18: 79             LD    A,C
 2f19: DD 86 09       ADD   A,(IX+$09)
 2f1c: 32 0E F0       LD    ($F00E),A
@@ -5701,13 +5531,13 @@ PLAY_MCP:
 
 2f2b: 78             LD    A,B
 2f2c: DD 86 05       ADD   A,(IX+$05)
-2f2f: 32 0C F0       LD    (TANK_SHOTS_F00C_TO_F01B(SPRITES_3_TO_6)),A
+2f2f: 32 0C F0       LD    (TANK_DISKS_F00C_TO_F01B(SPRITES_3_TO_6)),A
 2f32: 79             LD    A,C
 2f33: DD 86 06       ADD   A,(IX+$06)
 2f36: 32 0E F0       LD    ($F00E),A
 2f39: DD 7E 04       LD    A,(IX+$04)
 2f3c: 32 0D F0       LD    ($F00D),A
-2f3f: 3A 1D C4       LD    A,(REMAINING_DISKS/SHOTS_AT_A_TIME)
+2f3f: 3A 1D C4       LD    A,(REMAINING_DISKS_AT_A_TIME)
 2f42: B7             OR    A,A
 2f43: 28 14          JR    Z,$2F59
 
@@ -5738,9 +5568,9 @@ PLAY_MCP:
 2f78: AF             XOR   A,A
 2f79: 32 08 C4       LD    ($C408),A
 2f7c: 3E 00          LD    A,#$00
-2f7e: 32 0C F0       LD    (TANK_SHOTS_F00C_TO_F01B(SPRITES_3_TO_6)),A
+2f7e: 32 0C F0       LD    (TANK_DISKS_F00C_TO_F01B(SPRITES_3_TO_6)),A
 2f81: 32 14 F0       LD    ($F014),A
-2f84: 32 18 F0       LD    (IO_OR_MCP_OR_TANK_DISKS_OR_SHOTS_1_TO_4),A
+2f84: 32 18 F0       LD    (IO_OR_MCP_OR_TANK_DISKS_1_TO_4),A
 2f87: 0E 30          LD    C,#$30
 2f89: C3 B8 6F       JP    PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 
@@ -5787,6 +5617,8 @@ PLAY_MCP:
 2fd5: 32 08 F0       LD    (TANK_TURRET_OR_LC_ENEMIES),A
 2fd8: C9             RET   
 
+
+*** Set initial position and arm rotation of Tron sprites
 2fd9: 3E 80          LD    A,#$80
 2fdb: 32 07 C0       LD    (MCP_TRON_X_TANKS_DATA_VECTOR_x_1),A
 2fde: 3E C0          LD    A,#$C0
@@ -5794,7 +5626,7 @@ PLAY_MCP:
 2fe3: 3E 80          LD    A,#$80
 2fe5: 32 05 C0       LD    ($C005),A
 2fe8: AF             XOR   A,A
-2fe9: 32 05 C4       LD    ($C405),A
+2fe9: 32 05 C4       LD    (MCP_TRON_ARM_OR_TANK_TURRET_ROTATION),A
 2fec: C9             RET   
 
 2fed: 3A DD C0       LD    A,(MCP_TOWER_X)
@@ -5835,9 +5667,9 @@ PLAY_MCP:
 3024: C9             RET   
 
 MCP_PROCESS_DISK_POSITION(S)?:
-3025: DD 21 12 C0    LD    IX,MCP_DISK_DATA_TO_C02F/IO_TOWER_TIMER_DIGITS_TO_C019
-3029: FD 21 18 F0    LD    IY,IO_OR_MCP_OR_TANK_DISKS_OR_SHOTS_1_TO_4
-302d: 3A 1E C4       LD    A,(MAX_DISKS/SHOTS_AT_A_TIME)
+3025: DD 21 12 C0    LD    IX,MCP_DISK_1_DATA/IO_TOWER_TIMER_DIGITS_TO_C019
+3029: FD 21 18 F0    LD    IY,IO_OR_MCP_OR_TANK_DISKS_1_TO_4
+302d: 3A 1E C4       LD    A,(MAX_DISKS_AT_A_TIME)
 3030: 32 06 C4       LD    (MCP_DISK_NUMBER_BEING_PROCESSED),A
 3033: DD CB 09 7E    BIT   7,(IX+$09)
 3037: CA C4 30       JP    Z,$30C4
@@ -5845,7 +5677,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 303a: DD 35 08       DEC   (IX+$08)
 303d: 20 06          JR    NZ,$3045
 
-303f: CD 7E 31       CALL  $317E
+303f: CD 7E 31       CALL  MCP_DISK_END_FLIGHT
 3042: C3 C4 30       JP    $30C4
 
 3045: DD 6E 00       LD    L,(IX+$00)
@@ -5920,8 +5752,8 @@ MCP_PROCESS_DISK_POSITION(S)?:
 
 30d5: C9             RET   
 
-30d6: DD 21 12 C0    LD    IX,MCP_DISK_DATA_TO_C02F/IO_TOWER_TIMER_DIGITS_TO_C019
-30da: FD 21 18 F0    LD    IY,IO_OR_MCP_OR_TANK_DISKS_OR_SHOTS_1_TO_4
+30d6: DD 21 12 C0    LD    IX,MCP_DISK_1_DATA/IO_TOWER_TIMER_DIGITS_TO_C019
+30da: FD 21 18 F0    LD    IY,IO_OR_MCP_OR_TANK_DISKS_1_TO_4
 30de: DD 7E 09       LD    A,(IX+$09)
 30e1: B7             OR    A,A
 30e2: 28 0C          JR    Z,$30F0
@@ -5933,7 +5765,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 30ee: 18 EE          JR    $30DE
 
 30f0: FD E5          PUSH  IY
-30f2: FD 2A 10 C0    LD    IY,(TANKS_SHOTS_IN_RAM_STARTS_AT_C020)
+30f2: FD 2A 10 C0    LD    IY,(TANKS_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020)
 30f6: FD 6E 0F       LD    L,(IY+$0F)
 30f9: FD 66 10       LD    H,(IY+$10)
 30fc: DD 74 05       LD    (IX+$05),H
@@ -5995,14 +5827,15 @@ MCP_PROCESS_DISK_POSITION(S)?:
 3171: DD CB 09 46    BIT   0,(IX+$09)
 3175: C0             RET   NZ
 
-3176: C3 7E 31       JP    $317E
+3176: C3 7E 31       JP    MCP_DISK_END_FLIGHT
 
 3179: DD CB 09 86    RES   0,(IX+$09)
 317d: C9             RET   
 
+MCP_DISK_END_FLIGHT:
 317e: DD 36 09 00    LD    (IX+$09),#$00
 3182: FD 36 00 00    LD    (IY+$00),#$00
-3186: 21 1D C4       LD    HL,REMAINING_DISKS/SHOTS_AT_A_TIME
+3186: 21 1D C4       LD    HL,REMAINING_DISKS_AT_A_TIME
 3189: 34             INC   (HL)
 318a: C9             RET   
 
@@ -6031,7 +5864,7 @@ MCP_ROTATE_RIGHT:
 31b3: CD FA 31       CALL  $31FA
 31b6: 21 62 C0       LD    HL,MCP_POSITION_OF_BLOCKS_0_TO_F
 31b9: 34             INC   (HL)
-31ba: 3A E6 C0       LD    A,(MCP_NUMBER_OF_COLORS)
+31ba: 3A E6 C0       LD    A,(MCP_BLOCKS_PER_ROW)
 31bd: 3D             DEC   A
 31be: BE             CP    A,(HL)
 31bf: 30 02          JR    NC,$31C3
@@ -6047,12 +5880,12 @@ MCP_ROTATE_LEFT:
 31d1: 35             DEC   (HL)
 31d2: F2 DA 31       JP    P,$31DA
 
-31d5: 3A E6 C0       LD    A,(MCP_NUMBER_OF_COLORS)
+31d5: 3A E6 C0       LD    A,(MCP_BLOCKS_PER_ROW)
 31d8: 3D             DEC   A
 31d9: 77             LD    (HL),A
 31da: CD A7 32       CALL  $32A7
 31dd: 3A 62 C0       LD    A,(MCP_POSITION_OF_BLOCKS_0_TO_F)
-31e0: 21 E6 C0       LD    HL,MCP_NUMBER_OF_COLORS
+31e0: 21 E6 C0       LD    HL,MCP_BLOCKS_PER_ROW
 31e3: 96             SUB   A,(HL)
 31e4: ED 44          NEG   
 31e6: 87             ADD   A,A
@@ -6096,7 +5929,7 @@ MCP_ROTATE_LEFT:
 3231: D6 05          SUB   A,#$05
 3233: F2 3A 32       JP    P,$323A
 
-3236: 21 E6 C0       LD    HL,MCP_NUMBER_OF_COLORS
+3236: 21 E6 C0       LD    HL,MCP_BLOCKS_PER_ROW
 3239: 86             ADD   A,(HL)
 323a: 21 3A C0       LD    HL,MCP_DATA_TO_C0D9?
 323d: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
@@ -6161,7 +5994,7 @@ MCP_ROTATE_LEFT:
 32ae: D6 05          SUB   A,#$05
 32b0: F2 B7 32       JP    P,$32B7
 
-32b3: 21 E6 C0       LD    HL,MCP_NUMBER_OF_COLORS
+32b3: 21 E6 C0       LD    HL,MCP_BLOCKS_PER_ROW
 32b6: 86             ADD   A,(HL)
 32b7: 21 3A C0       LD    HL,MCP_DATA_TO_C0D9?
 32ba: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
@@ -6212,6 +6045,7 @@ MCP_ROTATE_LEFT:
 3303: 22 DB C0       LD    ($C0DB),HL
 3306: 7C             LD    A,H
 3307: 4F             LD    C,A
+MCP_DRAW_CONE:
 3308: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 330b: FD 21 A0 F0    LD    IY,MCP_TOWER_TO_F133
 330f: 21 B3 35       LD    HL,MCP_CONE_RELATIVEX_RELATIVEY_SPRITE_NUMBER_TO_35D9
@@ -6232,12 +6066,13 @@ MCP_ROTATE_LEFT:
 332d: FD 19          ADD   IY,DE
 332f: 10 E6          DJNZ  $3317
 
+MCP_DRAW_WALLS:
 3331: 11 08 00       LD    DE,$0008
 3334: 3A DC C0       LD    A,(MCP_TOWER_Y)
 3337: C6 00          ADD   A,#$00
 3339: 67             LD    H,A
 333a: FE F8          CP    A,#$F8
-333c: 30 25          JR    NC,$3363
+333c: 30 25          JR    NC,MCP_HIDE_SPRITES_33_AND_34
 
 333e: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 3341: FD 77 02       LD    (IY+$02),A
@@ -6254,18 +6089,20 @@ MCP_ROTATE_LEFT:
 335f: C6 10          ADD   A,#$10
 3361: 30 D6          JR    NC,$3339
 
+MCP_HIDE_SPRITES_33_AND_34:
 3363: FD 36 00 00    LD    (IY+$00),#$00
 3367: FD 36 02 00    LD    (IY+$02),#$00
 336b: FD 36 01 3F    LD    (IY+$01),#$3F
 336f: FD 36 04 00    LD    (IY+$04),#$00
 3373: FD 36 06 00    LD    (IY+$06),#$00
 3377: FD 36 05 3F    LD    (IY+$05),#$3F
+MCP_DRAW_BLOCKS:
 337b: 06 1E          LD    B,#$1E
 337d: DD 21 63 C0    LD    IX,$C063
 3381: FD 21 28 F0    LD    IY,MCP_BLOCKS_TOP_LEFT_MOVING_DOWN_AND_WRAP_TO_TOP_RIGHT_TO_F09F
-3385: 21 59 35       LD    HL,MCP_BRICKS_DATA_TO_35B2
+3385: 21 59 35       LD    HL,MCP_BLOCKS_DATA_TO_35B2
 3388: AF             XOR   A,A
-3389: 32 01 C0       LD    (TANK_PIC_OR_MCP_ROWS_OF_BRICKS),A
+3389: 32 01 C0       LD    (TANK_PIC_OR_MCP_ROWS_OF_BLOCKS),A
 338c: DD CB 03 7E    BIT   7,(IX+$03)
 3390: 28 43          JR    Z,$33D5
 
@@ -6277,7 +6114,7 @@ MCP_ROTATE_LEFT:
 339d: 79             LD    A,C
 339e: 86             ADD   A,(HL)
 339f: 23             INC   HL
-33a0: 38 0D          JR    C,$33AF
+33a0: 38 0D          JR    C,MCP_HIDE_SPRITE_GOING_OFF_BOTTOM_OF_SCREEN
 
 33a2: DD 77 01       LD    (IX+$01),A
 33a5: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
@@ -6285,6 +6122,7 @@ MCP_ROTATE_LEFT:
 33ab: FE F8          CP    A,#$F8
 33ad: 38 12          JR    C,$33C1
 
+MCP_HIDE_SPRITE_GOING_OFF_BOTTOM_OF_SCREEN:
 33af: DD 36 03 00    LD    (IX+$03),#$00
 33b3: FD 36 00 00    LD    (IY+$00),#$00
 33b7: FD 36 01 3F    LD    (IY+$01),#$3F
@@ -6312,7 +6150,7 @@ MCP_ROTATE_LEFT:
 33e7: FD 19          ADD   IY,DE
 33e9: 11 04 00       LD    DE,$0004
 33ec: DD 19          ADD   IX,DE
-33ee: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BRICKS)
+33ee: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BLOCKS)
 33f1: 3C             INC   A
 33f2: FE 05          CP    A,#$05
 33f4: 38 01          JR    C,$33F7
@@ -6353,7 +6191,7 @@ MCP_ROTATE_LEFT:
 3431: D8             RET   C
 
 3432: DD 21 63 C0    LD    IX,$C063
-3436: FD 21 59 35    LD    IY,MCP_BRICKS_DATA_TO_35B2
+3436: FD 21 59 35    LD    IY,MCP_BLOCKS_DATA_TO_35B2
 343a: 06 1E          LD    B,#$1E
 343c: DD 7E 03       LD    A,(IX+$03)
 343f: B7             OR    A,A
@@ -6402,8 +6240,8 @@ MCP_ROTATE_LEFT:
 3483: 00             NOP   
 3484: 01 00 E5       LD    BC,$E500
 3487: C5             PUSH  BC
-3488: FD 22 09 C4    LD    ($C409),IY
-348c: DD 22 0B C4    LD    ($C40B),IX
+3488: FD 22 09 C4    LD    (MCP_SPRITE_BLOCK_HIT_BY_DISK),IY
+348c: DD 22 0B C4    LD    (MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK),IX
 3490: 2B             DEC   HL
 3491: 2B             DEC   HL
 3492: E5             PUSH  HL
@@ -6417,9 +6255,9 @@ MCP_ROTATE_LEFT:
 34a4: DD 66 01       LD    H,(IX+$01)
 34a7: 2E 0A          LD    L,#$0A
 34a9: 22 E1 C0       LD    ($C0E1),HL
-34ac: DD 21 12 C0    LD    IX,MCP_DISK_DATA_TO_C02F/IO_TOWER_TIMER_DIGITS_TO_C019
-34b0: FD 21 18 F0    LD    IY,IO_OR_MCP_OR_TANK_DISKS_OR_SHOTS_1_TO_4
-34b4: 3A 1E C4       LD    A,(MAX_DISKS/SHOTS_AT_A_TIME)
+34ac: DD 21 12 C0    LD    IX,MCP_DISK_1_DATA/IO_TOWER_TIMER_DIGITS_TO_C019
+34b0: FD 21 18 F0    LD    IY,IO_OR_MCP_OR_TANK_DISKS_1_TO_4
+34b4: 3A 1E C4       LD    A,(MAX_DISKS_AT_A_TIME)
 34b7: 47             LD    B,A
 34b8: DD CB 09 7E    BIT   7,(IX+$09)
 34bc: 28 38          JR    Z,$34F6
@@ -6452,10 +6290,10 @@ MCP_ROTATE_LEFT:
 34e3: BD             CP    A,L
 34e4: 30 10          JR    NC,$34F6
 
-34e6: CD 7E 31       CALL  $317E
-34e9: DD 2A 0B C4    LD    IX,($C40B)
-34ed: FD 2A 09 C4    LD    IY,($C409)
-34f1: CD 2A 35       CALL  $352A
+34e6: CD 7E 31       CALL  MCP_DISK_END_FLIGHT
+34e9: DD 2A 0B C4    LD    IX,(MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK)
+34ed: FD 2A 09 C4    LD    IY,(MCP_SPRITE_BLOCK_HIT_BY_DISK)
+34f1: CD 2A 35       CALL  MCP_PROCESS_HIT_BLOCK
 34f4: 18 14          JR    $350A
 
 34f6: 11 04 00       LD    DE,$0004
@@ -6464,8 +6302,8 @@ MCP_ROTATE_LEFT:
 34fe: DD 19          ADD   IX,DE
 3500: 10 B6          DJNZ  $34B8
 
-3502: FD 2A 09 C4    LD    IY,($C409)
-3506: DD 2A 0B C4    LD    IX,($C40B)
+3502: FD 2A 09 C4    LD    IY,(MCP_SPRITE_BLOCK_HIT_BY_DISK)
+3506: DD 2A 0B C4    LD    IX,(MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK)
 350a: C1             POP   BC
 350b: E1             POP   HL
 350c: C9             RET   
@@ -6485,33 +6323,39 @@ MCP_ROTATE_LEFT:
 3525: FD 36 00 00    LD    (IY+$00),#$00
 3529: C9             RET   
 
-352a: 21 E3 C0       LD    HL,MCP_BRICKS_REMAINING_COUNT
+
+*** Decrement blocks remaining, change block sprite to explosion (00)
+MCP_PROCESS_HIT_BLOCK:
+352a: 21 E3 C0       LD    HL,MCP_BLOCKS_REMAINING_COUNT
 352d: 35             DEC   (HL)
 352e: FD 36 01 00    LD    (IY+$01),#$00
-3532: 21 54 35       LD    HL,$3554
+3532: 21 54 35       LD    HL,MCP_BLOCK_DATA_TO_PROCESS_HIT
 3535: C5             PUSH  BC
 3536: CD 52 6F       CALL  PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LC
 3539: C1             POP   BC
 353a: DD 36 02 02    LD    (IX+$02),#$02
 353e: DD 36 03 81    LD    (IX+$03),#$81
-3542: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BRICKS)
-3545: 21 4F 35       LD    HL,$354F
+3542: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BLOCKS)
+3545: 21 4F 35       LD    HL,MCP_BLOCK_HIT_AUDIO
 3548: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 354b: 4E             LD    C,(HL)
 354c: C3 B8 6F       JP    PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 
-354f: 34             INC   (HL)
-3550: 33             INC   SP
-3551: 32 31 31       LD    ($3131),A
-3554: 05             DEC   B
-3555: 02             LD    (BC),A
-3556: 00             NOP   
-3557: 00             NOP   
-3558: 00             NOP   
+
+*** Audio to play for block hit. Number of rows dictates sound used?
+*** When you get to 5 rows, is the wrong sound (@3554) played?
+MCP_BLOCK_HIT_AUDIO:
+354f: 34 33 32 31 31 
+
+
+*** Data used at 3532 for processing MCP block hit
+MCP_BLOCK_DATA_TO_PROCESS_HIT:
+3554: 05 02 00 00 00 
+
 
 *** 5 rows (max) by 6 columns (always) by 3 bytes:
 *** relative X, relative Y, picture number
-MCP_BRICKS_DATA_TO_35B2:
+MCP_BLOCKS_DATA_TO_35B2:
 3559: 00 00 31 00 0C 31 00 18 31 00 24 31 00 30 31 0C 
 3569: 03 32 0C 0F 32 0C 1B 32 0C 27 32 0C 33 32 1C 05 
 3579: 33 1C 11 33 1C 1D 33 1C 29 33 1C 35 33 2C 05 34 
@@ -7209,8 +7053,8 @@ MCP_COLOR_PALETTE_ALL_ZEROS:
 3965: 3F             CCF   
 
 *** Data for setting up MCP cone game.
-*** 10x4 (direction, number of colors?, Y speed, rotation speed)
-*** plugged into C0E9, 6, 7, 5
+*** 10x4: 4= direction, blocks per row, Y move delay, rotation delay
+*** plugged into C0E9, C0E6, C0E7, C0E5
 DATA_FOR_MCP_SETUP_TO_398D:
 3966: 00 10 32 20 00 18 28 20 00 20 24 20 01 28 28 18 
 3976: 00 28 32 10 01 28 60 40 00 28 C0 0E 01 28 60 0E 
@@ -7322,19 +7166,19 @@ PLAY_TANKS:
 3a16: 21 80 79       LD    HL,TANK_COLOR_PALETTE
 3a19: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 3a1c: AF             XOR   A,A
-3a1d: 32 05 C4       LD    ($C405),A
+3a1d: 32 05 C4       LD    (MCP_TRON_ARM_OR_TANK_TURRET_ROTATION),A
 3a20: 21 2C 01       LD    HL,$012C
 3a23: 22 48 C1       LD    ($C148),HL
 3a26: 3E 01          LD    A,#$01
 3a28: 32 08 C4       LD    ($C408),A
 
-*** Set up shots (up to 4) in sprites 3-6 (F00C-F01B)
-3a2b: 3A 1E C4       LD    A,(MAX_DISKS/SHOTS_AT_A_TIME)
+*** Set up disks (up to 4) in sprites 3-6 (F00C-F01B)
+3a2b: 3A 1E C4       LD    A,(MAX_DISKS_AT_A_TIME)
 3a2e: 4F             LD    C,A
 3a2f: 06 00          LD    B,#$00
-3a31: 21 0C F0       LD    HL,TANK_SHOTS_F00C_TO_F01B(SPRITES_3_TO_6)
+3a31: 21 0C F0       LD    HL,TANK_DISKS_F00C_TO_F01B(SPRITES_3_TO_6)
 3a34: 11 10 00       LD    DE,$0010
-3a37: FD 21 01 C0    LD    IY,TANK_PIC_OR_MCP_ROWS_OF_BRICKS
+3a37: FD 21 01 C0    LD    IY,TANK_PIC_OR_MCP_ROWS_OF_BLOCKS
 3a3b: FD 19          ADD   IY,DE
 3a3d: FD 36 00 00    LD    (IY+$00),#$00
 3a41: FD 36 08 00    LD    (IY+$08),#$00
@@ -7350,7 +7194,7 @@ PLAY_TANKS:
 3a5c: 0D             DEC   C
 3a5d: 20 DC          JR    NZ,$3A3B
 
-3a5f: 21 1C F0       LD    HL,$F01C
+3a5f: 21 1C F0       LD    HL,IO_OR_MCP_OR_TANK_DISKS_2
 3a62: 11 04 00       LD    DE,$0004
 3a65: 36 00          LD    (HL),#$00
 3a67: 19             ADD   HL,DE
@@ -7393,7 +7237,7 @@ PLAY_TANKS:
 3a9f: 7E             LD    A,(HL)
 3aa0: E6 7F          AND   A,#$7F
 3aa2: 32 4A C1       LD    (NUMBER_OF_TANKS),A
-3aa5: 32 59 C1       LD    (TANKS_NUMBER_OF_ENEMY_SHOTS?),A
+3aa5: 32 59 C1       LD    (TANKS_NUMBER_OF_ENEMY_BULLETS?),A
 3aa8: 4F             LD    C,A
 3aa9: 7E             LD    A,(HL)
 3aaa: E6 80          AND   A,#$80
@@ -7436,7 +7280,7 @@ PLAY_TANKS:
 3aff: B7             OR    A,A
 3b00: 20 05          JR    NZ,$3B07
 
-3b02: CD 14 44       CALL  $4414
+3b02: CD 14 44       CALL  TANK_PROCESS_ENEMY_TANKS_ON_STARTUP_SOMEHOW?_USES_IX
 3b05: 18 03          JR    $3B0A
 
 3b07: CD 43 44       CALL  $4443
@@ -7487,7 +7331,7 @@ PLAY_TANKS:
 3b55: DD 75 16       LD    (IX+$16),L
 3b58: DD 74 17       LD    (IX+$17),H
 3b5b: E5             PUSH  HL
-3b5c: CD E2 47       CALL  $47E2
+3b5c: CD E2 47       CALL  TANK_POSITION_THE_ONE_AT_IX
 3b5f: E1             POP   HL
 3b60: 7D             LD    A,L
 3b61: C6 04          ADD   A,#$04
@@ -7504,12 +7348,12 @@ PLAY_TANKS:
 3b73: C2 C3 3A       JP    NZ,$3AC3
 
 
-*** Setup of enemy tank shots
+*** Setup of enemy tank bullets
 *** Sprite is explosion and X=0 and Y=4?
-3b76: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_SHOTS?)
+3b76: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_BULLETS?)
 3b79: 4F             LD    C,A
-3b7a: 21 44 F0       LD    HL,TANK_ENEMY_SHOTS
-3b7d: FD 21 08 C1    LD    IY,TANKS_ENEMY_SHOTS_IN_RAM_AT_C111?
+3b7a: 21 44 F0       LD    HL,TANK_ENEMY_BULLETS
+3b7d: FD 21 08 C1    LD    IY,TANKS_ENEMY_BULLETS_IN_RAM_AT_C111?
 3b81: 11 09 00       LD    DE,$0009
 3b84: FD 19          ADD   IY,DE
 3b86: FD 36 07 00    LD    (IY+$07),#$00
@@ -7517,7 +7361,7 @@ PLAY_TANKS:
 3b8e: FD 75 03       LD    (IY+$03),L
 3b91: FD 74 04       LD    (IY+$04),H
 3b94: E5             PUSH  HL
-3b95: CD 70 4B       CALL  $4B70
+3b95: CD 70 4B       CALL  TANK_BULLET?_DRAW_USES_IY
 3b98: E1             POP   HL
 3b99: 7D             LD    A,L
 3b9a: C6 04          ADD   A,#$04
@@ -7528,6 +7372,8 @@ PLAY_TANKS:
 3ba0: 0D             DEC   C
 3ba1: 20 DE          JR    NZ,$3B81
 
+
+*** Set up Tron tank (the playa'!)
 3ba3: 21 00 C0       LD    HL,CPU_RAM_OR_GS_DISK_X_TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF
 3ba6: 3E 61          LD    A,#$61
 3ba8: 77             LD    (HL),A
@@ -7551,7 +7397,7 @@ PLAY_TANKS:
 3bc2: CD A5 40       CALL  $40A5
 3bc5: 22 07 C0       LD    (MCP_TRON_X_TANKS_DATA_VECTOR_x_1),HL
 3bc8: ED 43 09 C0    LD    (MCP_TRON_Y_TANKS_DATA_VECTOR_x_2),BC
-3bcc: CD D0 40       CALL  $40D0
+3bcc: CD D0 40       CALL  TANK_UPDATE_POSITION_AND_PIC_OF_TANK_FROM_C000_TO_C002
 3bcf: 3E 35          LD    A,#$35
 3bd1: 32 50 C1       LD    ($C150),A
 3bd4: 32 51 C1       LD    ($C151),A
@@ -7568,8 +7414,8 @@ PLAY_TANKS:
 3bea: E6 02          AND   A,#$02
 3bec: 20 5D          JR    NZ,$3C4B
 
-3bee: CD B5 3D       CALL  $3DB5
-3bf1: CD C8 49       CALL  $49C8
+3bee: CD B5 3D       CALL  TANK_PROCESS_CONTROLS_INPUT
+3bf1: CD C8 49       CALL  TANK_TURRET_DRAW
 3bf4: 3A 47 C1       LD    A,($C147)
 3bf7: E6 80          AND   A,#$80
 3bf9: 20 50          JR    NZ,$3C4B
@@ -7639,7 +7485,7 @@ PLAY_TANKS:
 3c6f: 21 2C 01       LD    HL,$012C
 3c72: 22 48 C1       LD    ($C148),HL
 3c75: DD 21 51 C0    LD    IX,INFO_FOR_TANK_GAME_SEE_3ABF_TO_C05A_FOR_A_SINGLE_TANK
-3c79: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_SHOTS?)
+3c79: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_BULLETS?)
 3c7c: 47             LD    B,A
 3c7d: 11 20 00       LD    DE,$0020
 3c80: DD 7E 07       LD    A,(IX+$07)
@@ -7701,7 +7547,7 @@ TANKS_INSTRUCTIONS:
 3ce8: 21 80 79       LD    HL,TANK_COLOR_PALETTE
 3ceb: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 3cee: AF             XOR   A,A
-3cef: 32 05 C4       LD    ($C405),A
+3cef: 32 05 C4       LD    (MCP_TRON_ARM_OR_TANK_TURRET_ROTATION),A
 3cf2: 3E 01          LD    A,#$01
 3cf4: 32 08 C4       LD    ($C408),A
 3cf7: 21 00 C0       LD    HL,CPU_RAM_OR_GS_DISK_X_TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF
@@ -7727,7 +7573,7 @@ TANKS_INSTRUCTIONS:
 3d16: CD A5 40       CALL  $40A5
 3d19: 22 07 C0       LD    (MCP_TRON_X_TANKS_DATA_VECTOR_x_1),HL
 3d1c: ED 43 09 C0    LD    (MCP_TRON_Y_TANKS_DATA_VECTOR_x_2),BC
-3d20: CD D0 40       CALL  $40D0
+3d20: CD D0 40       CALL  TANK_UPDATE_POSITION_AND_PIC_OF_TANK_FROM_C000_TO_C002
 3d23: 11 35 3D       LD    DE,DESTROY_ALL_S
 3d26: 01 CC FD       LD    BC,$FDCC
 3d29: CD 5D 70       CALL  ADD_MESSAGE_TO_Q
@@ -7750,10 +7596,13 @@ TANK_JOYSTICK_INPUT_TABLE?:
 3d9d: 02 00 40 20 08 00 00 00 08 20 40 10 10 20 40 08 
 3dad: 20 10 08 40 40 10 08 20 
 
+TANK_PROCESS_CONTROLS_INPUT:
 3db5: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 3db8: B7             OR    A,A
 3db9: 28 1F          JR    Z,$3DDA
 
+
+*** Attract mode input processing ...
 3dbb: 21 55 C1       LD    HL,$C155
 3dbe: 34             INC   (HL)
 3dbf: 7E             LD    A,(HL)
@@ -7773,6 +7622,8 @@ TANK_JOYSTICK_INPUT_TABLE?:
 3dd5: 22 56 C1       LD    ($C156),HL
 3dd8: 18 1E          JR    $3DF8
 
+
+*** User input processing ...
 3dda: DB 02          IN    A,($02)
 3ddc: 2F             CPL   
 3ddd: 4F             LD    C,A
@@ -7917,9 +7768,9 @@ TANK_JOYSTICK_INPUT_TABLE?:
 3ec6: DA F8 3D       JP    C,$3DF8
 
 3ec9: 3A 0F C0       LD    A,($C00F)
-3ecc: 32 01 C0       LD    (TANK_PIC_OR_MCP_ROWS_OF_BRICKS),A
+3ecc: 32 01 C0       LD    (TANK_PIC_OR_MCP_ROWS_OF_BLOCKS),A
 3ecf: CD 21 3F       CALL  $3F21
-3ed2: CD D0 40       CALL  $40D0
+3ed2: CD D0 40       CALL  TANK_UPDATE_POSITION_AND_PIC_OF_TANK_FROM_C000_TO_C002
 3ed5: 3A 0D C0       LD    A,(IO_TOWER_TIMER_VALUE_REVERSED_TO_C010)
 3ed8: 32 0B C0       LD    ($C00B),A
 3edb: 3A 0E C0       LD    A,(INFINITE_TIME_CHEAT)
@@ -7980,7 +7831,8 @@ TANK_JOYSTICK_INPUT_TABLE?:
 3f3a: 4F             LD    C,A
 3f3b: C3 B8 6F       JP    PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 
-3f3e: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_SHOTS?)
+3f3e: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_BULLETS?)
+Error: missed a comment line at 3F3F, line=3F42
 3f41: 11 20 00 DD 21 31 C0 
 
 3f48: 4F DD 19 DD 7E 00 B7 28 45 DD 7E 05 32 10 C0 
@@ -8013,162 +7865,15 @@ TANK_JOYSTICK_INPUT_TABLE?:
 *** 18? data blocks used by tanks
 3f9a: 00 
 
-3f9b: 28 
+3f9b: 28 E0 E8 F8 00 28 38 48 58 70 80 A0 B0 D0 E0 E8 
+3fab: F8 00 28 B0 B8 F8 00 28 38 40 50 58 68 70 80 88 
+3fbb: 98 A0 B0 B8 C8 D0 E0 E8 F8 00 28 38 40 E0 E8 F8 
+3fcb: 00 28 38 58 68 70 80 A0 B0 B8 C8 D0 F8 00 28 C8 
+3fdb: D0 F8 00 28 C8 D0 E0 E8 F8 00 28 38 40 50 58 68 
+3feb: 70 80 A0 B0 B8 C8 D0 E0 E8 F8 00 28 80 A0 F8 00 
+3ffb: 28 88 98 F8 00 28 38 40 50 58 68 70 88 98 B0 B8 
+400b: C8 D0 E0 E8 F8 00 
 
-3f9c: E0             RET   PO
-
-3f9d: E8             RET   PE
-
-3f9e: F8             RET   M
-
-3f9f: 00             NOP   
-3fa0: 28 38          JR    Z,$3FDA
-
-3fa2: 48             LD    C,B
-3fa3: 58             LD    E,B
-3fa4: 70             LD    (HL),B
-3fa5: 80             ADD   A,B
-3fa6: A0             AND   A,B
-3fa7: B0             OR    A,B
-3fa8: D0             RET   NC
-
-3fa9: E0             RET   PO
-
-3faa: E8             RET   PE
-
-3fab: F8             RET   M
-
-3fac: 00             NOP   
-3fad: 28 B0          JR    Z,$3F5F
-
-3faf: B8             CP    A,B
-3fb0: F8             RET   M
-
-3fb1: 00             NOP   
-3fb2: 28 38          JR    Z,$3FEC
-
-3fb4: 40             LD    B,B
-3fb5: 50             LD    D,B
-3fb6: 58             LD    E,B
-3fb7: 68             LD    L,B
-3fb8: 70             LD    (HL),B
-3fb9: 80             ADD   A,B
-3fba: 88             ADC   A,B
-3fbb: 98             SBC   A,B
-3fbc: A0             AND   A,B
-3fbd: B0             OR    A,B
-3fbe: B8             CP    A,B
-3fbf: C8             RET   Z
-
-3fc0: D0             RET   NC
-
-3fc1: E0             RET   PO
-
-3fc2: E8             RET   PE
-
-3fc3: F8             RET   M
-
-3fc4: 00             NOP   
-3fc5: 28 38          JR    Z,$3FFF
-
-3fc7: 40             LD    B,B
-3fc8: E0             RET   PO
-
-3fc9: E8             RET   PE
-
-3fca: F8             RET   M
-
-3fcb: 00             NOP   
-3fcc: 28 38          JR    Z,$4006
-
-3fce: 58             LD    E,B
-3fcf: 68             LD    L,B
-3fd0: 70             LD    (HL),B
-3fd1: 80             ADD   A,B
-3fd2: A0             AND   A,B
-3fd3: B0             OR    A,B
-3fd4: B8             CP    A,B
-3fd5: C8             RET   Z
-
-3fd6: D0             RET   NC
-
-3fd7: F8             RET   M
-
-3fd8: 00             NOP   
-3fd9: 28 C8          JR    Z,$3FA3
-
-3fdb: D0             RET   NC
-
-3fdc: F8             RET   M
-
-3fdd: 00             NOP   
-3fde: 28 C8          JR    Z,$3FA8
-
-3fe0: D0             RET   NC
-
-3fe1: E0             RET   PO
-
-3fe2: E8             RET   PE
-
-3fe3: F8             RET   M
-
-3fe4: 00             NOP   
-3fe5: 28 38          JR    Z,$401F
-
-3fe7: 40             LD    B,B
-3fe8: 50             LD    D,B
-3fe9: 58             LD    E,B
-3fea: 68             LD    L,B
-3feb: 70             LD    (HL),B
-3fec: 80             ADD   A,B
-3fed: A0             AND   A,B
-3fee: B0             OR    A,B
-3fef: B8             CP    A,B
-3ff0: C8             RET   Z
-
-3ff1: D0             RET   NC
-
-3ff2: E0             RET   PO
-
-3ff3: E8             RET   PE
-
-3ff4: F8             RET   M
-
-3ff5: 00             NOP   
-3ff6: 28 80          JR    Z,$3F78
-
-3ff8: A0             AND   A,B
-3ff9: F8             RET   M
-
-3ffa: 00             NOP   
-3ffb: 28 88          JR    Z,$3F85
-
-3ffd: 98             SBC   A,B
-3ffe: F8             RET   M
-
-3fff: 00             NOP   
-4000: 28 38          JR    Z,$403A
-
-4002: 40             LD    B,B
-4003: 50             LD    D,B
-4004: 58             LD    E,B
-4005: 68             LD    L,B
-4006: 70             LD    (HL),B
-4007: 88             ADC   A,B
-4008: 98             SBC   A,B
-4009: B0             OR    A,B
-400a: B8             CP    A,B
-400b: C8             RET   Z
-
-400c: D0             RET   NC
-
-400d: E0             RET   PO
-
-400e: E8             RET   PE
-
-400f: F8             RET   M
-
-4010: 00             NOP   
 4011: 28 50          JR    Z,TANKS_DATA_FOR_x_STARTS_AT_4066
 
 4013: 58             LD    E,B
@@ -8279,70 +7984,14 @@ TANK_JOYSTICK_INPUT_TABLE?:
 4064: 00             NOP   
 4065: 00             NOP   
 
-*** 18?x3 bytes: ?, vector to other data (they look like variable size 00 terminate
-*** This data structure is used at 40C9. It's BIG but I'm not sure where it ends
-4066: 18 9A          JR    $4002
+*** This data structure is used at 40C9
+*** ??? 18?x3 bytes: ?, vector to other data
+*** (they look like variable size 00 terminated data blocks)
+4066: 18 9A 3F 27 9B 3F 30 A0 3F 3F AD 3F 48 B2 3F 57 
+4076: C5 3F 60 CC 3F 67 D9 3F 6F DE 3F 78 E5 3F 87 F6 
+4086: 3F 8F 00 40 9F 11 40 AF 20 40 B8 25 40 C7 36 40 
+4096: D0 41 40 DF 50 40 E8 55 40 F7 62 40 FF 65 40 
 
-4068: 3F             CCF   
-4069: 27             DAA   
-406a: 9B             SBC   A,E
-406b: 3F             CCF   
-406c: 30 A0          JR    NC,$400E
-
-406e: 3F             CCF   
-406f: 3F             CCF   
-4070: AD             XOR   A,L
-4071: 3F             CCF   
-4072: 48             LD    C,B
-4073: B2             OR    A,D
-4074: 3F             CCF   
-4075: 57             LD    D,A
-4076: C5             PUSH  BC
-4077: 3F             CCF   
-4078: 60             LD    H,B
-4079: CC 3F 67       CALL  Z,$673F
-407c: D9             EXX   
-407d: 3F             CCF   
-407e: 6F             LD    L,A
-407f: DE 3F          SBC   A,#$3F
-4081: 78             LD    A,B
-4082: E5             PUSH  HL
-4083: 3F             CCF   
-4084: 87             ADD   A,A
-4085: F6 3F          OR    A,#$3F
-4087: 8F             ADC   A,A
-4088: 00             NOP   
-4089: 40             LD    B,B
-408a: 9F             SBC   A,A
-408b: 11 40 AF       LD    DE,$AF40
-408e: 20 40          JR    NZ,$40D0
-
-4090: B8             CP    A,B
-4091: 25             DEC   H
-4092: 40             LD    B,B
-4093: C7             RST   $00
-
-4094: 36 40          LD    (HL),#$40
-4096: D0             RET   NC
-
-4097: 41             LD    B,C
-4098: 40             LD    B,B
-4099: DF             RST   $18
-
-409a: 50             LD    D,B
-409b: 40             LD    B,B
-409c: E8             RET   PE
-
-409d: 55             LD    D,L
-409e: 40             LD    B,B
-409f: F7             RST   $30
-
-40a0: 62             LD    H,D
-40a1: 40             LD    B,B
-40a2: FF             RST   $38
-
-40a3: 65             LD    H,L
-40a4: 40             LD    B,B
 40a5: DD 21 63 40    LD    IX,TANKS_DATA_FOR_x_STARTS_AT_4066
 40a9: 11 03 00       LD    DE,$0003
 40ac: DD 19          ADD   IX,DE
@@ -8352,7 +8001,7 @@ TANK_JOYSTICK_INPUT_TABLE?:
 
 40b4: DD 6E 01       LD    L,(IX+$01)
 40b7: DD 66 02       LD    H,(IX+$02)
-40ba: DD 21 FB 4C    LD    IX,$4CFB
+40ba: DD 21 FB 4C    LD    IX,TANK_DATA_FOR?_STARTS_AT_4CFF
 40be: 11 04 00       LD    DE,$0004
 40c1: DD 19          ADD   IX,DE
 40c3: DD 7E 00       LD    A,(IX+$00)
@@ -8363,14 +8012,13 @@ TANK_JOYSTICK_INPUT_TABLE?:
 40cc: DD 46 03       LD    B,(IX+$03)
 40cf: C9             RET   
 
-
-*** Update position and pic of tank (from C000 to C002)
+TANK_UPDATE_POSITION_AND_PIC_OF_TANK_FROM_C000_TO_C002:
 40d0: 21 04 F0       LD    HL,TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT
 40d3: 3A 00 C0       LD    A,(CPU_RAM_OR_GS_DISK_X_TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
 40d6: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 40d9: 77             LD    (HL),A
 40da: 23             INC   HL
-40db: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BRICKS)
+40db: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BLOCKS)
 40de: 77             LD    (HL),A
 40df: 23             INC   HL
 40e0: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
@@ -8413,7 +8061,7 @@ TANK_WARP:
 4118: F5             PUSH  AF
 4119: 0E 37          LD    C,#$37
 411b: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
-411e: CD D0 40       CALL  $40D0
+411e: CD D0 40       CALL  TANK_UPDATE_POSITION_AND_PIC_OF_TANK_FROM_C000_TO_C002
 4121: F1             POP   AF
 4122: 37             SCF   
 4123: C9             RET   
@@ -8453,6 +8101,7 @@ TANK_WARP:
 
 4143: A9             XOR   A,C
 4144: 41             LD    B,C
+TANK_DATA_FOR_?:
 4145: E8             RET   PE
 
 4146: B2             OR    A,D
@@ -8465,218 +8114,26 @@ TANK_WARP:
 414d: 41             LD    B,C
 414e: 48             LD    C,B
 414f: CC 41 58       CALL  Z,$5841
-4152: CF             RST   $08
 
-4153: 41             LD    B,C
-4154: 70             LD    (HL),B
-4155: D9             EXX   
-4156: 41             LD    B,C
-4157: 88             ADC   A,B
-4158: E2 41 A0       JP    PO,$A041
+*** Data used by tanks around 4414?  The 3 below are educated guesses at this point
+*** 11?x3: 3= Type, vector to next data structure
+4152: CF 41 70 D9 41 88 E2 41 A0 E9 41 B8 F4 41 D0 FD 
+4162: 41 E8 06 42 
 
-415b: E9             JP    (HL)
-415c: 41             LD    B,C
-415d: B8             CP    A,B
-415e: F4 41 D0       CALL  P,$D041
-4161: FD 41          Illegal Opcode
-4163: E8             RET   PE
+4166: 00 28 48 70 A0 D0 00 28 40 48 58 70 88 A0 00 B8 
+4176: D0 E8 00 40 58 70 88 A0 B8 D0 00 D0 E8 00 28 40 
+4186: 58 70 A0 B8 00 28 40 58 70 00 A0 B8 D0 E8 00 28 
+4196: 40 00 40 58 70 A0 B8 D0 E8 00 40 58 00 70 88 A0 
+41a6: 00 B8 D0 00 28 40 58 70 88 A0 B8 D0 
 
-4164: 06 42          LD    B,#$42
-4166: 00             NOP   
-4167: 28 48          JR    Z,$41B1
+41b2: 00 40 58 88 A0 B8 E8 00 00 18 30 60 78 90 D0 00 
+41c2: 30 48 00 60 78 90 A0 B8 D0 E8 00 18 30 00 30 48 
+41d2: 60 78 A0 B8 00 D0 E8 00 18 30 48 60 78 A0 B8 D0 
+41e2: 00 30 48 00 B8 D0 E8 00 18 30 48 60 78 A0 B8 00 
+41f2: D0 E8 00 30 48 60 78 A0 B8 D0 E8 00 18 30 48 58 
+4202: 78 A0 B8 D0 00 30 58 78 A0 E8 00 
 
-4169: 70             LD    (HL),B
-416a: A0             AND   A,B
-416b: D0             RET   NC
-
-416c: 00             NOP   
-416d: 28 40          JR    Z,$41AF
-
-416f: 48             LD    C,B
-4170: 58             LD    E,B
-4171: 70             LD    (HL),B
-4172: 88             ADC   A,B
-4173: A0             AND   A,B
-4174: 00             NOP   
-4175: B8             CP    A,B
-4176: D0             RET   NC
-
-4177: E8             RET   PE
-
-4178: 00             NOP   
-4179: 40             LD    B,B
-417a: 58             LD    E,B
-417b: 70             LD    (HL),B
-417c: 88             ADC   A,B
-417d: A0             AND   A,B
-417e: B8             CP    A,B
-417f: D0             RET   NC
-
-4180: 00             NOP   
-4181: D0             RET   NC
-
-4182: E8             RET   PE
-
-4183: 00             NOP   
-4184: 28 40          JR    Z,$41C6
-
-4186: 58             LD    E,B
-4187: 70             LD    (HL),B
-4188: A0             AND   A,B
-4189: B8             CP    A,B
-418a: 00             NOP   
-418b: 28 40          JR    Z,$41CD
-
-418d: 58             LD    E,B
-418e: 70             LD    (HL),B
-418f: 00             NOP   
-4190: A0             AND   A,B
-4191: B8             CP    A,B
-4192: D0             RET   NC
-
-4193: E8             RET   PE
-
-4194: 00             NOP   
-4195: 28 40          JR    Z,$41D7
-
-4197: 00             NOP   
-4198: 40             LD    B,B
-4199: 58             LD    E,B
-419a: 70             LD    (HL),B
-419b: A0             AND   A,B
-419c: B8             CP    A,B
-419d: D0             RET   NC
-
-419e: E8             RET   PE
-
-419f: 00             NOP   
-41a0: 40             LD    B,B
-41a1: 58             LD    E,B
-41a2: 00             NOP   
-41a3: 70             LD    (HL),B
-41a4: 88             ADC   A,B
-41a5: A0             AND   A,B
-41a6: 00             NOP   
-41a7: B8             CP    A,B
-41a8: D0             RET   NC
-
-41a9: 00             NOP   
-41aa: 28 40          JR    Z,$41EC
-
-41ac: 58             LD    E,B
-41ad: 70             LD    (HL),B
-41ae: 88             ADC   A,B
-41af: A0             AND   A,B
-41b0: B8             CP    A,B
-41b1: D0             RET   NC
-
-41b2: 00             NOP   
-41b3: 40             LD    B,B
-41b4: 58             LD    E,B
-41b5: 88             ADC   A,B
-41b6: A0             AND   A,B
-41b7: B8             CP    A,B
-41b8: E8             RET   PE
-
-41b9: 00             NOP   
-41ba: 00             NOP   
-41bb: 18 30          JR    $41ED
-
-41bd: 60             LD    H,B
-41be: 78             LD    A,B
-41bf: 90             SUB   A,B
-41c0: D0             RET   NC
-
-41c1: 00             NOP   
-41c2: 30 48          JR    NC,$420C
-
-41c4: 00             NOP   
-41c5: 60             LD    H,B
-41c6: 78             LD    A,B
-41c7: 90             SUB   A,B
-41c8: A0             AND   A,B
-41c9: B8             CP    A,B
-41ca: D0             RET   NC
-
-41cb: E8             RET   PE
-
-41cc: 00             NOP   
-41cd: 18 30          JR    $41FF
-
-41cf: 00             NOP   
-41d0: 30 48          JR    NC,$421A
-
-41d2: 60             LD    H,B
-41d3: 78             LD    A,B
-41d4: A0             AND   A,B
-41d5: B8             CP    A,B
-41d6: 00             NOP   
-41d7: D0             RET   NC
-
-41d8: E8             RET   PE
-
-41d9: 00             NOP   
-41da: 18 30          JR    $420C
-
-41dc: 48             LD    C,B
-41dd: 60             LD    H,B
-41de: 78             LD    A,B
-41df: A0             AND   A,B
-41e0: B8             CP    A,B
-41e1: D0             RET   NC
-
-41e2: 00             NOP   
-41e3: 30 48          JR    NC,$422D
-
-41e5: 00             NOP   
-41e6: B8             CP    A,B
-41e7: D0             RET   NC
-
-41e8: E8             RET   PE
-
-41e9: 00             NOP   
-41ea: 18 30          JR    $421C
-
-41ec: 48             LD    C,B
-41ed: 60             LD    H,B
-41ee: 78             LD    A,B
-41ef: A0             AND   A,B
-41f0: B8             CP    A,B
-41f1: 00             NOP   
-41f2: D0             RET   NC
-
-41f3: E8             RET   PE
-
-41f4: 00             NOP   
-41f5: 30 48          JR    NC,$423F
-
-41f7: 60             LD    H,B
-41f8: 78             LD    A,B
-41f9: A0             AND   A,B
-41fa: B8             CP    A,B
-41fb: D0             RET   NC
-
-41fc: E8             RET   PE
-
-41fd: 00             NOP   
-41fe: 18 30          JR    $4230
-
-4200: 48             LD    C,B
-4201: 58             LD    E,B
-4202: 78             LD    A,B
-4203: A0             AND   A,B
-4204: B8             CP    A,B
-4205: D0             RET   NC
-
-4206: 00             NOP   
-4207: 30 58          JR    NC,$4261
-
-4209: 78             LD    A,B
-420a: A0             AND   A,B
-420b: E8             RET   PE
-
-420c: 00             NOP   
-420d: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_SHOTS?)
+420d: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_BULLETS?)
 4210: 4F             LD    C,A
 4211: DD 21 31 C0    LD    IX,$C031
 4215: 11 20 00       LD    DE,$0020
@@ -8718,7 +8175,7 @@ TANK_WARP:
 425d: DD 71 14       LD    (IX+$14),C
 4260: DD 70 15       LD    (IX+$15),B
 4263: C1             POP   BC
-4264: CD E2 47       CALL  $47E2
+4264: CD E2 47       CALL  TANK_POSITION_THE_ONE_AT_IX
 4267: 18 45          JR    $42AE
 
 4269: DD 7E 1A       LD    A,(IX+$1A)
@@ -8919,7 +8376,7 @@ TANK_WARP:
 43b2: CD 7E 44       CALL  $447E
 43b5: 38 D3          JR    C,$438A
 
-43b7: CD 14 44       CALL  $4414
+43b7: CD 14 44       CALL  TANK_PROCESS_ENEMY_TANKS_ON_STARTUP_SOMEHOW?_USES_IX
 43ba: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 43bd: DD 96 02       SUB   A,(IX+$02)
 43c0: 30 01          JR    NC,$43C3
@@ -8980,9 +8437,10 @@ TANK_WARP:
 4410: CD BD 44       CALL  $44BD
 4413: C9             RET   
 
+TANK_PROCESS_ENEMY_TANKS_ON_STARTUP_SOMEHOW?_USES_IX:
 4414: DD 36 09 00    LD    (IX+$09),#$00
 4418: DD 7E 02       LD    A,(IX+$02)
-441b: FD 21 45 41    LD    IY,$4145
+441b: FD 21 45 41    LD    IY,TANK_DATA_FOR_?
 441f: 11 03 00       LD    DE,$0003
 4422: FD 19          ADD   IY,DE
 4424: FD BE 00       CP    A,(IY+$00)
@@ -9024,7 +8482,7 @@ TANK_WARP:
 446e: DD 72 0D       LD    (IX+$0D),D
 4471: C9             RET   
 
-4472: CD 14 44       CALL  $4414
+4472: CD 14 44       CALL  TANK_PROCESS_ENEMY_TANKS_ON_STARTUP_SOMEHOW?_USES_IX
 4475: DD 7E 08       LD    A,(IX+$08)
 4478: ED 44          NEG   
 447a: DD 77 08       LD    (IX+$08),A
@@ -9036,7 +8494,7 @@ TANK_WARP:
 4485: 20 03          JR    NZ,$448A
 
 4487: 01 00 00       LD    BC,$0000
-448a: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_SHOTS?)
+448a: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_BULLETS?)
 448d: 6F             LD    L,A
 448e: 11 20 00       LD    DE,$0020
 4491: FD 21 31 C0    LD    IY,$C031
@@ -9144,7 +8602,7 @@ TANK_WARP:
 4541: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
 4544: 77             LD    (HL),A
 4545: 23             INC   HL
-4546: 7E             LD    A,(HL)
+4546: 7E             LD    A,(HL)         ;Mirror Y of explosion sprite on tank to make it look like fire
 4547: EE 40          XOR   A,#$40
 4549: 77             LD    (HL),A
 454a: 23             INC   HL
@@ -9168,9 +8626,9 @@ TANK_WARP:
 456b: 6F             LD    L,A
 456c: C9             RET   
 
-456d: 3A 1E C4       LD    A,(MAX_DISKS/SHOTS_AT_A_TIME)
+456d: 3A 1E C4       LD    A,(MAX_DISKS_AT_A_TIME)
 4570: 47             LD    B,A
-4571: FD 21 01 C0    LD    IY,TANK_PIC_OR_MCP_ROWS_OF_BRICKS
+4571: FD 21 01 C0    LD    IY,TANK_PIC_OR_MCP_ROWS_OF_BLOCKS
 4575: 11 10 00       LD    DE,$0010
 4578: FD 19          ADD   IY,DE
 457a: FD 7E 0E       LD    A,(IY+$0E)
@@ -9183,7 +8641,7 @@ TANK_WARP:
 4585: FD 7E 0F       LD    A,(IY+$0F)
 4588: CB 27          SLA   A
 458a: CB 27          SLA   A
-458c: 21 1C F0       LD    HL,$F01C
+458c: 21 1C F0       LD    HL,IO_OR_MCP_OR_TANK_DISKS_2
 458f: 85             ADD   A,L
 4590: 30 01          JR    NC,$4593
 
@@ -9380,7 +8838,7 @@ TANK_WARP:
 46c8: C3 06 46       JP    $4606
 
 46cb: E5             PUSH  HL
-46cc: 21 1C F0       LD    HL,$F01C
+46cc: 21 1C F0       LD    HL,IO_OR_MCP_OR_TANK_DISKS_2
 46cf: FD 7E 0F       LD    A,(IY+$0F)
 46d2: CB 27          SLA   A
 46d4: CB 27          SLA   A
@@ -9403,7 +8861,7 @@ TANK_WARP:
 46f3: E1             POP   HL
 46f4: C9             RET   
 
-46f5: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_SHOTS?)
+46f5: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_BULLETS?)
 46f8: E5             PUSH  HL
 46f9: 11 20 00       LD    DE,$0020
 46fc: DD 21 31 C0    LD    IX,$C031
@@ -9448,8 +8906,6 @@ TANK_WARP:
 4736: 21 04 C0       LD    HL,$C004
 4739: 86             ADD   A,(HL)
 473a: B8             CP    A,B
-
-*** 47b8-47c6 looks like data, not sure for what though ...
 473b: 38 11          JR    C,$474E        ;Invincibility TANK Game = 18 (JR *) (bullet collision?)
 
 473d: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
@@ -9470,7 +8926,7 @@ TANK_WARP:
 
 4752: FD 36 08 00    LD    (IY+$08),#$00
 4756: FD 36 00 00    LD    (IY+$00),#$00
-475a: 21 1D C4       LD    HL,REMAINING_DISKS/SHOTS_AT_A_TIME
+475a: 21 1D C4       LD    HL,REMAINING_DISKS_AT_A_TIME
 475d: 34             INC   (HL)
 475e: CD C7 47       CALL  $47C7
 4761: C9             RET   
@@ -9496,7 +8952,7 @@ TANK_WARP:
 4788: C3 95 47       JP    $4795
 
 478b: DD 36 00 00    LD    (IX+$00),#$00
-478f: CD E2 47       CALL  $47E2
+478f: CD E2 47       CALL  TANK_POSITION_THE_ONE_AT_IX
 4792: C3 95 47       JP    $4795
 
 4795: DD 7E 11       LD    A,(IX+$11)
@@ -9520,6 +8976,8 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 47b3: DD 36 1A 08    LD    (IX+$1A),#$08
 47b7: C9             RET   
 
+
+*** looks like data, not sure for what though ...
 47b8: 00 00 05 00 00 00 00 03 00 00 00 00 01 00 00 
 
 47c7: FD 6E 0B       LD    L,(IY+$0B)
@@ -9536,6 +8994,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 47e0: 77             LD    (HL),A
 47e1: C9             RET   
 
+TANK_POSITION_THE_ONE_AT_IX:
 47e2: DD 6E 16       LD    L,(IX+$16)
 47e5: DD 66 17       LD    H,(IX+$17)
 47e8: DD 7E 00       LD    A,(IX+$00)
@@ -9584,16 +9043,16 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 
 4829: 3E 04          LD    A,#$04
 482b: 32 58 C1       LD    ($C158),A
-482e: 3A 1D C4       LD    A,(REMAINING_DISKS/SHOTS_AT_A_TIME)
+482e: 3A 1D C4       LD    A,(REMAINING_DISKS_AT_A_TIME)
 4831: B7             OR    A,A
 4832: C8             RET   Z
 
 4833: 0E 2D          LD    C,#$2D
 4835: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
-4838: 3A 1E C4       LD    A,(MAX_DISKS/SHOTS_AT_A_TIME)
+4838: 3A 1E C4       LD    A,(MAX_DISKS_AT_A_TIME)
 483b: 47             LD    B,A
 483c: 11 10 00       LD    DE,$0010
-483f: DD 21 01 C0    LD    IX,TANK_PIC_OR_MCP_ROWS_OF_BRICKS
+483f: DD 21 01 C0    LD    IX,TANK_PIC_OR_MCP_ROWS_OF_BLOCKS
 4843: DD 19          ADD   IX,DE
 4845: DD 7E 09       LD    A,(IX+$09)
 4848: B7             OR    A,A
@@ -9616,7 +9075,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 486f: DD 36 09 00    LD    (IX+$09),#$00
 4873: DD 36 08 90    LD    (IX+$08),#$90
 4877: DD 36 0D 00    LD    (IX+$0D),#$00
-487b: 21 1D C4       LD    HL,REMAINING_DISKS/SHOTS_AT_A_TIME
+487b: 21 1D C4       LD    HL,REMAINING_DISKS_AT_A_TIME
 487e: 35             DEC   (HL)
 487f: C9             RET   
 
@@ -9625,277 +9084,43 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 
 4883: C9             RET   
 
-4884: 02             LD    (BC),A
-4885: FC 13 0C       CALL  M,$0C13
-4888: 00             NOP   
-4889: 01 00 00       LD    BC,$0000
-488c: 00             NOP   
-488d: 02             LD    (BC),A
-488e: FC 14 0C       CALL  M,$0C14
-4891: FD 00          Illegal Opcode
-4893: FC FF D4       CALL  M,$D4FF
-4896: 02             LD    (BC),A
-4897: FC 15 0C       CALL  M,$0C15
-489a: FB             EI    
-489b: 00             NOP   
-489c: F1             POP   AF
-489d: FF             RST   $38
+DATA_TO_49C7_USED_AT_49C8:
+4884: 02 FC 13 0C 00 01 00 00 00 02 FC 14 0C FD 00 FC 
+4894: FF D4 02 FC 15 0C FB 00 F1 FF A8 02 FC 16 0B FB 
+48a4: 00 DE FF 80 02 FC 17 0A F7 00 C4 FF 5B 02 FC 18 
+48b4: 08 F6 00 A5 FF 3C 02 FC 19 05 F4 00 80 FF 22 02 
+48c4: FC 1A 03 F3 00 58 FF 0F 02 FC 1B 01 F2 00 2C FF 
+48d4: 04 02 FC 1C FE F4 00 00 FF 00 FB FC 9B FC F2 FF 
+48e4: D4 FF 04 FB FC 9A FA F3 FF A8 FF 0F FB FC 99 F7 
+48f4: F4 FF 80 FF 22 FB FC 98 F5 F5 FF 5B FF 3C FB FC 
+4904: 97 F4 F7 FF 3C FF 5B FB FC 96 F2 FB FF 22 FF 80 
+4914: FB FC 95 F1 FB FF 0F FF A8 FB FC 94 F1 FD FF 04 
+4924: FF D4 FB FC 93 F1 00 FF 00 00 00 FB 04 D4 F0 03 
+4934: FF 04 00 2C FB 04 D5 F0 05 FF 0F 00 58 FB 04 D6 
+4944: F1 07 FF 22 00 80 FB 04 D7 F2 09 FF 3C 00 A5 FB 
+4954: 04 D8 F4 0B FF 5A 00 C4 FB 04 D9 F6 0D FF 80 00 
+4964: DE FB 04 DA F9 0E FF A8 00 F1 FB 04 DB FC 0E FF 
+4974: D4 00 FC 02 04 5C FE 0E 00 00 01 00 02 04 5B 00 
+4984: 0E 00 2C 00 FC 02 04 5A 03 0E 00 58 00 F1 02 04 
+4994: 59 06 0D 00 80 00 DE 02 04 58 08 0B 00 A5 00 C4 
+49a4: 02 04 57 0A 09 00 C4 00 A5 02 04 56 0B 07 00 DE 
+49b4: 00 80 02 04 55 0C 05 00 F1 00 58 02 04 54 0C 03 
+49c4: 00 FC 00 2C 
 
-489e: A8             XOR   A,B
-489f: 02             LD    (BC),A
-48a0: FC 16 0B       CALL  M,$0B16
-48a3: FB             EI    
-48a4: 00             NOP   
-48a5: DE FF          SBC   A,#$FF
-48a7: 80             ADD   A,B
-48a8: 02             LD    (BC),A
-48a9: FC 17 0A       CALL  M,$0A17
-48ac: F7             RST   $30
-
-48ad: 00             NOP   
-48ae: C4 FF 5B       CALL  NZ,$5BFF
-48b1: 02             LD    (BC),A
-48b2: FC 18 08       CALL  M,$0818
-48b5: F6 00          OR    A,#$00
-48b7: A5             AND   A,L
-48b8: FF             RST   $38
-
-48b9: 3C             INC   A
-48ba: 02             LD    (BC),A
-48bb: FC 19 05       CALL  M,$0519
-48be: F4 00 80       CALL  P,$8000
-48c1: FF             RST   $38
-
-48c2: 22 02 FC       LD    ($FC02),HL
-48c5: 1A             LD    A,(DE)
-48c6: 03             INC   BC
-48c7: F3             DI    
-48c8: 00             NOP   
-48c9: 58             LD    E,B
-48ca: FF             RST   $38
-
-48cb: 0F             RRCA  
-48cc: 02             LD    (BC),A
-48cd: FC 1B 01       CALL  M,$011B
-48d0: F2 00 2C       JP    P,$2C00
-
-48d3: FF             RST   $38
-
-48d4: 04             INC   B
-48d5: 02             LD    (BC),A
-48d6: FC 1C FE       CALL  M,$FE1C
-48d9: F4 00 00       CALL  P,$0000
-48dc: FF             RST   $38
-
-48dd: 00             NOP   
-48de: FB             EI    
-48df: FC 9B FC       CALL  M,$FC9B
-48e2: F2 FF D4       JP    P,$D4FF
-
-48e5: FF             RST   $38
-
-48e6: 04             INC   B
-48e7: FB             EI    
-48e8: FC 9A FA       CALL  M,$FA9A
-48eb: F3             DI    
-48ec: FF             RST   $38
-
-48ed: A8             XOR   A,B
-48ee: FF             RST   $38
-
-48ef: 0F             RRCA  
-48f0: FB             EI    
-48f1: FC 99 F7       CALL  M,$F799
-48f4: F4 FF 80       CALL  P,$80FF
-48f7: FF             RST   $38
-
-48f8: 22 FB FC       LD    ($FCFB),HL
-48fb: 98             SBC   A,B
-48fc: F5             PUSH  AF
-48fd: F5             PUSH  AF
-48fe: FF             RST   $38
-
-48ff: 5B             LD    E,E
-4900: FF             RST   $38
-
-4901: 3C             INC   A
-4902: FB             EI    
-4903: FC 97 F4       CALL  M,$F497
-4906: F7             RST   $30
-
-4907: FF             RST   $38
-
-4908: 3C             INC   A
-4909: FF             RST   $38
-
-490a: 5B             LD    E,E
-490b: FB             EI    
-490c: FC 96 F2       CALL  M,$F296
-490f: FB             EI    
-4910: FF             RST   $38
-
-4911: 22 FF 80       LD    ($80FF),HL
-4914: FB             EI    
-4915: FC 95 F1       CALL  M,$F195
-4918: FB             EI    
-4919: FF             RST   $38
-
-491a: 0F             RRCA  
-491b: FF             RST   $38
-
-491c: A8             XOR   A,B
-491d: FB             EI    
-491e: FC 94 F1       CALL  M,$F194
-4921: FD FF          Illegal Opcode
-4923: 04             INC   B
-4924: FF             RST   $38
-
-4925: D4 FB FC       CALL  NC,$FCFB
-4928: 93             SUB   A,E
-4929: F1             POP   AF
-492a: 00             NOP   
-492b: FF             RST   $38
-
-492c: 00             NOP   
-492d: 00             NOP   
-492e: 00             NOP   
-492f: FB             EI    
-4930: 04             INC   B
-4931: D4 F0 03       CALL  NC,$03F0
-4934: FF             RST   $38
-
-4935: 04             INC   B
-4936: 00             NOP   
-4937: 2C             INC   L
-4938: FB             EI    
-4939: 04             INC   B
-493a: D5             PUSH  DE
-493b: F0             RET   P
-
-493c: 05             DEC   B
-493d: FF             RST   $38
-
-493e: 0F             RRCA  
-493f: 00             NOP   
-4940: 58             LD    E,B
-4941: FB             EI    
-4942: 04             INC   B
-4943: D6 F1          SUB   A,#$F1
-4945: 07             RLCA  
-4946: FF             RST   $38
-
-4947: 22 00 80       LD    ($8000),HL
-494a: FB             EI    
-494b: 04             INC   B
-494c: D7             RST   $10
-
-494d: F2 09 FF       JP    P,$FF09
-
-4950: 3C             INC   A
-4951: 00             NOP   
-4952: A5             AND   A,L
-4953: FB             EI    
-4954: 04             INC   B
-4955: D8             RET   C
-
-4956: F4 0B FF       CALL  P,$FF0B
-4959: 5A             LD    E,D
-495a: 00             NOP   
-495b: C4 FB 04       CALL  NZ,$04FB
-495e: D9             EXX   
-495f: F6 0D          OR    A,#$0D
-4961: FF             RST   $38
-
-4962: 80             ADD   A,B
-4963: 00             NOP   
-4964: DE FB          SBC   A,#$FB
-4966: 04             INC   B
-4967: DA F9 0E       JP    C,$0EF9
-
-496a: FF             RST   $38
-
-496b: A8             XOR   A,B
-496c: 00             NOP   
-496d: F1             POP   AF
-496e: FB             EI    
-496f: 04             INC   B
-4970: DB FC          IN    A,($FC)
-4972: 0E FF          LD    C,#$FF
-4974: D4 00 FC       CALL  NC,$FC00
-4977: 02             LD    (BC),A
-4978: 04             INC   B
-4979: 5C             LD    E,H
-497a: FE 0E          CP    A,#$0E
-497c: 00             NOP   
-497d: 00             NOP   
-497e: 01 00 02       LD    BC,$0200
-4981: 04             INC   B
-4982: 5B             LD    E,E
-4983: 00             NOP   
-4984: 0E 00          LD    C,#$00
-4986: 2C             INC   L
-4987: 00             NOP   
-4988: FC 02 04       CALL  M,$0402
-498b: 5A             LD    E,D
-498c: 03             INC   BC
-498d: 0E 00          LD    C,#$00
-498f: 58             LD    E,B
-4990: 00             NOP   
-4991: F1             POP   AF
-4992: 02             LD    (BC),A
-4993: 04             INC   B
-4994: 59             LD    E,C
-4995: 06 0D          LD    B,#$0D
-4997: 00             NOP   
-4998: 80             ADD   A,B
-4999: 00             NOP   
-499a: DE 02          SBC   A,#$02
-499c: 04             INC   B
-499d: 58             LD    E,B
-499e: 08             EX    AF,AF'
-499f: 0B             DEC   BC
-49a0: 00             NOP   
-49a1: A5             AND   A,L
-49a2: 00             NOP   
-49a3: C4 02 04       CALL  NZ,$0402
-49a6: 57             LD    D,A
-49a7: 0A             LD    A,(BC)
-49a8: 09             ADD   HL,BC
-49a9: 00             NOP   
-49aa: C4 00 A5       CALL  NZ,$A500
-49ad: 02             LD    (BC),A
-49ae: 04             INC   B
-49af: 56             LD    D,(HL)
-49b0: 0B             DEC   BC
-49b1: 07             RLCA  
-49b2: 00             NOP   
-49b3: DE 00          SBC   A,#$00
-49b5: 80             ADD   A,B
-49b6: 02             LD    (BC),A
-49b7: 04             INC   B
-49b8: 55             LD    D,L
-49b9: 0C             INC   C
-49ba: 05             DEC   B
-49bb: 00             NOP   
-49bc: F1             POP   AF
-49bd: 00             NOP   
-49be: 58             LD    E,B
-49bf: 02             LD    (BC),A
-49c0: 04             INC   B
-49c1: 54             LD    D,H
-49c2: 0C             INC   C
-49c3: 03             INC   BC
-49c4: 00             NOP   
-49c5: FC 00 2C       CALL  M,$2C00
-49c8: 21 84 48       LD    HL,$4884
+TANK_TURRET_DRAW:
+49c8: 21 84 48       LD    HL,DATA_TO_49C7_USED_AT_49C8
 49cb: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 49ce: B7             OR    A,A
-49cf: 3A 05 C4       LD    A,($C405)
+49cf: 3A 05 C4       LD    A,(MCP_TRON_ARM_OR_TANK_TURRET_ROTATION)
 49d2: 28 07          JR    Z,$49DB
 
+
+*** Attract mode input processing ...
 49d4: 3A 55 C1       LD    A,($C155)
 49d7: CB 3F          SRL   A
 49d9: CB 3F          SRL   A
+
+*** User and attract mode processing continues here ...
 49db: E6 3F          AND   A,#$3F
 49dd: 47             LD    B,A
 49de: CB 27          SLA   A
@@ -9913,6 +9138,8 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 
 49ee: 24             INC   H
 49ef: 6F             LD    L,A
+
+*** Update turret position and rotation
 49f0: DD 21 08 F0    LD    IX,TANK_TURRET_OR_LC_ENEMIES
 49f4: 3A 00 C0       LD    A,(CPU_RAM_OR_GS_DISK_X_TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
 49f7: 47             LD    B,A
@@ -9933,10 +9160,10 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 4a15: 23             INC   HL
 4a16: 7E             LD    A,(HL)
 4a17: DD 77 01       LD    (IX+$01),A
-4a1a: 3A 1E C4       LD    A,(MAX_DISKS/SHOTS_AT_A_TIME)
+4a1a: 3A 1E C4       LD    A,(MAX_DISKS_AT_A_TIME)
 4a1d: 47             LD    B,A
 4a1e: 11 10 00       LD    DE,$0010
-4a21: DD 21 01 C0    LD    IX,TANK_PIC_OR_MCP_ROWS_OF_BRICKS
+4a21: DD 21 01 C0    LD    IX,TANK_PIC_OR_MCP_ROWS_OF_BLOCKS
 4a25: DD 19          ADD   IX,DE
 4a27: DD 7E 08       LD    A,(IX+$08)
 4a2a: B7             OR    A,A
@@ -9968,7 +9195,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 
 4a53: C9             RET   
 
-4a54: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_SHOTS?)
+4a54: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_BULLETS?)
 4a57: 4F             LD    C,A
 4a58: DD 21 31 C0    LD    IX,$C031
 4a5c: 11 20 00       LD    DE,$0020
@@ -10111,9 +9338,10 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 
 4b64: FD 36 01 05    LD    (IY+$01),#$05
 4b68: FD 36 07 02    LD    (IY+$07),#$02
-4b6c: CD 70 4B       CALL  $4B70
+4b6c: CD 70 4B       CALL  TANK_BULLET?_DRAW_USES_IY
 4b6f: C9             RET   
 
+TANK_BULLET?_DRAW_USES_IY:
 4b70: FD 6E 03       LD    L,(IY+$03)
 4b73: FD 66 04       LD    H,(IY+$04)
 4b76: FD 7E 00       LD    A,(IY+$00)
@@ -10129,13 +9357,12 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 4b8b: 77             LD    (HL),A
 4b8c: C9             RET   
 
-4b8d: 08             EX    AF,AF'
-4b8e: 08             EX    AF,AF'
-4b8f: FF             RST   $38
+TANK_DATA_FOR?_USED_AT_4BBB:
+4b8d: 08 08 FF 
 
-4b90: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_SHOTS?)
+4b90: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_BULLETS?)
 4b93: 4F             LD    C,A
-4b94: FD 21 08 C1    LD    IY,TANKS_ENEMY_SHOTS_IN_RAM_AT_C111?
+4b94: FD 21 08 C1    LD    IY,TANKS_ENEMY_BULLETS_IN_RAM_AT_C111?
 4b98: 11 09 00       LD    DE,$0009
 4b9b: FD 19          ADD   IY,DE
 4b9d: FD 7E 07       LD    A,(IY+$07)
@@ -10143,7 +9370,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 4ba1: 28 56          JR    Z,$4BF9
 
 4ba3: 06 05          LD    B,#$05
-4ba5: CD 70 4B       CALL  $4B70
+4ba5: CD 70 4B       CALL  TANK_BULLET?_DRAW_USES_IY
 4ba8: FD 7E 00       LD    A,(IY+$00)
 4bab: FD 86 05       ADD   A,(IY+$05)
 4bae: FD 77 00       LD    (IY+$00),A
@@ -10151,7 +9378,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 4bb4: FD 86 06       ADD   A,(IY+$06)
 4bb7: FD 77 02       LD    (IY+$02),A
 4bba: C5             PUSH  BC
-4bbb: 21 8D 4B       LD    HL,$4B8D
+4bbb: 21 8D 4B       LD    HL,TANK_DATA_FOR?_USED_AT_4BBB
 4bbe: FD 7E 00       LD    A,(IY+$00)
 4bc1: 86             ADD   A,(HL)
 4bc2: 47             LD    B,A
@@ -10197,7 +9424,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 
 4bfd: FD 36 07 00    LD    (IY+$07),#$00
 4c01: FD 36 00 00    LD    (IY+$00),#$00
-4c05: CD 70 4B       CALL  $4B70
+4c05: CD 70 4B       CALL  TANK_BULLET?_DRAW_USES_IY
 4c08: C9             RET   
 
 4c09: 21 04 F0       LD    HL,TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT
@@ -10477,55 +9704,18 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 4cf9: F8             RET   M
 
 4cfa: 00             NOP   
+TANK_DATA_FOR?_STARTS_AT_4CFF:
 4cfb: 18 F8          JR    $4CF5
 
 4cfd: 00             NOP   
 4cfe: 00             NOP   
-4cff: 28 01          JR    Z,$4D02
 
-4d01: 2C             INC   L
-4d02: 4C             LD    C,H
-4d03: 37             SCF   
-4d04: 00             NOP   
-4d05: 2D             DEC   L
-4d06: 4C             LD    C,H
-4d07: 38 01          JR    C,$4D0A
+*** This data structure may extend past 4d3b ...
+4cff: 28 01 2C 4C 37 00 2D 4C 38 01 32 4C 40 01 32 4C 
+4d0f: 48 00 41 4C 4F 00 48 4C 50 01 4D 4C 57 00 4D 4C 
+4d1f: 58 01 5E 4C 67 00 71 4C 68 01 78 4C 70 01 78 4C 
+4d2f: 7F 00 89 4C 80 01 8E 4C 88 01 8E 4C 97 
 
-4d09: 32 4C 40       LD    ($404C),A
-4d0c: 01 32 4C       LD    BC,$4C32
-4d0f: 48             LD    C,B
-4d10: 00             NOP   
-4d11: 41             LD    B,C
-4d12: 4C             LD    C,H
-4d13: 4F             LD    C,A
-4d14: 00             NOP   
-4d15: 48             LD    C,B
-4d16: 4C             LD    C,H
-4d17: 50             LD    D,B
-4d18: 01 4D 4C       LD    BC,$4C4D
-4d1b: 57             LD    D,A
-4d1c: 00             NOP   
-4d1d: 4D             LD    C,L
-4d1e: 4C             LD    C,H
-4d1f: 58             LD    E,B
-4d20: 01 5E 4C       LD    BC,$4C5E
-4d23: 67             LD    H,A
-4d24: 00             NOP   
-4d25: 71             LD    (HL),C
-4d26: 4C             LD    C,H
-4d27: 68             LD    L,B
-4d28: 01 78 4C       LD    BC,$4C78
-4d2b: 70             LD    (HL),B
-4d2c: 01 78 4C       LD    BC,$4C78
-4d2f: 7F             LD    A,A
-4d30: 00             NOP   
-4d31: 89             ADC   A,C
-4d32: 4C             LD    C,H
-4d33: 80             ADD   A,B
-4d34: 01 8E 4C       LD    BC,$4C8E
-4d37: 88             ADC   A,B
-4d38: 01 8E 4C       LD    BC,$4C8E
-4d3b: 97             SUB   A,A
 4d3c: 00             NOP   
 4d3d: A1             AND   A,C
 4d3e: 4C             LD    C,H
@@ -10576,7 +9766,7 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 4d74: 00             NOP   
 4d75: FE 4C          CP    A,#$4C
 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE:
-4d77: DD 21 FB 4C    LD    IX,$4CFB
+4d77: DD 21 FB 4C    LD    IX,TANK_DATA_FOR?_STARTS_AT_4CFF
 4d7b: 11 04 00       LD    DE,$0004
 4d7e: DD 19          ADD   IX,DE
 4d80: DD 7E 00       LD    A,(IX+$00)
@@ -10672,15 +9862,21 @@ TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE:
 4f52: 0E 02 01 00 30 08 E8 00 01 0E 0E 01 01 00 E8 88 
 4f62: E8 00 01 0E 0E 02 FF 00 B8 88 70 00 01 0E 0E 02 
 4f72: FF 00 B8 88 A0 00 01 0E 0E 02 FF 00 
-
 TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA:
-4f7e: 80 01 9E 4D 90 02 A8 4D A0 03 BC 4D B0 04 DA 4D 
-4f8e: C0 04 02 4E D0 86 06 4F E0 05 66 4E F0 06 98 4E 
-4f9e: FF 05 D4 4E FF 86 2A 4E FF 06 42 4F 
+4f7e: 80 01 9E 4D 
+4f82: 90 02 A8 4D 
+4f86: A0 03 BC 4D 
+4f8a: B0 04 DA 4D 
+4f8e: C0 04 02 4E 
+4f92: D0 86 06 4F 
+4f96: E0 05 66 4E 
+4f9a: F0 06 98 4E 
+4f9e: FF 05 D4 4E 
+4fa2: FF 86 2A 4E 
+4fa6: FF 06 42 4F 
 
 
 *** Tank warp locations (X, picture, Y) 16x3
-*** at 57ba
 4faa: 31 A0 40 31 48 20 E9 A0 10 61 B8 08 61 38 40 19 
 4fba: 8A 20 48 28 10 31 B8 08 B9 80 40 B9 48 20 BA D0 
 4fca: 10 31 58 08 31 88 40 D1 A0 20 69 D0 10 8C E8 08 
@@ -10874,7 +10070,7 @@ LC_INSTRUCTIONS:
 512c: 3E E8          LD    A,#$E8
 512e: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 5131: FD 77 02       LD    (IY+$02),A
-5134: DD 21 51 51    LD    IX,$5151
+5134: DD 21 51 51    LD    IX,LC_INSTRUCTION_STRINGS_SOURCE_AND_DESTINATION_DATA
 5138: DD 4E 00       LD    C,(IX+$00)
 513b: DD 46 01       LD    B,(IX+$01)
 513e: 78             LD    A,B
@@ -10888,22 +10084,13 @@ LC_INSTRUCTIONS:
 514d: DD 19          ADD   IX,DE
 514f: 18 E7          JR    $5138
 
-5151: E4 FD 67       CALL  PO,$67FD
-5154: 51             LD    D,C
-5155: E6 FD          AND   A,#$FD
-5157: 75             LD    (HL),L
-5158: 51             LD    D,C
-5159: E8             RET   PE
 
-515a: FD 82          Illegal Opcode
-515c: 51             LD    D,C
-515d: EA FD 8C       JP    PE,$8CFD
+*** 5x4: 4 = destination vector and source vector
+*** at 57ba
+LC_INSTRUCTION_STRINGS_SOURCE_AND_DESTINATION_DATA:
+5151: E4 FD 67 51 E6 FD 75 51 E8 FD 82 51 EA FD 8C 51 
+5161: EC FD 9C 51 00 00 
 
-5160: 51             LD    D,C
-5161: EC FD 9C       CALL  PE,$9CFD
-5164: 51             LD    D,C
-5165: 00             NOP   
-5166: 00             NOP   
 AVOID_HITTING_S:
 5167: AVOID HITTING
 
@@ -11909,7 +11096,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 5854: 19             ADD   HL,DE
 5855: 19             ADD   HL,DE
 5856: 19             ADD   HL,DE
-5857: 22 0B C4       LD    ($C40B),HL
+5857: 22 0B C4       LD    (MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK),HL
 585a: EB             EX    DE,HL
 585b: E1             POP   HL
 585c: C5             PUSH  BC
@@ -11918,7 +11105,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 5861: C1             POP   BC
 5862: AF             XOR   A,A
 5863: 12             LD    (DE),A
-5864: ED 5B 0B C4    LD    DE,($C40B)
+5864: ED 5B 0B C4    LD    DE,(MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK)
 5868: C3 7E 70       JP    ADD_MESSAGE_TO_Q2
 
 586b: 34             INC   (HL)
@@ -12598,7 +11785,7 @@ PLAY_IO_TOWER:
 5d10: CD 35 70       CALL  COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
 5d13: 21 C0 79       LD    HL,IO_COLOR_PALETTE
 5d16: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
-5d19: 21 C6 68       LD    HL,$68C6
+5d19: 21 C6 68       LD    HL,DATA_TO_?_USED_AT_5D19
 5d1c: DD 21 E0 FF    LD    IX,$FFE0
 5d20: 06 0E          LD    B,#$0E
 5d22: CD 3B 6F       CALL  $6F3B
@@ -12620,7 +11807,7 @@ PLAY_IO_TOWER:
 5d41: 66             LD    H,(HL)
 5d42: 6F             LD    L,A
 5d43: CD 77 67       CALL  $6777
-5d46: CD 1D 62       CALL  SET_SOME_VALUES_IN_C02X?
+5d46: CD 1D 62       CALL  IO_OR_MCP?_SET_TRON_INITIAL_POSITION_AND_ROTATION
 5d49: 3E 01          LD    A,#$01
 5d4b: 32 5E C4       LD    ($C45E),A
 5d4e: 3A 19 C4       LD    A,(HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?))
@@ -12628,7 +11815,7 @@ PLAY_IO_TOWER:
 5d53: 28 07          JR    Z,$5D5C
 
 5d55: 3E 01          LD    A,#$01
-5d57: 32 10 C0       LD    (TANKS_SHOTS_IN_RAM_STARTS_AT_C020),A
+5d57: 32 10 C0       LD    (TANKS_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020),A
 5d5a: 18 05          JR    $5D61
 
 5d5c: 3E 05          LD    A,#$05
@@ -12763,7 +11950,7 @@ IO_TOWER_INSTRUCTIONS:
 5e47: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 5e4a: CD 49 70       CALL  INITIALIZE_SPRITES
 5e4d: 21 B7 5E       LD    HL,IO_TOWER_COLOR_PALETTE
-5e50: CD 1D 62       CALL  SET_SOME_VALUES_IN_C02X?
+5e50: CD 1D 62       CALL  IO_OR_MCP?_SET_TRON_INITIAL_POSITION_AND_ROTATION
 5e53: 21 79 6B       LD    HL,DATA_FOR_SETTING_UP_TRON_SPRITES?
 5e56: 22 2E C0       LD    ($C02E),HL
 5e59: CD 65 60       CALL  INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
@@ -12852,9 +12039,9 @@ IO_TOWER_COLOR_PALETTE:
 5f22: C9             RET   
 
 CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?:
-5f23: 21 12 C0       LD    HL,MCP_DISK_DATA_TO_C02F/IO_TOWER_TIMER_DIGITS_TO_C019
+5f23: 21 12 C0       LD    HL,MCP_DISK_1_DATA/IO_TOWER_TIMER_DIGITS_TO_C019
 5f26: 22 54 C4       LD    ($C454),HL
-5f29: 11 10 C0       LD    DE,TANKS_SHOTS_IN_RAM_STARTS_AT_C020
+5f29: 11 10 C0       LD    DE,TANKS_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020
 5f2c: 06 04          LD    B,#$04
 5f2e: 1A             LD    A,(DE)
 5f2f: C6 30          ADD   A,#$30
@@ -12967,13 +12154,13 @@ HANDLE_JOYSTICK_INPUT?_TO_601F:
 
 5fe2: F8             RET   M
 
-5fe3: 3A 26 C0       LD    A,(IO_TRON_X)
+5fe3: 3A 26 C0       LD    A,(MCP_DISK_3_DATA)
 5fe6: FE 80          CP    A,#$80
 5fe8: 3E 4B          LD    A,#$4B
 5fea: 38 02          JR    C,$5FEE
 
 5fec: 3E B6          LD    A,#$B6
-5fee: 32 26 C0       LD    (IO_TRON_X),A
+5fee: 32 26 C0       LD    (MCP_DISK_3_DATA),A
 5ff1: 2A 27 C0       LD    HL,($C027)
 5ff4: ED 5B 2B C0    LD    DE,($C02B)
 5ff8: 19             ADD   HL,DE
@@ -13010,7 +12197,7 @@ HANDLE_JOYSTICK_INPUT?_TO_601F:
 6027: FE 96          CP    A,#$96
 6029: 30 38          JR    NC,$6063
 
-602b: 3A 26 C0       LD    A,(IO_TRON_X)
+602b: 3A 26 C0       LD    A,(MCP_DISK_3_DATA)
 602e: FE 4C          CP    A,#$4C
 6030: 38 31          JR    C,$6063
 
@@ -13048,7 +12235,7 @@ HANDLE_JOYSTICK_INPUT?_TO_601F:
 
 INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 6065: DD 2A 2E C0    LD    IX,($C02E)
-6069: 3A 26 C0       LD    A,(IO_TRON_X)
+6069: 3A 26 C0       LD    A,(MCP_DISK_3_DATA)
 606c: 32 04 F0       LD    (TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT),A
 606f: 32 08 F0       LD    (TANK_TURRET_OR_LC_ENEMIES),A
 6072: 47             LD    B,A
@@ -13099,7 +12286,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 60ce: CB 86          RES   0,(HL)
 60d0: 78             LD    A,B
 60d1: DD 86 08       ADD   A,(IX+$08)
-60d4: 32 0C F0       LD    (TANK_SHOTS_F00C_TO_F01B(SPRITES_3_TO_6)),A
+60d4: 32 0C F0       LD    (TANK_DISKS_F00C_TO_F01B(SPRITES_3_TO_6)),A
 60d7: 79             LD    A,C
 60d8: DD 86 09       ADD   A,(IX+$09)
 60db: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
@@ -13112,14 +12299,14 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 
 60ed: 78             LD    A,B
 60ee: DD 86 05       ADD   A,(IX+$05)
-60f1: 32 0C F0       LD    (TANK_SHOTS_F00C_TO_F01B(SPRITES_3_TO_6)),A
+60f1: 32 0C F0       LD    (TANK_DISKS_F00C_TO_F01B(SPRITES_3_TO_6)),A
 60f4: 79             LD    A,C
 60f5: DD 86 06       ADD   A,(IX+$06)
 60f8: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 60fb: 32 0E F0       LD    ($F00E),A
 60fe: DD 7E 04       LD    A,(IX+$04)
 6101: 32 0D F0       LD    ($F00D),A
-6104: 3A 1D C4       LD    A,(REMAINING_DISKS/SHOTS_AT_A_TIME)
+6104: 3A 1D C4       LD    A,(REMAINING_DISKS_AT_A_TIME)
 6107: B7             OR    A,A
 6108: 28 17          JR    Z,$6121
 
@@ -13179,7 +12366,7 @@ MOVE_SPIDERS?:
 
 615e: 3E 19          LD    A,#$19
 6160: 32 22 C0       LD    (IO_TOWER_INCREMENTS_19_TO_1E_FOR_EACH_DISK_THROWN),A
-6163: 21 1D C4       LD    HL,REMAINING_DISKS/SHOTS_AT_A_TIME
+6163: 21 1D C4       LD    HL,REMAINING_DISKS_AT_A_TIME
 6166: 7E             LD    A,(HL)
 6167: B7             OR    A,A
 6168: C8             RET   Z
@@ -13196,7 +12383,7 @@ MOVE_SPIDERS?:
 617b: 3A 22 C0       LD    A,(IO_TOWER_INCREMENTS_19_TO_1E_FOR_EACH_DISK_THROWN)
 617e: 20 0A          JR    NZ,$618A
 
-6180: 3A 05 C4       LD    A,($C405)
+6180: 3A 05 C4       LD    A,(MCP_TRON_ARM_OR_TANK_TURRET_ROTATION)
 6183: B7             OR    A,A
 6184: 28 04          JR    Z,$618A
 
@@ -13231,9 +12418,9 @@ MOVE_SPIDERS?:
 61b8: AF             XOR   A,A
 61b9: 32 08 C4       LD    ($C408),A
 61bc: 3E 00          LD    A,#$00
-61be: 32 0C F0       LD    (TANK_SHOTS_F00C_TO_F01B(SPRITES_3_TO_6)),A
+61be: 32 0C F0       LD    (TANK_DISKS_F00C_TO_F01B(SPRITES_3_TO_6)),A
 61c1: 32 14 F0       LD    ($F014),A
-61c4: 32 18 F0       LD    (IO_OR_MCP_OR_TANK_DISKS_OR_SHOTS_1_TO_4),A
+61c4: 32 18 F0       LD    (IO_OR_MCP_OR_TANK_DISKS_1_TO_4),A
 61c7: 0E 30          LD    C,#$30
 61c9: C3 B8 6F       JP    PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 
@@ -13282,15 +12469,15 @@ MOVE_SPIDERS?:
 6219: 32 08 F0       LD    (TANK_TURRET_OR_LC_ENEMIES),A
 621c: C9             RET   
 
-SET_SOME_VALUES_IN_C02X?:
+IO_OR_MCP?_SET_TRON_INITIAL_POSITION_AND_ROTATION:
 621d: 3E 80          LD    A,#$80
-621f: 32 26 C0       LD    (IO_TRON_X),A
+621f: 32 26 C0       LD    (MCP_DISK_3_DATA),A
 6222: 3E D4          LD    A,#$D4
 6224: 32 28 C0       LD    (IO_TRON_Y),A
 6227: 3E 80          LD    A,#$80
 6229: 32 24 C0       LD    (IO_TOWER_ALWAYS_80?),A
 622c: AF             XOR   A,A
-622d: 32 05 C4       LD    ($C405),A
+622d: 32 05 C4       LD    (MCP_TRON_ARM_OR_TANK_TURRET_ROTATION),A
 6230: 3E 19          LD    A,#$19
 6232: 32 22 C0       LD    (IO_TOWER_INCREMENTS_19_TO_1E_FOR_EACH_DISK_THROWN),A
 6235: C9             RET   
@@ -13300,7 +12487,7 @@ SET_SOME_VALUES_IN_C02X?:
 623b: 20 4B          JR    NZ,$6288
 
 623d: 0E 02          LD    C,#$02
-623f: 3A 26 C0       LD    A,(IO_TRON_X)
+623f: 3A 26 C0       LD    A,(MCP_DISK_3_DATA)
 6242: FE 80          CP    A,#$80
 6244: 30 03          JR    NC,$6249
 
@@ -13310,7 +12497,7 @@ SET_SOME_VALUES_IN_C02X?:
 6249: 28 06          JR    Z,$6251
 
 624b: 3D             DEC   A
-624c: 32 26 C0       LD    (IO_TRON_X),A
+624c: 32 26 C0       LD    (MCP_DISK_3_DATA),A
 624f: 18 01          JR    $6252
 
 6251: 0D             DEC   C
@@ -13350,7 +12537,7 @@ SET_SOME_VALUES_IN_C02X?:
 628e: 30 07          JR    NC,$6297
 
 6290: 3E 00          LD    A,#$00
-6292: 32 26 C0       LD    (IO_TRON_X),A
+6292: 32 26 C0       LD    (MCP_DISK_3_DATA),A
 6295: 18 07          JR    $629E
 
 6297: 11 00 FF       LD    DE,$FF00
@@ -13366,7 +12553,7 @@ SET_SOME_VALUES_IN_C02X?:
 62a9: 32 7C C4       LD    (NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2),A
 62ac: C9             RET   
 
-62ad: 3A 26 C0       LD    A,(IO_TRON_X)
+62ad: 3A 26 C0       LD    A,(MCP_DISK_3_DATA)
 62b0: 21 00 C0       LD    HL,CPU_RAM_OR_GS_DISK_X_TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF
 62b3: 96             SUB   A,(HL)
 62b4: 30 07          JR    NC,$62BD
@@ -13381,7 +12568,7 @@ SET_SOME_VALUES_IN_C02X?:
 62bf: D0             RET   NC
 
 62c0: 3A 28 C0       LD    A,(IO_TRON_Y)
-62c3: 21 01 C0       LD    HL,TANK_PIC_OR_MCP_ROWS_OF_BRICKS
+62c3: 21 01 C0       LD    HL,TANK_PIC_OR_MCP_ROWS_OF_BLOCKS
 62c6: 96             SUB   A,(HL)
 62c7: 30 07          JR    NC,$62D0
 
@@ -13414,7 +12601,7 @@ SET_SOME_VALUES_IN_C02X?:
 62fc: FD 77 00       LD    (IY+$00),A
 62ff: 3A 04 C0       LD    A,($C004)
 6302: 47             LD    B,A
-6303: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BRICKS)
+6303: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BLOCKS)
 6306: 4F             LD    C,A
 6307: FE 80          CP    A,#$80
 6309: 38 1B          JR    C,$6326
@@ -13452,7 +12639,7 @@ SET_SOME_VALUES_IN_C02X?:
 
 633a: 3A 00 C0       LD    A,(CPU_RAM_OR_GS_DISK_X_TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
 633d: 32 28 F0       LD    (MCP_BLOCKS_TOP_LEFT_MOVING_DOWN_AND_WRAP_TO_TOP_RIGHT_TO_F09F),A
-6340: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BRICKS)
+6340: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BLOCKS)
 6343: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
 6346: 32 2A F0       LD    ($F02A),A
 6349: 3E 0C          LD    A,#$0C
@@ -13473,8 +12660,8 @@ SET_SOME_VALUES_IN_C02X?:
 636c: C9             RET   
 
 636d: DD 21 E8 C1    LD    IX,$C1E8
-6371: FD 21 18 F0    LD    IY,IO_OR_MCP_OR_TANK_DISKS_OR_SHOTS_1_TO_4
-6375: 3A 1E C4       LD    A,(MAX_DISKS/SHOTS_AT_A_TIME)
+6371: FD 21 18 F0    LD    IY,IO_OR_MCP_OR_TANK_DISKS_1_TO_4
+6375: 3A 1E C4       LD    A,(MAX_DISKS_AT_A_TIME)
 6378: 32 06 C4       LD    (MCP_DISK_NUMBER_BEING_PROCESSED),A
 637b: DD CB 09 7E    BIT   7,(IX+$09)
 637f: CA 21 64       JP    Z,$6421
@@ -13570,7 +12757,7 @@ SET_SOME_VALUES_IN_C02X?:
 6432: C9             RET   
 
 6433: DD 21 E8 C1    LD    IX,$C1E8
-6437: FD 21 18 F0    LD    IY,IO_OR_MCP_OR_TANK_DISKS_OR_SHOTS_1_TO_4
+6437: FD 21 18 F0    LD    IY,IO_OR_MCP_OR_TANK_DISKS_1_TO_4
 643b: DD 7E 09       LD    A,(IX+$09)
 643e: B7             OR    A,A
 643f: 28 0C          JR    Z,$644D
@@ -13593,7 +12780,7 @@ SET_SOME_VALUES_IN_C02X?:
 6465: F2 6A 64       JP    P,$646A
 
 6468: 3E FF          LD    A,#$FF
-646a: 21 26 C0       LD    HL,IO_TRON_X
+646a: 21 26 C0       LD    HL,MCP_DISK_3_DATA
 646d: 86             ADD   A,(HL)
 646e: DD 77 01       LD    (IX+$01),A
 6471: DD 36 00 00    LD    (IX+$00),#$00
@@ -13615,7 +12802,7 @@ SET_SOME_VALUES_IN_C02X?:
 64a1: FD 36 01 07    LD    (IY+$01),#$07
 64a5: C9             RET   
 
-64a6: 3A 26 C0       LD    A,(IO_TRON_X)
+64a6: 3A 26 C0       LD    A,(MCP_DISK_3_DATA)
 64a9: DD 96 01       SUB   A,(IX+$01)
 64ac: 30 08          JR    NC,$64B6
 
@@ -13651,7 +12838,7 @@ SET_SOME_VALUES_IN_C02X?:
 
 64db: DD 36 09 00    LD    (IX+$09),#$00
 64df: FD 36 00 00    LD    (IY+$00),#$00
-64e3: 21 1D C4       LD    HL,REMAINING_DISKS/SHOTS_AT_A_TIME
+64e3: 21 1D C4       LD    HL,REMAINING_DISKS_AT_A_TIME
 64e6: 34             INC   (HL)
 64e7: C9             RET   
 
@@ -13678,10 +12865,10 @@ SET_SOME_VALUES_IN_C02X?:
 
 6504: 3A 1D C0       LD    A,($C01D)
 6507: 32 06 C4       LD    (MCP_DISK_NUMBER_BEING_PROCESSED),A
-650a: DD 21 30 C0    LD    IX,$C030
+650a: DD 21 30 C0    LD    IX,MCP_DISK_4_DATA
 650e: FD 21 30 F0    LD    IY,IO_GRID_BUGS
-6512: DD 22 0B C4    LD    ($C40B),IX
-6516: FD 22 09 C4    LD    ($C409),IY
+6512: DD 22 0B C4    LD    (MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK),IX
+6516: FD 22 09 C4    LD    (MCP_SPRITE_BLOCK_HIT_BY_DISK),IY
 651a: DD CB 0A 4E    BIT   1,(IX+$0A)
 651e: 28 05          JR    Z,$6525
 
@@ -13824,10 +13011,10 @@ SET_SOME_VALUES_IN_C02X?:
 6621: FD E5          PUSH  IY
 6623: D5             PUSH  DE
 6624: CD D2 66       CALL  $66D2
-6627: DD 21 30 C0    LD    IX,$C030
+6627: DD 21 30 C0    LD    IX,MCP_DISK_4_DATA
 662b: FD 21 30 F0    LD    IY,IO_GRID_BUGS
 662f: 21 AE 66       LD    HL,$66AE
-6632: 3A 26 C0       LD    A,(IO_TRON_X)
+6632: 3A 26 C0       LD    A,(MCP_DISK_3_DATA)
 6635: 92             SUB   A,D
 6636: 30 04          JR    NC,$663C
 
@@ -13971,7 +13158,7 @@ SET_SOME_VALUES_IN_C02X?:
 6708: 30 02          JR    NC,$670C
 
 670a: 0E 14          LD    C,#$14
-670c: FD 21 30 C0    LD    IY,$C030
+670c: FD 21 30 C0    LD    IY,MCP_DISK_4_DATA
 6710: 06 28          LD    B,#$28
 6712: FD 7E 0A       LD    A,(IY+$0A)
 6715: E6 82          AND   A,#$82
@@ -14085,7 +13272,7 @@ SET_SOME_VALUES_IN_C02X?:
 67d1: 7E             LD    A,(HL)
 67d2: 32 0B C0       LD    ($C00B),A
 67d5: 23             INC   HL
-67d6: DD 21 30 C0    LD    IX,$C030
+67d6: DD 21 30 C0    LD    IX,MCP_DISK_4_DATA
 67da: FD 21 30 F0    LD    IY,IO_GRID_BUGS
 67de: 7E             LD    A,(HL)
 67df: DD 77 01       LD    (IX+$01),A
@@ -14135,10 +13322,10 @@ SET_SOME_VALUES_IN_C02X?:
 
 6826: C9             RET   
 
-6827: 3A 1E C4       LD    A,(MAX_DISKS/SHOTS_AT_A_TIME)
+6827: 3A 1E C4       LD    A,(MAX_DISKS_AT_A_TIME)
 682a: 47             LD    B,A
 682b: FD 21 E8 C1    LD    IY,$C1E8
-682f: 21 18 F0       LD    HL,IO_OR_MCP_OR_TANK_DISKS_OR_SHOTS_1_TO_4
+682f: 21 18 F0       LD    HL,IO_OR_MCP_OR_TANK_DISKS_1_TO_4
 6832: FD CB 09 7E    BIT   7,(IY+$09)
 6836: 28 39          JR    Z,$6871
 
@@ -14166,8 +13353,8 @@ SET_SOME_VALUES_IN_C02X?:
 685c: FD E1          POP   IY
 685e: E5             PUSH  HL
 685f: CD DB 64       CALL  $64DB
-6862: DD 2A 0B C4    LD    IX,($C40B)
-6866: FD 2A 09 C4    LD    IY,($C409)
+6862: DD 2A 0B C4    LD    IX,(MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK)
+6866: FD 2A 09 C4    LD    IY,(MCP_SPRITE_BLOCK_HIT_BY_DISK)
 686a: CD 60 67       CALL  $6760
 686d: E1             POP   HL
 686e: FD E1          POP   IY
@@ -14178,7 +13365,7 @@ SET_SOME_VALUES_IN_C02X?:
 6879: 19             ADD   HL,DE
 687a: 10 B6          DJNZ  $6832
 
-687c: FD 2A 09 C4    LD    IY,($C409)
+687c: FD 2A 09 C4    LD    IY,(MCP_SPRITE_BLOCK_HIT_BY_DISK)
 6880: C9             RET   
 
 6881: 3A 24 C0       LD    A,(IO_TOWER_ALWAYS_80?)
@@ -14186,7 +13373,7 @@ SET_SOME_VALUES_IN_C02X?:
 6886: FE 80          CP    A,#$80
 6888: C0             RET   NZ
 
-6889: 3A 26 C0       LD    A,(IO_TRON_X)
+6889: 3A 26 C0       LD    A,(MCP_DISK_3_DATA)
 688c: DD 96 01       SUB   A,(IX+$01)
 688f: 30 07          JR    NC,$6898
 
@@ -14227,419 +13414,48 @@ SET_SOME_VALUES_IN_C02X?:
 68c2: CD 9F 61       CALL  $619F
 68c5: C9             RET   
 
-68c6: 00             NOP   
-68c7: 00             NOP   
-68c8: 00             NOP   
-68c9: 00             NOP   
-68ca: 00             NOP   
-68cb: 00             NOP   
-68cc: 01 86 00       LD    BC,$0086
-68cf: 00             NOP   
-68d0: 00             NOP   
-68d1: 00             NOP   
-68d2: 00             NOP   
-68d3: 00             NOP   
-68d4: 00             NOP   
-68d5: 00             NOP   
-68d6: 00             NOP   
-68d7: 00             NOP   
-68d8: 00             NOP   
-68d9: 00             NOP   
-68da: 00             NOP   
-68db: 00             NOP   
-68dc: 00             NOP   
-68dd: 00             NOP   
-68de: 01 00 01       LD    BC,$0100
-68e1: 00             NOP   
-68e2: BD             CP    A,L
-68e3: 37             SCF   
-68e4: BD             CP    A,L
-68e5: F0             RET   P
+DATA_TO_?_USED_AT_5D19:
+68c6: 00 00 00 00 00 00 01 86 00 00 00 00 00 00 00 00 
+68d6: 00 00 00 00 00 00 00 00 01 00 01 00 BD 37 BD F0 
+68e6: 35 37 35 F0 35 D0 35 20 D0 D0 D0 20 89 59 89 59 
+68f6: 89 59 89 59 00 0D 69 1D 69 39 69 61 69 99 69 01 
+6906: 6A 35 6A 6D 6A C9 6A 08 0C 03 C8 40 70 01 11 C8 
+6916: 70 01 11 80 24 01 11 07 14 06 64 C8 70 01 11 40 
+6926: 70 01 11 E8 48 02 11 28 48 02 11 60 24 02 11 A0 
+6936: 24 02 11 06 1C 09 3C C8 70 01 11 40 70 01 11 E8 
+6946: 48 02 11 28 48 02 11 60 98 02 11 A0 98 02 11 84 
+6956: 98 04 11 60 24 01 11 A0 24 01 11 05 1E 0D 1E 40 
+6966: 70 01 0E C8 70 01 0E 40 48 02 0E C8 48 02 0E 60 
+6976: 98 02 0E A0 98 02 0E 80 98 02 0E 40 C8 04 0E 50 
+6986: B0 04 0E C0 C8 04 0E B0 B0 05 0E 60 24 05 0E A0 
+6996: 24 01 0E 86 1E 19 14 48 24 01 0E 58 24 01 0E 68 
+69a6: 24 01 0E 78 24 01 0E 88 24 01 0E 98 24 01 0E A8 
+69b6: 24 01 0E B8 24 01 0E C8 24 01 0E C8 40 01 0E C8 
+69c6: 58 01 0E C8 70 01 0E C8 88 01 0E B0 98 01 0E 98 
+69d6: A8 01 0E 84 B4 01 0E 74 C0 01 0E 64 CC 01 0E 54 
+69e6: EC 01 0E 30 EC 01 0E 48 EC 01 0E 60 EC 01 0E 78 
+69f6: EC 01 0E 90 EC 01 0E B8 EC 01 0E 05 1E 0C 0A 40 
+6a06: 70 01 0E C8 70 01 0E B0 88 01 0E 58 88 01 0E 98 
+6a16: A0 01 0E 70 A0 01 0E 80 B8 01 0E 88 B8 01 0E A0 
+6a26: D0 01 0E 68 D0 01 0E 50 E8 01 0E B8 E8 01 0E 06 
+6a36: 28 0D FF 80 98 01 11 C8 24 01 11 40 24 01 11 40 
+6a46: 40 01 11 C8 40 01 11 C8 60 01 11 40 60 01 11 40 
+6a56: 80 01 11 C8 80 01 11 C8 A0 01 11 40 A0 01 11 40 
+6a66: C0 01 11 C8 C0 01 11 86 28 16 FF 40 98 01 11 50 
+6a76: 98 01 11 60 98 01 11 70 98 01 11 80 98 01 11 90 
+6a86: 98 01 11 A0 98 01 11 B0 98 01 11 C0 98 01 11 D0 
+6a96: 98 01 11 E0 98 01 11 48 B0 01 11 58 B0 01 11 68 
+6aa6: B0 01 11 78 B0 01 11 88 B0 01 11 98 B0 01 11 A8 
+6ab6: B0 01 11 B8 B0 01 11 C8 B0 01 11 D8 B0 01 11 E8 
+6ac6: B0 01 11 86 28 1B FF 48 24 14 0E 68 24 14 0E 88 
+6ad6: 24 14 0E 48 40 14 0E B9 40 14 0E C9 50 14 0E 38 
+6ae6: 50 14 0E 28 60 14 0E D9 60 14 0E C9 70 14 0E 38 
+6af6: 70 14 0E 28 80 14 0E B9 80 14 0E A0 98 14 0E 60 
+6b06: 98 14 0E 80 A8 14 0E 70 B8 14 0E 90 B8 14 0E 60 
+6b16: C8 14 0E A0 C8 14 0E B0 D8 14 0E 50 D8 14 0E 60 
+6b26: EC 14 0E A0 EC 14 0E 90 EC 14 0E 70 EC 14 0E 80 
+6b36: EC 14 0E 
 
-68e6: 35             DEC   (HL)
-68e7: 37             SCF   
-68e8: 35             DEC   (HL)
-68e9: F0             RET   P
-
-68ea: 35             DEC   (HL)
-68eb: D0             RET   NC
-
-68ec: 35             DEC   (HL)
-68ed: 20 D0          JR    NZ,$68BF
-
-68ef: D0             RET   NC
-
-68f0: D0             RET   NC
-
-68f1: 20 89          JR    NZ,$687C
-
-68f3: 59             LD    E,C
-68f4: 89             ADC   A,C
-68f5: 59             LD    E,C
-68f6: 89             ADC   A,C
-68f7: 59             LD    E,C
-68f8: 89             ADC   A,C
-68f9: 59             LD    E,C
-68fa: 00             NOP   
-68fb: 0D             DEC   C
-68fc: 69             LD    L,C
-68fd: 1D             DEC   E
-68fe: 69             LD    L,C
-68ff: 39             ADD   HL,SP
-6900: 69             LD    L,C
-6901: 61             LD    H,C
-6902: 69             LD    L,C
-6903: 99             SBC   A,C
-6904: 69             LD    L,C
-6905: 01 6A 35       LD    BC,$356A
-6908: 6A             LD    L,D
-6909: 6D             LD    L,L
-690a: 6A             LD    L,D
-690b: C9             RET   
-
-690c: 6A             LD    L,D
-690d: 08             EX    AF,AF'
-690e: 0C             INC   C
-690f: 03             INC   BC
-6910: C8             RET   Z
-
-6911: 40             LD    B,B
-6912: 70             LD    (HL),B
-6913: 01 11 C8       LD    BC,$C811
-6916: 70             LD    (HL),B
-6917: 01 11 80       LD    BC,$8011
-691a: 24             INC   H
-691b: 01 11 07       LD    BC,$0711
-691e: 14             INC   D
-691f: 06 64          LD    B,#$64
-6921: C8             RET   Z
-
-6922: 70             LD    (HL),B
-6923: 01 11 40       LD    BC,$4011
-6926: 70             LD    (HL),B
-6927: 01 11 E8       LD    BC,$E811
-692a: 48             LD    C,B
-692b: 02             LD    (BC),A
-692c: 11 28 48       LD    DE,$4828
-692f: 02             LD    (BC),A
-6930: 11 60 24       LD    DE,$2460
-6933: 02             LD    (BC),A
-6934: 11 A0 24       LD    DE,$24A0
-6937: 02             LD    (BC),A
-6938: 11 06 1C       LD    DE,$1C06
-693b: 09             ADD   HL,BC
-693c: 3C             INC   A
-693d: C8             RET   Z
-
-693e: 70             LD    (HL),B
-693f: 01 11 40       LD    BC,$4011
-6942: 70             LD    (HL),B
-6943: 01 11 E8       LD    BC,$E811
-6946: 48             LD    C,B
-6947: 02             LD    (BC),A
-6948: 11 28 48       LD    DE,$4828
-694b: 02             LD    (BC),A
-694c: 11 60 98       LD    DE,$9860
-694f: 02             LD    (BC),A
-6950: 11 A0 98       LD    DE,$98A0
-6953: 02             LD    (BC),A
-6954: 11 84 98       LD    DE,$9884
-6957: 04             INC   B
-6958: 11 60 24       LD    DE,$2460
-695b: 01 11 A0       LD    BC,$A011
-695e: 24             INC   H
-695f: 01 11 05       LD    BC,$0511
-6962: 1E 0D          LD    E,#$0D
-6964: 1E 40          LD    E,#$40
-6966: 70             LD    (HL),B
-6967: 01 0E C8       LD    BC,$C80E
-696a: 70             LD    (HL),B
-696b: 01 0E 40       LD    BC,$400E
-696e: 48             LD    C,B
-696f: 02             LD    (BC),A
-6970: 0E C8          LD    C,#$C8
-6972: 48             LD    C,B
-6973: 02             LD    (BC),A
-6974: 0E 60          LD    C,#$60
-6976: 98             SBC   A,B
-6977: 02             LD    (BC),A
-6978: 0E A0          LD    C,#$A0
-697a: 98             SBC   A,B
-697b: 02             LD    (BC),A
-697c: 0E 80          LD    C,#$80
-697e: 98             SBC   A,B
-697f: 02             LD    (BC),A
-6980: 0E 40          LD    C,#$40
-6982: C8             RET   Z
-
-6983: 04             INC   B
-6984: 0E 50          LD    C,#$50
-6986: B0             OR    A,B
-6987: 04             INC   B
-6988: 0E C0          LD    C,#$C0
-698a: C8             RET   Z
-
-698b: 04             INC   B
-698c: 0E B0          LD    C,#$B0
-698e: B0             OR    A,B
-698f: 05             DEC   B
-6990: 0E 60          LD    C,#$60
-6992: 24             INC   H
-6993: 05             DEC   B
-6994: 0E A0          LD    C,#$A0
-6996: 24             INC   H
-6997: 01 0E 86       LD    BC,$860E
-699a: 1E 19          LD    E,#$19
-699c: 14             INC   D
-699d: 48             LD    C,B
-699e: 24             INC   H
-699f: 01 0E 58       LD    BC,$580E
-69a2: 24             INC   H
-69a3: 01 0E 68       LD    BC,$680E
-69a6: 24             INC   H
-69a7: 01 0E 78       LD    BC,$780E
-69aa: 24             INC   H
-69ab: 01 0E 88       LD    BC,$880E
-69ae: 24             INC   H
-69af: 01 0E 98       LD    BC,$980E
-69b2: 24             INC   H
-69b3: 01 0E A8       LD    BC,$A80E
-69b6: 24             INC   H
-69b7: 01 0E B8       LD    BC,$B80E
-69ba: 24             INC   H
-69bb: 01 0E C8       LD    BC,$C80E
-69be: 24             INC   H
-69bf: 01 0E C8       LD    BC,$C80E
-69c2: 40             LD    B,B
-69c3: 01 0E C8       LD    BC,$C80E
-69c6: 58             LD    E,B
-69c7: 01 0E C8       LD    BC,$C80E
-69ca: 70             LD    (HL),B
-69cb: 01 0E C8       LD    BC,$C80E
-69ce: 88             ADC   A,B
-69cf: 01 0E B0       LD    BC,$B00E
-69d2: 98             SBC   A,B
-69d3: 01 0E 98       LD    BC,$980E
-69d6: A8             XOR   A,B
-69d7: 01 0E 84       LD    BC,$840E
-69da: B4             OR    A,H
-69db: 01 0E 74       LD    BC,$740E
-69de: C0             RET   NZ
-
-69df: 01 0E 64       LD    BC,$640E
-69e2: CC 01 0E       CALL  Z,$0E01
-69e5: 54             LD    D,H
-69e6: EC 01 0E       CALL  PE,$0E01
-69e9: 30 EC          JR    NC,$69D7
-
-69eb: 01 0E 48       LD    BC,$480E
-69ee: EC 01 0E       CALL  PE,$0E01
-69f1: 60             LD    H,B
-69f2: EC 01 0E       CALL  PE,$0E01
-69f5: 78             LD    A,B
-69f6: EC 01 0E       CALL  PE,$0E01
-69f9: 90             SUB   A,B
-69fa: EC 01 0E       CALL  PE,$0E01
-69fd: B8             CP    A,B
-69fe: EC 01 0E       CALL  PE,$0E01
-6a01: 05             DEC   B
-6a02: 1E 0C          LD    E,#$0C
-6a04: 0A             LD    A,(BC)
-6a05: 40             LD    B,B
-6a06: 70             LD    (HL),B
-6a07: 01 0E C8       LD    BC,$C80E
-6a0a: 70             LD    (HL),B
-6a0b: 01 0E B0       LD    BC,$B00E
-6a0e: 88             ADC   A,B
-6a0f: 01 0E 58       LD    BC,$580E
-6a12: 88             ADC   A,B
-6a13: 01 0E 98       LD    BC,$980E
-6a16: A0             AND   A,B
-6a17: 01 0E 70       LD    BC,$700E
-6a1a: A0             AND   A,B
-6a1b: 01 0E 80       LD    BC,$800E
-6a1e: B8             CP    A,B
-6a1f: 01 0E 88       LD    BC,$880E
-6a22: B8             CP    A,B
-6a23: 01 0E A0       LD    BC,$A00E
-6a26: D0             RET   NC
-
-6a27: 01 0E 68       LD    BC,$680E
-6a2a: D0             RET   NC
-
-6a2b: 01 0E 50       LD    BC,$500E
-6a2e: E8             RET   PE
-
-6a2f: 01 0E B8       LD    BC,$B80E
-6a32: E8             RET   PE
-
-6a33: 01 0E 06       LD    BC,$060E
-6a36: 28 0D          JR    Z,$6A45
-
-6a38: FF             RST   $38
-
-6a39: 80             ADD   A,B
-6a3a: 98             SBC   A,B
-6a3b: 01 11 C8       LD    BC,$C811
-6a3e: 24             INC   H
-6a3f: 01 11 40       LD    BC,$4011
-6a42: 24             INC   H
-6a43: 01 11 40       LD    BC,$4011
-6a46: 40             LD    B,B
-6a47: 01 11 C8       LD    BC,$C811
-6a4a: 40             LD    B,B
-6a4b: 01 11 C8       LD    BC,$C811
-6a4e: 60             LD    H,B
-6a4f: 01 11 40       LD    BC,$4011
-6a52: 60             LD    H,B
-6a53: 01 11 40       LD    BC,$4011
-6a56: 80             ADD   A,B
-6a57: 01 11 C8       LD    BC,$C811
-6a5a: 80             ADD   A,B
-6a5b: 01 11 C8       LD    BC,$C811
-6a5e: A0             AND   A,B
-6a5f: 01 11 40       LD    BC,$4011
-6a62: A0             AND   A,B
-6a63: 01 11 40       LD    BC,$4011
-6a66: C0             RET   NZ
-
-6a67: 01 11 C8       LD    BC,$C811
-6a6a: C0             RET   NZ
-
-6a6b: 01 11 86       LD    BC,$8611
-6a6e: 28 16          JR    Z,$6A86
-
-6a70: FF             RST   $38
-
-6a71: 40             LD    B,B
-6a72: 98             SBC   A,B
-6a73: 01 11 50       LD    BC,$5011
-6a76: 98             SBC   A,B
-6a77: 01 11 60       LD    BC,$6011
-6a7a: 98             SBC   A,B
-6a7b: 01 11 70       LD    BC,$7011
-6a7e: 98             SBC   A,B
-6a7f: 01 11 80       LD    BC,$8011
-6a82: 98             SBC   A,B
-6a83: 01 11 90       LD    BC,$9011
-6a86: 98             SBC   A,B
-6a87: 01 11 A0       LD    BC,$A011
-6a8a: 98             SBC   A,B
-6a8b: 01 11 B0       LD    BC,$B011
-6a8e: 98             SBC   A,B
-6a8f: 01 11 C0       LD    BC,$C011
-6a92: 98             SBC   A,B
-6a93: 01 11 D0       LD    BC,$D011
-6a96: 98             SBC   A,B
-6a97: 01 11 E0       LD    BC,$E011
-6a9a: 98             SBC   A,B
-6a9b: 01 11 48       LD    BC,$4811
-6a9e: B0             OR    A,B
-6a9f: 01 11 58       LD    BC,$5811
-6aa2: B0             OR    A,B
-6aa3: 01 11 68       LD    BC,$6811
-6aa6: B0             OR    A,B
-6aa7: 01 11 78       LD    BC,$7811
-6aaa: B0             OR    A,B
-6aab: 01 11 88       LD    BC,$8811
-6aae: B0             OR    A,B
-6aaf: 01 11 98       LD    BC,$9811
-6ab2: B0             OR    A,B
-6ab3: 01 11 A8       LD    BC,$A811
-6ab6: B0             OR    A,B
-6ab7: 01 11 B8       LD    BC,$B811
-6aba: B0             OR    A,B
-6abb: 01 11 C8       LD    BC,$C811
-6abe: B0             OR    A,B
-6abf: 01 11 D8       LD    BC,$D811
-6ac2: B0             OR    A,B
-6ac3: 01 11 E8       LD    BC,$E811
-6ac6: B0             OR    A,B
-6ac7: 01 11 86       LD    BC,$8611
-6aca: 28 1B          JR    Z,$6AE7
-
-6acc: FF             RST   $38
-
-6acd: 48             LD    C,B
-6ace: 24             INC   H
-6acf: 14             INC   D
-6ad0: 0E 68          LD    C,#$68
-6ad2: 24             INC   H
-6ad3: 14             INC   D
-6ad4: 0E 88          LD    C,#$88
-6ad6: 24             INC   H
-6ad7: 14             INC   D
-6ad8: 0E 48          LD    C,#$48
-6ada: 40             LD    B,B
-6adb: 14             INC   D
-6adc: 0E B9          LD    C,#$B9
-6ade: 40             LD    B,B
-6adf: 14             INC   D
-6ae0: 0E C9          LD    C,#$C9
-6ae2: 50             LD    D,B
-6ae3: 14             INC   D
-6ae4: 0E 38          LD    C,#$38
-6ae6: 50             LD    D,B
-6ae7: 14             INC   D
-6ae8: 0E 28          LD    C,#$28
-6aea: 60             LD    H,B
-6aeb: 14             INC   D
-6aec: 0E D9          LD    C,#$D9
-6aee: 60             LD    H,B
-6aef: 14             INC   D
-6af0: 0E C9          LD    C,#$C9
-6af2: 70             LD    (HL),B
-6af3: 14             INC   D
-6af4: 0E 38          LD    C,#$38
-6af6: 70             LD    (HL),B
-6af7: 14             INC   D
-6af8: 0E 28          LD    C,#$28
-6afa: 80             ADD   A,B
-6afb: 14             INC   D
-6afc: 0E B9          LD    C,#$B9
-6afe: 80             ADD   A,B
-6aff: 14             INC   D
-6b00: 0E A0          LD    C,#$A0
-6b02: 98             SBC   A,B
-6b03: 14             INC   D
-6b04: 0E 60          LD    C,#$60
-6b06: 98             SBC   A,B
-6b07: 14             INC   D
-6b08: 0E 80          LD    C,#$80
-6b0a: A8             XOR   A,B
-6b0b: 14             INC   D
-6b0c: 0E 70          LD    C,#$70
-6b0e: B8             CP    A,B
-6b0f: 14             INC   D
-6b10: 0E 90          LD    C,#$90
-6b12: B8             CP    A,B
-6b13: 14             INC   D
-6b14: 0E 60          LD    C,#$60
-6b16: C8             RET   Z
-
-6b17: 14             INC   D
-6b18: 0E A0          LD    C,#$A0
-6b1a: C8             RET   Z
-
-6b1b: 14             INC   D
-6b1c: 0E B0          LD    C,#$B0
-6b1e: D8             RET   C
-
-6b1f: 14             INC   D
-6b20: 0E 50          LD    C,#$50
-6b22: D8             RET   C
-
-6b23: 14             INC   D
-6b24: 0E 60          LD    C,#$60
-6b26: EC 14 0E       CALL  PE,$0E14
-6b29: A0             AND   A,B
-6b2a: EC 14 0E       CALL  PE,$0E14
-6b2d: 90             SUB   A,B
-6b2e: EC 14 0E       CALL  PE,$0E14
-6b31: 70             LD    (HL),B
-6b32: EC 14 0E       CALL  PE,$0E14
-6b35: 80             ADD   A,B
-6b36: EC 14 0E       CALL  PE,$0E14
 
 *** Table of 16x 4 bytes used by joystick direction input @5FB3. There are 8 valid
 *** inputs (D,U,R,L,DR,DL,UR,UL).  All others (no input or invalid input) are set
@@ -14783,6 +13599,8 @@ COPY_20_FROM_HL_TO_FF80:
 
 6f51: C9             RET   
 
+
+*** HL passed in
 PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LC:
 6f52: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 6f55: B7             OR    A,A
@@ -15098,7 +13916,7 @@ RETURN_C687-7_IF_NZ_IN_A:
 
 *** Return C687 in A.  If non-zero, subtract 2.  Do not affect other registers.
 RETURN_C687-2_IF_NZ_IN_A:
-7165: C5             PUSH  BC             ;to get the code at 9900 to disassemble correctly
+7165: C5             PUSH  BC
 7166: 47             LD    B,A
 7167: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
 716a: B7             OR    A,A
@@ -17527,7 +16345,7 @@ LC_COLOR_PALETTE:
 9080: 00             NOP   
 9081: 00             NOP   
 9082: 01 C6 01       LD    BC,$01C6
-9085: C3 01 C0       JP    TANK_PIC_OR_MCP_ROWS_OF_BRICKS
+9085: C3 01 C0       JP    TANK_PIC_OR_MCP_ROWS_OF_BLOCKS
 
 9088: 00             NOP   
 9089: 9B             SBC   A,E
@@ -17681,106 +16499,19 @@ BACKGROUND_TRAINING_FOR_LC:
 9860: 62 41 62 41 62 41 62 41 62 41 62 41 62 41 62 41 
 9870: 62 41 62 41 62 41 62 41 62 41 62 41 62 41 62 41 
 
-9880: 64             LD    H,H
-9881: DC 40 80       CALL  C,$8040
-9884: 4A             LD    C,D
-9885: C6 EC          ADD   A,#$EC
-9887: CC 7C DE       CALL  Z,$DE7C
-988a: EC DE BC       CALL  PE,$BCDE
-988d: 65             LD    H,L
-988e: EF             RST   $28
 
-988f: 8F             ADC   A,A
-9890: C4 98 DC       CALL  NZ,$DC98
-9893: 2E E8          LD    L,#$E8
-9895: C0             RET   NZ
+*** Appears to be 4 bytes of data.  Not sure where it is used.
+9880: 64 DC 40 80 
 
-9896: CF             RST   $08
-
-9897: 4C             LD    C,H
-9898: C0             RET   NZ
-
-9899: C5             PUSH  BC
-989a: 7C             LD    A,H
-989b: 74             LD    (HL),H
-989c: 26 0C          LD    H,#$0C
-989e: 35             DEC   (HL)
-989f: 62             LD    H,D
-98a0: EF             RST   $28
-
-98a1: EE FE          XOR   A,#$FE
-98a3: EC 5E 5C       CALL  PE,$5C5E
-98a6: 5C             LD    E,H
-98a7: 4F             LD    C,A
-98a8: 7C             LD    A,H
-98a9: A4             AND   A,H
-98aa: 12             LD    (DE),A
-98ab: D8             RET   C
-
-98ac: 38 EE          JR    C,$989C
-
-98ae: E4 A9 AA       CALL  PO,$AAA9
-98b1: 5C             LD    E,H
-98b2: A1             AND   A,C
-98b3: 4D             LD    C,L
-98b4: 8A             ADC   A,D
-98b5: FD 44          Illegal Opcode
-98b7: 7E             LD    A,(HL)
-98b8: DD FC          Illegal Opcode
-98ba: BC             CP    A,H
-98bb: 86             ADD   A,(HL)
-98bc: CD 4A EC       CALL  $EC4A
-98bf: 0D             DEC   C
-98c0: 4E             LD    C,(HL)
-98c1: 74             LD    (HL),H
-98c2: 4A             LD    C,D
-98c3: 6C             LD    L,H
-98c4: F5             PUSH  AF
-98c5: FD EC          Illegal Opcode
-98c7: C4 B4 D4       CALL  NZ,$D4B4
-98ca: 0C             INC   C
-98cb: DC CA 0C       CALL  C,$0CCA
-98ce: E8             RET   PE
-
-98cf: 8C             ADC   A,H
-98d0: BE             CP    A,(HL)
-98d1: C8             RET   Z
-
-98d2: ED DC          Illegal Opcode
-98d4: D0             RET   NC
-
-98d5: 5C             LD    E,H
-98d6: 4C             LD    C,H
-98d7: 4A             LD    C,D
-98d8: 44             LD    B,H
-98d9: F5             PUSH  AF
-98da: 5D             LD    E,L
-98db: 46             LD    B,(HL)
-98dc: 40             LD    B,B
-98dd: F0             RET   P
-
-98de: 2E C0          LD    L,#$C0
-98e0: EC D8 CC       CALL  PE,$CCD8
-98e3: EC 55 CE       CALL  PE,$CE55
-98e6: C4 CE 7C       CALL  NZ,$7CCE
-98e9: E4 74 6F       CALL  PO,$6F74
-98ec: FC A4 DC       CALL  M,$DCA4
-98ef: D9             EXX   
-98f0: E8             RET   PE
-
-98f1: CD 5C 3B       CALL  $3B5C
-98f4: 64             LD    H,H
-98f5: 47             LD    B,A
-98f6: 2C             INC   L
-98f7: 74             LD    (HL),H
-98f8: 65             LD    H,L
-98f9: 7C             LD    A,H
-98fa: 7A             LD    A,D
-98fb: 86             ADD   A,(HL)
-98fc: 50             LD    D,B
-98fd: 45             LD    B,L
-98fe: 6C             LD    L,H
-98ff: CC 
+DATA_TO_?_USED_AT_6954:
+9884: 4A C6 EC CC 7C DE EC DE BC 65 EF 8F C4 98 DC 2E 
+9894: E8 C0 CF 4C C0 C5 7C 74 26 0C 35 62 EF EE FE EC 
+98a4: 5E 5C 5C 4F 7C A4 12 D8 38 EE E4 A9 AA 5C A1 4D 
+98b4: 8A FD 44 7E DD FC BC 86 CD 4A EC 0D 4E 74 4A 6C 
+98c4: F5 FD EC C4 B4 D4 0C DC CA 0C E8 8C BE C8 ED DC 
+98d4: D0 5C 4C 4A 44 F5 5D 46 40 F0 2E C0 EC D8 CC EC 
+98e4: 55 CE C4 CE 7C E4 74 6F FC A4 DC D9 E8 CD 5C 3B 
+98f4: 64 47 2C 74 65 7C 7A 86 50 45 6C CC 
 
 9900: CD 20 70       CALL  ZERO_RAM_C000-C418
 9903: 3E 78          LD    A,#$78
@@ -19240,7 +17971,7 @@ ab35: F6
 ab39: 1E 01          LD    E,#$01
 ab3b: FD 21 80 FF    LD    IY,COLOR_RAM_TO_FFFF
 ab3f: 21 00 F8       LD    HL,BACKGROUND_VIDEO_RAM_TO_FF7F
-ab42: FD 22 0B C4    LD    ($C40B),IY
+ab42: FD 22 0B C4    LD    (MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK),IY
 ab46: 16 5D          LD    D,#$5D
 ab48: 01 E0 01       LD    BC,$01E0
 ab4b: 72             LD    (HL),D
@@ -19264,7 +17995,7 @@ ab5e: 20 EB          JR    NZ,$AB4B
 
 ab60: DD 21 A9 AB    LD    IX,$ABA9
 ab64: 0E 04          LD    C,#$04
-ab66: FD 2A 0B C4    LD    IY,($C40B)
+ab66: FD 2A 0B C4    LD    IY,(MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK)
 ab6a: 06 10          LD    B,#$10
 ab6c: DD 7E 00       LD    A,(IX+$00)
 ab6f: B7             OR    A,A

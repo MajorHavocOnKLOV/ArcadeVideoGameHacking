@@ -48,9 +48,9 @@
 ;    up, right, down, left and repeat until someone dies
 
 ; Possible bugs:
-; 1) Upon completion of the IO Tower game, the max disks/shots is one greater than it should be for just the next game!
-; 2) The tank is 1 pixel too far right when moving up/down
-; 3) The enemy tank shot has a stray pixel in the bottom row near the right side
+; 1) Upon completion of the IO Tower game, the max disks is one greater than it should be for just the next game!
+; 2) The player tank is 1 pixel too far right when moving up/down
+; 3) The horizontal enemy tank bullet has a stray pixel in the bottom row close to the side
 
 ; IN/OUT instructions apparently don't look up labels: TODO
 ; label 0000 IO_0
@@ -67,6 +67,7 @@
 label 006b COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S
 label 01ab COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?
 label 01cb SERVICE_INTERRUPT_ROUTINE
+label 0289 TANK_ROTATE_TURRET?
 label 02e3 GET_INPUT_FROM_JOYSTICK_TRIGGER_+?
 label 0401 STRING_IN_DE_TO_HL
 label 041c CHECK_DATA_C4F0_TO_C657?
@@ -164,7 +165,6 @@ label 1a13 1ST_HIT___100_POINTS_S
 label 1a28 2ND_HIT___300_POINTS_S
 label 1a3d 3RD_HIT___500_POINTS_S
 label 1a52 DISPLAY_CYCLE_GAME_SCREEN
-label 1bc2 IO_TOWER_GAME_S
 label 1a89 CYCLE_GAME_S
 label 1a94 PLAYER____BLUE_CYCLE_S
 label 1aa9 JOYSTICK__MOVES_CYCLE_S
@@ -228,7 +228,16 @@ label 2d12 PLAY_MCP
 label 31b0 MCP_ROTATE_RIGHT
 label 31c8 MCP_ROTATE_LEFT
 label 3025 MCP_PROCESS_DISK_POSITION(S)?
-label 3559 MCP_BRICKS_DATA_TO_35B2
+label 317e MCP_DISK_END_FLIGHT
+label 3308 MCP_DRAW_CONE
+label 3331 MCP_DRAW_WALLS
+label 3363 MCP_HIDE_SPRITES_33_AND_34
+label 337b MCP_DRAW_BLOCKS
+label 33af MCP_HIDE_SPRITE_GOING_OFF_BOTTOM_OF_SCREEN
+label 352a MCP_PROCESS_HIT_BLOCK
+label 354f MCP_BLOCK_HIT_AUDIO
+label 3554 MCP_BLOCK_DATA_TO_PROCESS_HIT
+label 3559 MCP_BLOCKS_DATA_TO_35B2
 label 35b3 MCP_CONE_RELATIVEX_RELATIVEY_SPRITE_NUMBER_TO_35D9
 label 3926 MCP_COLOR_PALETTE_ALL_ZEROS
 label 3966 DATA_FOR_MCP_SETUP_TO_398D
@@ -237,15 +246,27 @@ label 3cdf TANKS_INSTRUCTIONS
 label 3d35 DESTROY_ALL_S
 label 3d41 ENEMY_TANKS_S
 label 3d4d TANK_JOYSTICK_INPUT_TABLE?
+label 3db5 TANK_PROCESS_CONTROLS_INPUT
 label 4063 TANKS_DATA_FOR_x_STARTS_AT_4066
+label 40d0 TANK_UPDATE_POSITION_AND_PIC_OF_TANK_FROM_C000_TO_C002
 label 40ea TANK_UPDATE_POSITION
 label 40fc TANK_WARP
+label 4145 TANK_DATA_FOR_?
+; 4414 Find X & Y of this tank in a data structure?  For movement?
+label 4414 TANK_PROCESS_ENEMY_TANKS_ON_STARTUP_SOMEHOW?_USES_IX
 label 46fb TANKS_DATA_FOR_x_STARTS_AT_46FF
+label 47e2 TANK_POSITION_THE_ONE_AT_IX
 label 47a7 COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?
+label 4884 DATA_TO_49C7_USED_AT_49C8
+label 49c8 TANK_TURRET_DRAW
+label 4b70 TANK_BULLET?_DRAW_USES_IY
+label 4b8d TANK_DATA_FOR?_USED_AT_4BBB
+label 4cfb TANK_DATA_FOR?_STARTS_AT_4CFF
 label 4d77 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE
 label 4f7e TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA
 label 5000 PLAY_LC
 label 5103 LC_INSTRUCTIONS
+label 5151 LC_INSTRUCTION_STRINGS_SOURCE_AND_DESTINATION_DATA
 label 5167 AVOID_HITTING_S
 label 5175 LIGHT_TRACES2_S
 label 5182 AND_WALLS_S
@@ -264,7 +285,8 @@ label 5f23 CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?
 label 5f73 HANDLE_JOYSTICK_INPUT?_TO_601F
 label 6065 INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
 label 6127 MOVE_SPIDERS?
-label 621d SET_SOME_VALUES_IN_C02X?
+label 621d IO_OR_MCP?_SET_TRON_INITIAL_POSITION_AND_ROTATION
+label 68c6 DATA_TO_?_USED_AT_5D19
 label 6b39 JOYSTICK_INPUT_TABLE
 label 6b79 DATA_FOR_SETTING_UP_TRON_SPRITES?
 label 6f00 ADD_A_TO_HL_WITH_CARRY
@@ -299,6 +321,7 @@ label 8900 BACKGROUND_LC
 label 9080 LC_COLOR_PALETTE
 label 90c0 COLOR_PALETTE_FOR_5?
 label 9100 BACKGROUND_TRAINING_FOR_LC
+label 9884 DATA_TO_?_USED_AT_6954
 label 998c GET_TRIGGER_INPUT_FOR_SERVICE_MENU
 
 label 9bd8 ?_DATA_USED_FOR_?1
@@ -501,22 +524,25 @@ label b17a JCL_S
 label b17e USER_S
 
 ; MCP
-; C004 high bit is 1 unless a shot is fired?
+; C004 high bit is 1 unless a disk is fired?
 ; C013-16 path of disk? changes as disk flies
-; C017 inverts when shot fired and then reverts
-; C01A-1B change as shot fires
+; C017 inverts when disk fired and then reverts
+; C01A-1B change as disk fires
 ;
 ; c000 LC_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY
 ; c000 MCP 00-03 legs open, 04-04 legs closed
 label c000 CPU_RAM_OR_GS_DISK_X_TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF
-label c001 TANK_PIC_OR_MCP_ROWS_OF_BRICKS
+label c001 TANK_PIC_OR_MCP_ROWS_OF_BLOCKS
 label c002 TANK_Y_OR_GS_DISK_Y
 label c007 MCP_TRON_X_TANKS_DATA_VECTOR_x_1
 label c009 MCP_TRON_Y_TANKS_DATA_VECTOR_x_2
 label c00d IO_TOWER_TIMER_VALUE_REVERSED_TO_C010
 label c00e INFINITE_TIME_CHEAT
-label c010 TANKS_SHOTS_IN_RAM_STARTS_AT_C020
-label c012 MCP_DISK_DATA_TO_C02F/IO_TOWER_TIMER_DIGITS_TO_C019
+label c010 TANKS_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020
+label c012 MCP_DISK_1_DATA/IO_TOWER_TIMER_DIGITS_TO_C019
+label c01c MCP_DISK_2_DATA
+label c026 MCP_DISK_3_DATA
+label c030 MCP_DISK_4_DATA
 label c022 IO_TOWER_INCREMENTS_19_TO_1E_FOR_EACH_DISK_THROWN
 label c023 IO_TOWER_TRIGGER_DEBOUNCE?
 label c024 IO_TOWER_ALWAYS_80?
@@ -524,32 +550,47 @@ label c026 IO_TRON_X
 label c028 IO_TRON_Y
 label c029 JOYSTICK_INPUT_ARRAY_TO_C02C
 label c03a MCP_DATA_TO_C0D9?
+; c051: beginning of enemy tank(s) data.  Each takes up 0x20 bytes
+; c051: offsets 0-9? copied from data structures starting at 
+; c051: offsets 0,1,2 = X, picture, Y
+; c051: offset B: vector to tank data structure
+; c051: offset D: offset in B that matches offset 0
+; c051: offset 16: vector to sprite(s) for what?
+; c051: offset 18: vector to sprite(s) for what?
 label c051 INFO_FOR_TANK_GAME_SEE_3ABF_TO_C05A_FOR_A_SINGLE_TANK
 label c062 MCP_POSITION_OF_BLOCKS_0_TO_F
 label c0dc MCP_TOWER_Y
 label c0dd MCP_TOWER_X
-label c0e3 MCP_BRICKS_REMAINING_COUNT
+label c0e3 MCP_BLOCKS_REMAINING_COUNT
 label c0e5 MCP_ROTATION_SPEED_LOWER_IS_FASTER
-label c0e6 MCP_NUMBER_OF_COLORS
+label c0e6 MCP_BLOCKS_PER_ROW
 label c0e7 MCP_Y_SPEED_LOWER_IS_SLOWER
 ;label c0e8 MCP_DATA_4
 label c0e9 MCP_DIRECTION_0_IS_RIGHT
-label c108 TANKS_ENEMY_SHOTS_IN_RAM_AT_C111?
+label c108 TANKS_ENEMY_BULLETS_IN_RAM_AT_C111?
+; c111: Enemy bullet(s) data. Each takes up 0x9 bytes
+; offset 0: initialized to 0
+; offset 7: initialized to 0
+; offset 3: vector to sprite(s) for what?
 label c14a NUMBER_OF_TANKS
-label c159 TANKS_NUMBER_OF_ENEMY_SHOTS?
+label c159 TANKS_NUMBER_OF_ENEMY_BULLETS?
 label c15b FIRST_NUMBER_FROM_4F7E
 label c15f TANK_IF_HARDNESS>0X0B_SEE_COMMENT_AT_3A79
 label c402 COUNTDOWN_TIMER_SECONDS
 label c403 COUNTDOWN_TIMER_FRAMES
+label c404 TANK_SPINNER_LAST_INPUT
+label c405 MCP_TRON_ARM_OR_TANK_TURRET_ROTATION
 label c40f ATTRACT_MCP_ROTATE_COLORS_IF_NON_ZERO
 label c410 MCP_BLOCKS_COLOR_VECTOR_POINTER_0E55
 label c406 MCP_DISK_NUMBER_BEING_PROCESSED
+label c409 MCP_SPRITE_BLOCK_HIT_BY_DISK
+label c40b MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK
 label c419 HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?)
 label c41a PLAYING_HOW_LONG_NOW_TO_C41C
 label c41b CURRENT_PLAYER_DATA_BYTE_02
 label c41c CURRENT_PLAYER_DATA_BYTE_03
-label c41d REMAINING_DISKS/SHOTS_AT_A_TIME
-label c41e MAX_DISKS/SHOTS_AT_A_TIME
+label c41d REMAINING_DISKS_AT_A_TIME
+label c41e MAX_DISKS_AT_A_TIME
 label c41f LIVES_REMAINING
 label c420 CURRENT_PLAYER_DATA_BYTE_07
 label c421 CURRENT_PLAYER_DATA_BYTE_08
@@ -560,7 +601,7 @@ label c424 DIRECTION_CHOSEN_8D4U2R1L
 ; starts as 0x00.  Each attempted direction bit set
 label c425 ATTEMPTED_GAMES_XXXXDURL
 label c426 VECTOR_OF_GAMES_TO_C42D
-label c42e NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_SHOTS_MAY_GO_TO_1???
+label c42e NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_DISKS_MAY_GO_TO_1???
 label c42f OTHER_PLAYER_DATA
 label c45b GS_DIRECTION:1=DOWN,2=?,3=?,5=?,OTHER=?
 label c45f PLAYER_NUMBER
@@ -605,12 +646,15 @@ label C000 NVRAM
 label F000 SPRITE_RAM
 label F004 TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT
 label F008 TANK_TURRET_OR_LC_ENEMIES
-label F00C TANK_SHOTS_F00C_TO_F01B(SPRITES_3_TO_6)
-label f018 IO_OR_MCP_OR_TANK_DISKS_OR_SHOTS_1_TO_4
+label F00C TANK_DISKS_F00C_TO_F01B(SPRITES_3_TO_6)
+label f018 IO_OR_MCP_OR_TANK_DISKS_1_TO_4
+label f01c IO_OR_MCP_OR_TANK_DISKS_2
+label f020 IO_OR_MCP_OR_TANK_DISKS_3
+label f024 IO_OR_MCP_OR_TANK_DISKS_4
 label f028 MCP_BLOCKS_TOP_LEFT_MOVING_DOWN_AND_WRAP_TO_TOP_RIGHT_TO_F09F
 label f02c TANK_ENEMIES
 label f030 IO_GRID_BUGS
-label f044 TANK_ENEMY_SHOTS
+label f044 TANK_ENEMY_BULLETS
 label f060 TANK_HITS_ON_ENEMIES
 label f0a0 MCP_TOWER_TO_F133
 ; label F200 SPRITE_RAM_M5
@@ -631,7 +675,14 @@ data 01ab-01ba
 commentline 01f6 How long has this user been playing?  C41A = BCD minutes, C41B = BCD seconds,
 commentline 01f6 C41C = countdown of 30 frames? (reset to 30 once count goes negative)
 
+commentline 0289 Get spinner value.  Subtract from last. Store last spinner value to C404
+commentline 0289 And ???
+commentline 0289 Update spinner value: 0 is right, increases counter clockwise to 0x23
+commentline 0289 (#36 )
+
+commentline 02d9 Tank (only?) turret rotation overflow (0x24) so set to 0
 commentline 0401 Copy null-terminated string in DE to HL
+commentline 040b Handle a space character (0x20 or 32)
 
 commentline 049c Data copied with initial high scores to c4f0
 data 049c-04af
@@ -687,10 +738,11 @@ ascii 0baf-0bc2
 
 commentline 0d52 I/O byte 00, bit 4? (isn't it 7?) is trigger. 0 when trigger is pulled, 1 otherwise
 
-commentline 0d7c Draw MCP cone tip to sprites 16-30? (0x10-0x1C?)
+commentline 0d7c Draw MCP cone tip to sprites 25-37 (0x19-0x25)
 commentline 0d9f Draw MCP blocks to sprites 1-24 (0x01-0x18)
 
-commentline 0dc3 24x3 bytes: X, Y, picture (0x56 is added to X and 0x80 to Y)
+commentline 0dc3 24x3 bytes: relative X, relative Y, picture
+commentline 0dc3 (0x56 is added to X and 0x80 to Y)
 data 0dc3-0dfd
 ascii 0dfe-0e00
 data 0e01-0e0a
@@ -842,7 +894,7 @@ commentline 1fc2 pick GS instructions to print
 
 commentline 205c Finished level so set up for the next level (to 2097)
 commentline 2070 Increment user level (C422)
-commentline 20a3 This increment gives the next game an extra disk/shot! Is it a feature or a bug?
+commentline 20a3 This increment gives the next game an extra disk! Is it a feature or a bug?
 
 commentline 20a7 Map of Difficulty level settings (picked by operator in settings) to how hard
 commentline 20a7 each user level is set.  The hardness values range from 0 (easy) to 20 (hard)
@@ -919,6 +971,9 @@ data 234A-2AC9
 
 data 2aca-2ae9
 
+commentline 2aea Appears to be data to 2BFF?
+data 2aea-2bff
+
 commentline 2c48 Not sure if all 5 bytes are data or how they're used starting at 6F68
 data 2c48-2c4c
 
@@ -928,17 +983,32 @@ ascii 2cf8-2d04
 ascii 2d05-2d11
 
 commentline 2d33 MCP info: C001 gets number of rows (3,4,or 5 based on hardness 0,1-10,11+)
-commentline 2d33 Each row has 16 bricks
-commentline 2d33 Register c contains 1C, 1E, or 1F (why? visibility of bricks?)
-commentline 2d33 C0E3 ends up with the total number of bricks (C001*0x10)
+commentline 2d33 Each row has C0E6 number of blocks
+commentline 2d33 Register c contains 1C, 1E, or 1F (why? visibility of blocks?)
+commentline 2d33 C0E3 ends up with the total number of blocks (C001*0x10)
 commentline 2d45 Ensure Hardness for MCP is below $0A
 
 commentline 2d82 Set MCP tower at 40x and 56y
+commentline 2d8c Fill $05x$1E of RAM $C063-C0DB with $80 or $00.  Why?
+commentline 2d8c Column (6) x Row (5) x 4: 4= X, Y, ?, ? (starts as 80.  Lowest bit set when hit)
+commentline 2d8c If a row is empty, the 4 bytes for it are all 00
+commentline 2db2 
 commentline 2e19 MCP: Tron has gone too far left. Set him to 21 x
 commentline 2e21 MCP: Tron has gone too far right. Set him to E7 x
 
+commentline 2fd9 Set initial position and arm rotation of Tron sprites
+
 comment 346a Invincibility MCP Game = 18 (JR *)
 comment 3471 Invincibility MCP Game = 11 (LD DE, **)
+
+commentline 352a Decrement blocks remaining, change block sprite to explosion (00)
+commentline 354f Audio to play for block hit. Number of rows dictates sound used?
+commentline 354f When you get to 5 rows, is the wrong sound (@3554) played?
+data 354f-3553
+
+commentline 3554 Data used at 3532 for processing MCP block hit
+data 3554-3558
+
 
 commentline 3559 5 rows (max) by 6 columns (always) by 3 bytes:
 commentline 3559 relative X, relative Y, picture number
@@ -952,11 +1022,11 @@ data 35da-35da
 data 3926-3945
 
 commentline 3966 Data for setting up MCP cone game.
-commentline 3966 10x4 (direction, number of colors?, Y speed, rotation speed)
-commentline 3966 plugged into C0E9, 6, 7, 5
+commentline 3966 10x4: 4= direction, blocks per row, Y move delay, rotation delay
+commentline 3966 plugged into C0E9, C0E6, C0E7, C0E5
 data 3966-398d
 
-commentline 3a2b Set up shots (up to 4) in sprites 3-6 (F00C-F01B)
+commentline 3a2b Set up disks (up to 4) in sprites 3-6 (F00C-F01B)
 
 commentline 3a79 If hardness above 0x0B (11), subtract 5 from hardness until hardness for
 commentline 3a79 this game is =< 0x0B. Increment C for each subtraction. Cap C at 4.
@@ -964,17 +1034,20 @@ commentline 3a79 Multiply C times 32 and place into C15F
 
 commentline 3aae If bit 7 in number of tanks is set, C15C=0x35
 
-commentline 3b76 Setup of enemy tank shots
+commentline 3b76 Setup of enemy tank bullets
 commentline 3b76 Sprite is explosion and X=0 and Y=4?
 
+commentline 3ba3 Set up Tron tank (the playa'!)
 ascii 3d35-3d40
 ascii 3d41-3d4c
 data 3d4d-3db4
 
+commentline 3dbb Attract mode input processing ...
+commentline 3dda User input processing ...
+
 comment 3f91 Invincibility TANK Game = 18 (JR *) (tank collision?)
 
-; This might not be right.  Used by data blocks starting at 4066
-commentline 3f9a 18? data blocks used by tanks
+commentline 3f3f This might not be right.  Used by data blocks starting at 4066?
 data 3f3f-3f47
 data 3f48-3f56
 data 3f57-3f5f
@@ -984,16 +1057,15 @@ data 3f6f-3f77
 data 3f78-3f86
 data 3f87-3f8e
 data 3f8f-3f8f
+
+commentline 3f9a 18? data blocks used by tanks
 data 3f9a-3f9a
-data 3f9b-3f3e
+data 3f9b-4010
 
-commentline 4066 18?x3 bytes: ?, vector to other data (they look like variable size 00 terminated data blocks)
-;data 4066-40a4
-
-commentline 4066 This data structure is used at 40C9. It's BIG but I'm not sure where it ends
-;data 4066-4d7a
-
-commentline 40d0 Update position and pic of tank (from C000 to C002)
+commentline 4066 This data structure is used at 40C9
+commentline 4066 ??? 18?x3 bytes: ?, vector to other data
+commentline 4066 (they look like variable size 00 terminated data blocks)
+data 4066-40a4
 
 ; Another data structure may start at 4088
 ; data 409f-
@@ -1007,10 +1079,30 @@ commentline 40d0 Update position and pic of tank (from C000 to C002)
 ; data 40ff-
 ; data 40dd-
 
+commentline 4152 Data used by tanks around 4414?  The 3 below are educated guesses at this point
+commentline 4152 11?x3: 3= Type, vector to next data structure
+data 4152-4165
+data 4165-41b1
+data 41b2-420c
+
+comment 4546 Mirror Y of explosion sprite on tank to make it look like fire
 comment 473b Invincibility TANK Game = 18 (JR *) (bullet collision?)
 
-commentline ? 47b8-47c6 looks like data, not sure for what though ...
+commentline 47b8-47c6 looks like data, not sure for what though ...
 data 47b8-47c6
+
+; commentline 47e2 Position the tank pointed to by IX
+
+; commentline DATA_TO_49C7_USED_AT_49C8
+data 4884-49c7
+
+commentline 49d4 Attract mode input processing ...
+commentline 49db User and attract mode processing continues here ...
+commentline 49f0 Update turret position and rotation
+data 4b8d-4b8f
+
+commentline 4cff This data structure may extend past 4d3b ...
+data 4cff-4d3b
 
 commentline 4d9e This data is copied to C051!
 commentline 4d9e number of tanks x 10 bytes
@@ -1040,10 +1132,14 @@ data 4f42-4f7d
 
 ; commentline 4f7e Tank game setup data. 11x4 bytes: ?, number of tanks, vector to level setup data
 
-data 4f7e-4fa9
+; data 4f7e-4fa9
+data 4f7e,11,4
 
 commentline 4faa Tank warp locations (X, picture, Y) 16x3
 data 4faa-4fd9
+
+commentline 5151 5x4: 4 = destination vector and source vector
+data 5151-5166
 
 ascii 5167-5174
 ascii 5175-5181
@@ -1073,6 +1169,8 @@ commentline 60ce Tron fires his disk here (so don't set up disk in hand, maybe?)
 
 comment 68c1 Invincibility I/O Tower Game = C9 (RET)
 
+data 68c6-6b38
+
 commentline 6b39 Table of 16x 4 bytes used by joystick direction input @5FB3. There are 8 valid
 commentline 6b39 inputs (D,U,R,L,DR,DL,UR,UL).  All others (no input or invalid input) are set
 commentline 6b39 to all zeroes effectively giving you no input.
@@ -1083,6 +1181,8 @@ commentline 6f20 This line is hit for every tick of the teletype (which strikes 
 commentline 6f2d Set color RAMs in some way?
 commentline 6f35 Another entry point to: Set color RAMs in some way?
 commentline 6f3e Color RAM: if bit 8 of word set, write to odd byte. Else, write to even byte
+
+commentline 6f52 HL passed in
 
 commentline 6fc7 Clear background screen (set graphic to 51 and attributes to 5E)
 commentline 6fff Add a message to the output queue (max of 6) DE is source and BC is destination
@@ -1132,8 +1232,13 @@ data 90e0-90ff
 
 data 9100-987F
 
-comment Just to get the code at 9900 to disassemble correctly
-data 98ff-98ff
+commentline 9880 Appears to be 4 bytes of data.  Not sure where it is used.
+data 9880-9883
+
+data 9884-98ff
+
+; comment Just to get the code at 9900 to disassemble correctly
+; data 98ff-98ff
 
 data 9a11-9a2d
 data 9a2e-9a5f
@@ -1436,8 +1541,8 @@ data b183-bfff
 ; 	01 = explosion large A
 ; 	02 = explosion large B (only 1 bit looks different from A???)
 ; 	03 = explosion large C
-; 	04 = tank shot right
-; 	05 = tank shot up
+; 	04 = enemy tank bullet right
+; 	05 = enemy tank bullet up
 ; 	06 = dot large
 ; 	07 = dot small
 ; 	08 = enemy tank facing right
@@ -1464,7 +1569,7 @@ data b183-bfff
 ; 	2E - enemy light cycle right
 ; 	2F - light cycle up
 ; 	30 - light cycle right
-; 	31-36 - MCP brick left to right (6 positions)
+; 	31-36 - MCP block left to right (6 positions)
 ; 	37 - MCP cone block
 ; 	38 - MCP cone left triangle?
 ; 	39 - MCP cone right triangle?
