@@ -36,6 +36,7 @@ ALL_RIGHTS_RESERVED_S EQU $0baf
 READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS EQU $0d38
 SHOULD_I_UPDATE_CONE_COLOR? EQU $0e32
 MCP_ATTRACT_COLORS? EQU $0e55
+DATA_TO_101A_USED_AT_0F86? EQU $1001
 PLEASE_S EQU $101b
 ENTER_S EQU $1022
 YOUR_S EQU $1028
@@ -48,6 +49,7 @@ YOUR_SCORE_S EQU $120c
 RANKING_IS_S EQU $1217
 NOT_IN_THE_TOP_S EQU $1222
 100_SCORES_S EQU $1231
+DATA_FOR_???_TO_14FF EQU $13f7
 PICK_WHICH_INSTRUCTIONS_TO_PRINT EQU $1500
 SUBROUTINE_THAT_DOES_WHAT? EQU $1538
 DISPLAY_RANKINGS_SCREEN EQU $1558
@@ -168,6 +170,7 @@ MCP_BLOCK_HIT_AUDIO EQU $354f
 MCP_BLOCK_DATA_TO_PROCESS_HIT EQU $3554
 MCP_BLOCKS_DATA_TO_35B2 EQU $3559
 MCP_CONE_RELATIVEX_RELATIVEY_SPRITE_NUMBER_TO_35D9 EQU $35b3
+_???_ EQU $35da
 MCP_COLOR_PALETTE_ALL_ZEROS EQU $3926
 DATA_FOR_MCP_SETUP_TO_398D EQU $3966
 PLAY_TANKS EQU $3a00
@@ -189,6 +192,7 @@ DATA_TO_49C7_USED_AT_49C8 EQU $4884
 TANK_TURRET_DRAW EQU $49c8
 TANK_BULLET?_DRAW_USES_IY EQU $4b70
 TANK_DATA_FOR?_USED_AT_4BBB EQU $4b8d
+TANK_SET_BULLET_X_AND_?_OFFSCREEN_CALL_UPDATE_POSITION? EQU $4bfd
 TANK_DATA_FOR?_STARTS_AT_4CFF EQU $4cfb
 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE EQU $4d77
 TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA EQU $4f7e
@@ -202,6 +206,7 @@ USE_TRIGGER_FOR_S EQU $518c
 SPEED_CONTROL_S EQU $519c
 LC_ERASE_TRAIL_OF_DESTROYED_LC EQU $5551
 LC_DRAW_A_TRAIL? EQU $59e5
+LC_MULTIPLE_CYCLES_DO_SOMETHING? EQU $5ac9
 PLAY_IO_TOWER EQU $5d00
 IO_TOWER_INSTRUCTIONS EQU $5e36
 IO_TOWER_STRING_DESTINATION_AND_SOURCE_LOCATIONS_00 EQU $5e7e
@@ -647,98 +652,18 @@ COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S:
 006b: COPYRIGHT 1982 BALLY MIDWAY MFG 
 008b: CO
 
-008d: 08             EX    AF,AF'
-008e: C4 0C 29       CALL  NZ,$290C
-0091: 85             ADD   A,L
-0092: 39             ADD   HL,SP
-0093: 22 29 09       LD    ($0929),HL
-0096: B1             OR    A,C
-0097: 58             LD    E,B
-0098: 80             ADD   A,B
-0099: 07             RLCA  
-009a: 22 E4 86       LD    ($86E4),HL
-009d: 0D             DEC   C
-009e: C0             RET   NZ
 
-009f: 57             LD    D,A
-00a0: 04             INC   B
-00a1: 11 3B 25       LD    DE,$253B
-00a4: D5             PUSH  DE
-00a5: 45             LD    B,L
-00a6: 06 05          LD    B,#$05
-00a8: 84             ADD   A,H
-00a9: A9             XOR   A,C
-00aa: FB             EI    
-00ab: 16 14          LD    D,#$14
-00ad: 00             NOP   
-00ae: 2C             INC   L
-00af: 57             LD    D,A
-00b0: 29             ADD   HL,HL
-00b1: 01 18 55       LD    BC,$5518
-00b4: 50             LD    D,B
-00b5: 40             LD    B,B
-00b6: 44             LD    B,H
-00b7: 18 80          JR    $0039
+*** Data used where for what?
+008d: 08 C4 0C 29 85 39 22 29 09 B1 58 80 07 22 E4 86 
+009d: 0D C0 57 04 11 3B 25 D5 45 06 05 84 A9 FB 16 14 
+00ad: 00 2C 57 29 01 18 55 50 40 44 18 80 50 CC 1D 62 
+00bd: 3C C6 E8 76 36 FE FC CE A6 1D 6F DD FA 58 8F F3 
+00cd: FD DE EB F2 BC 3B 8F FA F0 D7 BB F6 2A 85 EF FC 
+00dd: F1 0E 9C 9E 23 6F EF C6 73 44 98 4E 6A 13 5A F8 
+00ed: 3E 9B 0F E6 78 0F 8B F1 4F 9E 1B 75 FF 1F F2 DA 
+00fd: 79 EA 6A 
 
-00b9: 50             LD    D,B
-00ba: CC 1D 62       CALL  Z,IO_OR_MCP?_SET_TRON_INITIAL_POSITION_AND_ROTATION
-00bd: 3C             INC   A
-00be: C6 E8          ADD   A,#$E8
-00c0: 76             HALT  
-
-00c1: 36 FE          LD    (HL),#$FE
-00c3: FC CE A6       CALL  M,$A6CE
-00c6: 1D             DEC   E
-00c7: 6F             LD    L,A
-00c8: DD FA          Illegal Opcode
-00ca: 58             LD    E,B
-00cb: 8F             ADC   A,A
-00cc: F3             DI    
-00cd: FD DE          Illegal Opcode
-00cf: EB             EX    DE,HL
-00d0: F2 BC 3B       JP    P,$3BBC
-
-00d3: 8F             ADC   A,A
-00d4: FA F0 D7       JP    M,$D7F0
-
-00d7: BB             CP    A,E
-00d8: F6 2A          OR    A,#$2A
-00da: 85             ADD   A,L
-00db: EF             RST   $28
-
-00dc: FC F1 0E       CALL  M,$0EF1
-00df: 9C             SBC   A,H
-00e0: 9E             SBC   A,(HL)
-00e1: 23             INC   HL
-00e2: 6F             LD    L,A
-00e3: EF             RST   $28
-
-00e4: C6 73          ADD   A,#$73
-00e6: 44             LD    B,H
-00e7: 98             SBC   A,B
-00e8: 4E             LD    C,(HL)
-00e9: 6A             LD    L,D
-00ea: 13             INC   DE
-00eb: 5A             LD    E,D
-00ec: F8             RET   M
-
-00ed: 3E 9B          LD    A,#$9B
-00ef: 0F             RRCA  
-00f0: E6 78          AND   A,#$78
-00f2: 0F             RRCA  
-00f3: 8B             ADC   A,E
-00f4: F1             POP   AF
-00f5: 4F             LD    C,A
-00f6: 9E             SBC   A,(HL)
-00f7: 1B             DEC   DE
-00f8: 75             LD    (HL),L
-00f9: FF             RST   $38
-
-00fa: 1F             RRA   
-00fb: F2 DA 79       JP    P,$79DA
-
-00fe: EA 6A F3       JP    PE,$F36A
-
+0100: F3             DI    
 0101: 21 32 00       LD    HL,$0032
 0104: 2B             DEC   HL
 0105: 7C             LD    A,H
@@ -2566,65 +2491,14 @@ MCP_ATTRACT_COLORS?:
 0eb8: 32 7D C4       LD    ($C47D),A
 0ebb: C3 28 0D       JP    $0D28
 
-0ebe: 89             ADC   A,C
-0ebf: 9C             SBC   A,H
-0ec0: FE DB          CP    A,#$DB
-0ec2: F3             DI    
-0ec3: F7             RST   $30
 
-0ec4: BE             CP    A,(HL)
-0ec5: DF             RST   $18
+*** Data used where for what?
+0ebe: 89 9C FE DB F3 F7 BE DF F3 D5 CF FA D9 F4 FC FB 
+0ece: F3 F2 FE DA E3 F3 7E FF F6 EB EF 9F F2 F3 5F E2 
+0ede: D1 FB CB D2 F6 F0 EF BE F5 EB DD FF F6 EA DD C3 
+0eee: EA E4 FD EA E1 D3 DB FE FF 73 DF DF CF F3 9B D6 
+0efe: D0 85 
 
-0ec6: F3             DI    
-0ec7: D5             PUSH  DE
-0ec8: CF             RST   $08
-
-0ec9: FA D9 F4       JP    M,$F4D9
-
-0ecc: FC FB F3       CALL  M,$F3FB
-0ecf: F2 FE DA       JP    P,$DAFE
-
-0ed2: E3             EX    (SP),HL
-0ed3: F3             DI    
-0ed4: 7E             LD    A,(HL)
-0ed5: FF             RST   $38
-
-0ed6: F6 EB          OR    A,#$EB
-0ed8: EF             RST   $28
-
-0ed9: 9F             SBC   A,A
-0eda: F2 F3 5F       JP    P,$5FF3
-
-0edd: E2 D1 FB       JP    PO,$FBD1
-
-0ee0: CB D2          SET   2,D
-0ee2: F6 F0          OR    A,#$F0
-0ee4: EF             RST   $28
-
-0ee5: BE             CP    A,(HL)
-0ee6: F5             PUSH  AF
-0ee7: EB             EX    DE,HL
-0ee8: DD FF          Illegal Opcode
-0eea: F6 EA          OR    A,#$EA
-0eec: DD C3          Illegal Opcode
-0eee: EA E4 FD       JP    PE,$FDE4
-
-0ef1: EA E1 D3       JP    PE,$D3E1
-
-0ef4: DB FE          IN    A,($FE)
-0ef6: FF             RST   $38
-
-0ef7: 73             LD    (HL),E
-0ef8: DF             RST   $18
-
-0ef9: DF             RST   $18
-
-0efa: CF             RST   $08
-
-0efb: F3             DI    
-0efc: 9B             SBC   A,E
-0efd: D6 D0          SUB   A,#$D0
-0eff: 85             ADD   A,L
 0f00: 06 20          LD    B,#$20
 0f02: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 0f05: 10 FB          DJNZ  $0F02
@@ -2693,7 +2567,7 @@ MCP_ATTRACT_COLORS?:
 0f7f: AF             XOR   A,A
 0f80: 32 65 C4       LD    ($C465),A
 0f83: CD C7 6F       CALL  CLEAR_BACKGROUND
-0f86: DD 21 01 10    LD    IX,$1001
+0f86: DD 21 01 10    LD    IX,DATA_TO_101A_USED_AT_0F86?
 0f8a: DD 4E 00       LD    C,(IX+$00)
 0f8d: DD 46 01       LD    B,(IX+$01)
 0f90: 79             LD    A,C
@@ -2751,23 +2625,10 @@ MCP_ATTRACT_COLORS?:
 
 0ffe: C3 1D 11       JP    $111D
 
-1001: C8             RET   Z
+DATA_TO_101A_USED_AT_0F86?:
+1001: C8 FC 1B 10 CA FC 22 10 CC FC 28 10 CE FC 2D 10 
+1011: F8 FD 36 10 FA FD 3C 10 00 00 
 
-1002: FC 1B 10       CALL  M,PLEASE_S
-1005: CA FC 22       JP    Z,$22FC
-
-1008: 10 CC          DJNZ  $0FD6
-
-100a: FC 28 10       CALL  M,YOUR_S
-100d: CE FC          ADC   A,#$FC
-100f: 2D             DEC   L
-1010: 10 F8          DJNZ  $100A
-
-1012: FD 36 10 FA    LD    (IY+$10),#$FA
-1016: FD 3C          Illegal Opcode
-1018: 10 00          DJNZ  $101A
-
-101a: 00             NOP   
 PLEASE_S:
 101b: PLEASE
 
@@ -3224,7 +3085,7 @@ NOT_IN_THE_TOP_S:
 133c: 00             NOP   
 133d: 06 00          LD    B,#$00
 133f: 21 58 C6       LD    HL,$C658
-1342: DD 21 F7 13    LD    IX,$13F7
+1342: DD 21 F7 13    LD    IX,DATA_FOR_???_TO_14FF
 1346: 06 09          LD    B,#$09
 1348: 3A 16 C4       LD    A,($C416)
 134b: DD BE 00       CP    A,(IX+$00)
@@ -3333,243 +3194,27 @@ NOT_IN_THE_TOP_S:
 13f3: 32 27 C5       LD    ($C527),A
 13f6: C9             RET   
 
-13f7: 00             NOP   
-13f8: 50             LD    D,B
-13f9: 00             NOP   
-13fa: 01 00 00       LD    BC,$0000
-13fd: 02             LD    (BC),A
-13fe: 00             NOP   
-13ff: 00             NOP   
-1400: 03             INC   BC
-1401: 00             NOP   
-1402: 00             NOP   
-1403: 04             INC   B
-1404: 00             NOP   
-1405: 00             NOP   
-1406: 05             DEC   B
-1407: 00             NOP   
-1408: 00             NOP   
-1409: 07             RLCA  
-140a: 50             LD    D,B
-140b: 00             NOP   
-140c: 10 00          DJNZ  $140E
+DATA_FOR_???_TO_14FF:
+13f7: 00 50 00 01 00 00 02 00 00 03 00 00 04 00 00 05 
+1407: 00 00 07 50 00 10 00 00 15 00 00 30 44 96 D4 C4 
+1417: 14 00 1D 20 03 25 8D 01 25 74 8E 95 88 B0 80 66 
+1427: C5 42 4C 04 0F 40 D0 46 A5 35 56 1C 58 30 31 99 
+1437: 01 02 0C B4 95 90 03 06 00 00 8F 19 0E 83 65 D1 
+1447: 10 62 32 0C 35 5E 34 20 64 70 0E C7 14 94 24 1D 
+1457: 3E 07 3D 84 12 93 07 3D 01 04 B4 61 BE 77 0C 5C 
+1467: AC 54 38 C6 4C CB 54 8C 24 B4 50 36 0A 30 09 40 
+1477: 47 9D 06 C0 23 80 21 30 7E 6F B9 BB 9F EB CB 5B 
+1487: E7 7C 68 1A E3 33 E7 FC D2 76 FA 4F 33 FB C0 3B 
+1497: EF F9 5F A7 AB F6 6F 3A D5 EB 7C 88 E9 D8 4B 7B 
+14a7: 7B 4B 6D B3 A8 EA 6D 2B 49 F9 E8 EA 6E AA 77 4F 
+14b7: FB BA 99 EB 7B 4E B1 FF 9E 2B B2 AB D9 D3 26 B9 
+14c7: DF 9F 74 D3 87 EA F3 F2 FA F6 25 5B 6F A7 6B 71 
+14d7: 6C F3 F9 E9 E8 52 C7 73 F6 FB E7 6A B9 6B 2A 9B 
+14e7: EB 83 E3 E3 FE 7D FE 9B FA FB 83 3C 7A 27 77 83 
+14f7: E6 36 F7 B7 8B B3 2C B8 4B 
 
-140e: 00             NOP   
-140f: 15             DEC   D
-1410: 00             NOP   
-1411: 00             NOP   
-1412: 30 44          JR    NC,$1458
-
-1414: 96             SUB   A,(HL)
-1415: D4 C4 14       CALL  NC,$14C4
-1418: 00             NOP   
-1419: 1D             DEC   E
-141a: 20 03          JR    NZ,$141F
-
-141c: 25             DEC   H
-141d: 8D             ADC   A,L
-141e: 01 25 74       LD    BC,$7425
-1421: 8E             ADC   A,(HL)
-1422: 95             SUB   A,L
-1423: 88             ADC   A,B
-1424: B0             OR    A,B
-1425: 80             ADD   A,B
-1426: 66             LD    H,(HL)
-1427: C5             PUSH  BC
-1428: 42             LD    B,D
-1429: 4C             LD    C,H
-142a: 04             INC   B
-142b: 0F             RRCA  
-142c: 40             LD    B,B
-142d: D0             RET   NC
-
-142e: 46             LD    B,(HL)
-142f: A5             AND   A,L
-1430: 35             DEC   (HL)
-1431: 56             LD    D,(HL)
-1432: 1C             INC   E
-1433: X01
-
-1436: 99             SBC   A,C
-1437: 01 02 0C       LD    BC,$0C02
-143a: B4             OR    A,H
-143b: 95             SUB   A,L
-143c: 90             SUB   A,B
-143d: 03             INC   BC
-143e: 06 00          LD    B,#$00
-1440: 00             NOP   
-1441: 8F             ADC   A,A
-1442: 19             ADD   HL,DE
-1443: 0E 83          LD    C,#$83
-1445: 65             LD    H,L
-1446: D1             POP   DE
-1447: 10 62          DJNZ  $14AB
-
-1449: 32 0C 35       LD    ($350C),A
-144c: 5E             LD    E,(HL)
-144d: 34             INC   (HL)
-144e: 20 64          JR    NZ,$14B4
-
-1450: 70             LD    (HL),B
-1451: 0E C7          LD    C,#$C7
-1453: 14             INC   D
-1454: 94             SUB   A,H
-1455: 24             INC   H
-1456: 1D             DEC   E
-1457: 3E 07          LD    A,#$07
-1459: 3D             DEC   A
-145a: 84             ADD   A,H
-145b: 12             LD    (DE),A
-145c: 93             SUB   A,E
-145d: 07             RLCA  
-145e: 3D             DEC   A
-145f: 01 04 B4       LD    BC,$B404
-1462: 61             LD    H,C
-1463: BE             CP    A,(HL)
-1464: 77             LD    (HL),A
-1465: 0C             INC   C
-1466: 5C             LD    E,H
-1467: AC             XOR   A,H
-1468: 54             LD    D,H
-1469: 38 C6          JR    C,$1431
-
-146b: 4C             LD    C,H
-146c: CB 54          BIT   2,H
-146e: 8C             ADC   A,H
-146f: 24             INC   H
-1470: B4             OR    A,H
-1471: 50             LD    D,B
-1472: 36 0A          LD    (HL),#$0A
-1474: 30 09          JR    NC,$147F
-
-1476: 40             LD    B,B
-1477: 47             LD    B,A
-1478: 9D             SBC   A,L
-1479: 06 C0          LD    B,#$C0
-147b: 23             INC   HL
-147c: 80             ADD   A,B
-147d: 21 30 7E       LD    HL,$7E30
-1480: 6F             LD    L,A
-1481: B9             CP    A,C
-1482: BB             CP    A,E
-1483: 9F             SBC   A,A
-1484: EB             EX    DE,HL
-1485: CB 5B          BIT   3,E
-1487: E7             RST   $20
-
-1488: 7C             LD    A,H
-1489: 68             LD    L,B
-148a: 1A             LD    A,(DE)
-148b: E3             EX    (SP),HL
-148c: 33             INC   SP
-148d: E7             RST   $20
-
-148e: FC D2 76       CALL  M,$76D2
-1491: FA 4F 33       JP    M,$334F
-
-1494: FB             EI    
-1495: C0             RET   NZ
-
-1496: 3B             DEC   SP
-1497: EF             RST   $28
-
-1498: F9             LD    SP,HL
-1499: 5F             LD    E,A
-149a: A7             AND   A,A
-149b: AB             XOR   A,E
-149c: F6 6F          OR    A,#$6F
-149e: 3A D5 EB       LD    A,($EBD5)
-14a1: 7C             LD    A,H
-14a2: 88             ADC   A,B
-14a3: E9             JP    (HL)
-14a4: D8             RET   C
-
-14a5: 4B             LD    C,E
-14a6: 7B             LD    A,E
-14a7: 7B             LD    A,E
-14a8: 4B             LD    C,E
-14a9: 6D             LD    L,L
-14aa: B3             OR    A,E
-14ab: A8             XOR   A,B
-14ac: EA 6D 2B       JP    PE,$2B6D
-
-14af: 49             LD    C,C
-14b0: F9             LD    SP,HL
-14b1: E8             RET   PE
-
-14b2: EA 6E AA       JP    PE,$AA6E
-
-14b5: 77             LD    (HL),A
-14b6: 4F             LD    C,A
-14b7: FB             EI    
-14b8: BA             CP    A,D
-14b9: 99             SBC   A,C
-14ba: EB             EX    DE,HL
-14bb: 7B             LD    A,E
-14bc: 4E             LD    C,(HL)
-14bd: B1             OR    A,C
-14be: FF             RST   $38
-
-14bf: 9E             SBC   A,(HL)
-14c0: 2B             DEC   HL
-14c1: B2             OR    A,D
-14c2: AB             XOR   A,E
-14c3: D9             EXX   
-14c4: D3 26          OUT   ($26),A
-14c6: B9             CP    A,C
-14c7: DF             RST   $18
-
-14c8: 9F             SBC   A,A
-14c9: 74             LD    (HL),H
-14ca: D3 87          OUT   ($87),A
-14cc: EA F3 F2       JP    PE,$F2F3
-
-14cf: FA F6 25       JP    M,$25F6
-
-14d2: 5B             LD    E,E
-14d3: 6F             LD    L,A
-14d4: A7             AND   A,A
-14d5: 6B             LD    L,E
-14d6: 71             LD    (HL),C
-14d7: 6C             LD    L,H
-14d8: F3             DI    
-14d9: F9             LD    SP,HL
-14da: E9             JP    (HL)
-14db: E8             RET   PE
-
-14dc: 52             LD    D,D
-14dd: C7             RST   $00
-
-14de: 73             LD    (HL),E
-14df: F6 FB          OR    A,#$FB
-14e1: E7             RST   $20
-
-14e2: 6A             LD    L,D
-14e3: B9             CP    A,C
-14e4: 6B             LD    L,E
-14e5: 2A 9B EB       LD    HL,($EB9B)
-14e8: 83             ADD   A,E
-14e9: E3             EX    (SP),HL
-14ea: E3             EX    (SP),HL
-14eb: FE 7D          CP    A,#$7D
-14ed: FE 9B          CP    A,#$9B
-14ef: FA FB 83       JP    M,$83FB
-
-14f2: 3C             INC   A
-14f3: 7A             LD    A,D
-14f4: 27             DAA   
-14f5: 77             LD    (HL),A
-14f6: 83             ADD   A,E
-14f7: E6 36          AND   A,#$36
-14f9: F7             RST   $30
-
-14fa: B7             OR    A,A
-14fb: 8B             ADC   A,E
-14fc: B3             OR    A,E
-14fd: 2C             INC   L
-14fe: B8             CP    A,B
-14ff: 4B             LD    C,E
 PICK_WHICH_INSTRUCTIONS_TO_PRINT:
+Error: missed a data line, count-1=1500,curdata=46,numdata=507,start=1433, end=1435
 1500: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_5?
 1503: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 1506: CD 49 70       CALL  INITIALIZE_SPRITES
@@ -4175,227 +3820,24 @@ THE_CONE_S:
 ALL_BLOCKS_S:
 1e06: ALL BLOCKS
 
-1e11: 33             INC   SP
-1e12: AB             XOR   A,E
-1e13: EB             EX    DE,HL
-1e14: 4B             LD    C,E
-1e15: BB             CP    A,E
-1e16: E2 E9 B7       JP    PO,$B7E9
 
-1e19: EF             RST   $28
+*** Data for what used where?
+1e11: 33 AB EB 4B BB E2 E9 B7 EF 1E 7D E9 BB 6B 22 FE 
+1e21: E3 A0 DF 88 F9 2A AF EB FF A2 39 FF E3 EA A9 A2 
+1e31: EB 7F 49 8F FF EA A3 5F AB AB 3F F0 E6 FC A2 DB 
+1e41: FF FE 67 97 FB DB BF CB EB FD 6D 6B F9 F7 6B 6B 
+1e51: 5B EF BB 63 E3 26 E3 EA ED 0F 78 B5 BD EF E9 CB 
+1e61: 6F 5F 79 FF EB F9 6C FA 6D 72 FA FD FF EB 6B EA 
+1e71: E3 EA 6D AD 5F EB F8 EF D1 5F FF FF FF F6 FB 75 
+1e81: 51 65 E8 04 8C 1C 50 44 4B 31 1C 0C E0 ED 36 24 
+1e91: 98 04 49 98 04 74 44 0C 42 0C 95 66 24 24 44 10 
+1ea1: 46 63 7C 24 7B 08 02 10 26 36 08 C0 D1 10 96 76 
+1eb1: 21 5E 18 52 E0 1E 54 40 D0 30 54 21 00 55 76 14 
+1ec1: 95 04 0D 8C D3 00 C0 30 04 AE C0 44 10 86 5E 0E 
+1ed1: 48 33 22 21 05 14 97 04 CC 00 12 04 60 19 A5 50 
+1ee1: 91 08 14 02 26 01 18 5C A8 16 14 94 10 08 84 05 
+1ef1: D4 00 00 94 3A 02 56 A1 C9 14 D4 97 1A D0 04 
 
-1e1a: 1E 7D          LD    E,#$7D
-1e1c: E9             JP    (HL)
-1e1d: BB             CP    A,E
-1e1e: 6B             LD    L,E
-1e1f: 22 FE E3       LD    ($E3FE),HL
-1e22: A0             AND   A,B
-1e23: DF             RST   $18
-
-1e24: 88             ADC   A,B
-1e25: F9             LD    SP,HL
-1e26: 2A AF EB       LD    HL,($EBAF)
-1e29: FF             RST   $38
-
-1e2a: A2             AND   A,D
-1e2b: 39             ADD   HL,SP
-1e2c: FF             RST   $38
-
-1e2d: E3             EX    (SP),HL
-1e2e: EA A9 A2       JP    PE,$A2A9
-
-1e31: EB             EX    DE,HL
-1e32: 7F             LD    A,A
-1e33: 49             LD    C,C
-1e34: 8F             ADC   A,A
-1e35: FF             RST   $38
-
-1e36: EA A3 5F       JP    PE,$5FA3
-
-1e39: AB             XOR   A,E
-1e3a: AB             XOR   A,E
-1e3b: 3F             CCF   
-1e3c: F0             RET   P
-
-1e3d: E6 FC          AND   A,#$FC
-1e3f: A2             AND   A,D
-1e40: DB FF          IN    A,($FF)
-1e42: FE 67          CP    A,#$67
-1e44: 97             SUB   A,A
-1e45: FB             EI    
-1e46: DB BF          IN    A,($BF)
-1e48: CB EB          SET   5,E
-1e4a: FD 6D          Illegal Opcode
-1e4c: 6B             LD    L,E
-1e4d: F9             LD    SP,HL
-1e4e: F7             RST   $30
-
-1e4f: 6B             LD    L,E
-1e50: 6B             LD    L,E
-1e51: 5B             LD    E,E
-1e52: EF             RST   $28
-
-1e53: BB             CP    A,E
-1e54: 63             LD    H,E
-1e55: E3             EX    (SP),HL
-1e56: 26 E3          LD    H,#$E3
-1e58: EA ED 0F       JP    PE,$0FED
-
-1e5b: 78             LD    A,B
-1e5c: B5             OR    A,L
-1e5d: BD             CP    A,L
-1e5e: EF             RST   $28
-
-1e5f: E9             JP    (HL)
-1e60: CB 6F          BIT   5,A
-1e62: 5F             LD    E,A
-1e63: 79             LD    A,C
-1e64: FF             RST   $38
-
-1e65: EB             EX    DE,HL
-1e66: F9             LD    SP,HL
-1e67: 6C             LD    L,H
-1e68: FA 6D 72       JP    M,$726D
-
-1e6b: FA FD FF       JP    M,$FFFD
-
-1e6e: EB             EX    DE,HL
-1e6f: 6B             LD    L,E
-1e70: EA E3 EA       JP    PE,$EAE3
-
-1e73: 6D             LD    L,L
-1e74: AD             XOR   A,L
-1e75: 5F             LD    E,A
-1e76: EB             EX    DE,HL
-1e77: F8             RET   M
-
-1e78: EF             RST   $28
-
-1e79: D1             POP   DE
-1e7a: 5F             LD    E,A
-1e7b: FF             RST   $38
-
-1e7c: FF             RST   $38
-
-1e7d: FF             RST   $38
-
-1e7e: F6 FB          OR    A,#$FB
-1e80: 75             LD    (HL),L
-1e81: 51             LD    D,C
-1e82: 65             LD    H,L
-1e83: E8             RET   PE
-
-1e84: 04             INC   B
-1e85: 8C             ADC   A,H
-1e86: 1C             INC   E
-1e87: 50             LD    D,B
-1e88: 44             LD    B,H
-1e89: 4B             LD    C,E
-1e8a: 31 1C 0C       LD    SP,$0C1C
-1e8d: E0             RET   PO
-
-1e8e: ED 36          Illegal Opcode
-1e90: 24             INC   H
-1e91: 98             SBC   A,B
-1e92: 04             INC   B
-1e93: 49             LD    C,C
-1e94: 98             SBC   A,B
-1e95: 04             INC   B
-1e96: 74             LD    (HL),H
-1e97: 44             LD    B,H
-1e98: 0C             INC   C
-1e99: 42             LD    B,D
-1e9a: 0C             INC   C
-1e9b: 95             SUB   A,L
-1e9c: 66             LD    H,(HL)
-1e9d: 24             INC   H
-1e9e: 24             INC   H
-1e9f: 44             LD    B,H
-1ea0: 10 46          DJNZ  $1EE8
-
-1ea2: 63             LD    H,E
-1ea3: 7C             LD    A,H
-1ea4: 24             INC   H
-1ea5: 7B             LD    A,E
-1ea6: 08             EX    AF,AF'
-1ea7: 02             LD    (BC),A
-1ea8: 10 26          DJNZ  $1ED0
-
-1eaa: 36 08          LD    (HL),#$08
-1eac: C0             RET   NZ
-
-1ead: D1             POP   DE
-1eae: 10 96          DJNZ  $1E46
-
-1eb0: 76             HALT  
-
-1eb1: 21 5E 18       LD    HL,$185E
-1eb4: 52             LD    D,D
-1eb5: E0             RET   PO
-
-1eb6: 1E 54          LD    E,#$54
-1eb8: 40             LD    B,B
-1eb9: D0             RET   NC
-
-1eba: 30 54          JR    NC,$1F10
-
-1ebc: 21 00 55       LD    HL,$5500
-1ebf: 76             HALT  
-
-1ec0: 14             INC   D
-1ec1: 95             SUB   A,L
-1ec2: 04             INC   B
-1ec3: 0D             DEC   C
-1ec4: 8C             ADC   A,H
-1ec5: D3 00          OUT   ($00),A
-1ec7: C0             RET   NZ
-
-1ec8: 30 04          JR    NC,$1ECE
-
-1eca: AE             XOR   A,(HL)
-1ecb: C0             RET   NZ
-
-1ecc: 44             LD    B,H
-1ecd: 10 86          DJNZ  $1E55
-
-1ecf: 5E             LD    E,(HL)
-1ed0: 0E 48          LD    C,#$48
-1ed2: 33             INC   SP
-1ed3: 22 21 05       LD    ($0521),HL
-1ed6: 14             INC   D
-1ed7: 97             SUB   A,A
-1ed8: 04             INC   B
-1ed9: CC 00 12       CALL  Z,$1200
-1edc: 04             INC   B
-1edd: 60             LD    H,B
-1ede: 19             ADD   HL,DE
-1edf: A5             AND   A,L
-1ee0: 50             LD    D,B
-1ee1: 91             SUB   A,C
-1ee2: 08             EX    AF,AF'
-1ee3: 14             INC   D
-1ee4: 02             LD    (BC),A
-1ee5: 26 01          LD    H,#$01
-1ee7: 18 5C          JR    $1F45
-
-1ee9: A8             XOR   A,B
-1eea: 16 14          LD    D,#$14
-1eec: 94             SUB   A,H
-1eed: 10 08          DJNZ  $1EF7
-
-1eef: 84             ADD   A,H
-1ef0: 05             DEC   B
-1ef1: D4 00 00       CALL  NC,$0000
-1ef4: 94             SUB   A,H
-1ef5: 3A 02 56       LD    A,($5602)
-1ef8: A1             AND   A,C
-1ef9: C9             RET   
-
-1efa: 14             INC   D
-1efb: D4 97 1A       CALL  NC,$1A97
-1efe: D0             RET   NC
-
-1eff: 04             INC   B
 GS_DO_?:
 1f00: 2A 56 C4       LD    HL,($C456)
 1f03: 7C             LD    A,H
@@ -5889,7 +5331,7 @@ MCP_ROTATE_LEFT:
 31e3: 96             SUB   A,(HL)
 31e4: ED 44          NEG   
 31e6: 87             ADD   A,A
-31e7: 21 DA 35       LD    HL,$35DA
+31e7: 21 DA 35       LD    HL,_???_
 31ea: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 31ed: 22 10 C4       LD    (MCP_BLOCKS_COLOR_VECTOR_POINTER_0E55),HL
 31f0: 3E 01          LD    A,#$01
@@ -6370,660 +5812,60 @@ MCP_CONE_RELATIVEX_RELATIVEY_SPRITE_NUMBER_TO_35D9:
 
 
 *** MCP colors?
-35da: 01 
-
-35db: C0             RET   NZ
-
-35dc: 00             NOP   
-35dd: 38 00          JR    C,$35DF
-
-35df: 07             RLCA  
-35e0: 01 C7 01       LD    BC,$01C7
-35e3: F8             RET   M
-
-35e4: 00             NOP   
-35e5: 3F             CCF   
-35e6: 01 C0 00       LD    BC,$00C0
-35e9: 38 00          JR    C,$35EB
-
-35eb: 07             RLCA  
-35ec: 01 C7 01       LD    BC,$01C7
-35ef: F8             RET   M
-
-35f0: 00             NOP   
-35f1: 3F             CCF   
-35f2: 01 C0 00       LD    BC,$00C0
-35f5: 38 00          JR    C,$35F7
-
-35f7: 07             RLCA  
-35f8: 01 C7 01       LD    BC,$01C7
-35fb: F8             RET   M
-
-35fc: 00             NOP   
-35fd: 3F             CCF   
-35fe: 01 C0 00       LD    BC,$00C0
-3601: 38 00          JR    C,$3603
-
-3603: 07             RLCA  
-3604: 01 C7 01       LD    BC,$01C7
-3607: F8             RET   M
-
-3608: 00             NOP   
-3609: 3F             CCF   
-360a: 01 C0 00       LD    BC,$00C0
-360d: 38 00          JR    C,$360F
-
-360f: 07             RLCA  
-3610: 01 C7 01       LD    BC,$01C7
-3613: F8             RET   M
-
-3614: 00             NOP   
-3615: 3F             CCF   
-3616: 01 C0 00       LD    BC,$00C0
-3619: 38 00          JR    C,$361B
-
-361b: 07             RLCA  
-361c: 01 C7 01       LD    BC,$01C7
-361f: F8             RET   M
-
-3620: 00             NOP   
-3621: 3F             CCF   
-3622: 01 C0 00       LD    BC,$00C0
-3625: 38 00          JR    C,$3627
-
-3627: 07             RLCA  
-3628: 01 C7 01       LD    BC,$01C7
-362b: F8             RET   M
-
-362c: 00             NOP   
-362d: 3F             CCF   
-362e: 0F             RRCA  
-362f: 00             NOP   
-3630: 00             NOP   
-3631: F0             RET   P
-
-3632: 00             NOP   
-3633: 0F             RRCA  
-3634: 0F             RRCA  
-3635: 0F             RRCA  
-3636: 0F             RRCA  
-3637: F0             RET   P
-
-3638: 00             NOP   
-3639: FF             RST   $38
-
-363a: 00             NOP   
-363b: 00             NOP   
-363c: 00             NOP   
-363d: 00             NOP   
-363e: 00             NOP   
-363f: FE 00          CP    A,#$00
-3641: 00             NOP   
-3642: 00             NOP   
-3643: 02             LD    (BC),A
-3644: 00             NOP   
-3645: 00             NOP   
-3646: 00             NOP   
-3647: 00             NOP   
-3648: 00             NOP   
-3649: 00             NOP   
-364a: 00             NOP   
-364b: 00             NOP   
-364c: 00             NOP   
-364d: FE 00          CP    A,#$00
-364f: FE 00          CP    A,#$00
-3651: FE 00          CP    A,#$00
-3653: 02             LD    (BC),A
-3654: 00             NOP   
-3655: FE 00          CP    A,#$00
-3657: 00             NOP   
-3658: 00             NOP   
-3659: 00             NOP   
-365a: 00             NOP   
-365b: 00             NOP   
-365c: 00             NOP   
-365d: 02             LD    (BC),A
-365e: 00             NOP   
-365f: FE 00          CP    A,#$00
-3661: 02             LD    (BC),A
-3662: 00             NOP   
-3663: 02             LD    (BC),A
-3664: 00             NOP   
-3665: 02             LD    (BC),A
-3666: 00             NOP   
-3667: 00             NOP   
-3668: 00             NOP   
-3669: 00             NOP   
-366a: 00             NOP   
-366b: 00             NOP   
-366c: 00             NOP   
-366d: 00             NOP   
-366e: 00             NOP   
-366f: 00             NOP   
-3670: 00             NOP   
-3671: 00             NOP   
-3672: 00             NOP   
-3673: 00             NOP   
-3674: 00             NOP   
-3675: 00             NOP   
-3676: 00             NOP   
-3677: 00             NOP   
-3678: 00             NOP   
-3679: 00             NOP   
-367a: 9D             SBC   A,L
-367b: 9E             SBC   A,(HL)
-367c: 9F             SBC   A,A
-367d: A0             AND   A,B
-367e: AB             XOR   A,E
-367f: 00             NOP   
-3680: 01 AC 00       LD    BC,$00AC
-3683: 02             LD    (BC),A
-3684: AA             XOR   A,D
-3685: 07             RLCA  
-3686: F9             LD    SP,HL
-3687: FA 03 00       JP    M,$0003
-
-368a: 04             INC   B
-368b: 00             NOP   
-368c: 00             NOP   
-368d: 9D             SBC   A,L
-368e: 9E             SBC   A,(HL)
-368f: 9F             SBC   A,A
-3690: A0             AND   A,B
-3691: AB             XOR   A,E
-3692: 00             NOP   
-3693: 01 AC 00       LD    BC,$00AC
-3696: 02             LD    (BC),A
-3697: E9             JP    (HL)
-3698: 07             RLCA  
-3699: 03             INC   BC
-369a: FA 03 D8       JP    M,$D803
-
-369d: 03             INC   BC
-369e: AC             XOR   A,H
-369f: 00             NOP   
-36a0: 9D             SBC   A,L
-36a1: 9E             SBC   A,(HL)
-36a2: 9F             SBC   A,A
-36a3: A0             AND   A,B
-36a4: AB             XOR   A,E
-36a5: 00             NOP   
-36a6: 01 AC 00       LD    BC,$00AC
-36a9: 02             LD    (BC),A
-36aa: E8             RET   PE
-
-36ab: 07             RLCA  
-36ac: 03             INC   BC
-36ad: FA 03 AC       JP    M,$AC03
-
-36b0: 03             INC   BC
-36b1: 58             LD    E,B
-36b2: 01 9D 9E       LD    BC,$9E9D
-36b5: 9F             SBC   A,A
-36b6: A0             AND   A,B
-36b7: AB             XOR   A,E
-36b8: 00             NOP   
-36b9: 01 AC 00       LD    BC,$00AC
-36bc: 02             LD    (BC),A
-36bd: E7             RST   $20
-
-36be: 07             RLCA  
-36bf: 03             INC   BC
-36c0: FA 03 64       JP    M,$6403
-
-36c3: 03             INC   BC
-36c4: F4 01 9D       CALL  P,$9D01
-36c7: 9E             SBC   A,(HL)
-36c8: 9F             SBC   A,A
-36c9: A0             AND   A,B
-36ca: AB             XOR   A,E
-36cb: 00             NOP   
-36cc: 01 AC 00       LD    BC,$00AC
-36cf: 02             LD    (BC),A
-36d0: E6 07          AND   A,#$07
-36d2: 03             INC   BC
-36d3: FA 03 00       JP    M,$0003
-
-36d6: 03             INC   BC
-36d7: 84             ADD   A,H
-36d8: 02             LD    (BC),A
-36d9: 9D             SBC   A,L
-36da: 9E             SBC   A,(HL)
-36db: 9F             SBC   A,A
-36dc: A0             AND   A,B
-36dd: AB             XOR   A,E
-36de: 00             NOP   
-36df: 01 AC 00       LD    BC,$00AC
-36e2: 02             LD    (BC),A
-36e3: E5             PUSH  HL
-36e4: 07             RLCA  
-36e5: 03             INC   BC
-36e6: FA 03 84       JP    M,$8403
-
-36e9: 02             LD    (BC),A
-36ea: 00             NOP   
-36eb: 03             INC   BC
-36ec: 9D             SBC   A,L
-36ed: 9E             SBC   A,(HL)
-36ee: 9F             SBC   A,A
-36ef: A0             AND   A,B
-36f0: AB             XOR   A,E
-36f1: 00             NOP   
-36f2: 01 AC 00       LD    BC,$00AC
-36f5: 02             LD    (BC),A
-36f6: E4 07 03       CALL  PO,$0307
-36f9: FA 03 F4       JP    M,$F403
-
-36fc: 01 64 03       LD    BC,$0364
-36ff: 9D             SBC   A,L
-3700: 9E             SBC   A,(HL)
-3701: 9F             SBC   A,A
-3702: A0             AND   A,B
-3703: AB             XOR   A,E
-3704: 00             NOP   
-3705: 01 AC 00       LD    BC,$00AC
-3708: 02             LD    (BC),A
-3709: E3             EX    (SP),HL
-370a: 07             RLCA  
-370b: 03             INC   BC
-370c: FA 03 58       JP    M,$5803
-
-370f: 01 AC 03       LD    BC,$03AC
-3712: 9D             SBC   A,L
-3713: 9E             SBC   A,(HL)
-3714: 9F             SBC   A,A
-3715: A0             AND   A,B
-3716: AB             XOR   A,E
-3717: 00             NOP   
-3718: 01 AC 00       LD    BC,$00AC
-371b: 02             LD    (BC),A
-371c: E2 07 03       JP    PO,$0307
-
-371f: FA 03 AC       JP    M,$AC03
-
-3722: 00             NOP   
-3723: D8             RET   C
-
-3724: 03             INC   BC
-3725: 9D             SBC   A,L
-3726: 9E             SBC   A,(HL)
-3727: 9F             SBC   A,A
-3728: A0             AND   A,B
-3729: AB             XOR   A,E
-372a: 00             NOP   
-372b: 01 AC 00       LD    BC,$00AC
-372e: 02             LD    (BC),A
-372f: E1             POP   HL
-3730: 07             RLCA  
-3731: 03             INC   BC
-3732: FA 03 00       JP    M,$0003
-
-3735: 00             NOP   
-3736: 00             NOP   
-3737: 04             INC   B
-3738: 1D             DEC   E
-3739: 1E 1F          LD    E,#$1F
-373b: 20 2B          JR    NZ,$3768
-
-373d: 00             NOP   
-373e: 01 2C 00       LD    BC,$002C
-3741: 02             LD    (BC),A
-3742: 62             LD    H,D
-3743: FA 02 06       JP    M,$0602
-
-3746: 03             INC   BC
-3747: 54             LD    D,H
-3748: FF             RST   $38
-
-3749: D8             RET   C
-
-374a: 03             INC   BC
-374b: 1D             DEC   E
-374c: 1E 1F          LD    E,#$1F
-374e: 20 2B          JR    NZ,$377B
-
-3750: 00             NOP   
-3751: 01 2C 00       LD    BC,$002C
-3754: 02             LD    (BC),A
-3755: 63             LD    H,E
-3756: FA 02 06       JP    M,$0602
-
-3759: 03             INC   BC
-375a: A8             XOR   A,B
-375b: FE AC          CP    A,#$AC
-375d: 03             INC   BC
-375e: 1D             DEC   E
-375f: 1E 1F          LD    E,#$1F
-3761: 20 2B          JR    NZ,$378E
-
-3763: 00             NOP   
-3764: 01 2C 00       LD    BC,$002C
-3767: 02             LD    (BC),A
-3768: 64             LD    H,H
-3769: FA 02 06       JP    M,$0602
-
-376c: 03             INC   BC
-376d: 0C             INC   C
-376e: FE 64          CP    A,#$64
-3770: 03             INC   BC
-3771: 1D             DEC   E
-3772: 1E 1F          LD    E,#$1F
-3774: 20 2B          JR    NZ,$37A1
-
-3776: 00             NOP   
-3777: 01 2C 00       LD    BC,$002C
-377a: 02             LD    (BC),A
-377b: 65             LD    H,L
-377c: FA 02 06       JP    M,$0602
-
-377f: 03             INC   BC
-3780: 7C             LD    A,H
-3781: FD 00          Illegal Opcode
-3783: 03             INC   BC
-3784: 1D             DEC   E
-3785: 1E 1F          LD    E,#$1F
-3787: 20 2B          JR    NZ,$37B4
-
-3789: 00             NOP   
-378a: 01 2C 00       LD    BC,$002C
-378d: 02             LD    (BC),A
-378e: 66             LD    H,(HL)
-378f: FA 02 06       JP    M,$0602
-
-3792: 03             INC   BC
-3793: 00             NOP   
-3794: FD 84          Illegal Opcode
-3796: 02             LD    (BC),A
-3797: 1D             DEC   E
-3798: 1E 1F          LD    E,#$1F
-379a: 20 2B          JR    NZ,$37C7
-
-379c: 00             NOP   
-379d: 01 2C 00       LD    BC,$002C
-37a0: 02             LD    (BC),A
-37a1: 67             LD    H,A
-37a2: FA 02 06       JP    M,$0602
-
-37a5: 03             INC   BC
-37a6: 9C             SBC   A,H
-37a7: FC F4 01       CALL  M,$01F4
-37aa: 1D             DEC   E
-37ab: 1E 1F          LD    E,#$1F
-37ad: 20 2B          JR    NZ,$37DA
-
-37af: 00             NOP   
-37b0: 01 2C 00       LD    BC,$002C
-37b3: 02             LD    (BC),A
-37b4: 68             LD    L,B
-37b5: FA 02 06       JP    M,$0602
-
-37b8: 03             INC   BC
-37b9: 54             LD    D,H
-37ba: FC 58 01       CALL  M,$0158
-37bd: 1D             DEC   E
-37be: 1E 1F          LD    E,#$1F
-37c0: 20 2B          JR    NZ,$37ED
-
-37c2: 00             NOP   
-37c3: 01 2C 00       LD    BC,$002C
-37c6: 02             LD    (BC),A
-37c7: 69             LD    L,C
-37c8: FA 02 06       JP    M,$0602
-
-37cb: 03             INC   BC
-37cc: 28 FC          JR    Z,$37CA
-
-37ce: AC             XOR   A,H
-37cf: 00             NOP   
-37d0: 1D             DEC   E
-37d1: 1E 1F          LD    E,#$1F
-37d3: 20 2B          JR    NZ,$3800
-
-37d5: 00             NOP   
-37d6: 01 2C 00       LD    BC,$002C
-37d9: 02             LD    (BC),A
-37da: 2A FA F9       LD    HL,($F9FA)
-37dd: 06 03          LD    B,#$03
-37df: 00             NOP   
-37e0: FC 00 00       CALL  M,$0000
-37e3: 1D             DEC   E
-37e4: 1E 1F          LD    E,#$1F
-37e6: 20 2B          JR    NZ,$3813
-
-37e8: 00             NOP   
-37e9: 01 2C 00       LD    BC,$002C
-37ec: 02             LD    (BC),A
-37ed: 29             ADD   HL,HL
-37ee: FA F9 06       JP    M,$06F9
-
-37f1: 03             INC   BC
-37f2: 28 FC          JR    Z,$37F0
-
-37f4: 54             LD    D,H
-37f5: FF             RST   $38
-
-37f6: 1D             DEC   E
-37f7: 1E 1F          LD    E,#$1F
-37f9: 20 2B          JR    NZ,$3826
-
-37fb: 00             NOP   
-37fc: 01 2C 00       LD    BC,$002C
-37ff: 02             LD    (BC),A
-3800: 28 FA          JR    Z,$37FC
-
-3802: F9             LD    SP,HL
-3803: 06 03          LD    B,#$03
-3805: 54             LD    D,H
-3806: FC A8 FE       CALL  M,$FEA8
-3809: 1D             DEC   E
-380a: 1E 1F          LD    E,#$1F
-380c: 20 2B          JR    NZ,$3839
-
-380e: 00             NOP   
-380f: 01 2C 00       LD    BC,$002C
-3812: 02             LD    (BC),A
-3813: 27             DAA   
-3814: FA F9 06       JP    M,$06F9
-
-3817: 03             INC   BC
-3818: 9C             SBC   A,H
-3819: FC 0C FE       CALL  M,$FE0C
-381c: 1D             DEC   E
-381d: 1E 1F          LD    E,#$1F
-381f: 20 2B          JR    NZ,$384C
-
-3821: 00             NOP   
-3822: 01 2C 00       LD    BC,$002C
-3825: 02             LD    (BC),A
-3826: 26 FA          LD    H,#$FA
-3828: F9             LD    SP,HL
-3829: 06 03          LD    B,#$03
-382b: 00             NOP   
-382c: FD 7C          Illegal Opcode
-382e: FD 1D          Illegal Opcode
-3830: 1E 1F          LD    E,#$1F
-3832: 20 2B          JR    NZ,$385F
-
-3834: 00             NOP   
-3835: 01 2C 00       LD    BC,$002C
-3838: 02             LD    (BC),A
-3839: 25             DEC   H
-383a: FA F9 06       JP    M,$06F9
-
-383d: 03             INC   BC
-383e: 7C             LD    A,H
-383f: FD 00          Illegal Opcode
-3841: FD 1D          Illegal Opcode
-3843: 1E 1F          LD    E,#$1F
-3845: 20 2B          JR    NZ,$3872
-
-3847: 00             NOP   
-3848: 01 2C 00       LD    BC,$002C
-384b: 02             LD    (BC),A
-384c: 24             INC   H
-384d: FA F9 06       JP    M,$06F9
-
-3850: 03             INC   BC
-3851: 0C             INC   C
-3852: FE 9C          CP    A,#$9C
-3854: FC 1D 1E       CALL  M,$1E1D
-3857: 1F             RRA   
-3858: 20 2B          JR    NZ,$3885
-
-385a: 00             NOP   
-385b: 01 2C 00       LD    BC,$002C
-385e: 02             LD    (BC),A
-385f: 23             INC   HL
-3860: FA F9 06       JP    M,$06F9
-
-3863: 03             INC   BC
-3864: A8             XOR   A,B
-3865: FE 54          CP    A,#$54
-3867: FC 1D 1E       CALL  M,$1E1D
-386a: 1F             RRA   
-386b: 20 2B          JR    NZ,$3898
-
-386d: 00             NOP   
-386e: 01 2C 00       LD    BC,$002C
-3871: 02             LD    (BC),A
-3872: 22 FA F9       LD    ($F9FA),HL
-3875: 06 03          LD    B,#$03
-3877: 54             LD    D,H
-3878: FF             RST   $38
-
-3879: 28 FC          JR    Z,$3877
-
-387b: 1D             DEC   E
-387c: 1E 1F          LD    E,#$1F
-387e: 20 2B          JR    NZ,$38AB
-
-3880: 00             NOP   
-3881: 01 2C 00       LD    BC,$002C
-3884: 02             LD    (BC),A
-3885: 21 FA F9       LD    HL,$F9FA
-3888: 06 03          LD    B,#$03
-388a: 00             NOP   
-388b: 00             NOP   
-388c: 00             NOP   
-388d: FC 9D 9E       CALL  M,$9E9D
-3890: 9F             SBC   A,A
-3891: A0             AND   A,B
-3892: AB             XOR   A,E
-3893: 00             NOP   
-3894: 01 AC 00       LD    BC,$00AC
-3897: 02             LD    (BC),A
-3898: A2             AND   A,D
-3899: 07             RLCA  
-389a: F9             LD    SP,HL
-389b: FA 03 AC       JP    M,$AC03
-
-389e: 00             NOP   
-389f: 28 FC          JR    Z,$389D
-
-38a1: 9D             SBC   A,L
-38a2: 9E             SBC   A,(HL)
-38a3: 9F             SBC   A,A
-38a4: A0             AND   A,B
-38a5: AB             XOR   A,E
-38a6: 00             NOP   
-38a7: 01 AC 00       LD    BC,$00AC
-38aa: 02             LD    (BC),A
-38ab: A3             AND   A,E
-38ac: 07             RLCA  
-38ad: F9             LD    SP,HL
-38ae: FA 03 58       JP    M,$5803
-
-38b1: 01 54 FC       LD    BC,$FC54
-38b4: 9D             SBC   A,L
-38b5: 9E             SBC   A,(HL)
-38b6: 9F             SBC   A,A
-38b7: A0             AND   A,B
-38b8: AB             XOR   A,E
-38b9: 00             NOP   
-38ba: 01 AC 00       LD    BC,$00AC
-38bd: 02             LD    (BC),A
-38be: A4             AND   A,H
-38bf: 07             RLCA  
-38c0: F9             LD    SP,HL
-38c1: FA 03 F4       JP    M,$F403
-
-38c4: 01 9C FC       LD    BC,$FC9C
-38c7: 9D             SBC   A,L
-38c8: 9E             SBC   A,(HL)
-38c9: 9F             SBC   A,A
-38ca: A0             AND   A,B
-38cb: AB             XOR   A,E
-38cc: 00             NOP   
-38cd: 01 AC 00       LD    BC,$00AC
-38d0: 02             LD    (BC),A
-38d1: A5             AND   A,L
-38d2: 07             RLCA  
-38d3: F9             LD    SP,HL
-38d4: FA 03 84       JP    M,$8403
-
-38d7: 02             LD    (BC),A
-38d8: 00             NOP   
-38d9: FD 9D          Illegal Opcode
-38db: 9E             SBC   A,(HL)
-38dc: 9F             SBC   A,A
-38dd: A0             AND   A,B
-38de: AB             XOR   A,E
-38df: 00             NOP   
-38e0: 01 AC 00       LD    BC,$00AC
-38e3: 02             LD    (BC),A
-38e4: A6             AND   A,(HL)
-38e5: 07             RLCA  
-38e6: F9             LD    SP,HL
-38e7: FA 03 00       JP    M,$0003
-
-38ea: 03             INC   BC
-38eb: 7C             LD    A,H
-38ec: FD 9D          Illegal Opcode
-38ee: 9E             SBC   A,(HL)
-38ef: 9F             SBC   A,A
-38f0: A0             AND   A,B
-38f1: AB             XOR   A,E
-38f2: 00             NOP   
-38f3: 01 AC 00       LD    BC,$00AC
-38f6: 02             LD    (BC),A
-38f7: A7             AND   A,A
-38f8: 07             RLCA  
-38f9: F9             LD    SP,HL
-38fa: FA 03 64       JP    M,$6403
-
-38fd: 03             INC   BC
-38fe: 0C             INC   C
-38ff: FE 9D          CP    A,#$9D
-3901: 9E             SBC   A,(HL)
-3902: 9F             SBC   A,A
-3903: A0             AND   A,B
-3904: AB             XOR   A,E
-3905: 00             NOP   
-3906: 01 AC 00       LD    BC,$00AC
-3909: 02             LD    (BC),A
-390a: A8             XOR   A,B
-390b: 07             RLCA  
-390c: F9             LD    SP,HL
-390d: FA 03 AC       JP    M,$AC03
-
-3910: 03             INC   BC
-3911: A8             XOR   A,B
-3912: FE 9D          CP    A,#$9D
-3914: 9E             SBC   A,(HL)
-3915: 9F             SBC   A,A
-3916: A0             AND   A,B
-3917: AB             XOR   A,E
-3918: 00             NOP   
-3919: 01 AC 00       LD    BC,$00AC
-391c: 02             LD    (BC),A
-391d: A9             XOR   A,C
-391e: 07             RLCA  
-391f: F9             LD    SP,HL
-3920: FA 03 D8       JP    M,$D803
-
-3923: 03             INC   BC
-3924: 54             LD    D,H
-3925: FF             RST   $38
+_???_:
+35da: 01 C0 00 38 00 07 01 C7 01 F8 00 3F 01 C0 00 38 
+35ea: 00 07 01 C7 01 F8 00 3F 01 C0 00 38 00 07 01 C7 
+35fa: 01 F8 00 3F 01 C0 00 38 00 07 01 C7 01 F8 00 3F 
+360a: 01 C0 00 38 00 07 01 C7 01 F8 00 3F 01 C0 00 38 
+361a: 00 07 01 C7 01 F8 00 3F 01 C0 00 38 00 07 01 C7 
+362a: 01 F8 00 3F 0F 00 00 F0 00 0F 0F 0F 0F F0 00 FF 
+363a: 00 00 00 00 00 FE 00 00 00 02 00 00 00 00 00 00 
+364a: 00 00 00 FE 00 FE 00 FE 00 02 00 FE 00 00 00 00 
+365a: 00 00 00 02 00 FE 00 02 00 02 00 02 00 00 00 00 
+366a: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+367a: 9D 9E 9F A0 AB 00 01 AC 00 02 AA 07 F9 FA 03 00 
+368a: 04 00 00 9D 9E 9F A0 AB 00 01 AC 00 02 E9 07 03 
+369a: FA 03 D8 03 AC 00 9D 9E 9F A0 AB 00 01 AC 00 02 
+36aa: E8 07 03 FA 03 AC 03 58 01 9D 9E 9F A0 AB 00 01 
+36ba: AC 00 02 E7 07 03 FA 03 64 03 F4 01 9D 9E 9F A0 
+36ca: AB 00 01 AC 00 02 E6 07 03 FA 03 00 03 84 02 9D 
+36da: 9E 9F A0 AB 00 01 AC 00 02 E5 07 03 FA 03 84 02 
+36ea: 00 03 9D 9E 9F A0 AB 00 01 AC 00 02 E4 07 03 FA 
+36fa: 03 F4 01 64 03 9D 9E 9F A0 AB 00 01 AC 00 02 E3 
+370a: 07 03 FA 03 58 01 AC 03 9D 9E 9F A0 AB 00 01 AC 
+371a: 00 02 E2 07 03 FA 03 AC 00 D8 03 9D 9E 9F A0 AB 
+372a: 00 01 AC 00 02 E1 07 03 FA 03 00 00 00 04 1D 1E 
+373a: 1F 20 2B 00 01 2C 00 02 62 FA 02 06 03 54 FF D8 
+374a: 03 1D 1E 1F 20 2B 00 01 2C 00 02 63 FA 02 06 03 
+375a: A8 FE AC 03 1D 1E 1F 20 2B 00 01 2C 00 02 64 FA 
+376a: 02 06 03 0C FE 64 03 1D 1E 1F 20 2B 00 01 2C 00 
+377a: 02 65 FA 02 06 03 7C FD 00 03 1D 1E 1F 20 2B 00 
+378a: 01 2C 00 02 66 FA 02 06 03 00 FD 84 02 1D 1E 1F 
+379a: 20 2B 00 01 2C 00 02 67 FA 02 06 03 9C FC F4 01 
+37aa: 1D 1E 1F 20 2B 00 01 2C 00 02 68 FA 02 06 03 54 
+37ba: FC 58 01 1D 1E 1F 20 2B 00 01 2C 00 02 69 FA 02 
+37ca: 06 03 28 FC AC 00 1D 1E 1F 20 2B 00 01 2C 00 02 
+37da: 2A FA F9 06 03 00 FC 00 00 1D 1E 1F 20 2B 00 01 
+37ea: 2C 00 02 29 FA F9 06 03 28 FC 54 FF 1D 1E 1F 20 
+37fa: 2B 00 01 2C 00 02 28 FA F9 06 03 54 FC A8 FE 1D 
+380a: 1E 1F 20 2B 00 01 2C 00 02 27 FA F9 06 03 9C FC 
+381a: 0C FE 1D 1E 1F 20 2B 00 01 2C 00 02 26 FA F9 06 
+382a: 03 00 FD 7C FD 1D 1E 1F 20 2B 00 01 2C 00 02 25 
+383a: FA F9 06 03 7C FD 00 FD 1D 1E 1F 20 2B 00 01 2C 
+384a: 00 02 24 FA F9 06 03 0C FE 9C FC 1D 1E 1F 20 2B 
+385a: 00 01 2C 00 02 23 FA F9 06 03 A8 FE 54 FC 1D 1E 
+386a: 1F 20 2B 00 01 2C 00 02 22 FA F9 06 03 54 FF 28 
+387a: FC 1D 1E 1F 20 2B 00 01 2C 00 02 21 FA F9 06 03 
+388a: 00 00 00 FC 9D 9E 9F A0 AB 00 01 AC 00 02 A2 07 
+389a: F9 FA 03 AC 00 28 FC 9D 9E 9F A0 AB 00 01 AC 00 
+38aa: 02 A3 07 F9 FA 03 58 01 54 FC 9D 9E 9F A0 AB 00 
+38ba: 01 AC 00 02 A4 07 F9 FA 03 F4 01 9C FC 9D 9E 9F 
+38ca: A0 AB 00 01 AC 00 02 A5 07 F9 FA 03 84 02 00 FD 
+38da: 9D 9E 9F A0 AB 00 01 AC 00 02 A6 07 F9 FA 03 00 
+38ea: 03 7C FD 9D 9E 9F A0 AB 00 01 AC 00 02 A7 07 F9 
+38fa: FA 03 64 03 0C FE 9D 9E 9F A0 AB 00 01 AC 00 02 
+390a: A8 07 F9 FA 03 AC 03 A8 FE 9D 9E 9F A0 AB 00 01 
+391a: AC 00 02 A9 07 F9 FA 03 D8 03 54 FF 
 
 MCP_COLOR_PALETTE_ALL_ZEROS:
 3926: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -9406,7 +8248,7 @@ TANK_DATA_FOR?_USED_AT_4BBB:
 4be6: CD 77 4D       CALL  TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE
 4be9: 38 03          JR    C,$4BEE
 
-4beb: CD FD 4B       CALL  $4BFD
+4beb: CD FD 4B       CALL  TANK_SET_BULLET_X_AND_?_OFFSCREEN_CALL_UPDATE_POSITION?
 4bee: E1             POP   HL
 4bef: 23             INC   HL
 4bf0: 7E             LD    A,(HL)
@@ -9422,6 +8264,7 @@ TANK_DATA_FOR?_USED_AT_4BBB:
 
 4bfc: C9             RET   
 
+TANK_SET_BULLET_X_AND_?_OFFSCREEN_CALL_UPDATE_POSITION?:
 4bfd: FD 36 07 00    LD    (IY+$07),#$00
 4c01: FD 36 00 00    LD    (IY+$00),#$00
 4c05: CD 70 4B       CALL  TANK_BULLET?_DRAW_USES_IY
@@ -9881,42 +8724,10 @@ TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA:
 4fba: 8A 20 48 28 10 31 B8 08 B9 80 40 B9 48 20 BA D0 
 4fca: 10 31 58 08 31 88 40 D1 A0 20 69 D0 10 8C E8 08 
 
-4fda: EF             RST   $28
+4fda: EF FF AB 69 B7 DF 8B ED EF F1 ED 7C 03 74 31 FA 
+4fea: B7 F7 60 3B BD 73 EB 67 0B CD 7F BD 4F E7 B3 FD 
+4ffa: AF CF FD F2 27 6F 
 
-4fdb: FF             RST   $38
-
-4fdc: AB             XOR   A,E
-4fdd: 69             LD    L,C
-4fde: B7             OR    A,A
-4fdf: DF             RST   $18
-
-4fe0: 8B             ADC   A,E
-4fe1: ED EF          Illegal Opcode
-4fe3: F1             POP   AF
-4fe4: ED 7C          Illegal Opcode
-4fe6: 03             INC   BC
-4fe7: 74             LD    (HL),H
-4fe8: 31 FA B7       LD    SP,$B7FA
-4feb: F7             RST   $30
-
-4fec: 60             LD    H,B
-4fed: 3B             DEC   SP
-4fee: BD             CP    A,L
-4fef: 73             LD    (HL),E
-4ff0: EB             EX    DE,HL
-4ff1: 67             LD    H,A
-4ff2: 0B             DEC   BC
-4ff3: CD 7F BD       CALL  $BD7F
-4ff6: 4F             LD    C,A
-4ff7: E7             RST   $20
-
-4ff8: B3             OR    A,E
-4ff9: FD AF          Illegal Opcode
-4ffb: CF             RST   $08
-
-4ffc: FD F2          Illegal Opcode
-4ffe: 27             DAA   
-4fff: 6F             LD    L,A
 PLAY_LC:
 5000: CD 49 70       CALL  INITIALIZE_SPRITES
 5003: 21 80 90       LD    HL,LC_COLOR_PALETTE
@@ -11408,7 +10219,7 @@ LC_DRAW_A_TRAIL?:
 5a4f: 21 2E C2       LD    HL,$C22E
 5a52: 09             ADD   HL,BC
 5a53: 46             LD    B,(HL)
-5a54: CD C9 5A       CALL  $5AC9
+5a54: CD C9 5A       CALL  LC_MULTIPLE_CYCLES_DO_SOMETHING?
 5a57: 3A FF C1       LD    A,($C1FF)
 5a5a: FE 63          CP    A,#$63
 5a5c: C0             RET   NZ
@@ -11424,31 +10235,31 @@ LC_DRAW_A_TRAIL?:
 5a69: FA 89 5A       JP    M,$5A89
 
 5a6c: 06 00          LD    B,#$00
-5a6e: CD C9 5A       CALL  $5AC9
+5a6e: CD C9 5A       CALL  LC_MULTIPLE_CYCLES_DO_SOMETHING?
 5a71: 06 02          LD    B,#$02
-5a73: CD C9 5A       CALL  $5AC9
+5a73: CD C9 5A       CALL  LC_MULTIPLE_CYCLES_DO_SOMETHING?
 5a76: 3A FF C1       LD    A,($C1FF)
 5a79: FE 63          CP    A,#$63
 5a7b: 20 2C          JR    NZ,$5AA9
 
 5a7d: 06 01          LD    B,#$01
-5a7f: CD C9 5A       CALL  $5AC9
+5a7f: CD C9 5A       CALL  LC_MULTIPLE_CYCLES_DO_SOMETHING?
 5a82: 06 03          LD    B,#$03
-5a84: CD C9 5A       CALL  $5AC9
+5a84: CD C9 5A       CALL  LC_MULTIPLE_CYCLES_DO_SOMETHING?
 5a87: 18 20          JR    $5AA9
 
 5a89: 06 01          LD    B,#$01
-5a8b: CD C9 5A       CALL  $5AC9
+5a8b: CD C9 5A       CALL  LC_MULTIPLE_CYCLES_DO_SOMETHING?
 5a8e: 06 03          LD    B,#$03
-5a90: CD C9 5A       CALL  $5AC9
+5a90: CD C9 5A       CALL  LC_MULTIPLE_CYCLES_DO_SOMETHING?
 5a93: 3A FF C1       LD    A,($C1FF)
 5a96: FE 63          CP    A,#$63
 5a98: 20 0F          JR    NZ,$5AA9
 
 5a9a: 06 00          LD    B,#$00
-5a9c: CD C9 5A       CALL  $5AC9
+5a9c: CD C9 5A       CALL  LC_MULTIPLE_CYCLES_DO_SOMETHING?
 5a9f: 06 02          LD    B,#$02
-5aa1: CD C9 5A       CALL  $5AC9
+5aa1: CD C9 5A       CALL  LC_MULTIPLE_CYCLES_DO_SOMETHING?
 5aa4: 18 03          JR    $5AA9
 
 5aa6: CD F1 5A       CALL  $5AF1
@@ -11471,6 +10282,7 @@ LC_DRAW_A_TRAIL?:
 5ac6: 36 10          LD    (HL),#$10
 5ac8: C9             RET   
 
+LC_MULTIPLE_CYCLES_DO_SOMETHING?:
 5ac9: ED 5B 0B C2    LD    DE,($C20B)
 5acd: 21 FA C1       LD    HL,$C1FA
 5ad0: 19             ADD   HL,DE

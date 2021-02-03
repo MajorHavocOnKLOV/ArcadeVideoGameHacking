@@ -107,6 +107,7 @@ label 0baf ALL_RIGHTS_RESERVED_S
 label 0d38 READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS
 label 0e32 SHOULD_I_UPDATE_CONE_COLOR?
 label 0e55 MCP_ATTRACT_COLORS?
+label 1001 DATA_TO_101A_USED_AT_0F86?
 label 101b PLEASE_S
 label 1022 ENTER_S
 label 1028 YOUR_S
@@ -119,6 +120,7 @@ label 120c YOUR_SCORE_S
 label 1217 RANKING_IS_S
 label 1222 NOT_IN_THE_TOP_S
 label 1231 100_SCORES_S
+label 13f7 DATA_FOR_???_TO_14FF
 label 1500 PICK_WHICH_INSTRUCTIONS_TO_PRINT
 label 1538 SUBROUTINE_THAT_DOES_WHAT?
 label 1558 DISPLAY_RANKINGS_SCREEN
@@ -239,6 +241,7 @@ label 354f MCP_BLOCK_HIT_AUDIO
 label 3554 MCP_BLOCK_DATA_TO_PROCESS_HIT
 label 3559 MCP_BLOCKS_DATA_TO_35B2
 label 35b3 MCP_CONE_RELATIVEX_RELATIVEY_SPRITE_NUMBER_TO_35D9
+label 35da _???_
 label 3926 MCP_COLOR_PALETTE_ALL_ZEROS
 label 3966 DATA_FOR_MCP_SETUP_TO_398D
 label 3a00 PLAY_TANKS
@@ -261,6 +264,7 @@ label 4884 DATA_TO_49C7_USED_AT_49C8
 label 49c8 TANK_TURRET_DRAW
 label 4b70 TANK_BULLET?_DRAW_USES_IY
 label 4b8d TANK_DATA_FOR?_USED_AT_4BBB
+label 4bfd TANK_SET_BULLET_X_AND_?_OFFSCREEN_CALL_UPDATE_POSITION?
 label 4cfb TANK_DATA_FOR?_STARTS_AT_4CFF
 label 4d77 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE
 label 4f7e TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA
@@ -274,6 +278,7 @@ label 518c USE_TRIGGER_FOR_S
 label 519c SPEED_CONTROL_S
 label 5551 LC_ERASE_TRAIL_OF_DESTROYED_LC
 label 59e5 LC_DRAW_A_TRAIL?
+label 5ac9 LC_MULTIPLE_CYCLES_DO_SOMETHING?
 label 5d00 PLAY_IO_TOWER
 label 5e36 IO_TOWER_INSTRUCTIONS
 label 5e7e IO_TOWER_STRING_DESTINATION_AND_SOURCE_LOCATIONS_00
@@ -670,6 +675,9 @@ commentline 0000 Dissasembly of the Tron 8/9 ROMs used by MAME (labelled as tron
 
 ascii 006b-008c
 
+commentline 008d Data used where for what?
+data 008d-00ff
+
 data 01ab-01ba
 
 commentline 01f6 How long has this user been playing?  C41A = BCD minutes, C41B = BCD seconds,
@@ -756,6 +764,11 @@ commentline 0e55 See Bally/Midway's MCR II System manual top-right corner of pag
 commentline 0e55 for more information.
 data 0e55-0e60
 
+commentline 0ebe Data used where for what?
+data 0ebe-0eff
+
+data 1001-101a
+
 ascii 101b-1021
 ascii 1022-1027
 ascii 1028-102c
@@ -769,6 +782,9 @@ ascii 1217-1221
 ascii 1222-1230
 ascii 1231-123b
 ascii 134e-1350
+
+data 13f7-14ff
+
 ascii 1433-1435
 
 data 1527-1534
@@ -888,6 +904,9 @@ ascii 1dcb-1de2
 ascii 1de3-1deb
 ascii 1dec-1e05
 ascii 1e06-1e10
+
+commentline 1e11 Data for what used where?
+data 1e11-1eff
 
 commentline 1fc0 if level > 0, skip game instructions
 commentline 1fc2 pick GS instructions to print
@@ -1017,7 +1036,7 @@ data 3559-35b2
 data 35b3-35d9
 
 commentline 35da MCP colors?
-data 35da-35da
+data 35da-3925
 
 data 3926-3945
 
@@ -1137,6 +1156,8 @@ data 4f7e,11,4
 
 commentline 4faa Tank warp locations (X, picture, Y) 16x3
 data 4faa-4fd9
+
+data 4fda-4fff
 
 commentline 5151 5x4: 4 = destination vector and source vector
 data 5151-5166
