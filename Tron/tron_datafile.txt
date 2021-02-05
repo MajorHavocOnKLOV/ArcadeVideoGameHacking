@@ -120,6 +120,7 @@ label 120c YOUR_SCORE_S
 label 1217 RANKING_IS_S
 label 1222 NOT_IN_THE_TOP_S
 label 1231 100_SCORES_S
+label 132d DATA_FOR_???_TO_133E
 label 13f7 DATA_FOR_???_TO_14FF
 label 1500 PICK_WHICH_INSTRUCTIONS_TO_PRINT
 label 1538 SUBROUTINE_THAT_DOES_WHAT?
@@ -127,6 +128,7 @@ label 1558 DISPLAY_RANKINGS_SCREEN
 label 1653 RANKINGS_S
 label 165c DISPLAY_POINT_VALUES_SCREEN
 label 16ab POINT_VALUES_S
+label 16b8 DATA_FOR_???_TO_16D6
 label 16e7 TANKS______500_S
 label 16f6 GRID_BUGS___50_S
 label 1705 CYCLES_____500_S
@@ -224,6 +226,7 @@ label 2c48 DATA_TO_2C4C?_USED_STARTING_AT_6F68
 label 2c4d 1000_BONUS_ALL_BLOCKS_HIT_S
 label 2c67 1000_FOR_ENTERING_CONE_S
 label 2c7e MCP_INSTRUCTIONS
+label 2cee DATA_FOR_???_TO_2CF7
 label 2cf8 TRY_TO_ENTER_S
 label 2d05 THE_MCP_CONE_S
 label 2d12 PLAY_MCP
@@ -236,6 +239,7 @@ label 3331 MCP_DRAW_WALLS
 label 3363 MCP_HIDE_SPRITES_33_AND_34
 label 337b MCP_DRAW_BLOCKS
 label 33af MCP_HIDE_SPRITE_GOING_OFF_BOTTOM_OF_SCREEN
+label 3481 DATA_FOR_???_TO_3485
 label 352a MCP_PROCESS_HIT_BLOCK
 label 354f MCP_BLOCK_HIT_AUDIO
 label 3554 MCP_BLOCK_DATA_TO_PROCESS_HIT
@@ -257,6 +261,7 @@ label 40fc TANK_WARP
 label 4145 TANK_DATA_FOR_?
 ; 4414 Find X & Y of this tank in a data structure?  For movement?
 label 4414 TANK_PROCESS_ENEMY_TANKS_ON_STARTUP_SOMEHOW?_USES_IX
+label 45ed DATA_USED_FOR_???_TO_45FE
 label 46fb TANKS_DATA_FOR_x_STARTS_AT_46FF
 label 47e2 TANK_POSITION_THE_ONE_AT_IX
 label 47a7 COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?
@@ -276,6 +281,7 @@ label 5175 LIGHT_TRACES2_S
 label 5182 AND_WALLS_S
 label 518c USE_TRIGGER_FOR_S
 label 519c SPEED_CONTROL_S
+label 554c DATA_USED_FOR_???_TO_5550
 label 5551 LC_ERASE_TRAIL_OF_DESTROYED_LC
 label 59e5 LC_DRAW_A_TRAIL?
 label 5ac9 LC_MULTIPLE_CYCLES_DO_SOMETHING?
@@ -291,6 +297,9 @@ label 5f73 HANDLE_JOYSTICK_INPUT?_TO_601F
 label 6065 INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
 label 6127 MOVE_SPIDERS?
 label 621d IO_OR_MCP?_SET_TRON_INITIAL_POSITION_AND_ROTATION
+label 62ed DATA_USED_FOR_???_TO_62F1
+label 66ae DATA_USED_FOR_???_TO_66D1
+label 6772 DATA_USED_FOR_???_TO_6776
 label 68c6 DATA_TO_?_USED_AT_5D19
 label 6b39 JOYSTICK_INPUT_TABLE
 label 6b79 DATA_FOR_SETTING_UP_TRON_SPRITES?
@@ -680,6 +689,9 @@ data 008d-00ff
 
 data 01ab-01ba
 
+commentline 01bb Data used where for what?
+data 01bb-01cb
+
 commentline 01f6 How long has this user been playing?  C41A = BCD minutes, C41B = BCD seconds,
 commentline 01f6 C41C = countdown of 30 frames? (reset to 30 once count goes negative)
 
@@ -764,6 +776,9 @@ commentline 0e55 See Bally/Midway's MCR II System manual top-right corner of pag
 commentline 0e55 for more information.
 data 0e55-0e60
 
+commentline 0e61 Data used where for what?  Copy of 12 bytes at 0e55!
+data 0e61-0e6c
+
 commentline 0ebe Data used where for what?
 data 0ebe-0eff
 
@@ -781,11 +796,15 @@ ascii 120c-1216
 ascii 1217-1221
 ascii 1222-1230
 ascii 1231-123b
+
+data 132d-133e
+
 ascii 134e-1350
 
-data 13f7-14ff
-
+data 13f7-1432
+commentline 1433 Is this a string or an oops?  Remove and merge data?
 ascii 1433-1435
+data 1436-14ff
 
 data 1527-1534
 
@@ -799,7 +818,14 @@ commentline 161c print out user level (programming language)
 
 ascii 1653-165b
 ascii 16ab-16b7
+
+data 16b8-16d6
+
 ascii 16d7-16d9
+
+commentline 16da Data used where for what?
+data 16da-16e6
+
 ascii 16e7-16f5
 ascii 16f6-1704
 ascii 1705-1713
@@ -998,6 +1024,9 @@ data 2c48-2c4c
 
 ascii 2c4d-2c66
 ascii 2c67-2c7d
+
+data 2cee-2cf7
+
 ascii 2cf8-2d04
 ascii 2d05-2d11
 
@@ -1020,6 +1049,8 @@ commentline 2fd9 Set initial position and arm rotation of Tron sprites
 comment 346a Invincibility MCP Game = 18 (JR *)
 comment 3471 Invincibility MCP Game = 11 (LD DE, **)
 
+data 3481-3485
+
 commentline 352a Decrement blocks remaining, change block sprite to explosion (00)
 commentline 354f Audio to play for block hit. Number of rows dictates sound used?
 commentline 354f When you get to 5 rows, is the wrong sound (@3554) played?
@@ -1039,6 +1070,9 @@ commentline 35da MCP colors?
 data 35da-3925
 
 data 3926-3945
+
+commentline 3946 Data used where for what?
+data 3946-3965
 
 commentline 3966 Data for setting up MCP cone game.
 commentline 3966 10x4: 4= direction, blocks per row, Y move delay, rotation delay
@@ -1066,20 +1100,24 @@ commentline 3dda User input processing ...
 
 comment 3f91 Invincibility TANK Game = 18 (JR *) (tank collision?)
 
-commentline 3f3f This might not be right.  Used by data blocks starting at 4066?
-data 3f3f-3f47
-data 3f48-3f56
-data 3f57-3f5f
-data 3f60-3f66
-data 3f67-3f6e
-data 3f6f-3f77
-data 3f78-3f86
-data 3f87-3f8e
-data 3f8f-3f8f
+; ??? The data I found below looks like valid code instead. Investigate how I mixed this up?
+; commentline 3f3f This might not be right.  Used by data blocks starting at 4066?
+; data 3f3f-3f47
+; data 3f48-3f56
+; data 3f57-3f5f
+; data 3f60-3f66
+; data 3f67-3f6e
+; data 3f6f-3f77
+; data 3f78-3f86
+; data 3f87-3f8e
+; data 3f8f-3f8f
 
 commentline 3f9a 18? data blocks used by tanks
 data 3f9a-3f9a
 data 3f9b-4010
+
+commentline 4011 Data used where for what?
+data 4011-4065
 
 commentline 4066 This data structure is used at 40C9
 commentline 4066 ??? 18?x3 bytes: ?, vector to other data
@@ -1105,6 +1143,9 @@ data 4165-41b1
 data 41b2-420c
 
 comment 4546 Mirror Y of explosion sprite on tank to make it look like fire
+
+data 45ed-45fe
+
 comment 473b Invincibility TANK Game = 18 (JR *) (bullet collision?)
 
 commentline 47b8-47c6 looks like data, not sure for what though ...
@@ -1120,8 +1161,12 @@ commentline 49db User and attract mode processing continues here ...
 commentline 49f0 Update turret position and rotation
 data 4b8d-4b8f
 
-commentline 4cff This data structure may extend past 4d3b ...
-data 4cff-4d3b
+data 4c2c-4cfa
+; do not merge above and below!  Otherwise label for 4CFB will not print!
+data 4cfb-4cfe
+
+commentline 4cff This data structure used at 40BA and 4D77 but points to 4CFB and then adds 4!
+data 4cff-4d76
 
 commentline 4d9e This data is copied to C051!
 commentline 4d9e number of tanks x 10 bytes
@@ -1168,8 +1213,13 @@ ascii 5182-518b
 ascii 518c-519b
 ascii 519c-51a9
 
+data 554c-5550
+
 commentline used at 57ba
 data 5b62-5c20
+
+commentline 5c21 Data used where for what?
+data 5c21-5cff
 
 commentline 5e6d if BC was 0, return.  Does this mean skip instructions?
 
@@ -1181,12 +1231,21 @@ ascii 5ea9-5eb6
 
 data 5eb7-5ed6
 
+commentline 5ed7 Data used where for what?
+data 5ed7-5ef6
+
 commentline 5f73 IO:0000 - xxxBxxxx
 commentline 5f73 IO:0002 - xxxxDURL
 
 comment 5fb3 look at 6b39 for more info!
 
 commentline 60ce Tron fires his disk here (so don't set up disk in hand, maybe?)
+
+data 62ed-62f1
+
+data 66ae-66d1
+
+data 6772-6776
 
 comment 68c1 Invincibility I/O Tower Game = C9 (RET)
 
@@ -1235,6 +1294,9 @@ data 7127-7158
 commentline 7159 Return C687 in A.  If non-zero, subtract 7.  Do not affect other registers.
 commentline 7165 Return C687 in A.  If non-zero, subtract 2.  Do not affect other registers.
 
+commentline 7171 Data used by what for why?
+data 7171-71ff
+
 data 7200-797F
 
 ; Color palette for tanks
@@ -1246,7 +1308,7 @@ data 79e0-79ff
 
 data 7a00-817F
 data 8900-907F
-
+data 9080-909F
 data 90a0-90bf
 data 90c0-90df
 data 90e0-90ff

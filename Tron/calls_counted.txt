@@ -108,8 +108,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 ZERO_RAM_C000-C450
       1 Z,SHOULD_I_UPDATE_CONE_COLOR?
       1 Z,INITIALIZE_LEVEL?
-      1 Z,$F8FC
-      1 Z,$C5BE
       1 Z,$62AD
       1 Z,$5841
       1 Z,$33FA
@@ -127,24 +125,15 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS
       1 READ_AND_PROCESS_INPUT_PORTS
       1 PRINT_OUT_MESSAGES_IN_QUEUES
-      1 PO,$A815
       1 PO,$1BD8
-      1 PO,$0800
       1 PICK_WHICH_INSTRUCTIONS_TO_PRINT
       1 P,$A59F
-      1 P,$9F7E
       1 OUTPUT_IO_TOWER_TIMER?/TELETYPE_PRINTING_TO_THE_SCREEN_UNTIL_NULL_BYTE?
-      1 NZ,$DB21
       1 NZ,$66DF
       1 NZ,$0991
-      1 NC,$EA01
-      1 NC,$0700
       1 MOVE_SPIDERS?
       1 MCP_PROCESS_HIT_BLOCK
       1 MCP_PROCESS_DISK_POSITION(S)?
-      1 M,GRID_BUGS___50_S
-      1 M,$F9FD
-      1 M,$97D8
       1 HANDLE_JOYSTICK_INPUT?_TO_601F
       1 GET_INPUT_FROM_JOYSTICK_TRIGGER_+?
       1 DRAW_SPRITES_FOR_GAME_SELECTION_SCREEN
@@ -156,7 +145,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 C,$0F7F
       1 ADD_MESSAGE_TO_Q2
       1 $F99B
-      1 $C5CE
       1 $AF15
       1 $ABC3
       1 $ABB1

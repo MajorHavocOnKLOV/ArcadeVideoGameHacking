@@ -49,6 +49,7 @@ YOUR_SCORE_S EQU $120c
 RANKING_IS_S EQU $1217
 NOT_IN_THE_TOP_S EQU $1222
 100_SCORES_S EQU $1231
+DATA_FOR_???_TO_133E EQU $132d
 DATA_FOR_???_TO_14FF EQU $13f7
 PICK_WHICH_INSTRUCTIONS_TO_PRINT EQU $1500
 SUBROUTINE_THAT_DOES_WHAT? EQU $1538
@@ -56,6 +57,7 @@ DISPLAY_RANKINGS_SCREEN EQU $1558
 RANKINGS_S EQU $1653
 DISPLAY_POINT_VALUES_SCREEN EQU $165c
 POINT_VALUES_S EQU $16ab
+DATA_FOR_???_TO_16D6 EQU $16b8
 TANKS______500_S EQU $16e7
 GRID_BUGS___50_S EQU $16f6
 CYCLES_____500_S EQU $1705
@@ -153,6 +155,7 @@ DATA_TO_2C4C?_USED_STARTING_AT_6F68 EQU $2c48
 1000_BONUS_ALL_BLOCKS_HIT_S EQU $2c4d
 1000_FOR_ENTERING_CONE_S EQU $2c67
 MCP_INSTRUCTIONS EQU $2c7e
+DATA_FOR_???_TO_2CF7 EQU $2cee
 TRY_TO_ENTER_S EQU $2cf8
 THE_MCP_CONE_S EQU $2d05
 PLAY_MCP EQU $2d12
@@ -165,6 +168,7 @@ MCP_DRAW_WALLS EQU $3331
 MCP_HIDE_SPRITES_33_AND_34 EQU $3363
 MCP_DRAW_BLOCKS EQU $337b
 MCP_HIDE_SPRITE_GOING_OFF_BOTTOM_OF_SCREEN EQU $33af
+DATA_FOR_???_TO_3485 EQU $3481
 MCP_PROCESS_HIT_BLOCK EQU $352a
 MCP_BLOCK_HIT_AUDIO EQU $354f
 MCP_BLOCK_DATA_TO_PROCESS_HIT EQU $3554
@@ -185,6 +189,7 @@ TANK_UPDATE_POSITION EQU $40ea
 TANK_WARP EQU $40fc
 TANK_DATA_FOR_? EQU $4145
 TANK_PROCESS_ENEMY_TANKS_ON_STARTUP_SOMEHOW?_USES_IX EQU $4414
+DATA_USED_FOR_???_TO_45FE EQU $45ed
 TANKS_DATA_FOR_x_STARTS_AT_46FF EQU $46fb
 TANK_POSITION_THE_ONE_AT_IX EQU $47e2
 COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE? EQU $47a7
@@ -204,6 +209,7 @@ LIGHT_TRACES2_S EQU $5175
 AND_WALLS_S EQU $5182
 USE_TRIGGER_FOR_S EQU $518c
 SPEED_CONTROL_S EQU $519c
+DATA_USED_FOR_???_TO_5550 EQU $554c
 LC_ERASE_TRAIL_OF_DESTROYED_LC EQU $5551
 LC_DRAW_A_TRAIL? EQU $59e5
 LC_MULTIPLE_CYCLES_DO_SOMETHING? EQU $5ac9
@@ -219,6 +225,9 @@ HANDLE_JOYSTICK_INPUT?_TO_601F EQU $5f73
 INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER EQU $6065
 MOVE_SPIDERS? EQU $6127
 IO_OR_MCP?_SET_TRON_INITIAL_POSITION_AND_ROTATION EQU $621d
+DATA_USED_FOR_???_TO_62F1 EQU $62ed
+DATA_USED_FOR_???_TO_66D1 EQU $66ae
+DATA_USED_FOR_???_TO_6776 EQU $6772
 DATA_TO_?_USED_AT_5D19 EQU $68c6
 JOYSTICK_INPUT_TABLE EQU $6b39
 DATA_FOR_SETTING_UP_TRON_SPRITES? EQU $6b79
@@ -745,22 +754,9 @@ COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S:
 COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?:
 01ab: 00 00 00 00 00 00 00 38 01 86 00 00 00 00 00 00 
 
-01bb: 00             NOP   
-01bc: 00             NOP   
-01bd: 00             NOP   
-01be: 00             NOP   
-01bf: 00             NOP   
-01c0: 00             NOP   
-01c1: 00             NOP   
-01c2: 00             NOP   
-01c3: 00             NOP   
-01c4: 00             NOP   
-01c5: 00             NOP   
-01c6: 00             NOP   
-01c7: 00             NOP   
-01c8: 00             NOP   
-01c9: 00             NOP   
-01ca: 38 08          JR    C,$01D4
+
+*** Data used where for what?
+01bb: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 38 
 
 01cc: D9             EXX   
 01cd: DD E5          PUSH  IX
@@ -2447,15 +2443,10 @@ SHOULD_I_UPDATE_CONE_COLOR?:
 MCP_ATTRACT_COLORS?:
 0e55: 01 C0 00 38 00 07 01 C7 01 F8 00 3F 
 
-0e61: 01 C0 00       LD    BC,$00C0
-0e64: 38 00          JR    C,$0E66
 
-0e66: 07             RLCA  
-0e67: 01 C7 01       LD    BC,$01C7
-0e6a: F8             RET   M
+*** Data used where for what?  Copy of 12 bytes at 0e55!
+0e61: 01 C0 00 38 00 07 01 C7 01 F8 00 3F 
 
-0e6b: 00             NOP   
-0e6c: 3F             CCF   
 0e6d: 3A 86 C6       LD    A,($C686)
 0e70: 32 1F C4       LD    (LIVES_REMAINING),A
 0e73: 2A FD C4       LD    HL,($C4FD)
@@ -2984,7 +2975,7 @@ NOT_IN_THE_TOP_S:
 129b: C3 6C 10       JP    $106C
 
 129e: 21 6C C6       LD    HL,$C66C
-12a1: DD 21 2D 13    LD    IX,$132D
+12a1: DD 21 2D 13    LD    IX,DATA_FOR_???_TO_133E
 12a5: 06 09          LD    B,#$09
 12a7: 3A 1A C4       LD    A,(PLAYING_HOW_LONG_NOW_TO_C41C)
 12aa: DD BE 00       CP    A,(IX+$00)
@@ -3069,21 +3060,10 @@ NOT_IN_THE_TOP_S:
 1329: 32 2B C5       LD    ($C52B),A
 132c: C9             RET   
 
-132d: 00             NOP   
-132e: 30 01          JR    NC,$1331
+DATA_FOR_???_TO_133E:
+132d: 00 30 01 00 01 30 02 00 02 30 03 00 04 00 05 00 
+133d: 06 00 
 
-1330: 00             NOP   
-1331: 01 30 02       LD    BC,$0230
-1334: 00             NOP   
-1335: 02             LD    (BC),A
-1336: 30 03          JR    NC,$133B
-
-1338: 00             NOP   
-1339: 04             INC   B
-133a: 00             NOP   
-133b: 05             DEC   B
-133c: 00             NOP   
-133d: 06 00          LD    B,#$00
 133f: 21 58 C6       LD    HL,$C658
 1342: DD 21 F7 13    LD    IX,DATA_FOR_???_TO_14FF
 1346: 06 09          LD    B,#$09
@@ -3198,23 +3178,27 @@ DATA_FOR_???_TO_14FF:
 13f7: 00 50 00 01 00 00 02 00 00 03 00 00 04 00 00 05 
 1407: 00 00 07 50 00 10 00 00 15 00 00 30 44 96 D4 C4 
 1417: 14 00 1D 20 03 25 8D 01 25 74 8E 95 88 B0 80 66 
-1427: C5 42 4C 04 0F 40 D0 46 A5 35 56 1C 58 30 31 99 
-1437: 01 02 0C B4 95 90 03 06 00 00 8F 19 0E 83 65 D1 
-1447: 10 62 32 0C 35 5E 34 20 64 70 0E C7 14 94 24 1D 
-1457: 3E 07 3D 84 12 93 07 3D 01 04 B4 61 BE 77 0C 5C 
-1467: AC 54 38 C6 4C CB 54 8C 24 B4 50 36 0A 30 09 40 
-1477: 47 9D 06 C0 23 80 21 30 7E 6F B9 BB 9F EB CB 5B 
-1487: E7 7C 68 1A E3 33 E7 FC D2 76 FA 4F 33 FB C0 3B 
-1497: EF F9 5F A7 AB F6 6F 3A D5 EB 7C 88 E9 D8 4B 7B 
-14a7: 7B 4B 6D B3 A8 EA 6D 2B 49 F9 E8 EA 6E AA 77 4F 
-14b7: FB BA 99 EB 7B 4E B1 FF 9E 2B B2 AB D9 D3 26 B9 
-14c7: DF 9F 74 D3 87 EA F3 F2 FA F6 25 5B 6F A7 6B 71 
-14d7: 6C F3 F9 E9 E8 52 C7 73 F6 FB E7 6A B9 6B 2A 9B 
-14e7: EB 83 E3 E3 FE 7D FE 9B FA FB 83 3C 7A 27 77 83 
-14f7: E6 36 F7 B7 8B B3 2C B8 4B 
+1427: C5 42 4C 04 0F 40 D0 46 A5 35 56 1C 
+
+
+*** Is this a string or an oops?  Remove and merge data?
+1433: X01
+
+1436: 99 01 02 0C B4 95 90 03 06 00 00 8F 19 0E 83 65 
+1446: D1 10 62 32 0C 35 5E 34 20 64 70 0E C7 14 94 24 
+1456: 1D 3E 07 3D 84 12 93 07 3D 01 04 B4 61 BE 77 0C 
+1466: 5C AC 54 38 C6 4C CB 54 8C 24 B4 50 36 0A 30 09 
+1476: 40 47 9D 06 C0 23 80 21 30 7E 6F B9 BB 9F EB CB 
+1486: 5B E7 7C 68 1A E3 33 E7 FC D2 76 FA 4F 33 FB C0 
+1496: 3B EF F9 5F A7 AB F6 6F 3A D5 EB 7C 88 E9 D8 4B 
+14a6: 7B 7B 4B 6D B3 A8 EA 6D 2B 49 F9 E8 EA 6E AA 77 
+14b6: 4F FB BA 99 EB 7B 4E B1 FF 9E 2B B2 AB D9 D3 26 
+14c6: B9 DF 9F 74 D3 87 EA F3 F2 FA F6 25 5B 6F A7 6B 
+14d6: 71 6C F3 F9 E9 E8 52 C7 73 F6 FB E7 6A B9 6B 2A 
+14e6: 9B EB 83 E3 E3 FE 7D FE 9B FA FB 83 3C 7A 27 77 
+14f6: 83 E6 36 F7 B7 8B B3 2C B8 4B 
 
 PICK_WHICH_INSTRUCTIONS_TO_PRINT:
-Error: missed a data line, count-1=1500,curdata=46,numdata=507,start=1433, end=1435
 1500: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_5?
 1503: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 1506: CD 49 70       CALL  INITIALIZE_SPRITES
@@ -3431,7 +3415,7 @@ DISPLAY_POINT_VALUES_SCREEN:
 165c: 01 CA FC       LD    BC,$FCCA
 165f: 11 AB 16       LD    DE,POINT_VALUES_S
 1662: CD FF 6F       CALL  ADD_A_MESSAGE_TO_Q
-1665: DD 21 B8 16    LD    IX,$16B8
+1665: DD 21 B8 16    LD    IX,DATA_FOR_???_TO_16D6
 1669: FD 21 04 F0    LD    IY,TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT
 166d: DD 7E 00       LD    A,(IX+$00)
 1670: B7             OR    A,A
@@ -3463,40 +3447,16 @@ DISPLAY_POINT_VALUES_SCREEN:
 POINT_VALUES_S:
 16ab: POINT VALUES
 
-16b8: 48             LD    C,B
-16b9: 48             LD    C,B
-16ba: 08             EX    AF,AF'
-16bb: 00             NOP   
-16bc: D2 FC E7       JP    NC,$E7FC
+DATA_FOR_???_TO_16D6:
+16b8: 48 48 08 00 D2 FC E7 16 60 48 11 00 D8 FC F6 16 
+16c8: 78 48 2F 00 DE FC 05 17 A0 40 31 A0 50 36 90 
 
-16bf: 16 60          LD    D,#$60
-16c1: 48             LD    C,B
-16c2: 11 00 D8       LD    DE,$D800
-16c5: FC F6 16       CALL  M,GRID_BUGS___50_S
-16c8: 78             LD    A,B
-16c9: 48             LD    C,B
-16ca: 2F             CPL   
-16cb: 00             NOP   
-16cc: DE FC          SBC   A,#$FC
-16ce: 05             DEC   B
-16cf: 17             RLA   
-16d0: A0             AND   A,B
-16d1: 40             LD    B,B
-16d2: 31 A0 50       LD    SP,$50A0
-16d5: 36 90          LD    (HL),#$90
 16d7: H9
 
-16da: E6 FC          AND   A,#$FC
-16dc: 14             INC   D
-16dd: 17             RLA   
-16de: B8             CP    A,B
-16df: 48             LD    C,B
-16e0: 0C             INC   C
-16e1: 00             NOP   
-16e2: EE FC          XOR   A,#$FC
-16e4: 23             INC   HL
-16e5: 17             RLA   
-16e6: 00             NOP   
+
+*** Data used where for what?
+16da: E6 FC 14 17 B8 48 0C 00 EE FC 23 17 00 
+
 TANKS______500_S:
 16e7: TANKS      500
 
@@ -4626,7 +4586,7 @@ MCP_INSTRUCTIONS:
 2cc0: FD 19          ADD   IY,DE
 2cc2: 10 E6          DJNZ  $2CAA
 
-2cc4: DD 21 EE 2C    LD    IX,$2CEE
+2cc4: DD 21 EE 2C    LD    IX,DATA_FOR_???_TO_2CF7
 2cc8: DD 4E 00       LD    C,(IX+$00)
 2ccb: DD 46 01       LD    B,(IX+$01)
 2cce: 78             LD    A,B
@@ -4645,13 +4605,9 @@ MCP_INSTRUCTIONS:
 2ce8: 22 10 C0       LD    (TANKS_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020),HL
 2ceb: C3 AD 2E       JP    $2EAD
 
-2cee: CC FC F8       CALL  Z,$F8FC
-2cf1: 2C             INC   L
-2cf2: CE FC          ADC   A,#$FC
-2cf4: 05             DEC   B
-2cf5: 2D             DEC   L
-2cf6: 00             NOP   
-2cf7: 00             NOP   
+DATA_FOR_???_TO_2CF7:
+2cee: CC FC F8 2C CE FC 05 2D 00 00 
+
 TRY_TO_ENTER_S:
 2cf8: TRY TO ENTER
 
@@ -5618,7 +5574,7 @@ MCP_HIDE_SPRITE_GOING_OFF_BOTTOM_OF_SCREEN:
 3415: 11 67 2C       LD    DE,1000_FOR_ENTERING_CONE_S
 3418: 01 92 FE       LD    BC,$FE92
 341b: CD 5D 70       CALL  ADD_MESSAGE_TO_Q
-341e: 21 81 34       LD    HL,$3481
+341e: 21 81 34       LD    HL,DATA_FOR_???_TO_3485
 3421: C3 52 6F       JP    PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LC
 
 3424: 79             LD    A,C
@@ -5677,10 +5633,10 @@ MCP_HIDE_SPRITE_GOING_OFF_BOTTOM_OF_SCREEN:
 
 3480: C9             RET   
 
-3481: 00             NOP   
-3482: 00             NOP   
-3483: 00             NOP   
-3484: 01 00 E5       LD    BC,$E500
+DATA_FOR_???_TO_3485:
+3481: 00 00 00 01 00 
+
+3486: E5             PUSH  HL
 3487: C5             PUSH  BC
 3488: FD 22 09 C4    LD    (MCP_SPRITE_BLOCK_HIT_BY_DISK),IY
 348c: DD 22 0B C4    LD    (MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK),IX
@@ -5871,28 +5827,11 @@ MCP_COLOR_PALETTE_ALL_ZEROS:
 3926: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 3936: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 
-3946: 00             NOP   
-3947: 00             NOP   
-3948: 01 C0 01       LD    BC,$01C0
-394b: 80             ADD   A,B
-394c: 00             NOP   
-394d: 38 01          JR    C,$3950
 
-394f: D4 00 07       CALL  NC,$0700
-3952: 01 C2 01       LD    BC,$01C2
-3955: C5             PUSH  BC
-3956: 00             NOP   
-3957: 00             NOP   
-3958: 00             NOP   
-3959: 7E             LD    A,(HL)
-395a: 00             NOP   
-395b: 04             INC   B
-395c: 01 C7 00       LD    BC,$00C7
-395f: 00             NOP   
-3960: 01 F8 00       LD    BC,$00F8
-3963: 38 00          JR    C,$3965
+*** Data used where for what?
+3946: 00 00 01 C0 01 80 00 38 01 D4 00 07 01 C2 01 C5 
+3956: 00 00 00 7E 00 04 01 C7 00 00 01 F8 00 38 00 3F 
 
-3965: 3F             CCF   
 
 *** Data for setting up MCP cone game.
 *** 10x4: 4= direction, blocks per row, Y move delay, rotation delay
@@ -6674,25 +6613,45 @@ TANK_PROCESS_CONTROLS_INPUT:
 3f3b: C3 B8 6F       JP    PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 
 3f3e: 3A 59 C1       LD    A,(TANKS_NUMBER_OF_ENEMY_BULLETS?)
-Error: missed a comment line at 3F3F, line=3F42
-3f41: 11 20 00 DD 21 31 C0 
+3f41: 11 20 00       LD    DE,$0020
+3f44: DD 21 31 C0    LD    IX,$C031
+3f48: 4F             LD    C,A
+3f49: DD 19          ADD   IX,DE
+3f4b: DD 7E 00       LD    A,(IX+$00)
+3f4e: B7             OR    A,A
+3f4f: 28 45          JR    Z,$3F96
 
-3f48: 4F DD 19 DD 7E 00 B7 28 45 DD 7E 05 32 10 C0 
+3f51: DD 7E 05       LD    A,(IX+$05)
+3f54: 32 10 C0       LD    (TANKS_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020),A
+3f57: 3A 00 C0       LD    A,(CPU_RAM_OR_GS_DISK_X_TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
+3f5a: 21 03 C0       LD    HL,$C003
+3f5d: 86             ADD   A,(HL)
+3f5e: 47             LD    B,A
+3f5f: DD 7E 03       LD    A,(IX+$03)
+3f62: DD 86 00       ADD   A,(IX+$00)
+3f65: 21 04 C0       LD    HL,$C004
+3f68: 90             SUB   A,B
+3f69: 30 04          JR    NC,$3F6F
 
-3f57: 3A 00 C0 21 03 C0 86 47 DD 
+3f6b: 2F             CPL   
+3f6c: 21 10 C0       LD    HL,TANKS_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020
+3f6f: BE             CP    A,(HL)
+3f70: 30 24          JR    NC,$3F96
 
-3f60: 7E 03 DD 86 00 21 04 
+3f72: DD 7E 06       LD    A,(IX+$06)
+3f75: 32 10 C0       LD    (TANKS_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020),A
+3f78: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
+3f7b: 21 05 C0       LD    HL,$C005
+3f7e: 86             ADD   A,(HL)
+3f7f: 47             LD    B,A
+3f80: DD 7E 04       LD    A,(IX+$04)
+3f83: DD 86 02       ADD   A,(IX+$02)
+3f86: 21 06 C0       LD    HL,$C006
+3f89: 90             SUB   A,B
+3f8a: 30 04          JR    NC,$3F90
 
-3f67: C0 90 30 04 2F 21 10 C0 
-
-3f6f: BE 30 24 DD 7E 06 32 10 C0 
-
-3f78: 3A 02 C0 21 05 C0 86 47 DD 7E 04 DD 86 02 21 
-
-3f87: 06 C0 90 30 04 2F 21 10 
-
-3f8f: C0 
-
+3f8c: 2F             CPL   
+3f8d: 21 10 C0       LD    HL,TANKS_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020
 3f90: BE             CP    A,(HL)
 3f91: 30 03          JR    NC,$3F96       ;Invincibility TANK Game = 18 (JR *) (tank collision?)
 
@@ -6716,115 +6675,15 @@ Error: missed a comment line at 3F3F, line=3F42
 3ffb: 28 88 98 F8 00 28 38 40 50 58 68 70 88 98 B0 B8 
 400b: C8 D0 E0 E8 F8 00 
 
-4011: 28 50          JR    Z,TANKS_DATA_FOR_x_STARTS_AT_4066
 
-4013: 58             LD    E,B
-4014: 68             LD    L,B
-4015: 70             LD    (HL),B
-4016: 80             ADD   A,B
-4017: A0             AND   A,B
-4018: B0             OR    A,B
-4019: B8             CP    A,B
-401a: C8             RET   Z
+*** Data used where for what?
+4011: 28 50 58 68 70 80 A0 B0 B8 C8 D0 E0 E8 F8 00 28 
+4021: 38 40 F8 00 28 38 40 50 58 68 70 80 A0 B0 B8 C8 
+4031: D0 E0 E8 F8 00 28 38 40 68 70 B0 B8 E0 E8 F8 00 
+4041: 28 38 40 50 70 80 88 98 B8 C8 D0 E0 E8 F8 00 28 
+4051: E0 E8 F8 00 40 50 58 68 88 98 A0 B0 B8 C8 E8 F8 
+4061: 00 28 F8 00 00 
 
-401b: D0             RET   NC
-
-401c: E0             RET   PO
-
-401d: E8             RET   PE
-
-401e: F8             RET   M
-
-401f: 00             NOP   
-4020: 28 38          JR    Z,$405A
-
-4022: 40             LD    B,B
-4023: F8             RET   M
-
-4024: 00             NOP   
-4025: 28 38          JR    Z,$405F
-
-4027: 40             LD    B,B
-4028: 50             LD    D,B
-4029: 58             LD    E,B
-402a: 68             LD    L,B
-402b: 70             LD    (HL),B
-402c: 80             ADD   A,B
-402d: A0             AND   A,B
-402e: B0             OR    A,B
-402f: B8             CP    A,B
-4030: C8             RET   Z
-
-4031: D0             RET   NC
-
-4032: E0             RET   PO
-
-4033: E8             RET   PE
-
-4034: F8             RET   M
-
-4035: 00             NOP   
-4036: 28 38          JR    Z,$4070
-
-4038: 40             LD    B,B
-4039: 68             LD    L,B
-403a: 70             LD    (HL),B
-403b: B0             OR    A,B
-403c: B8             CP    A,B
-403d: E0             RET   PO
-
-403e: E8             RET   PE
-
-403f: F8             RET   M
-
-4040: 00             NOP   
-4041: 28 38          JR    Z,$407B
-
-4043: 40             LD    B,B
-4044: 50             LD    D,B
-4045: 70             LD    (HL),B
-4046: 80             ADD   A,B
-4047: 88             ADC   A,B
-4048: 98             SBC   A,B
-4049: B8             CP    A,B
-404a: C8             RET   Z
-
-404b: D0             RET   NC
-
-404c: E0             RET   PO
-
-404d: E8             RET   PE
-
-404e: F8             RET   M
-
-404f: 00             NOP   
-4050: 28 E0          JR    Z,$4032
-
-4052: E8             RET   PE
-
-4053: F8             RET   M
-
-4054: 00             NOP   
-4055: 40             LD    B,B
-4056: 50             LD    D,B
-4057: 58             LD    E,B
-4058: 68             LD    L,B
-4059: 88             ADC   A,B
-405a: 98             SBC   A,B
-405b: A0             AND   A,B
-405c: B0             OR    A,B
-405d: B8             CP    A,B
-405e: C8             RET   Z
-
-405f: E8             RET   PE
-
-4060: F8             RET   M
-
-4061: 00             NOP   
-4062: 28 F8          JR    Z,$405C
-
-4064: 00             NOP   
-4065: 00             NOP   
 
 *** This data structure is used at 40C9
 *** ??? 18?x3 bytes: ?, vector to other data
@@ -7537,27 +7396,11 @@ TANK_PROCESS_ENEMY_TANKS_ON_STARTUP_SOMEHOW?_USES_IX:
 
 45ec: C9             RET   
 
-45ed: 00             NOP   
-45ee: 08             EX    AF,AF'
-45ef: 00             NOP   
-45f0: 08             EX    AF,AF'
-45f1: FF             RST   $38
+DATA_USED_FOR_???_TO_45FE:
+45ed: 00 08 00 08 FF 50 08 00 08 00 08 50 08 50 07 00 
+45fd: 08 FF 
 
-45f2: 50             LD    D,B
-45f3: 08             EX    AF,AF'
-45f4: 00             NOP   
-45f5: 08             EX    AF,AF'
-45f6: 00             NOP   
-45f7: 08             EX    AF,AF'
-45f8: 50             LD    D,B
-45f9: 08             EX    AF,AF'
-45fa: 50             LD    D,B
-45fb: 07             RLCA  
-45fc: 00             NOP   
-45fd: 08             EX    AF,AF'
-45fe: FF             RST   $38
-
-45ff: 21 ED 45       LD    HL,$45ED
+45ff: 21 ED 45       LD    HL,DATA_USED_FOR_???_TO_45FE
 4602: FD 36 0A 00    LD    (IY+$0A),#$00
 4606: FD 7E 01       LD    A,(IY+$01)
 4609: 86             ADD   A,(HL)
@@ -8288,326 +8131,34 @@ TANK_SET_BULLET_X_AND_?_OFFSCREEN_CALL_UPDATE_POSITION?:
 
 4c2b: C9             RET   
 
-4c2c: 00             NOP   
-4c2d: 18 E0          JR    $4C0F
+4c2c: 00 18 E0 E8 F8 00 18 28 30 40 60 70 78 88 90 A0 
+4c3c: D0 E0 E8 F8 00 18 28 30 58 60 F8 00 18 58 60 F8 
+4c4c: 00 18 40 48 58 60 70 78 88 A0 B0 B8 C8 D0 E0 E8 
+4c5c: F8 00 18 28 30 40 48 58 60 70 78 88 A0 B0 B8 C8 
+4c6c: D0 E0 E8 F8 00 18 28 30 C8 D0 F8 00 18 28 30 40 
+4c7c: 48 58 60 70 78 88 A0 B0 D0 E0 E8 F8 00 18 E0 E8 
+4c8c: F8 00 18 28 30 40 48 58 60 70 80 90 A0 B0 B8 C8 
+4c9c: D0 E0 E8 F8 00 18 28 30 58 60 70 78 98 A0 B0 B8 
+4cac: F8 00 18 28 30 40 48 58 60 70 80 90 A0 B0 B8 C8 
+4cbc: D0 E0 E8 F8 00 18 C8 D0 F8 00 18 28 48 58 60 70 
+4ccc: 78 88 A0 B0 D0 E0 E8 F8 00 18 28 30 F8 00 18 28 
+4cdc: 30 40 48 58 78 88 A0 B0 B8 C8 D0 E0 E8 F8 00 18 
+4cec: E0 E8 F8 00 30 40 58 68 78 88 A0 B0 E8 F8 00 
 
-4c2f: E8             RET   PE
-
-4c30: F8             RET   M
-
-4c31: 00             NOP   
-4c32: 18 28          JR    $4C5C
-
-4c34: 30 40          JR    NC,$4C76
-
-4c36: 60             LD    H,B
-4c37: 70             LD    (HL),B
-4c38: 78             LD    A,B
-4c39: 88             ADC   A,B
-4c3a: 90             SUB   A,B
-4c3b: A0             AND   A,B
-4c3c: D0             RET   NC
-
-4c3d: E0             RET   PO
-
-4c3e: E8             RET   PE
-
-4c3f: F8             RET   M
-
-4c40: 00             NOP   
-4c41: 18 28          JR    $4C6B
-
-4c43: 30 58          JR    NC,$4C9D
-
-4c45: 60             LD    H,B
-4c46: F8             RET   M
-
-4c47: 00             NOP   
-4c48: 18 58          JR    $4CA2
-
-4c4a: 60             LD    H,B
-4c4b: F8             RET   M
-
-4c4c: 00             NOP   
-4c4d: 18 40          JR    $4C8F
-
-4c4f: 48             LD    C,B
-4c50: 58             LD    E,B
-4c51: 60             LD    H,B
-4c52: 70             LD    (HL),B
-4c53: 78             LD    A,B
-4c54: 88             ADC   A,B
-4c55: A0             AND   A,B
-4c56: B0             OR    A,B
-4c57: B8             CP    A,B
-4c58: C8             RET   Z
-
-4c59: D0             RET   NC
-
-4c5a: E0             RET   PO
-
-4c5b: E8             RET   PE
-
-4c5c: F8             RET   M
-
-4c5d: 00             NOP   
-4c5e: 18 28          JR    $4C88
-
-4c60: 30 40          JR    NC,$4CA2
-
-4c62: 48             LD    C,B
-4c63: 58             LD    E,B
-4c64: 60             LD    H,B
-4c65: 70             LD    (HL),B
-4c66: 78             LD    A,B
-4c67: 88             ADC   A,B
-4c68: A0             AND   A,B
-4c69: B0             OR    A,B
-4c6a: B8             CP    A,B
-4c6b: C8             RET   Z
-
-4c6c: D0             RET   NC
-
-4c6d: E0             RET   PO
-
-4c6e: E8             RET   PE
-
-4c6f: F8             RET   M
-
-4c70: 00             NOP   
-4c71: 18 28          JR    $4C9B
-
-4c73: 30 C8          JR    NC,$4C3D
-
-4c75: D0             RET   NC
-
-4c76: F8             RET   M
-
-4c77: 00             NOP   
-4c78: 18 28          JR    $4CA2
-
-4c7a: 30 40          JR    NC,$4CBC
-
-4c7c: 48             LD    C,B
-4c7d: 58             LD    E,B
-4c7e: 60             LD    H,B
-4c7f: 70             LD    (HL),B
-4c80: 78             LD    A,B
-4c81: 88             ADC   A,B
-4c82: A0             AND   A,B
-4c83: B0             OR    A,B
-4c84: D0             RET   NC
-
-4c85: E0             RET   PO
-
-4c86: E8             RET   PE
-
-4c87: F8             RET   M
-
-4c88: 00             NOP   
-4c89: 18 E0          JR    $4C6B
-
-4c8b: E8             RET   PE
-
-4c8c: F8             RET   M
-
-4c8d: 00             NOP   
-4c8e: 18 28          JR    $4CB8
-
-4c90: 30 40          JR    NC,$4CD2
-
-4c92: 48             LD    C,B
-4c93: 58             LD    E,B
-4c94: 60             LD    H,B
-4c95: 70             LD    (HL),B
-4c96: 80             ADD   A,B
-4c97: 90             SUB   A,B
-4c98: A0             AND   A,B
-4c99: B0             OR    A,B
-4c9a: B8             CP    A,B
-4c9b: C8             RET   Z
-
-4c9c: D0             RET   NC
-
-4c9d: E0             RET   PO
-
-4c9e: E8             RET   PE
-
-4c9f: F8             RET   M
-
-4ca0: 00             NOP   
-4ca1: 18 28          JR    $4CCB
-
-4ca3: 30 58          JR    NC,$4CFD
-
-4ca5: 60             LD    H,B
-4ca6: 70             LD    (HL),B
-4ca7: 78             LD    A,B
-4ca8: 98             SBC   A,B
-4ca9: A0             AND   A,B
-4caa: B0             OR    A,B
-4cab: B8             CP    A,B
-4cac: F8             RET   M
-
-4cad: 00             NOP   
-4cae: 18 28          JR    $4CD8
-
-4cb0: 30 40          JR    NC,$4CF2
-
-4cb2: 48             LD    C,B
-4cb3: 58             LD    E,B
-4cb4: 60             LD    H,B
-4cb5: 70             LD    (HL),B
-4cb6: 80             ADD   A,B
-4cb7: 90             SUB   A,B
-4cb8: A0             AND   A,B
-4cb9: B0             OR    A,B
-4cba: B8             CP    A,B
-4cbb: C8             RET   Z
-
-4cbc: D0             RET   NC
-
-4cbd: E0             RET   PO
-
-4cbe: E8             RET   PE
-
-4cbf: F8             RET   M
-
-4cc0: 00             NOP   
-4cc1: 18 C8          JR    $4C8B
-
-4cc3: D0             RET   NC
-
-4cc4: F8             RET   M
-
-4cc5: 00             NOP   
-4cc6: 18 28          JR    $4CF0
-
-4cc8: 48             LD    C,B
-4cc9: 58             LD    E,B
-4cca: 60             LD    H,B
-4ccb: 70             LD    (HL),B
-4ccc: 78             LD    A,B
-4ccd: 88             ADC   A,B
-4cce: A0             AND   A,B
-4ccf: B0             OR    A,B
-4cd0: D0             RET   NC
-
-4cd1: E0             RET   PO
-
-4cd2: E8             RET   PE
-
-4cd3: F8             RET   M
-
-4cd4: 00             NOP   
-4cd5: 18 28          JR    $4CFF
-
-4cd7: 30 F8          JR    NC,$4CD1
-
-4cd9: 00             NOP   
-4cda: 18 28          JR    $4D04
-
-4cdc: 30 40          JR    NC,$4D1E
-
-4cde: 48             LD    C,B
-4cdf: 58             LD    E,B
-4ce0: 78             LD    A,B
-4ce1: 88             ADC   A,B
-4ce2: A0             AND   A,B
-4ce3: B0             OR    A,B
-4ce4: B8             CP    A,B
-4ce5: C8             RET   Z
-
-4ce6: D0             RET   NC
-
-4ce7: E0             RET   PO
-
-4ce8: E8             RET   PE
-
-4ce9: F8             RET   M
-
-4cea: 00             NOP   
-4ceb: 18 E0          JR    $4CCD
-
-4ced: E8             RET   PE
-
-4cee: F8             RET   M
-
-4cef: 00             NOP   
-4cf0: 30 40          JR    NC,$4D32
-
-4cf2: 58             LD    E,B
-4cf3: 68             LD    L,B
-4cf4: 78             LD    A,B
-4cf5: 88             ADC   A,B
-4cf6: A0             AND   A,B
-4cf7: B0             OR    A,B
-4cf8: E8             RET   PE
-
-4cf9: F8             RET   M
-
-4cfa: 00             NOP   
 TANK_DATA_FOR?_STARTS_AT_4CFF:
-4cfb: 18 F8          JR    $4CF5
+4cfb: 18 F8 00 00 
 
-4cfd: 00             NOP   
-4cfe: 00             NOP   
 
-*** This data structure may extend past 4d3b ...
+*** This data structure used at 40BA and 4D77 but points to 4CFB and then adds 4!
 4cff: 28 01 2C 4C 37 00 2D 4C 38 01 32 4C 40 01 32 4C 
 4d0f: 48 00 41 4C 4F 00 48 4C 50 01 4D 4C 57 00 4D 4C 
 4d1f: 58 01 5E 4C 67 00 71 4C 68 01 78 4C 70 01 78 4C 
-4d2f: 7F 00 89 4C 80 01 8E 4C 88 01 8E 4C 97 
+4d2f: 7F 00 89 4C 80 01 8E 4C 88 01 8E 4C 97 00 A1 4C 
+4d3f: 98 01 AE 4C A0 01 AE 4C AF 00 C1 4C B0 01 C6 4C 
+4d4f: B8 01 C6 4C C7 00 D5 4C C8 01 DA 4C D0 01 DA 4C 
+4d5f: DF 00 EB 4C E0 01 F0 4C E8 01 F0 4C F7 00 FB 4C 
+4d6f: F8 01 FE 4C FF 00 FE 4C 
 
-4d3c: 00             NOP   
-4d3d: A1             AND   A,C
-4d3e: 4C             LD    C,H
-4d3f: 98             SBC   A,B
-4d40: 01 AE 4C       LD    BC,$4CAE
-4d43: A0             AND   A,B
-4d44: 01 AE 4C       LD    BC,$4CAE
-4d47: AF             XOR   A,A
-4d48: 00             NOP   
-4d49: C1             POP   BC
-4d4a: 4C             LD    C,H
-4d4b: B0             OR    A,B
-4d4c: 01 C6 4C       LD    BC,$4CC6
-4d4f: B8             CP    A,B
-4d50: 01 C6 4C       LD    BC,$4CC6
-4d53: C7             RST   $00
-
-4d54: 00             NOP   
-4d55: D5             PUSH  DE
-4d56: 4C             LD    C,H
-4d57: C8             RET   Z
-
-4d58: 01 DA 4C       LD    BC,$4CDA
-4d5b: D0             RET   NC
-
-4d5c: 01 DA 4C       LD    BC,$4CDA
-4d5f: DF             RST   $18
-
-4d60: 00             NOP   
-4d61: EB             EX    DE,HL
-4d62: 4C             LD    C,H
-4d63: E0             RET   PO
-
-4d64: 01 F0 4C       LD    BC,$4CF0
-4d67: E8             RET   PE
-
-4d68: 01 F0 4C       LD    BC,$4CF0
-4d6b: F7             RST   $30
-
-4d6c: 00             NOP   
-4d6d: FB             EI    
-4d6e: 4C             LD    C,H
-4d6f: F8             RET   M
-
-4d70: 01 FE 4C       LD    BC,$4CFE
-4d73: FF             RST   $38
-
-4d74: 00             NOP   
-4d75: FE 4C          CP    A,#$4C
 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE:
 4d77: DD 21 FB 4C    LD    IX,TANK_DATA_FOR?_STARTS_AT_4CFF
 4d7b: 11 04 00       LD    DE,$0004
@@ -9415,14 +8966,12 @@ SPEED_CONTROL_S:
 553f: 36 00          LD    (HL),#$00
 5541: 0E 0E          LD    C,#$0E
 5543: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
-5546: 21 4C 55       LD    HL,$554C
+5546: 21 4C 55       LD    HL,DATA_USED_FOR_???_TO_5550
 5549: C3 52 6F       JP    PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LC
 
-554c: 00             NOP   
-554d: 00             NOP   
-554e: 05             DEC   B
-554f: 00             NOP   
-5550: 00             NOP   
+DATA_USED_FOR_???_TO_5550:
+554c: 00 00 05 00 00 
+
 LC_ERASE_TRAIL_OF_DESTROYED_LC:
 5551: 11 00 89       LD    DE,BACKGROUND_LC
 5554: 21 00 F8       LD    HL,BACKGROUND_VIDEO_RAM_TO_FF7F
@@ -10402,191 +9951,23 @@ LC_MULTIPLE_CYCLES_DO_SOMETHING?:
 5c02: 00 01 01 02 03 03 02 03 03 01 63 02 03 63 01 05 
 5c12: 04 04 03 00 63 05 02 63 00 01 00 00 00 00 00 
 
-5c21: 06 60          LD    B,#$60
-5c23: 00             NOP   
-5c24: 00             NOP   
-5c25: 01 00 07       LD    BC,$0700
-5c28: 80             ADD   A,B
-5c29: 00             NOP   
-5c2a: 01 00 03       LD    BC,$0300
-5c2d: 07             RLCA  
-5c2e: A0             AND   A,B
-5c2f: 00             NOP   
-5c30: 83             ADD   A,E
-5c31: 01 00 07       LD    BC,$0700
-5c34: C0             RET   NZ
 
-5c35: 00             NOP   
-5c36: 03             INC   BC
-5c37: 41             LD    B,C
-5c38: 82             ADD   A,D
-5c39: 07             RLCA  
-5c3a: 01 00 00       LD    BC,$0000
-5c3d: 83             ADD   A,E
-5c3e: 43             LD    B,E
-5c3f: 07             RLCA  
-5c40: 20 01          JR    NZ,$5C43
+*** Data used where for what?
+5c21: 06 60 00 00 01 00 07 80 00 01 00 03 07 A0 00 83 
+5c31: 01 00 07 C0 00 03 41 82 07 01 00 00 83 43 07 20 
+5c41: 01 41 00 82 07 40 01 00 00 42 07 80 01 41 82 03 
+5c51: 07 80 01 03 41 82 07 80 01 00 83 43 07 A0 01 41 
+5c61: 00 82 07 C0 01 00 00 42 07 00 02 41 82 03 07 40 
+5c71: 02 03 41 82 07 40 02 00 83 43 07 40 02 41 00 82 
+5c81: 07 40 02 83 43 42 07 40 02 03 03 03 86 31 1B 83 
+5c91: 63 1A 22 95 14 90 87 87 42 39 67 0F 73 82 75 BA 
+5ca1: 7A 14 35 E7 90 92 8D 51 A0 80 0F 88 2A 84 17 2C 
+5cb1: 99 C4 21 DB 72 18 97 E8 4C 49 99 95 11 C2 16 07 
+5cc1: 25 14 21 3C A1 56 BF A1 24 A5 E1 5B 42 C6 A4 74 
+5cd1: 82 67 A4 46 42 B4 C8 07 AD 5B 32 48 E2 47 14 49 
+5ce1: 21 40 60 AF 14 1A 41 04 E0 99 44 C1 56 E4 15 A8 
+5cf1: 42 2A C6 FB 91 08 40 24 40 72 2A 17 82 A0 47 
 
-5c42: 41             LD    B,C
-5c43: 00             NOP   
-5c44: 82             ADD   A,D
-5c45: 07             RLCA  
-5c46: 40             LD    B,B
-5c47: 01 00 00       LD    BC,$0000
-5c4a: 42             LD    B,D
-5c4b: 07             RLCA  
-5c4c: 80             ADD   A,B
-5c4d: 01 41 82       LD    BC,$8241
-5c50: 03             INC   BC
-5c51: 07             RLCA  
-5c52: 80             ADD   A,B
-5c53: 01 03 41       LD    BC,$4103
-5c56: 82             ADD   A,D
-5c57: 07             RLCA  
-5c58: 80             ADD   A,B
-5c59: 01 00 83       LD    BC,$8300
-5c5c: 43             LD    B,E
-5c5d: 07             RLCA  
-5c5e: A0             AND   A,B
-5c5f: 01 41 00       LD    BC,$0041
-5c62: 82             ADD   A,D
-5c63: 07             RLCA  
-5c64: C0             RET   NZ
-
-5c65: 01 00 00       LD    BC,$0000
-5c68: 42             LD    B,D
-5c69: 07             RLCA  
-5c6a: 00             NOP   
-5c6b: 02             LD    (BC),A
-5c6c: 41             LD    B,C
-5c6d: 82             ADD   A,D
-5c6e: 03             INC   BC
-5c6f: 07             RLCA  
-5c70: 40             LD    B,B
-5c71: 02             LD    (BC),A
-5c72: 03             INC   BC
-5c73: 41             LD    B,C
-5c74: 82             ADD   A,D
-5c75: 07             RLCA  
-5c76: 40             LD    B,B
-5c77: 02             LD    (BC),A
-5c78: 00             NOP   
-5c79: 83             ADD   A,E
-5c7a: 43             LD    B,E
-5c7b: 07             RLCA  
-5c7c: 40             LD    B,B
-5c7d: 02             LD    (BC),A
-5c7e: 41             LD    B,C
-5c7f: 00             NOP   
-5c80: 82             ADD   A,D
-5c81: 07             RLCA  
-5c82: 40             LD    B,B
-5c83: 02             LD    (BC),A
-5c84: 83             ADD   A,E
-5c85: 43             LD    B,E
-5c86: 42             LD    B,D
-5c87: 07             RLCA  
-5c88: 40             LD    B,B
-5c89: 02             LD    (BC),A
-5c8a: 03             INC   BC
-5c8b: 03             INC   BC
-5c8c: 03             INC   BC
-5c8d: 86             ADD   A,(HL)
-5c8e: 31 1B 83       LD    SP,$831B
-5c91: 63             LD    H,E
-5c92: 1A             LD    A,(DE)
-5c93: 22 95 14       LD    ($1495),HL
-5c96: 90             SUB   A,B
-5c97: 87             ADD   A,A
-5c98: 87             ADD   A,A
-5c99: 42             LD    B,D
-5c9a: 39             ADD   HL,SP
-5c9b: 67             LD    H,A
-5c9c: 0F             RRCA  
-5c9d: 73             LD    (HL),E
-5c9e: 82             ADD   A,D
-5c9f: 75             LD    (HL),L
-5ca0: BA             CP    A,D
-5ca1: 7A             LD    A,D
-5ca2: 14             INC   D
-5ca3: 35             DEC   (HL)
-5ca4: E7             RST   $20
-
-5ca5: 90             SUB   A,B
-5ca6: 92             SUB   A,D
-5ca7: 8D             ADC   A,L
-5ca8: 51             LD    D,C
-5ca9: A0             AND   A,B
-5caa: 80             ADD   A,B
-5cab: 0F             RRCA  
-5cac: 88             ADC   A,B
-5cad: 2A 84 17       LD    HL,($1784)
-5cb0: 2C             INC   L
-5cb1: 99             SBC   A,C
-5cb2: C4 21 DB       CALL  NZ,$DB21
-5cb5: 72             LD    (HL),D
-5cb6: 18 97          JR    $5C4F
-
-5cb8: E8             RET   PE
-
-5cb9: 4C             LD    C,H
-5cba: 49             LD    C,C
-5cbb: 99             SBC   A,C
-5cbc: 95             SUB   A,L
-5cbd: 11 C2 16       LD    DE,$16C2
-5cc0: 07             RLCA  
-5cc1: 25             DEC   H
-5cc2: 14             INC   D
-5cc3: 21 3C A1       LD    HL,$A13C
-5cc6: 56             LD    D,(HL)
-5cc7: BF             CP    A,A
-5cc8: A1             AND   A,C
-5cc9: 24             INC   H
-5cca: A5             AND   A,L
-5ccb: E1             POP   HL
-5ccc: 5B             LD    E,E
-5ccd: 42             LD    B,D
-5cce: C6 A4          ADD   A,#$A4
-5cd0: 74             LD    (HL),H
-5cd1: 82             ADD   A,D
-5cd2: 67             LD    H,A
-5cd3: A4             AND   A,H
-5cd4: 46             LD    B,(HL)
-5cd5: 42             LD    B,D
-5cd6: B4             OR    A,H
-5cd7: C8             RET   Z
-
-5cd8: 07             RLCA  
-5cd9: AD             XOR   A,L
-5cda: 5B             LD    E,E
-5cdb: 32 48 E2       LD    ($E248),A
-5cde: 47             LD    B,A
-5cdf: 14             INC   D
-5ce0: 49             LD    C,C
-5ce1: 21 40 60       LD    HL,$6040
-5ce4: AF             XOR   A,A
-5ce5: 14             INC   D
-5ce6: 1A             LD    A,(DE)
-5ce7: 41             LD    B,C
-5ce8: 04             INC   B
-5ce9: E0             RET   PO
-
-5cea: 99             SBC   A,C
-5ceb: 44             LD    B,H
-5cec: C1             POP   BC
-5ced: 56             LD    D,(HL)
-5cee: E4 15 A8       CALL  PO,$A815
-5cf1: 42             LD    B,D
-5cf2: 2A C6 FB       LD    HL,($FBC6)
-5cf5: 91             SUB   A,C
-5cf6: 08             EX    AF,AF'
-5cf7: 40             LD    B,B
-5cf8: 24             INC   H
-5cf9: 40             LD    B,B
-5cfa: 72             LD    (HL),D
-5cfb: 2A 17 82       LD    HL,($8217)
-5cfe: A0             AND   A,B
-5cff: 47             LD    B,A
 PLAY_IO_TOWER:
 5d00: CD 20 70       CALL  ZERO_RAM_C000-C418
 5d03: 3E 04          LD    A,#$04
@@ -10800,30 +10181,10 @@ IO_TOWER_COLOR_PALETTE:
 5eb7: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 5ec7: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 
-5ed7: 00             NOP   
-5ed8: 00             NOP   
-5ed9: 00             NOP   
-5eda: 53             LD    D,E
-5edb: 01 80 00       LD    BC,$0080
-5ede: 30 01          JR    NC,$5EE1
 
-5ee0: D4 01 EA       CALL  NC,$EA01
-5ee3: 01 C2 01       LD    BC,$01C2
-5ee6: C5             PUSH  BC
-5ee7: 00             NOP   
-5ee8: 00             NOP   
-5ee9: 00             NOP   
-5eea: 7E             LD    A,(HL)
-5eeb: 01 FF 00       LD    BC,$00FF
-5eee: 0F             RRCA  
-5eef: 00             NOP   
-5ef0: 00             NOP   
-5ef1: 00             NOP   
-5ef2: 08             EX    AF,AF'
-5ef3: 00             NOP   
-5ef4: 38 01          JR    C,$5EF7
-
-5ef6: C0             RET   NZ
+*** Data used where for what?
+5ed7: 00 00 00 53 01 80 00 30 01 D4 01 EA 01 C2 01 C5 
+5ee7: 00 00 00 7E 01 FF 00 0F 00 00 00 08 00 38 01 C0 
 
 5ef7: 21 0C C0       LD    HL,$C00C
 5efa: 35             DEC   (HL)
@@ -11399,14 +10760,12 @@ IO_OR_MCP?_SET_TRON_INITIAL_POSITION_AND_ROTATION:
 62df: FD 36 01 3F    LD    (IY+$01),#$3F
 62e3: AF             XOR   A,A
 62e4: 32 04 C0       LD    ($C004),A
-62e7: 21 ED 62       LD    HL,$62ED
+62e7: 21 ED 62       LD    HL,DATA_USED_FOR_???_TO_62F1
 62ea: C3 52 6F       JP    PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LC
 
-62ed: 00             NOP   
-62ee: 00             NOP   
-62ef: 00             NOP   
-62f0: 05             DEC   B
-62f1: 00             NOP   
+DATA_USED_FOR_???_TO_62F1:
+62ed: 00 00 00 05 00 
+
 62f2: FD 21 2C F0    LD    IY,TANK_ENEMIES
 62f6: 21 03 C0       LD    HL,$C003
 62f9: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
@@ -11825,7 +11184,7 @@ IO_OR_MCP?_SET_TRON_INITIAL_POSITION_AND_ROTATION:
 6624: CD D2 66       CALL  $66D2
 6627: DD 21 30 C0    LD    IX,MCP_DISK_4_DATA
 662b: FD 21 30 F0    LD    IY,IO_GRID_BUGS
-662f: 21 AE 66       LD    HL,$66AE
+662f: 21 AE 66       LD    HL,DATA_USED_FOR_???_TO_66D1
 6632: 3A 26 C0       LD    A,(MCP_DISK_3_DATA)
 6635: 92             SUB   A,D
 6636: 30 04          JR    NC,$663C
@@ -11895,50 +11254,11 @@ IO_OR_MCP?_SET_TRON_INITIAL_POSITION_AND_ROTATION:
 66ab: DD E1          POP   IX
 66ad: C9             RET   
 
-66ae: B6             OR    A,(HL)
-66af: 66             LD    H,(HL)
-66b0: BA             CP    A,D
-66b1: 66             LD    H,(HL)
-66b2: BE             CP    A,(HL)
-66b3: 66             LD    H,(HL)
-66b4: C2 66 D7       JP    NZ,$D766
+DATA_USED_FOR_???_TO_66D1:
+66ae: B6 66 BA 66 BE 66 C2 66 D7 00 80 00 D7 00 80 FF 
+66be: 29 FF 80 00 29 FF 80 FF D7 00 80 00 D7 00 80 FF 
+66ce: 29 FF 80 00 
 
-66b7: 00             NOP   
-66b8: 80             ADD   A,B
-66b9: 00             NOP   
-66ba: D7             RST   $10
-
-66bb: 00             NOP   
-66bc: 80             ADD   A,B
-66bd: FF             RST   $38
-
-66be: 29             ADD   HL,HL
-66bf: FF             RST   $38
-
-66c0: 80             ADD   A,B
-66c1: 00             NOP   
-66c2: 29             ADD   HL,HL
-66c3: FF             RST   $38
-
-66c4: 80             ADD   A,B
-66c5: FF             RST   $38
-
-66c6: D7             RST   $10
-
-66c7: 00             NOP   
-66c8: 80             ADD   A,B
-66c9: 00             NOP   
-66ca: D7             RST   $10
-
-66cb: 00             NOP   
-66cc: 80             ADD   A,B
-66cd: FF             RST   $38
-
-66ce: 29             ADD   HL,HL
-66cf: FF             RST   $38
-
-66d0: 80             ADD   A,B
-66d1: 00             NOP   
 66d2: DD 36 0A 00    LD    (IX+$0A),#$00
 66d6: FD 36 00 00    LD    (IY+$00),#$00
 66da: 21 06 C0       LD    HL,$C006
@@ -12021,14 +11341,12 @@ IO_OR_MCP?_SET_TRON_INITIAL_POSITION_AND_ROTATION:
 6760: FD 36 01 00    LD    (IY+$01),#$00
 6764: DD 36 08 04    LD    (IX+$08),#$04
 6768: DD 36 0A 81    LD    (IX+$0A),#$81
-676c: 21 72 67       LD    HL,$6772
+676c: 21 72 67       LD    HL,DATA_USED_FOR_???_TO_6776
 676f: C3 52 6F       JP    PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LC
 
-6772: 00             NOP   
-6773: 05             DEC   B
-6774: 00             NOP   
-6775: 00             NOP   
-6776: 00             NOP   
+DATA_USED_FOR_???_TO_6776:
+6772: 00 05 00 00 00 
+
 6777: 3A 19 C4       LD    A,(HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?))
 677a: FE 09          CP    A,#$09
 677c: 30 07          JR    NC,$6785
@@ -12739,119 +12057,18 @@ RETURN_C687-2_IF_NZ_IN_A:
 716e: D6 02          SUB   A,#$02
 7170: C9             RET   
 
-7171: 3F             CCF   
-7172: D6 3E          SUB   A,#$3E
-7174: AA             XOR   A,D
-7175: 1C             INC   E
-7176: 68             LD    L,B
-7177: 0F             RRCA  
-7178: 80             ADD   A,B
-7179: B1             OR    A,C
-717a: 1F             RRA   
-717b: AC             XOR   A,H
-717c: 24             INC   H
-717d: 29             ADD   HL,HL
-717e: FC D8 97       CALL  M,$97D8
-7181: D1             POP   DE
-7182: E1             POP   HL
-7183: EF             RST   $28
 
-7184: CD CE C5       CALL  $C5CE
-7187: FC FD F9       CALL  M,$F9FD
-718a: 21 71 4B       LD    HL,$4B71
-718d: B6             OR    A,(HL)
-718e: 69             LD    L,C
-718f: 73             LD    (HL),E
-7190: 7B             LD    A,E
-7191: 79             LD    A,C
-7192: D8             RET   C
+*** Data used by what for why?
+7171: 3F D6 3E AA 1C 68 0F 80 B1 1F AC 24 29 FC D8 97 
+7181: D1 E1 EF CD CE C5 FC FD F9 21 71 4B B6 69 73 7B 
+7191: 79 D8 E1 1E BC 71 75 8A B3 D1 70 E2 BF 74 53 BA 
+71a1: B6 69 69 DF F9 73 FB FE 17 E1 EE F9 B5 D7 C3 F7 
+71b1: 0E F3 C2 45 ED 41 A3 82 52 53 C3 4E F2 FB 63 8E 
+71c1: 39 94 08 C0 51 3D A6 83 9F BE 8D 3E 47 E2 92 7F 
+71d1: A6 CC BE C5 06 D7 B8 91 BD F4 7E 9F 33 3E 0B 3C 
+71e1: 01 2C CE A0 31 BF 5C 12 91 86 BE 64 88 CA 8A C0 
+71f1: 00 E5 0C 01 A8 7A 8C 80 11 3A B6 09 01 FF 8F 
 
-7193: E1             POP   HL
-7194: 1E BC          LD    E,#$BC
-7196: 71             LD    (HL),C
-7197: 75             LD    (HL),L
-7198: 8A             ADC   A,D
-7199: B3             OR    A,E
-719a: D1             POP   DE
-719b: 70             LD    (HL),B
-719c: E2 BF 74       JP    PO,$74BF
-
-719f: 53             LD    D,E
-71a0: BA             CP    A,D
-71a1: B6             OR    A,(HL)
-71a2: 69             LD    L,C
-71a3: 69             LD    L,C
-71a4: DF             RST   $18
-
-71a5: F9             LD    SP,HL
-71a6: 73             LD    (HL),E
-71a7: FB             EI    
-71a8: FE 17          CP    A,#$17
-71aa: E1             POP   HL
-71ab: EE F9          XOR   A,#$F9
-71ad: B5             OR    A,L
-71ae: D7             RST   $10
-
-71af: C3 F7 0E       JP    $0EF7
-
-71b2: F3             DI    
-71b3: C2 45 ED       JP    NZ,$ED45
-
-71b6: 41             LD    B,C
-71b7: A3             AND   A,E
-71b8: 82             ADD   A,D
-71b9: 52             LD    D,D
-71ba: 53             LD    D,E
-71bb: C3 4E F2       JP    $F24E
-
-71be: FB             EI    
-71bf: 63             LD    H,E
-71c0: 8E             ADC   A,(HL)
-71c1: 39             ADD   HL,SP
-71c2: 94             SUB   A,H
-71c3: 08             EX    AF,AF'
-71c4: C0             RET   NZ
-
-71c5: 51             LD    D,C
-71c6: 3D             DEC   A
-71c7: A6             AND   A,(HL)
-71c8: 83             ADD   A,E
-71c9: 9F             SBC   A,A
-71ca: BE             CP    A,(HL)
-71cb: 8D             ADC   A,L
-71cc: 3E 47          LD    A,#$47
-71ce: E2 92 7F       JP    PO,$7F92
-
-71d1: A6             AND   A,(HL)
-71d2: CC BE C5       CALL  Z,$C5BE
-71d5: 06 D7          LD    B,#$D7
-71d7: B8             CP    A,B
-71d8: 91             SUB   A,C
-71d9: BD             CP    A,L
-71da: F4 7E 9F       CALL  P,$9F7E
-71dd: 33             INC   SP
-71de: 3E 0B          LD    A,#$0B
-71e0: 3C             INC   A
-71e1: 01 2C CE       LD    BC,$CE2C
-71e4: A0             AND   A,B
-71e5: 31 BF 5C       LD    SP,$5CBF
-71e8: 12             LD    (DE),A
-71e9: 91             SUB   A,C
-71ea: 86             ADD   A,(HL)
-71eb: BE             CP    A,(HL)
-71ec: 64             LD    H,H
-71ed: 88             ADC   A,B
-71ee: CA 8A C0       JP    Z,$C08A
-
-71f1: 00             NOP   
-71f2: E5             PUSH  HL
-71f3: 0C             INC   C
-71f4: 01 A8 7A       LD    BC,$7AA8
-71f7: 8C             ADC   A,H
-71f8: 80             ADD   A,B
-71f9: 11 3A B6       LD    DE,$B63A
-71fc: 09             ADD   HL,BC
-71fd: 01 FF 8F       LD    BC,$8FFF
 BACKGROUND_TANK_GAME:
 7200: 00 FF 00 40 00 40 00 40 01 44 0A 42 0C 44 10 44 
 7210: 20 44 23 44 25 44 5D 44 60 44 64 40 70 44 72 44 
@@ -15154,31 +14371,9 @@ BACKGROUND_LC:
 9070: 62 41 62 41 62 41 62 41 62 41 62 41 62 41 62 41 
 
 LC_COLOR_PALETTE:
-9080: 00             NOP   
-9081: 00             NOP   
-9082: 01 C6 01       LD    BC,$01C6
-9085: C3 01 C0       JP    TANK_PIC_OR_MCP_ROWS_OF_BLOCKS
+9080: 00 00 01 C6 01 C3 01 C0 00 9B 00 E4 00 08 00 4D 
+9090: 00 00 00 7C 00 52 00 9B 00 22 00 08 00 18 00 00 
 
-9088: 00             NOP   
-9089: 9B             SBC   A,E
-908a: 00             NOP   
-908b: E4 00 08       CALL  PO,$0800
-908e: 00             NOP   
-908f: 4D             LD    C,L
-9090: 00             NOP   
-9091: 00             NOP   
-9092: 00             NOP   
-9093: 7C             LD    A,H
-9094: 00             NOP   
-9095: 52             LD    D,D
-9096: 00             NOP   
-9097: 9B             SBC   A,E
-9098: 00             NOP   
-9099: 22 00 08       LD    ($0800),HL
-909c: 00             NOP   
-909d: 18 00          JR    $909F
-
-909f: 00             NOP   
 90a0: 00 00 00 2B 01 80 00 18 01 D4 01 EA 01 C2 01 C5 
 90b0: 00 04 00 7E 01 FF 00 0F 00 00 00 08 00 28 00 38 
 
