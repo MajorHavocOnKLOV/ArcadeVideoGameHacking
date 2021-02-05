@@ -52,17 +52,19 @@
 ; 2) The player tank is 1 pixel too far right when moving up/down
 ; 3) The horizontal enemy tank bullet has a stray pixel in the bottom row close to the side
 
-; IN/OUT instructions apparently don't look up labels: TODO
-; label 0000 IO_0
-; label 0001 IO_1
-; label 0002 IO_2
-; label 0003 IO_3
-; label 0004 IO_4
-; label 0007 IO_AUDIO_STATUS
-; label 001C IO_AUDIO_LATCHES
-; label 00E0 IO_WATCHDOG_RESET
-; label 00E8 IO_UNKNOWN_WRITTEN_AT_INITIALIZATION
-; label 00F0 IO_CTC
+IO_LABEL 00 IO_0
+IO_LABEL 01 IO_1
+IO_LABEL 02 IO_2
+IO_LABEL 03 IO_3
+IO_LABEL 04 IO_4
+IO_LABEL 07 IO_AUDIO_STATUS
+IO_LABEL 1C IO_AUDIO_LATCHES
+IO_LABEL E0 IO_WATCHDOG_RESET
+IO_LABEL E8 IO_UNKNOWN_WRITTEN_AT_INITIALIZATION
+IO_LABEL F0 IO_CTC0
+IO_LABEL F1 IO_CTC1
+; IO_LABEL F2 IO_CTC2
+IO_LABEL F3 IO_CTC3
 
 label 006b COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S
 label 01ab COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?

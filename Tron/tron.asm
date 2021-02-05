@@ -1,3 +1,16 @@
+IO_0 EQU $00
+IO_1 EQU $01
+IO_2 EQU $02
+IO_3 EQU $03
+IO_4 EQU $04
+IO_AUDIO_STATUS EQU $07
+IO_AUDIO_LATCHES EQU $1c
+IO_WATCHDOG_RESET EQU $e0
+IO_UNKNOWN_WRITTEN_AT_INITIALIZATION EQU $e8
+IO_CTC0 EQU $f0
+IO_CTC1 EQU $f1
+IO_CTC3 EQU $f3
+
 COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S EQU $006b
 COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA? EQU $01ab
 SERVICE_INTERRUPT_ROUTINE EQU $01cb
@@ -654,7 +667,7 @@ ORG $0000
 0063: CB 79          BIT   7,C
 0065: AA             XOR   A,D
 0066: 3E 07          LD    A,#$07
-0068: D3 E8          OUT   ($E8),A
+0068: D3 E8          OUT   (IO_UNKNOWN_WRITTEN_AT_INITIALIZATION),A
 006a: 76             HALT  
 
 COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S:
@@ -679,26 +692,26 @@ COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S:
 0106: B5             OR    A,L
 0107: 20 FB          JR    NZ,$0104
 
-0109: D3 E0          OUT   ($E0),A
+0109: D3 E0          OUT   (IO_WATCHDOG_RESET),A
 010b: AF             XOR   A,A
-010c: D3 00          OUT   ($00),A
+010c: D3 00          OUT   (IO_0),A
 010e: 3E 02          LD    A,#$02
-0110: D3 E8          OUT   ($E8),A
+0110: D3 E8          OUT   (IO_UNKNOWN_WRITTEN_AT_INITIALIZATION),A
 0112: 06 09          LD    B,#$09
 0114: AF             XOR   A,A
-0115: D3 E8          OUT   ($E8),A
+0115: D3 E8          OUT   (IO_UNKNOWN_WRITTEN_AT_INITIALIZATION),A
 0117: 3C             INC   A
-0118: D3 E8          OUT   ($E8),A
+0118: D3 E8          OUT   (IO_UNKNOWN_WRITTEN_AT_INITIALIZATION),A
 011a: 10 F8          DJNZ  $0114
 
 011c: 3E 05          LD    A,#$05
-011e: D3 E8          OUT   ($E8),A
+011e: D3 E8          OUT   (IO_UNKNOWN_WRITTEN_AT_INITIALIZATION),A
 0120: 31 FE C7       LD    SP,$C7FE
 0123: CD 15 AF       CALL  $AF15
 0126: CD E6 AA       CALL  $AAE6
 0129: 28 04          JR    Z,$012F
 
-012b: D3 E0          OUT   ($E0),A
+012b: D3 E0          OUT   (IO_WATCHDOG_RESET),A
 012d: 18 FC          JR    $012B
 
 012f: CD 1C 04       CALL  CHECK_DATA_C4F0_TO_C657?
@@ -726,15 +739,15 @@ COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S:
 016b: 3E 00          LD    A,#$00
 016d: ED 47          LD    I,A
 016f: 3E 08          LD    A,#$08
-0171: D3 F0          OUT   ($F0),A
+0171: D3 F0          OUT   (IO_CTC0),A
 0173: 3E C7          LD    A,#$C7
-0175: D3 F3          OUT   ($F3),A
+0175: D3 F3          OUT   (IO_CTC3),A
 0177: 3E 01          LD    A,#$01
-0179: D3 F3          OUT   ($F3),A
+0179: D3 F3          OUT   (IO_CTC3),A
 017b: 3E A7          LD    A,#$A7
-017d: D3 F1          OUT   ($F1),A
+017d: D3 F1          OUT   (IO_CTC1),A
 017f: 3E 4E          LD    A,#$4E
-0181: D3 F1          OUT   ($F1),A
+0181: D3 F1          OUT   (IO_CTC1),A
 0183: 21 82 C4       LD    HL,$C482
 0186: 22 80 C4       LD    ($C480),HL
 0189: FB             EI    
@@ -764,9 +777,9 @@ COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?:
 01d1: AF             XOR   A,A
 01d2: 32 62 C4       LD    ($C462),A
 01d5: 3E 87          LD    A,#$87
-01d7: D3 F0          OUT   ($F0),A
+01d7: D3 F0          OUT   (IO_CTC0),A
 01d9: 3E BB          LD    A,#$BB
-01db: D3 F0          OUT   ($F0),A
+01db: D3 F0          OUT   (IO_CTC0),A
 01dd: FB             EI    
 01de: CD C3 05       CALL  ROTATE_MCP_BLOCK_COLORS
 01e1: CD 4F 07       CALL  TANK_UPDATE_COLOR_CYCLING
@@ -815,7 +828,7 @@ COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?:
 0226: 3C             INC   A
 0227: 32 00 C4       LD    ($C400),A
 022a: 3E 03          LD    A,#$03
-022c: D3 F0          OUT   ($F0),A
+022c: D3 F0          OUT   (IO_CTC0),A
 022e: 32 62 C4       LD    ($C462),A
 0231: F1             POP   AF
 0232: ED 4D          RETI  
@@ -833,7 +846,7 @@ COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?:
 0247: 3E 09          LD    A,#$09
 0249: 32 01 C5       LD    (CREDITS),A
 024c: CD 89 02       CALL  TANK_ROTATE_TURRET?
-024f: DB 00          IN    A,($00)
+024f: DB 00          IN    A,(IO_0)
 0251: E6 20          AND   A,#$20
 0253: 20 2E          JR    NZ,$0283
 
@@ -852,7 +865,7 @@ COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?:
 026e: B5             OR    A,L
 026f: 20 FB          JR    NZ,$026C
 
-0271: DB 00          IN    A,($00)
+0271: DB 00          IN    A,(IO_0)
 0273: E6 20          AND   A,#$20
 0275: 28 F2          JR    Z,$0269
 
@@ -941,7 +954,7 @@ TANK_ROTATE_TURRET?:
 
 GET_INPUT_FROM_JOYSTICK_TRIGGER_+?:
 02e3: 21 73 C4       LD    HL,LEFT_COIN
-02e6: DB 00          IN    A,($00)
+02e6: DB 00          IN    A,(IO_0)
 02e8: E6 01          AND   A,#$01
 02ea: BE             CP    A,(HL)
 02eb: 28 03          JR    Z,$02F0
@@ -960,7 +973,7 @@ GET_INPUT_FROM_JOYSTICK_TRIGGER_+?:
 02fa: 28 2C          JR    Z,$0328
 
 02fc: 77             LD    (HL),A
-02fd: DB 00          IN    A,($00)
+02fd: DB 00          IN    A,(IO_0)
 02ff: E6 80          AND   A,#$80
 0301: 28 25          JR    Z,$0328
 
@@ -993,7 +1006,7 @@ GET_INPUT_FROM_JOYSTICK_TRIGGER_+?:
 
 0335: 3A 76 C4       LD    A,($C476)
 0338: CB 87          RES   0,A
-033a: D3 00          OUT   ($00),A
+033a: D3 00          OUT   (IO_0),A
 033c: 32 76 C4       LD    ($C476),A
 033f: C9             RET   
 
@@ -1006,12 +1019,12 @@ GET_INPUT_FROM_JOYSTICK_TRIGGER_+?:
 034a: 32 71 C4       LD    ($C471),A
 034d: 3A 76 C4       LD    A,($C476)
 0350: CB C7          SET   0,A
-0352: D3 00          OUT   ($00),A
+0352: D3 00          OUT   (IO_0),A
 0354: 32 76 C4       LD    ($C476),A
 0357: C9             RET   
 
 0358: 21 74 C4       LD    HL,RIGHT_COIN
-035b: DB 00          IN    A,($00)
+035b: DB 00          IN    A,(IO_0)
 035d: E6 02          AND   A,#$02
 035f: BE             CP    A,(HL)
 0360: 28 03          JR    Z,$0365
@@ -1030,14 +1043,14 @@ GET_INPUT_FROM_JOYSTICK_TRIGGER_+?:
 036f: 28 38          JR    Z,$03A9
 
 0371: 77             LD    (HL),A
-0372: DB 00          IN    A,($00)
+0372: DB 00          IN    A,(IO_0)
 0374: E6 80          AND   A,#$80
 0376: 28 31          JR    Z,$03A9
 
 0378: 2A 82 C6       LD    HL,($C682)
 037b: 23             INC   HL
 037c: 22 82 C6       LD    ($C682),HL
-037f: DB 03          IN    A,($03)
+037f: DB 03          IN    A,(IO_3)
 0381: E6 01          AND   A,#$01
 0383: 20 06          JR    NZ,$038B
 
@@ -1071,7 +1084,7 @@ GET_INPUT_FROM_JOYSTICK_TRIGGER_+?:
 
 03b6: 3A 76 C4       LD    A,($C476)
 03b9: CB 8F          RES   1,A
-03bb: D3 00          OUT   ($00),A
+03bb: D3 00          OUT   (IO_0),A
 03bd: 32 76 C4       LD    ($C476),A
 03c0: C9             RET   
 
@@ -1084,12 +1097,12 @@ GET_INPUT_FROM_JOYSTICK_TRIGGER_+?:
 03cb: 32 72 C4       LD    ($C472),A
 03ce: 3A 76 C4       LD    A,($C476)
 03d1: CB CF          SET   1,A
-03d3: D3 00          OUT   ($00),A
+03d3: D3 00          OUT   (IO_0),A
 03d5: 32 76 C4       LD    ($C476),A
 03d8: C9             RET   
 
 03d9: 21 75 C4       LD    HL,$C475
-03dc: DB 00          IN    A,($00)
+03dc: DB 00          IN    A,(IO_0)
 03de: E6 40          AND   A,#$40
 03e0: BE             CP    A,(HL)
 03e1: 28 02          JR    Z,$03E5
@@ -1108,7 +1121,7 @@ GET_INPUT_FROM_JOYSTICK_TRIGGER_+?:
 03ef: 28 0F          JR    Z,$0400
 
 03f1: 77             LD    (HL),A
-03f2: DB 00          IN    A,($00)
+03f2: DB 00          IN    A,(IO_0)
 03f4: E6 80          AND   A,#$80
 03f6: 28 08          JR    Z,$0400
 
@@ -1401,7 +1414,7 @@ OUTPUT_TO_SOUND_LATCHES:
 05b7: 32 6D C4       LD    ($C46D),A
 05ba: 21 6E C4       LD    HL,$C46E
 05bd: B6             OR    A,(HL)
-05be: D3 1C          OUT   ($1C),A
+05be: D3 1C          OUT   (IO_AUDIO_LATCHES),A
 05c0: 36 00          LD    (HL),#$00
 05c2: C9             RET   
 
@@ -1804,11 +1817,11 @@ ATTRACT_MODE_LOOP:
 0901: 3A 76 C4       LD    A,($C476)
 0904: CB B7          RES   6,A
 0906: 32 76 C4       LD    ($C476),A
-0909: D3 00          OUT   ($00),A
+0909: D3 00          OUT   (IO_0),A
 090b: FB             EI    
 090c: AF             XOR   A,A
 090d: 32 87 C6       LD    (FLIP_SCREEN_IF_VALUE_IS_01),A
-0910: DB 00          IN    A,($00)
+0910: DB 00          IN    A,(IO_0)
 0912: E6 80          AND   A,#$80
 0914: CA 00 99       JP    Z,$9900
 
@@ -1913,7 +1926,7 @@ ATTRACT_MODE_LOOP:
 09de: 32 7C C4       LD    (NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2),A
 09e1: C3 D1 1F       JP    DRAW_GAME_SELECT_SCREEN?
 
-09e4: DB 03          IN    A,($03)
+09e4: DB 03          IN    A,(IO_3)
 09e6: E6 04          AND   A,#$04
 09e8: C0             RET   NZ
 
@@ -1961,7 +1974,7 @@ ATTRACT_MODE_LOOP:
 0a46: 11 54 B0       LD    DE,PUSH_1_PLAYER_S
 0a49: CD F4 6F       CALL  INCREASE_C40D_BY_4_AND_ADD_A_MESSAGE_TO_Q
 0a4c: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
-0a4f: DB 00          IN    A,($00)
+0a4f: DB 00          IN    A,(IO_0)
 0a51: E6 04          AND   A,#$04
 0a53: 28 0B          JR    Z,$0A60
 
@@ -2020,7 +2033,7 @@ ATTRACT_MODE_LOOP:
 
 0ab1: CD 49 70       CALL  INITIALIZE_SPRITES
 0ab4: CD C7 6F       CALL  CLEAR_BACKGROUND
-0ab7: DB 03          IN    A,($03)
+0ab7: DB 03          IN    A,(IO_3)
 0ab9: E6 02          AND   A,#$02
 0abb: 28 13          JR    Z,$0AD0
 
@@ -2028,7 +2041,7 @@ ATTRACT_MODE_LOOP:
 0abe: 3A 76 C4       LD    A,($C476)
 0ac1: EE 40          XOR   A,#$40
 0ac3: 32 76 C4       LD    ($C476),A
-0ac6: D3 00          OUT   ($00),A
+0ac6: D3 00          OUT   (IO_0),A
 0ac8: FB             EI    
 0ac9: 21 87 C6       LD    HL,FLIP_SCREEN_IF_VALUE_IS_01
 0acc: 7E             LD    A,(HL)
@@ -2129,7 +2142,7 @@ ALL_RIGHTS_RESERVED_S:
 0bdd: F1             POP   AF
 0bde: 32 15 C4       LD    ($C415),A
 0be1: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
-0be4: DB 00          IN    A,($00)
+0be4: DB 00          IN    A,(IO_0)
 0be6: E6 10          AND   A,#$10
 0be8: 20 0A          JR    NZ,$0BF4
 
@@ -2204,7 +2217,7 @@ ALL_RIGHTS_RESERVED_S:
 0c7e: 11 B1 B0       LD    DE,2_PLAYERS_S
 0c81: C3 F4 6F       JP    INCREASE_C40D_BY_4_AND_ADD_A_MESSAGE_TO_Q
 
-0c84: DB 00          IN    A,($00)
+0c84: DB 00          IN    A,(IO_0)
 0c86: 2F             CPL   
 0c87: E6 0C          AND   A,#$0C
 0c89: C8             RET   Z
@@ -2324,11 +2337,11 @@ READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS:
 
 *** I/O byte 00, bit 4? (isn't it 7?) is trigger. 0 when trigger is pulled, 1 other
 READ_AND_PROCESS_INPUT_PORTS:
-0d52: DB 00          IN    A,($00)
+0d52: DB 00          IN    A,(IO_0)
 0d54: E6 80          AND   A,#$80
 0d56: C0             RET   NZ
 
-0d57: DB 00          IN    A,($00)
+0d57: DB 00          IN    A,(IO_0)
 0d59: 2F             CPL   
 0d5a: E6 0C          AND   A,#$0C
 0d5c: 21 68 C4       LD    HL,$C468
@@ -2638,7 +2651,7 @@ ERASE_S:
 END_S:
 103c: END
 
-1040: DB 02          IN    A,($02)
+1040: DB 02          IN    A,(IO_2)
 1042: 2F             CPL   
 1043: 4F             LD    C,A
 1044: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
@@ -2912,7 +2925,7 @@ NOT_IN_THE_TOP_S:
 100_SCORES_S:
 1231: 100 SCORES
 
-123c: DB 00          IN    A,($00)
+123c: DB 00          IN    A,(IO_0)
 123e: 2F             CPL   
 123f: E6 0C          AND   A,#$0C
 1241: 20 39          JR    NZ,$127C
@@ -2921,11 +2934,11 @@ NOT_IN_THE_TOP_S:
 1246: B7             OR    A,A
 1247: 20 06          JR    NZ,$124F
 
-1249: DB 00          IN    A,($00)
+1249: DB 00          IN    A,(IO_0)
 124b: E6 10          AND   A,#$10
 124d: 18 04          JR    $1253
 
-124f: DB 03          IN    A,($03)
+124f: DB 03          IN    A,(IO_3)
 1251: E6 80          AND   A,#$80
 1253: 21 13 C4       LD    HL,$C413
 1256: BE             CP    A,(HL)
@@ -3242,7 +3255,7 @@ SUBROUTINE_THAT_DOES_WHAT?:
 154d: B7             OR    A,A
 154e: 28 06          JR    Z,$1556
 
-1550: DB 00          IN    A,($00)
+1550: DB 00          IN    A,(IO_0)
 1552: 2F             CPL   
 1553: E6 0C          AND   A,#$0C
 1555: C0             RET   NZ
@@ -4114,7 +4127,7 @@ INITIALIZE_LEVEL?:
 2163: 32 25 C4       LD    (ATTEMPTED_GAMES_XXXXDURL),A
 2166: C9             RET   
 
-2167: DB 02          IN    A,($02)
+2167: DB 02          IN    A,(IO_2)
 2169: 2F             CPL   
 216a: 4F             LD    C,A
 216b: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
@@ -4740,7 +4753,7 @@ PLAY_MCP:
 2de2: B7             OR    A,A
 2de3: C0             RET   NZ
 
-2de4: DB 02          IN    A,($02)
+2de4: DB 02          IN    A,(IO_2)
 2de6: 2F             CPL   
 2de7: 4F             LD    C,A
 2de8: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
@@ -4833,11 +4846,11 @@ PLAY_MCP:
 2e73: B7             OR    A,A
 2e74: 28 06          JR    Z,$2E7C
 
-2e76: DB 03          IN    A,($03)
+2e76: DB 03          IN    A,(IO_3)
 2e78: E6 80          AND   A,#$80
 2e7a: 18 04          JR    $2E80
 
-2e7c: DB 00          IN    A,($00)
+2e7c: DB 00          IN    A,(IO_0)
 2e7e: E6 10          AND   A,#$10
 2e80: 21 04 C0       LD    HL,$C004
 2e83: BE             CP    A,(HL)
@@ -6405,7 +6418,7 @@ TANK_PROCESS_CONTROLS_INPUT:
 
 
 *** User input processing ...
-3dda: DB 02          IN    A,($02)
+3dda: DB 02          IN    A,(IO_2)
 3ddc: 2F             CPL   
 3ddd: 4F             LD    C,A
 3dde: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
@@ -7712,7 +7725,7 @@ TANK_POSITION_THE_ONE_AT_IX:
 4814: B7             OR    A,A
 4815: 28 06          JR    Z,$481D
 
-4817: DB 03          IN    A,($03)
+4817: DB 03          IN    A,(IO_3)
 4819: E6 80          AND   A,#$80
 481b: 18 04          JR    $4821
 
@@ -8701,7 +8714,7 @@ SPEED_CONTROL_S:
 5352: 21 08 C2       LD    HL,$C208
 5355: 34             INC   (HL)
 5356: 32 0D C2       LD    ($C20D),A
-5359: DB 02          IN    A,($02)
+5359: DB 02          IN    A,(IO_2)
 535b: 2F             CPL   
 535c: 6F             LD    L,A
 535d: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
@@ -10285,7 +10298,7 @@ HANDLE_JOYSTICK_INPUT?_TO_601F:
 5f99: 78             LD    A,B
 5f9a: 18 15          JR    $5FB1
 
-5f9c: DB 02          IN    A,($02)
+5f9c: DB 02          IN    A,(IO_2)
 5f9e: 2F             CPL   
 5f9f: 4F             LD    C,A
 5fa0: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
@@ -10516,11 +10529,11 @@ MOVE_SPIDERS?:
 613c: B7             OR    A,A
 613d: 28 06          JR    Z,$6145
 
-613f: DB 03          IN    A,($03)
+613f: DB 03          IN    A,(IO_3)
 6141: E6 80          AND   A,#$80
 6143: 18 04          JR    $6149
 
-6145: DB 00          IN    A,($00)
+6145: DB 00          IN    A,(IO_0)
 6147: E6 10          AND   A,#$10
 6149: 21 23 C0       LD    HL,IO_TOWER_TRIGGER_DEBOUNCE?
 614c: BE             CP    A,(HL)
@@ -11679,7 +11692,7 @@ PSEUDO_RANDOM_VALUE_IN_A_AND_C47A:
 
 RESET_WATCHDOG_UNTIL_C400_IS_ONE:
 6f17: 3A 00 C4       LD    A,($C400)
-6f1a: D3 E0          OUT   ($E0),A
+6f1a: D3 E0          OUT   (IO_WATCHDOG_RESET),A
 6f1c: FE 01          CP    A,#$01
 6f1e: 38 F7          JR    C,RESET_WATCHDOG_UNTIL_C400_IS_ONE
 
@@ -14530,7 +14543,7 @@ DATA_TO_?_USED_AT_6954:
 9913: AF             XOR   A,A
 9914: 32 7B C4       LD    (IN_ATTRACT_MODE?),A
 9917: 32 65 C4       LD    ($C465),A
-991a: DB 00          IN    A,($00)
+991a: DB 00          IN    A,(IO_0)
 991c: 2F             CPL   
 991d: E6 10          AND   A,#$10
 991f: 32 04 C0       LD    ($C004),A
@@ -14543,7 +14556,7 @@ DATA_TO_?_USED_AT_6954:
 9934: DD 7E 07       LD    A,(IX+$07)
 9937: 32 05 F0       LD    ($F005),A
 993a: CD CA 99       CALL  $99CA
-993d: DB 00          IN    A,($00)
+993d: DB 00          IN    A,(IO_0)
 993f: 2F             CPL   
 9940: E6 80          AND   A,#$80
 9942: CA 00 00       JP    Z,$0000
@@ -14564,7 +14577,7 @@ DATA_TO_?_USED_AT_6954:
 995d: 36 18          LD    (HL),#$18
 995f: 21 03 C0       LD    HL,$C003
 9962: DD 2A 00 C0    LD    IX,(CPU_RAM_OR_GS_DISK_X_TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
-9966: DB 02          IN    A,($02)
+9966: DB 02          IN    A,(IO_2)
 9968: 2F             CPL   
 9969: E6 04          AND   A,#$04
 996b: 28 0C          JR    Z,$9979
@@ -14579,7 +14592,7 @@ DATA_TO_?_USED_AT_6954:
 9974: DD 7E 06       LD    A,(IX+$06)
 9977: 3D             DEC   A
 9978: 77             LD    (HL),A
-9979: DB 02          IN    A,($02)
+9979: DB 02          IN    A,(IO_2)
 997b: 2F             CPL   
 997c: E6 08          AND   A,#$08
 997e: C8             RET   Z
@@ -14599,7 +14612,7 @@ DATA_TO_?_USED_AT_6954:
 GET_TRIGGER_INPUT_FOR_SERVICE_MENU:
 998c: 3A 04 C0       LD    A,($C004)
 998f: 47             LD    B,A
-9990: DB 00          IN    A,($00)
+9990: DB 00          IN    A,(IO_0)
 9992: 2F             CPL   
 9993: E6 10          AND   A,#$10
 9995: 32 04 C0       LD    ($C004),A
@@ -14736,7 +14749,7 @@ HIT_FIRE_BUTTON_FOR_TEST_S:
 9b5b: B7             OR    A,A
 9b5c: C0             RET   NZ
 
-9b5d: DB 00          IN    A,($00)
+9b5d: DB 00          IN    A,(IO_0)
 9b5f: 2F             CPL   
 9b60: E6 80          AND   A,#$80
 9b62: C8             RET   Z
@@ -14932,7 +14945,7 @@ SELECT_A_SOUND_S:
 9ec5: B7             OR    A,A
 9ec6: C0             RET   NZ
 
-9ec7: DB 00          IN    A,($00)
+9ec7: DB 00          IN    A,(IO_0)
 9ec9: 2F             CPL   
 9eca: E6 80          AND   A,#$80
 9ecc: C8             RET   Z
@@ -15154,7 +15167,7 @@ a112: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 a115: CD 8C 99       CALL  GET_TRIGGER_INPUT_FOR_SERVICE_MENU
 a118: C0             RET   NZ
 
-a119: DB 00          IN    A,($00)
+a119: DB 00          IN    A,(IO_0)
 a11b: E6 80          AND   A,#$80
 a11d: C0             RET   NZ
 
@@ -15240,7 +15253,7 @@ a24b: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 a24e: CD 8C 99       CALL  GET_TRIGGER_INPUT_FOR_SERVICE_MENU
 a251: C0             RET   NZ
 
-a252: DB 00          IN    A,($00)
+a252: DB 00          IN    A,(IO_0)
 a254: E6 80          AND   A,#$80
 a256: C0             RET   NZ
 
@@ -15308,7 +15321,7 @@ a390: 30 D2          JR    NC,$A364
 a392: CD CA 99       CALL  $99CA
 a395: 06 0E          LD    B,#$0E
 a397: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
-a39a: DB 00          IN    A,($00)
+a39a: DB 00          IN    A,(IO_0)
 a39c: E6 80          AND   A,#$80
 a39e: C0             RET   NZ
 
@@ -15357,7 +15370,7 @@ a437: DD 21 50 A4    LD    IX,$A450
 a43b: CD B1 99       CALL  $99B1
 a43e: AF             XOR   A,A
 a43f: 32 08 C0       LD    ($C008),A
-a442: DB 00          IN    A,($00)
+a442: DB 00          IN    A,(IO_0)
 a444: 2F             CPL   
 a445: E6 80          AND   A,#$80
 a447: C8             RET   Z
@@ -15610,11 +15623,11 @@ a765: FD 36 01 06    LD    (IY+$01),#$06
 a769: DD 21 94 A9    LD    IX,$A994
 a76d: DD 7E 00       LD    A,(IX+$00)
 a770: FD 77 02       LD    (IY+$02),A
-a773: DB 00          IN    A,($00)
+a773: DB 00          IN    A,(IO_0)
 a775: E6 80          AND   A,#$80
 a777: C0             RET   NZ
 
-a778: DB 02          IN    A,($02)
+a778: DB 02          IN    A,(IO_2)
 a77a: 2F             CPL   
 a77b: E6 0C          AND   A,#$0C
 a77d: 28 39          JR    Z,$A7B8
@@ -15649,7 +15662,7 @@ a7ae: DD 7E 00       LD    A,(IX+$00)
 a7b1: FD 77 02       LD    (IY+$02),A
 a7b4: AF             XOR   A,A
 a7b5: 32 09 C0       LD    (MCP_TRON_Y_TANKS_DATA_VECTOR_x_2),A
-a7b8: DB 00          IN    A,($00)
+a7b8: DB 00          IN    A,(IO_0)
 a7ba: E6 04          AND   A,#$04
 a7bc: 20 27          JR    NZ,$A7E5
 
@@ -15680,7 +15693,7 @@ a7e0: 23             INC   HL
 a7e1: 36 00          LD    (HL),#$00
 a7e3: 18 38          JR    $A81D
 
-a7e5: DB 00          IN    A,($00)
+a7e5: DB 00          IN    A,(IO_0)
 a7e7: E6 08          AND   A,#$08
 a7e9: 28 06          JR    Z,$A7F1
 
@@ -15862,11 +15875,11 @@ aa36: CD 70 AD       CALL  PRINT_A_NULL_TERMINATED_ASCII_STRING_FROM_BC_TO_HL
 aa39: CD 8C 99       CALL  GET_TRIGGER_INPUT_FOR_SERVICE_MENU
 aa3c: 20 09          JR    NZ,$AA47
 
-aa3e: DB 00          IN    A,($00)
+aa3e: DB 00          IN    A,(IO_0)
 aa40: E6 80          AND   A,#$80
 aa42: C0             RET   NZ
 
-aa43: D3 E0          OUT   ($E0),A
+aa43: D3 E0          OUT   (IO_WATCHDOG_RESET),A
 aa45: 18 F2          JR    $AA39
 
 aa47: CD 39 AB       CALL  $AB39
@@ -15891,11 +15904,11 @@ aa73: CD 70 AD       CALL  PRINT_A_NULL_TERMINATED_ASCII_STRING_FROM_BC_TO_HL
 aa76: CD 8C 99       CALL  GET_TRIGGER_INPUT_FOR_SERVICE_MENU
 aa79: 20 09          JR    NZ,$AA84
 
-aa7b: DB 00          IN    A,($00)
+aa7b: DB 00          IN    A,(IO_0)
 aa7d: E6 80          AND   A,#$80
 aa7f: C0             RET   NZ
 
-aa80: D3 E0          OUT   ($E0),A
+aa80: D3 E0          OUT   (IO_WATCHDOG_RESET),A
 aa82: 18 F2          JR    $AA76
 
 aa84: CD C7 6F       CALL  CLEAR_BACKGROUND
@@ -15909,11 +15922,11 @@ aa99: 11 FF FF       LD    DE,$FFFF
 aa9c: CD 8C 99       CALL  GET_TRIGGER_INPUT_FOR_SERVICE_MENU
 aa9f: C0             RET   NZ
 
-aaa0: DB 00          IN    A,($00)
+aaa0: DB 00          IN    A,(IO_0)
 aaa2: E6 80          AND   A,#$80
 aaa4: C0             RET   NZ
 
-aaa5: D3 E0          OUT   ($E0),A
+aaa5: D3 E0          OUT   (IO_WATCHDOG_RESET),A
 aaa7: 1B             DEC   DE
 aaa8: 7A             LD    A,D
 aaa9: B3             OR    A,E
@@ -16015,7 +16028,7 @@ ab78: 18 03          JR    $AB7D
 ab7a: FD 77 01       LD    (IY+$01),A
 ab7d: 21 00 10       LD    HL,$1000
 ab80: 2B             DEC   HL
-ab81: D3 E0          OUT   ($E0),A
+ab81: D3 E0          OUT   (IO_WATCHDOG_RESET),A
 ab83: 7C             LD    A,H
 ab84: B5             OR    A,L
 ab85: 20 F9          JR    NZ,$AB80
@@ -16079,7 +16092,7 @@ abda: DD 46 03       LD    B,(IX+$03)
 abdd: ED B0          LDIR  
 abdf: DD 7E 07       LD    A,(IX+$07)
 abe2: 32 FF C7       LD    ($C7FF),A
-abe5: D3 E0          OUT   ($E0),A
+abe5: D3 E0          OUT   (IO_WATCHDOG_RESET),A
 abe7: DD 6E 00       LD    L,(IX+$00)
 abea: DD 66 01       LD    H,(IX+$01)
 abed: DD 5E 02       LD    E,(IX+$02)
@@ -16107,7 +16120,7 @@ ac08: DD 66 01       LD    H,(IX+$01)
 ac0b: DD 6E 00       LD    L,(IX+$00)
 ac0e: DD 5E 02       LD    E,(IX+$02)
 ac11: DD 56 03       LD    D,(IX+$03)
-ac14: D3 E0          OUT   ($E0),A
+ac14: D3 E0          OUT   (IO_WATCHDOG_RESET),A
 
 *** Zero RAM from IX+0 to (IX+2)-1
 ac16: 7A             LD    A,D
@@ -16154,7 +16167,7 @@ ac4c: DD 56 01       LD    D,(IX+$01)
 ac4f: DD 5E 00       LD    E,(IX+$00)
 ac52: DD 4E 02       LD    C,(IX+$02)
 ac55: DD 46 03       LD    B,(IX+$03)
-ac58: D3 E0          OUT   ($E0),A
+ac58: D3 E0          OUT   (IO_WATCHDOG_RESET),A
 ac5a: ED B0          LDIR  
 ac5c: 47             LD    B,A
 ac5d: AF             XOR   A,A
@@ -16230,7 +16243,7 @@ acfb: DD B6 05       OR    A,(IX+$05)
 acfe: 57             LD    D,A
 acff: 01 06 00       LD    BC,$0006
 ad02: DD 09          ADD   IX,BC
-ad04: D3 E0          OUT   ($E0),A
+ad04: D3 E0          OUT   (IO_WATCHDOG_RESET),A
 ad06: 18 D4          JR    $ACDC
 
 ad08: 7A             LD    A,D
@@ -16311,7 +16324,7 @@ ad87: 18 E7          JR    PRINT_A_NULL_TERMINATED_ASCII_STRING_FROM_BC_TO_HL
 ad89: CD 49 70       CALL  INITIALIZE_SPRITES
 ad8c: CD 7C AE       CALL  DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN
 ad8f: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
-ad92: DB 00          IN    A,($00)
+ad92: DB 00          IN    A,(IO_0)
 ad94: E6 80          AND   A,#$80
 ad96: 20 05          JR    NZ,$AD9D
 
@@ -16345,7 +16358,7 @@ add6: 10 FB          DJNZ  $ADD3
 
 add8: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 addb: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
-adde: DB 07          IN    A,($07)
+adde: DB 07          IN    A,(IO_AUDIO_STATUS)
 ade0: C1             POP   BC
 ade1: DD BE 00       CP    A,(IX+$00)
 ade4: 28 01          JR    Z,$ADE7
@@ -16362,7 +16375,7 @@ adef: 01 2E AE       LD    BC,INTERFACE_ERROR_S
 adf2: 18 10          JR    $AE04
 
 adf4: 06 64          LD    B,#$64
-adf6: DB 07          IN    A,($07)
+adf6: DB 07          IN    A,(IO_AUDIO_STATUS)
 adf8: E6 80          AND   A,#$80
 adfa: 28 19          JR    Z,$AE15
 
@@ -16377,7 +16390,7 @@ ae0d: 01 4C AE       LD    BC,SOUND_BOARD_S
 ae10: CD 70 AD       CALL  PRINT_A_NULL_TERMINATED_ASCII_STRING_FROM_BC_TO_HL
 ae13: 18 0B          JR    $AE20
 
-ae15: DB 07          IN    A,($07)
+ae15: DB 07          IN    A,(IO_AUDIO_STATUS)
 ae17: B7             OR    A,A
 ae18: C8             RET   Z
 
@@ -16469,7 +16482,7 @@ af3a: DD 56 01       LD    D,(IX+$01)
 af3d: DD 5E 00       LD    E,(IX+$00)
 af40: DD 4E 02       LD    C,(IX+$02)
 af43: DD 46 03       LD    B,(IX+$03)
-af46: D3 E0          OUT   ($E0),A
+af46: D3 E0          OUT   (IO_WATCHDOG_RESET),A
 af48: ED B0          LDIR  
 af4a: AF             XOR   A,A
 af4b: 32 FF C7       LD    ($C7FF),A
