@@ -4,13 +4,13 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
 
      56 PUT_C_ON_STACK_TO_SEND_TO_AUDIO
      43 RESET_WATCHDOG_UNTIL_C400_IS_ONE
-     42 RETURN_C687-7_IF_NZ_IN_A
+     42 ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
      30 INITIALIZE_SPRITES
      28 CLEAR_BACKGROUND
      26 ADD_A_TO_HL_WITH_CARRY
      16 INCREASE_C40D_BY_4_AND_ADD_A_MESSAGE_TO_Q
-     14 RETURN_C687-2_IF_NZ_IN_A
      14 COPY_20_FROM_HL_TO_FF80
+     14 ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
      14 ADD_A_MESSAGE_TO_Q
      13 ADD_MESSAGE_TO_Q
      12 ZERO_RAM_C000-C418
@@ -18,9 +18,9 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
      10 PRINT_A_NULL_TERMINATED_ASCII_STRING_FROM_BC_TO_HL
      10 GET_TRIGGER_INPUT_FOR_SERVICE_MENU
       9 LC_MULTIPLE_CYCLES_DO_SOMETHING?
-      8 $5A1A
+      8 LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4
       6 PSEUDO_RANDOM_VALUE_IN_A_AND_C47A
-      6 COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
+      6 BACKGROUND_RAM_FILL_FROM_HL_0780_BYTES_TO_F800
       6 $A069
       6 $99CA
       6 $6F25
@@ -125,15 +125,14 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS
       1 READ_AND_PROCESS_INPUT_PORTS
       1 PRINT_OUT_MESSAGES_IN_QUEUES
-      1 PO,$1BD8
       1 PICK_WHICH_INSTRUCTIONS_TO_PRINT
-      1 P,$A59F
       1 OUTPUT_IO_TOWER_TIMER?/TELETYPE_PRINTING_TO_THE_SCREEN_UNTIL_NULL_BYTE?
       1 NZ,$66DF
       1 NZ,$0991
       1 MOVE_SPIDERS?
       1 MCP_PROCESS_HIT_BLOCK
       1 MCP_PROCESS_DISK_POSITION(S)?
+      1 LC_SET_UP_TRAILS_DATA_STRUCTURE_AT_C000_TO_C1DF
       1 HANDLE_JOYSTICK_INPUT?_TO_601F
       1 GET_INPUT_FROM_JOYSTICK_TRIGGER_+?
       1 DRAW_SPRITES_FOR_GAME_SELECTION_SCREEN
@@ -144,7 +143,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 C,$420D
       1 C,$0F7F
       1 ADD_MESSAGE_TO_Q2
-      1 $F99B
       1 $AF15
       1 $ABC3
       1 $ABB1
@@ -177,7 +175,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $587B
       1 $57F3
       1 $5751
-      1 $56F4
       1 $55DB
       1 $55D0
       1 $55C5
@@ -186,7 +183,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $4C09
       1 $4A54
       1 $47FF
-      1 $47FE
       1 $4752
       1 $46CB
       1 $45FF

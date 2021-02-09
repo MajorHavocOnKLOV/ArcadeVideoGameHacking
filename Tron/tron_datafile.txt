@@ -93,13 +93,10 @@ label 06f5 PRINT_OUT_MESSAGES_IN_QUEUE_2
 label 074f TANK_UPDATE_COLOR_CYCLING
 label 0792 OUTPUT_IO_TOWER_TIMER?/TELETYPE_PRINTING_TO_THE_SCREEN_UNTIL_NULL_BYTE?
 label 0825 UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE
-
 label 0900 ATTRACT_MODE_LOOP
-
+label 0b54 DATA_TO_0B57_USED_AT_0AFE?
 label 0d7c DRAW_ATTRACT_MCP_CONE
-
 label 0af1 DISPLAY_MCP_CONE_WITH_COPYRIGHTS_AND_NEXT_INSTRUCTIONS
-
 label 0b58 COPYRIGHT_MCMLXXXI_S
 label 0b6b WALT_DISNEY_PRODUCTIONS_S
 label 0b87 COPYRIGHT_MCMLXXXII_S
@@ -274,7 +271,7 @@ label 4b8d TANK_DATA_FOR?_USED_AT_4BBB
 label 4bfd TANK_SET_BULLET_X_AND_?_OFFSCREEN_CALL_UPDATE_POSITION?
 label 4cfb TANK_DATA_FOR?_STARTS_AT_4CFF
 label 4d77 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE
-label 4f7e TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA
+label 4f7e TANK_SET_UP_DATA
 label 5000 PLAY_LC
 label 5103 LC_INSTRUCTIONS
 label 5151 LC_INSTRUCTION_STRINGS_SOURCE_AND_DESTINATION_DATA
@@ -283,9 +280,12 @@ label 5175 LIGHT_TRACES2_S
 label 5182 AND_WALLS_S
 label 518c USE_TRIGGER_FOR_S
 label 519c SPEED_CONTROL_S
+label 523b LC_SET_UP_USER_AND_LC_1_2_3
 label 554c DATA_USED_FOR_???_TO_5550
 label 5551 LC_ERASE_TRAIL_OF_DESTROYED_LC
+label 56f4 LC_SET_UP_TRAILS_DATA_STRUCTURE_AT_C000_TO_C1DF
 label 59e5 LC_DRAW_A_TRAIL?
+label 5a1a LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4
 label 5ac9 LC_MULTIPLE_CYCLES_DO_SOMETHING?
 label 5d00 PLAY_IO_TOWER
 label 5e36 IO_TOWER_INSTRUCTIONS
@@ -319,33 +319,31 @@ label 6fff ADD_A_MESSAGE_TO_Q
 label 7020 ZERO_RAM_C000-C418
 label 7026 ZERO_RAM_C000-C450
 label 7029 ZERO_RAM_C000-C479
-label 7035 COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
+label 7035 BACKGROUND_RAM_FILL_FROM_HL_0780_BYTES_TO_F800
 label 7049 INITIALIZE_SPRITES
 label 705d ADD_MESSAGE_TO_Q
 label 707e ADD_MESSAGE_TO_Q2
 label 709f PROCESS_GAME_SELECT_COUNTDOWN_TIMER
 label 70ac PUT_GAME_SELECT_COUNTDOWN_DIGIT_MESSAGE_IN_Q2
 label 70cd GAME_SELECT_COUNTDOWN_DIGITS
-label 7159 RETURN_C687-7_IF_NZ_IN_A
-label 7165 RETURN_C687-2_IF_NZ_IN_A
+label 7159 ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
+label 7165 ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
 label 7200 BACKGROUND_TANK_GAME
 label 7980 TANK_COLOR_PALETTE
 label 79a0 COLOR_PALETTE_FOR_2?
 label 79c0 IO_COLOR_PALETTE
 label 7a00 BACKGROUND_IO_TOWER_GAME
+label 8180 BACKGROUND_IO_TOWER_AFTER_ENTERING_BEAM
 label 8900 BACKGROUND_LC
 label 9080 LC_COLOR_PALETTE
 label 90c0 COLOR_PALETTE_FOR_5?
 label 9100 BACKGROUND_TRAINING_FOR_LC
 label 9884 DATA_TO_?_USED_AT_6954
 label 998c GET_TRIGGER_INPUT_FOR_SERVICE_MENU
-
 label 9bd8 ?_DATA_USED_FOR_?1
 label 9c14 SOUND_TEST_STRINGS_VECTORSET_DESTINATION_AND_SOURCE_30X
-
 label 9a11 ?_DATA_USED_FOR_?0
 label 9a2e TEST_STRINGS_VECTORSET_DESTINATION_AND_SOURCE_12X
-
 label 9a60 SELECT_DESIRED_TEST_S
 label 9a74 1_SELF_DIAGNOSTICS_S
 label 9a87 2_SOUNDS_S
@@ -588,10 +586,36 @@ label c108 TANKS_ENEMY_BULLETS_IN_RAM_AT_C111?
 ; offset 0: initialized to 0
 ; offset 7: initialized to 0
 ; offset 3: vector to sprite(s) for what?
-label c14a NUMBER_OF_TANKS
+label c14a TANKS_NUMBER_OF_ENEMIES
 label c159 TANKS_NUMBER_OF_ENEMY_BULLETS?
-label c15b FIRST_NUMBER_FROM_4F7E
+label c15b TANKS_SHOT_SPEED
 label c15f TANK_IF_HARDNESS>0X0B_SEE_COMMENT_AT_3A79
+label c1e0 LC_USER_TRAIL_POSITION_VECTOR
+label c1e2 LC_ENEMY_1_TRAIL_POSITION_VECTOR
+label c1e4 LC_ENEMY_2_TRAIL_POSITION_VECTOR
+label c1e6 LC_ENEMY_3_TRAIL_POSITION_VECTOR
+label c1e9 LC_WHICH_LC_TO_DESTROY
+label c1ea LC_ENEMY_1_SPRITE
+label c1eb LC_ENEMY_2_SPRITE
+label c1ec LC_ENEMY_3_SPRITE
+label c1ed LC_USER_SPRITE
+label c1f7 LC_ENEMY_1_?1
+label c1f8 LC_ENEMY_2_?1
+label c1f9 LC_ENEMY_3_?1
+label c1fa LC_ENEMY_1_?2
+label c1fb LC_ENEMY_2_?2
+label c1fc LC_ENEMY_3_?2
+label c1fd LC_USER_?1
+label c1fe LC_USER_?2
+label c200 LC_ENEMY_1_X
+label c201 LC_ENEMY_2_X
+label c202 LC_ENEMY_3_X
+label c203 LC_USER_X
+label c204 LC_ENEMY_1_Y
+label c205 LC_ENEMY_2_Y
+label c206 LC_ENEMY_3_Y
+label c207 LC_USER_Y
+label c210 LC_ENEMIES_STILL_ALIVE_BITS_0_1_2?
 label c402 COUNTDOWN_TIMER_SECONDS
 label c403 COUNTDOWN_TIMER_FRAMES
 label c404 TANK_SPINNER_LAST_INPUT
@@ -684,6 +708,9 @@ label ff80 COLOR_RAM_TO_FFFF
 org 0000
 commentline 0000 Dissasembly of the Tron 8/9 ROMs used by MAME (labelled as tron)
 
+commentline 0003 Data used where for what?
+data 0003-006a
+
 ascii 006b-008c
 
 commentline 008d Data used where for what?
@@ -749,6 +776,8 @@ commentline 07e7 00 byte falls here
 commentline Is this data? Are the bounds right? Where is this used?
 data 0834-08ff
 
+data 0b54-0b57
+
 ascii 0b58-0b6a
 ascii 0b6b-0b82
 
@@ -765,12 +794,12 @@ commentline 0d9f Draw MCP blocks to sprites 1-24 (0x01-0x18)
 
 commentline 0dc3 24x3 bytes: relative X, relative Y, picture
 commentline 0dc3 (0x56 is added to X and 0x80 to Y)
-data 0dc3-0dfd
-ascii 0dfe-0e00
-data 0e01-0e0a
+data 0dc3,24,3
+; data 0dc3-0dfd
 
 commentline 0e0b 13x3 bytes: X, Y, picture (0x56 is added to X and 0x80 to Y)
-data 0e0b-0e31
+data 0e0b,13,3
+;data 0e0b-0e31
 
 commentline 0e55 These are color WORDS!  If bit 8 is set, write the color to the next byte up
 commentline 0e55 to set the A0 line high which sets bit 8 in the color WORD RAM.
@@ -969,7 +998,8 @@ data 226e-22ab
 commentline 22ac 4x3 bytes for auto game selection: disk X, disk Y,
 commentline 22ac what to add to VECTOR_OF_GAMES to use correct 2310 data structure
 commentline 22ac The X or Y position is checked against to start that game
-data 22ac-22b7
+data 22ac,4,3
+;data 22ac-22b7
 commentline 22b8 Data used at 217d
 data 22b8-22d7
 
@@ -979,7 +1009,8 @@ commentline 22d8 Vectors are: 22b5, 22ac, 22af, 22b2
 commentline 22d8 Data used at 1f22
 commentline 22d8 I have a hard time understanding why use 15 data structures
 commentline 22d8 to point to 4 data structures of directions.  Anyone know?
-data 22d8-2307
+data 22d8,15,3
+;data 22d8-2307
 
 commentline 2308 Used at 2115.  Set what game is at what quadrant?  Then 4x vector table.  Then 
 data 2308-230F
@@ -1081,6 +1112,9 @@ commentline 3966 10x4: 4= direction, blocks per row, Y move delay, rotation dela
 commentline 3966 plugged into C0E9, C0E6, C0E7, C0E5
 data 3966-398d
 
+commentline 398e Data used where for what?
+data 398e-39ff
+
 commentline 3a2b Set up disks (up to 4) in sprites 3-6 (F00C-F01B)
 
 commentline 3a79 If hardness above 0x0B (11), subtract 5 from hardness until hardness for
@@ -1125,6 +1159,10 @@ commentline 4066 This data structure is used at 40C9
 commentline 4066 ??? 18?x3 bytes: ?, vector to other data
 commentline 4066 (they look like variable size 00 terminated data blocks)
 data 4066-40a4
+
+comment 40ed If tank's X position is not 81, skip warp
+comment 40f4 If tank's Y position is 7E (top warp), jump to warp
+comment 40f8 If tank's Y position is not 91 (bottom warp), skip warp
 
 ; Another data structure may start at 4088
 ; data 409f-
@@ -1196,24 +1234,32 @@ data 4f06-4f41
 commentline 4f42 tank A hardness data
 data 4f42-4f7d
 
-; commentline 4f7e Tank game setup data. 11x4 bytes: ?, number of tanks, vector to level setup data
+commentline 4f7e Tank game setup data.
+commentline 4f7e 11x4 bytes: shot speed, number of tanks, vector to tank(s) setup data
+commentline 4f7e If high bit (7) set in number of tanks, recognizers instead of tanks
 
-; data 4f7e-4fa9
 data 4f7e,11,4
 
 commentline 4faa Tank warp locations (X, picture, Y) 16x3
-data 4faa-4fd9
+data 4faa,16,3
+;data 4faa-4fd9
 
 data 4fda-4fff
 
 commentline 5151 5x4: 4 = destination vector and source vector
-data 5151-5166
+data 5151,5,4
+;data 5151-5166
 
 ascii 5167-5174
 ascii 5175-5181
 ascii 5182-518b
 ascii 518c-519b
 ascii 519c-51a9
+
+commentline 523b LC set up user data
+commentline 526a LC set up enemy 1 data
+commentline 5296 LC set up enemy 2 data
+commentline 52c2 LC set up enemy 3 data
 
 data 554c-5550
 
@@ -1309,6 +1355,9 @@ data 79c0-79df
 data 79e0-79ff
 
 data 7a00-817F
+
+data 8180-88ff
+
 data 8900-907F
 data 9080-909F
 data 90a0-90bf
@@ -1524,7 +1573,7 @@ ascii ab35-ab38
 
 data aba9-abb0
 
-commentline abb1 Clear background (same as 6fc7?)
+commentline abb1 Clear background (identical to code at 6fdc!)
 commentline abc3 Test RAM at C000, C200, C400, C600 (0x0200 each),F800,FC00 ((0x0400 each)
 commentline abd1 Copy RAM from IX+0 sized IX+2 to IX+4
 commentline abf7 Test RAM from IX+0 sized IX+2 to IX+4 with 00 and FF

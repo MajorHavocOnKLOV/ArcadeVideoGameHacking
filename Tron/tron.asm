@@ -38,6 +38,7 @@ TANK_UPDATE_COLOR_CYCLING EQU $074f
 OUTPUT_IO_TOWER_TIMER?/TELETYPE_PRINTING_TO_THE_SCREEN_UNTIL_NULL_BYTE? EQU $0792
 UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE EQU $0825
 ATTRACT_MODE_LOOP EQU $0900
+DATA_TO_0B57_USED_AT_0AFE? EQU $0b54
 DRAW_ATTRACT_MCP_CONE EQU $0d7c
 DISPLAY_MCP_CONE_WITH_COPYRIGHTS_AND_NEXT_INSTRUCTIONS EQU $0af1
 COPYRIGHT_MCMLXXXI_S EQU $0b58
@@ -213,7 +214,7 @@ TANK_DATA_FOR?_USED_AT_4BBB EQU $4b8d
 TANK_SET_BULLET_X_AND_?_OFFSCREEN_CALL_UPDATE_POSITION? EQU $4bfd
 TANK_DATA_FOR?_STARTS_AT_4CFF EQU $4cfb
 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE EQU $4d77
-TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA EQU $4f7e
+TANK_SET_UP_DATA EQU $4f7e
 PLAY_LC EQU $5000
 LC_INSTRUCTIONS EQU $5103
 LC_INSTRUCTION_STRINGS_SOURCE_AND_DESTINATION_DATA EQU $5151
@@ -222,9 +223,12 @@ LIGHT_TRACES2_S EQU $5175
 AND_WALLS_S EQU $5182
 USE_TRIGGER_FOR_S EQU $518c
 SPEED_CONTROL_S EQU $519c
+LC_SET_UP_USER_AND_LC_1_2_3 EQU $523b
 DATA_USED_FOR_???_TO_5550 EQU $554c
 LC_ERASE_TRAIL_OF_DESTROYED_LC EQU $5551
+LC_SET_UP_TRAILS_DATA_STRUCTURE_AT_C000_TO_C1DF EQU $56f4
 LC_DRAW_A_TRAIL? EQU $59e5
+LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4 EQU $5a1a
 LC_MULTIPLE_CYCLES_DO_SOMETHING? EQU $5ac9
 PLAY_IO_TOWER EQU $5d00
 IO_TOWER_INSTRUCTIONS EQU $5e36
@@ -258,20 +262,21 @@ ADD_A_MESSAGE_TO_Q EQU $6fff
 ZERO_RAM_C000-C418 EQU $7020
 ZERO_RAM_C000-C450 EQU $7026
 ZERO_RAM_C000-C479 EQU $7029
-COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800) EQU $7035
+BACKGROUND_RAM_FILL_FROM_HL_0780_BYTES_TO_F800 EQU $7035
 INITIALIZE_SPRITES EQU $7049
 ADD_MESSAGE_TO_Q EQU $705d
 ADD_MESSAGE_TO_Q2 EQU $707e
 PROCESS_GAME_SELECT_COUNTDOWN_TIMER EQU $709f
 PUT_GAME_SELECT_COUNTDOWN_DIGIT_MESSAGE_IN_Q2 EQU $70ac
 GAME_SELECT_COUNTDOWN_DIGITS EQU $70cd
-RETURN_C687-7_IF_NZ_IN_A EQU $7159
-RETURN_C687-2_IF_NZ_IN_A EQU $7165
+ADJUST_SPRITE_X_IF_FLIPPED_SCREEN EQU $7159
+ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN EQU $7165
 BACKGROUND_TANK_GAME EQU $7200
 TANK_COLOR_PALETTE EQU $7980
 COLOR_PALETTE_FOR_2? EQU $79a0
 IO_COLOR_PALETTE EQU $79c0
 BACKGROUND_IO_TOWER_GAME EQU $7a00
+BACKGROUND_IO_TOWER_AFTER_ENTERING_BEAM EQU $8180
 BACKGROUND_LC EQU $8900
 LC_COLOR_PALETTE EQU $9080
 COLOR_PALETTE_FOR_5? EQU $90c0
@@ -503,10 +508,36 @@ MCP_BLOCKS_PER_ROW EQU $c0e6
 MCP_Y_SPEED_LOWER_IS_SLOWER EQU $c0e7
 MCP_DIRECTION_0_IS_RIGHT EQU $c0e9
 TANKS_ENEMY_BULLETS_IN_RAM_AT_C111? EQU $c108
-NUMBER_OF_TANKS EQU $c14a
+TANKS_NUMBER_OF_ENEMIES EQU $c14a
 TANKS_NUMBER_OF_ENEMY_BULLETS? EQU $c159
-FIRST_NUMBER_FROM_4F7E EQU $c15b
+TANKS_SHOT_SPEED EQU $c15b
 TANK_IF_HARDNESS>0X0B_SEE_COMMENT_AT_3A79 EQU $c15f
+LC_USER_TRAIL_POSITION_VECTOR EQU $c1e0
+LC_ENEMY_1_TRAIL_POSITION_VECTOR EQU $c1e2
+LC_ENEMY_2_TRAIL_POSITION_VECTOR EQU $c1e4
+LC_ENEMY_3_TRAIL_POSITION_VECTOR EQU $c1e6
+LC_WHICH_LC_TO_DESTROY EQU $c1e9
+LC_ENEMY_1_SPRITE EQU $c1ea
+LC_ENEMY_2_SPRITE EQU $c1eb
+LC_ENEMY_3_SPRITE EQU $c1ec
+LC_USER_SPRITE EQU $c1ed
+LC_ENEMY_1_?1 EQU $c1f7
+LC_ENEMY_2_?1 EQU $c1f8
+LC_ENEMY_3_?1 EQU $c1f9
+LC_ENEMY_1_?2 EQU $c1fa
+LC_ENEMY_2_?2 EQU $c1fb
+LC_ENEMY_3_?2 EQU $c1fc
+LC_USER_?1 EQU $c1fd
+LC_USER_?2 EQU $c1fe
+LC_ENEMY_1_X EQU $c200
+LC_ENEMY_2_X EQU $c201
+LC_ENEMY_3_X EQU $c202
+LC_USER_X EQU $c203
+LC_ENEMY_1_Y EQU $c204
+LC_ENEMY_2_Y EQU $c205
+LC_ENEMY_3_Y EQU $c206
+LC_USER_Y EQU $c207
+LC_ENEMIES_STILL_ALIVE_BITS_0_1_2? EQU $c210
 COUNTDOWN_TIMER_SECONDS EQU $c402
 COUNTDOWN_TIMER_FRAMES EQU $c403
 TANK_SPINNER_LAST_INPUT EQU $c404
@@ -580,95 +611,15 @@ ORG $0000
 *** Dissasembly of the Tron 8/9 ROMs used by MAME (labelled as tron)
 0000: C3 00 01       JP    $0100
 
-0003: 34             INC   (HL)
-0004: 19             ADD   HL,DE
-0005: 85             ADD   A,L
-0006: 0A             LD    A,(BC)
-0007: 0E 22          LD    C,#$22
-0009: 02             LD    (BC),A
-000a: 34             INC   (HL)
-000b: 02             LD    (BC),A
-000c: 10 00          DJNZ  $000E
 
-000e: CB 01          RLC   C
-0010: 18 FE          JR    $0010
-
-0012: 24             INC   H
-0013: 70             LD    (HL),B
-0014: 3B             DEC   SP
-0015: E4 D8 1B       CALL  PO,$1BD8
-0018: 87             ADD   A,A
-0019: C5             PUSH  BC
-001a: 35             DEC   (HL)
-001b: 96             SUB   A,(HL)
-001c: C7             RST   $00
-
-001d: E1             POP   HL
-001e: 69             LD    L,C
-001f: 60             LD    H,B
-0020: 45             LD    B,L
-0021: 0D             DEC   C
-0022: 04             INC   B
-0023: 04             INC   B
-0024: 06 05          LD    B,#$05
-0026: E1             POP   HL
-0027: 79             LD    A,C
-0028: 46             LD    B,(HL)
-0029: 01 1D A5       LD    BC,$A51D
-002c: 66             LD    H,(HL)
-002d: 07             RLCA  
-002e: 6F             LD    L,A
-002f: 41             LD    B,C
-0030: 05             DEC   B
-0031: 45             LD    B,L
-0032: A7             AND   A,A
-0033: 39             ADD   HL,SP
-0034: 2C             INC   L
-0035: C6 40          ADD   A,#$40
-0037: 84             ADD   A,H
-0038: 65             LD    H,L
-0039: 8F             ADC   A,A
-003a: 35             DEC   (HL)
-003b: EA 2C C1       JP    PE,$C12C
-
-003e: B4             OR    A,H
-003f: 2D             DEC   L
-0040: F6 6E          OR    A,#$6E
-0042: FF             RST   $38
-
-0043: EA 78 FF       JP    PE,$FF78
-
-0046: 8D             ADC   A,L
-0047: DE FE          SBC   A,#$FE
-0049: 61             LD    H,C
-004a: CE AB          ADC   A,#$AB
-004c: DD 73 72       LD    (IX+$72),E
-004f: F3             DI    
-0050: BF             CP    A,A
-0051: 45             LD    B,L
-0052: 0B             DEC   BC
-0053: 27             DAA   
-0054: F3             DI    
-0055: E8             RET   PE
-
-0056: BB             CP    A,E
-0057: 8C             ADC   A,H
-0058: 30 FA          JR    NC,$0054
-
-005a: 2B             DEC   HL
-005b: A9             XOR   A,C
-005c: 60             LD    H,B
-005d: B5             OR    A,L
-005e: 91             SUB   A,C
-005f: D9             EXX   
-0060: AF             XOR   A,A
-0061: 64             LD    H,H
-0062: 3F             CCF   
-0063: CB 79          BIT   7,C
-0065: AA             XOR   A,D
-0066: 3E 07          LD    A,#$07
-0068: D3 E8          OUT   (IO_UNKNOWN_WRITTEN_AT_INITIALIZATION),A
-006a: 76             HALT  
+*** Data used where for what?
+0003: 34 19 85 0A 0E 22 02 34 02 10 00 CB 01 18 FE 24 
+0013: 70 3B E4 D8 1B 87 C5 35 96 C7 E1 69 60 45 0D 04 
+0023: 04 06 05 E1 79 46 01 1D A5 66 07 6F 41 05 45 A7 
+0033: 39 2C C6 40 84 65 8F 35 EA 2C C1 B4 2D F6 6E FF 
+0043: EA 78 FF 8D DE FE 61 CE AB DD 73 72 F3 BF 45 0B 
+0053: 27 F3 E8 BB 8C 30 FA 2B A9 60 B5 91 D9 AF 64 3F 
+0063: CB 79 AA 3E 07 D3 E8 76 
 
 COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S:
 006b: COPYRIGHT 1982 BALLY MIDWAY MFG 
@@ -2069,7 +2020,7 @@ DISPLAY_MCP_CONE_WITH_COPYRIGHTS_AND_NEXT_INSTRUCTIONS:
 0af4: 11 6D B0       LD    DE,INSERT_1_COIN_S
 0af7: ED 4B 0D C4    LD    BC,($C40D)
 0afb: CD 5D 70       CALL  ADD_MESSAGE_TO_Q
-0afe: 11 54 0B       LD    DE,$0B54
+0afe: 11 54 0B       LD    DE,DATA_TO_0B57_USED_AT_0AFE?
 0b01: 01 6E FE       LD    BC,$FE6E
 0b04: CD 5D 70       CALL  ADD_MESSAGE_TO_Q
 0b07: 11 6B 0B       LD    DE,WALT_DISNEY_PRODUCTIONS_S
@@ -2105,13 +2056,11 @@ DISPLAY_MCP_CONE_WITH_COPYRIGHTS_AND_NEXT_INSTRUCTIONS:
 
 0b51: C3 00 15       JP    PICK_WHICH_INSTRUCTIONS_TO_PRINT
 
-0b54: FF             RST   $38
+DATA_TO_0B57_USED_AT_0AFE?:
+0b54: FF 91 51 20 
 
-0b55: 91             SUB   A,C
-0b56: 51             LD    D,C
-0b57: 20 43          JR    NZ,$0B9C
-
-0b59: OPYRIGHT MCMLXXXI
+COPYRIGHT_MCMLXXXI_S:
+0b58: COPYRIGHT MCMLXXXI
 
 WALT_DISNEY_PRODUCTIONS_S:
 0b6b: WALT DISNEY PRODUCTIONS
@@ -2126,7 +2075,6 @@ BALLY_MIDWAY_MFG_CO_S:
 
 ALL_RIGHTS_RESERVED_S:
 0baf: ALL RIGHTS RESERVED
-
 0bc3: AF             XOR   A,A
 0bc4: 32 15 C4       LD    ($C415),A
 0bc7: 32 60 C4       LD    ($C460),A
@@ -2335,7 +2283,7 @@ READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS:
 0d4f: C3 7C 5D       JP    $5D7C
 
 
-*** I/O byte 00, bit 4? (isn't it 7?) is trigger. 0 when trigger is pulled, 1 other
+*** I/O byte 00, bit 4? (isn't it 7?) is trigger. 0 when trigger is pulled, 1 otherwise
 READ_AND_PROCESS_INPUT_PORTS:
 0d52: DB 00          IN    A,(IO_0)
 0d54: E6 80          AND   A,#$80
@@ -2413,20 +2361,45 @@ DRAW_ATTRACT_MCP_CONE:
 
 *** 24x3 bytes: relative X, relative Y, picture
 *** (0x56 is added to X and 0x80 to Y)
-0dc3: 00 00 31 00 0C 31 00 18 31 00 24 31 0C 02 32 0C 
-0dd3: 0E 32 0C 1A 32 0C 26 32 1C 04 33 1C 10 33 1C 1C 
-0de3: 33 1C 28 33 2C 04 34 2C 10 34 2C 1C 34 2C 28 34 
-0df3: 3C 02 35 3C 0E 35 3C 1A 35 3C 26 
-
-0dfe: 5H
-
-0e01: 36 48 0C 36 48 18 36 48 24 36 
-
+0dc3: 00 00 31 
+0dc6: 00 0C 31 
+0dc9: 00 18 31 
+0dcc: 00 24 31 
+0dcf: 0C 02 32 
+0dd2: 0C 0E 32 
+0dd5: 0C 1A 32 
+0dd8: 0C 26 32 
+0ddb: 1C 04 33 
+0dde: 1C 10 33 
+0de1: 1C 1C 33 
+0de4: 1C 28 33 
+0de7: 2C 04 34 
+0dea: 2C 10 34 
+0ded: 2C 1C 34 
+0df0: 2C 28 34 
+0df3: 3C 02 35 
+0df6: 3C 0E 35 
+0df9: 3C 1A 35 
+0dfc: 3C 26 35 
+0dff: 48 00 36 
+0e02: 48 0C 36 
+0e05: 48 18 36 
+0e08: 48 24 36 
 
 *** 13x3 bytes: X, Y, picture (0x56 is added to X and 0x80 to Y)
-0e0b: 08 F4 38 18 F4 37 28 F4 37 38 F4 37 42 F4 B8 10 
-0e1b: E8 38 20 E8 37 30 E8 37 3C E8 B8 18 DC 38 28 DC 
-0e2b: 37 34 DC B8 24 D0 39 
+0e0b: 08 F4 38 
+0e0e: 18 F4 37 
+0e11: 28 F4 37 
+0e14: 38 F4 37 
+0e17: 42 F4 B8 
+0e1a: 10 E8 38 
+0e1d: 20 E8 37 
+0e20: 30 E8 37 
+0e23: 3C E8 B8 
+0e26: 18 DC 38 
+0e29: 28 DC 37 
+0e2c: 34 DC B8 
+0e2f: 24 D0 39 
 
 SHOULD_I_UPDATE_CONE_COLOR?:
 0e32: 21 7F C4       LD    HL,$C47F
@@ -2598,7 +2571,7 @@ MCP_ATTRACT_COLORS?:
 0fb3: FD 21 04 F0    LD    IY,TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT
 0fb7: FD 36 00 28    LD    (IY+$00),#$28
 0fbb: 3E 10          LD    A,#$10
-0fbd: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+0fbd: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 0fc0: FD 77 02       LD    (IY+$02),A
 0fc3: FD 36 01 06    LD    (IY+$01),#$06
 0fc7: AF             XOR   A,A
@@ -2724,7 +2697,7 @@ END_S:
 10ad: CB 27          SLA   A
 10af: CB 27          SLA   A
 10b1: C6 10          ADD   A,#$10
-10b3: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+10b3: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 10b6: 32 06 F0       LD    ($F006),A
 10b9: 11 04 FE       LD    DE,$FE04
 10bc: 3A 14 C4       LD    A,($C414)
@@ -3883,7 +3856,7 @@ GS_DIRECTION_CHOSEN:
 1f78: 0E FF          LD    C,#$FF
 1f7a: 81             ADD   A,C
 1f7b: 32 02 C0       LD    (TANK_Y_OR_GS_DISK_Y),A
-1f7e: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+1f7e: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 1f81: FD 77 02       LD    (IY+$02),A
 1f84: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 1f87: DD BE 01       CP    A,(IX+$01)
@@ -3951,7 +3924,7 @@ DRAW_GAME_SELECT_SCREEN?:
 1ff2: 32 08 C4       LD    ($C408),A
 1ff5: CD 49 70       CALL  INITIALIZE_SPRITES
 1ff8: 21 4A 23       LD    HL,BACKGROUND_PICK_A_GAME
-1ffb: CD 35 70       CALL  COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
+1ffb: CD 35 70       CALL  BACKGROUND_RAM_FILL_FROM_HL_0780_BYTES_TO_F800
 1ffe: 21 CA 2A       LD    HL,GS_COLOR_PALETTE
 2001: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 2004: 21 CA 2A       LD    HL,GS_COLOR_PALETTE
@@ -3965,7 +3938,7 @@ DRAW_GAME_SELECT_SCREEN?:
 201c: FD 77 00       LD    (IY+$00),A
 201f: 3E A4          LD    A,#$A4
 2021: 32 02 C0       LD    (TANK_Y_OR_GS_DISK_Y),A
-2024: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+2024: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 2027: FD 77 02       LD    (IY+$02),A
 202a: FD 36 01 06    LD    (IY+$01),#$06
 202e: 3E 01          LD    A,#$01
@@ -4053,7 +4026,7 @@ DRAW_GAME_SELECT_SCREEN?:
 20b7: 10 21 
 
 
-*** Maps for difficulty 1 to 9 to how hard the levels progress. 21,15,13,10,8,7,7,6
+*** Maps for difficulty 1 to 9 to how hard the levels progress. 21,15,13,10,8,7,7,6,5 bytes
 20b9: 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F 
 20c9: 10 11 12 13 14 
 
@@ -4230,12 +4203,12 @@ INITIALIZE_LEVEL?:
 21f9: 32 04 F0       LD    (TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT),A
 21fc: 79             LD    A,C
 21fd: 32 02 C0       LD    (TANK_Y_OR_GS_DISK_Y),A
-2200: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+2200: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 2203: 32 06 F0       LD    ($F006),A
 2206: C9             RET   
 
 
-*** Modify game selection screen to disable completed and show type of game if alre
+*** Modify game selection screen to disable completed and show type of game if already attempted
 DRAW_SPRITES_FOR_GAME_SELECTION_SCREEN:
 2207: 3A 25 C4       LD    A,(ATTEMPTED_GAMES_XXXXDURL)
 220a: 47             LD    B,A
@@ -4243,7 +4216,7 @@ DRAW_SPRITES_FOR_GAME_SELECTION_SCREEN:
 220e: 4F             LD    C,A
 220f: FD 21 08 F0    LD    IY,TANK_TURRET_OR_LC_ENEMIES
 
-*** 4x(3 bytes: ? ? ?). I think it's used to draw the sprites on the game selection
+*** 4x(3 bytes: ? ? ?). I think it's used to draw the sprites on the game selection screen
 2213: DD 21 3E 23    LD    IX,$233E
 2217: 21 26 C4       LD    HL,VECTOR_OF_GAMES_TO_C42D
 221a: 78             LD    A,B
@@ -4270,7 +4243,7 @@ DRAW_SPRITES_FOR_GAME_SELECTION_SCREEN:
 2233: 23             INC   HL
 2234: 7E             LD    A,(HL)
 2235: DD 86 02       ADD   A,(IX+$02)
-2238: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+2238: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 223b: FD 77 02       LD    (IY+$02),A
 223e: 23             INC   HL
 223f: 7E             LD    A,(HL)
@@ -4311,30 +4284,45 @@ DRAW_SPRITES_FOR_GAME_SELECTION_SCREEN:
 228e: 00 01 21 01 44 01 69 01 90 01 B9 01 E4 01 11 02 
 229e: 40 02 71 02 A4 02 D9 02 10 03 49 03 84 03 
 
-
 *** 4x3 bytes for auto game selection: disk X, disk Y,
 *** what to add to VECTOR_OF_GAMES to use correct 2310 data structure
 *** The X or Y position is checked against to start that game
-22ac: 40 A4 00 C0 A4 02 80 74 04 80 D4 06 
+22ac: 40 A4 00 
+22af: C0 A4 02 
+22b2: 80 74 04 
+22b5: 80 D4 06 
 
 
 *** Data used at 217d
 22b8: 00 00 FF 00 01 00 00 00 00 FF FF FF 01 FF 00 00 
 22c8: 00 01 FF 01 01 01 00 00 00 00 00 00 00 00 00 00 
 
-
 *** 15x3: Direction, vector to data
 *** Vectors are: 22b5, 22ac, 22af, 22b2
 *** Data used at 1f22
 *** I have a hard time understanding why use 15 data structures
 *** to point to 4 data structures of directions.  Anyone know?
-22d8: 00 B5 22 01 AC 22 02 AF 22 01 AC 22 04 B2 22 04 
-22e8: B2 22 04 B2 22 04 B2 22 08 B5 22 08 B5 22 08 B5 
-22f8: 22 08 B5 22 08 B5 22 08 B5 22 08 B5 22 08 B5 22 
+22d8: 00 B5 22 
+22db: 01 AC 22 
+22de: 02 AF 22 
+22e1: 01 AC 22 
+22e4: 04 B2 22 
+22e7: 04 B2 22 
+22ea: 04 B2 22 
+22ed: 04 B2 22 
+22f0: 08 B5 22 
+22f3: 08 B5 22 
+22f6: 08 B5 22 
+22f9: 08 B5 22 
+22fc: 08 B5 22 
+22ff: 08 B5 22 
+2302: 08 B5 22 
 
-
-*** Used at 2115.  Set what game is at what quadrant?  Then 4x vector table.  Then 
-2308: 10 23 16 23 1C 23 22 23 
+2305: 08             EX    AF,AF'
+2306: B5             OR    A,L
+2307: 22 10 23       LD    ($2310),HL
+Error: missed a comment line at 2308, line=230B
+230a: 16 23 1C 23 22 23 
 
 
 *** Vector of games to quadrants at C426 points to these blocks of data
@@ -4590,7 +4578,7 @@ MCP_INSTRUCTIONS:
 2cb1: 79             LD    A,C
 2cb2: 23             INC   HL
 2cb3: 86             ADD   A,(HL)
-2cb4: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+2cb4: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 2cb7: FD 77 02       LD    (IY+$02),A
 2cba: 23             INC   HL
 2cbb: 7E             LD    A,(HL)
@@ -4702,7 +4690,7 @@ PLAY_MCP:
 2d89: 32 DC C0       LD    (MCP_TOWER_Y),A
 
 *** Fill $05x$1E of RAM $C063-C0DB with $80 or $00.  Why?
-*** Column (6) x Row (5) x 4: 4= X, Y, ?, ? (starts as 80.  Lowest bit set when hit
+*** Column (6) x Row (5) x 4: 4= X, Y, ?, ? (starts as 80.  Lowest bit set when hit)
 *** If a row is empty, the 4 bytes for it are all 00
 2d8c: 11 04 00       LD    DE,$0004
 2d8f: DD 21 63 C0    LD    IX,$C063
@@ -4889,7 +4877,7 @@ PLAY_MCP:
 2eb7: 32 08 F0       LD    (TANK_TURRET_OR_LC_ENEMIES),A
 2eba: 47             LD    B,A
 2ebb: 3A 09 C0       LD    A,(MCP_TRON_Y_TANKS_DATA_VECTOR_x_2)
-2ebe: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+2ebe: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 2ec1: 4F             LD    C,A
 2ec2: 32 06 F0       LD    ($F006),A
 2ec5: C6 10          ADD   A,#$10
@@ -5150,7 +5138,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 30b2: DD 75 06       LD    (IX+$06),L
 30b5: DD 74 07       LD    (IX+$07),H
 30b8: DD 7E 03       LD    A,(IX+$03)
-30bb: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+30bb: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 30be: FD 77 02       LD    (IY+$02),A
 30c1: CD 49 31       CALL  $3149
 30c4: 11 0A 00       LD    DE,$000A
@@ -5204,7 +5192,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 3135: DD 36 08 18    LD    (IX+$08),#$18
 3139: FD E1          POP   IY
 313b: FD 70 00       LD    (IY+$00),B
-313e: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+313e: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 3141: FD 77 02       LD    (IY+$02),A
 3144: FD 36 01 07    LD    (IY+$01),#$07
 3148: C9             RET   
@@ -5457,7 +5445,7 @@ MCP_ROTATE_LEFT:
 3306: 7C             LD    A,H
 3307: 4F             LD    C,A
 MCP_DRAW_CONE:
-3308: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+3308: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 330b: FD 21 A0 F0    LD    IY,MCP_TOWER_TO_F133
 330f: 21 B3 35       LD    HL,MCP_CONE_RELATIVEX_RELATIVEY_SPRITE_NUMBER_TO_35D9
 3312: 06 0D          LD    B,#$0D
@@ -5468,7 +5456,7 @@ MCP_DRAW_CONE:
 331e: 79             LD    A,C
 331f: 23             INC   HL
 3320: 86             ADD   A,(HL)
-3321: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+3321: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 3324: FD 77 02       LD    (IY+$02),A
 3327: 23             INC   HL
 3328: 7E             LD    A,(HL)
@@ -5485,7 +5473,7 @@ MCP_DRAW_WALLS:
 333a: FE F8          CP    A,#$F8
 333c: 30 25          JR    NC,MCP_HIDE_SPRITES_33_AND_34
 
-333e: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+333e: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 3341: FD 77 02       LD    (IY+$02),A
 3344: FD 77 06       LD    (IY+$06),A
 3347: 3A DD C0       LD    A,(MCP_TOWER_X)
@@ -5528,7 +5516,7 @@ MCP_DRAW_BLOCKS:
 33a0: 38 0D          JR    C,MCP_HIDE_SPRITE_GOING_OFF_BOTTOM_OF_SCREEN
 
 33a2: DD 77 01       LD    (IX+$01),A
-33a5: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+33a5: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 33a8: FD 77 02       LD    (IY+$02),A
 33ab: FE F8          CP    A,#$F8
 33ad: 38 12          JR    C,$33C1
@@ -5854,100 +5842,17 @@ DATA_FOR_MCP_SETUP_TO_398D:
 3976: 00 28 32 10 01 28 60 40 00 28 C0 0E 01 28 60 0E 
 3986: 01 28 C0 0E 01 28 32 10 
 
-398e: C2 F0 E4       JP    NZ,$E4F0
 
-3991: AD             XOR   A,L
-3992: 29             ADD   HL,HL
-3993: 0E F1          LD    C,#$F1
-3995: 81             ADD   A,C
-3996: EF             RST   $28
+*** Data used where for what?
+398e: C2 F0 E4 AD 29 0E F1 81 EF 52 9F 40 72 E6 9A 18 
+399e: 25 0C 16 7D E0 02 22 90 EC 14 31 E3 E4 96 F1 44 
+39ae: A0 52 50 01 3F 84 A9 11 B8 06 70 5C 36 F0 42 71 
+39be: 14 7A D1 AD 3D BF BD 3A 5A 77 1F F0 DB 56 BF 9F 
+39ce: 77 86 BF CA 6B F6 9F 4E 1F 8E 5E 07 47 AE F9 CD 
+39de: FE 47 B9 AF 97 D1 EF AF 52 D6 A5 D9 24 E7 C1 AF 
+39ee: DF 62 EB BF DE BE F4 9F A5 D6 AF 0F 0F CD 9B F9 
+39fe: 6D 4B 
 
-3997: 52             LD    D,D
-3998: 9F             SBC   A,A
-3999: 40             LD    B,B
-399a: 72             LD    (HL),D
-399b: E6 9A          AND   A,#$9A
-399d: 18 25          JR    $39C4
-
-399f: 0C             INC   C
-39a0: 16 7D          LD    D,#$7D
-39a2: E0             RET   PO
-
-39a3: 02             LD    (BC),A
-39a4: 22 90 EC       LD    ($EC90),HL
-39a7: 14             INC   D
-39a8: 31 E3 E4       LD    SP,$E4E3
-39ab: 96             SUB   A,(HL)
-39ac: F1             POP   AF
-39ad: 44             LD    B,H
-39ae: A0             AND   A,B
-39af: 52             LD    D,D
-39b0: 50             LD    D,B
-39b1: 01 3F 84       LD    BC,$843F
-39b4: A9             XOR   A,C
-39b5: 11 B8 06       LD    DE,$06B8
-39b8: 70             LD    (HL),B
-39b9: 5C             LD    E,H
-39ba: 36 F0          LD    (HL),#$F0
-39bc: 42             LD    B,D
-39bd: 71             LD    (HL),C
-39be: 14             INC   D
-39bf: 7A             LD    A,D
-39c0: D1             POP   DE
-39c1: AD             XOR   A,L
-39c2: 3D             DEC   A
-39c3: BF             CP    A,A
-39c4: BD             CP    A,L
-39c5: 3A 5A 77       LD    A,($775A)
-39c8: 1F             RRA   
-39c9: F0             RET   P
-
-39ca: DB 56          IN    A,($56)
-39cc: BF             CP    A,A
-39cd: 9F             SBC   A,A
-39ce: 77             LD    (HL),A
-39cf: 86             ADD   A,(HL)
-39d0: BF             CP    A,A
-39d1: CA 6B F6       JP    Z,$F66B
-
-39d4: 9F             SBC   A,A
-39d5: 4E             LD    C,(HL)
-39d6: 1F             RRA   
-39d7: 8E             ADC   A,(HL)
-39d8: 5E             LD    E,(HL)
-39d9: 07             RLCA  
-39da: 47             LD    B,A
-39db: AE             XOR   A,(HL)
-39dc: F9             LD    SP,HL
-39dd: CD FE 47       CALL  $47FE
-39e0: B9             CP    A,C
-39e1: AF             XOR   A,A
-39e2: 97             SUB   A,A
-39e3: D1             POP   DE
-39e4: EF             RST   $28
-
-39e5: AF             XOR   A,A
-39e6: 52             LD    D,D
-39e7: D6 A5          SUB   A,#$A5
-39e9: D9             EXX   
-39ea: 24             INC   H
-39eb: E7             RST   $20
-
-39ec: C1             POP   BC
-39ed: AF             XOR   A,A
-39ee: DF             RST   $18
-
-39ef: 62             LD    H,D
-39f0: EB             EX    DE,HL
-39f1: BF             CP    A,A
-39f2: DE BE          SBC   A,#$BE
-39f4: F4 9F A5       CALL  P,$A59F
-39f7: D6 AF          SUB   A,#$AF
-39f9: 0F             RRCA  
-39fa: 0F             RRCA  
-39fb: CD 9B F9       CALL  $F99B
-39fe: 6D             LD    L,L
-39ff: 4B             LD    C,E
 PLAY_TANKS:
 3a00: CD 20 70       CALL  ZERO_RAM_C000-C418
 3a03: CD 49 70       CALL  INITIALIZE_SPRITES
@@ -5956,7 +5861,7 @@ PLAY_TANKS:
 3a0b: 3E 10          LD    A,#$10
 3a0d: 32 4E C1       LD    ($C14E),A
 3a10: 21 00 72       LD    HL,BACKGROUND_TANK_GAME
-3a13: CD 35 70       CALL  COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
+3a13: CD 35 70       CALL  BACKGROUND_RAM_FILL_FROM_HL_0780_BYTES_TO_F800
 3a16: 21 80 79       LD    HL,TANK_COLOR_PALETTE
 3a19: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 3a1c: AF             XOR   A,A
@@ -6012,7 +5917,7 @@ PLAY_TANKS:
 
 3a7e: 87             ADD   A,A
 3a7f: 87             ADD   A,A
-3a80: 21 7E 4F       LD    HL,TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA
+3a80: 21 7E 4F       LD    HL,TANK_SET_UP_DATA
 3a83: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 3a86: 79             LD    A,C
 3a87: FE 04          CP    A,#$04
@@ -6026,11 +5931,11 @@ PLAY_TANKS:
 3a95: CB 27          SLA   A
 3a97: 32 5F C1       LD    (TANK_IF_HARDNESS>0X0B_SEE_COMMENT_AT_3A79),A
 3a9a: 7E             LD    A,(HL)
-3a9b: 32 5B C1       LD    (FIRST_NUMBER_FROM_4F7E),A
+3a9b: 32 5B C1       LD    (TANKS_SHOT_SPEED),A
 3a9e: 23             INC   HL
 3a9f: 7E             LD    A,(HL)
 3aa0: E6 7F          AND   A,#$7F
-3aa2: 32 4A C1       LD    (NUMBER_OF_TANKS),A
+3aa2: 32 4A C1       LD    (TANKS_NUMBER_OF_ENEMIES),A
 3aa5: 32 59 C1       LD    (TANKS_NUMBER_OF_ENEMY_BULLETS?),A
 3aa8: 4F             LD    C,A
 3aa9: 7E             LD    A,(HL)
@@ -6260,7 +6165,7 @@ PLAY_TANKS:
 3c48: CD A8 3C       CALL  $3CA8
 3c4b: CD 6D 45       CALL  $456D
 3c4e: 21 5A C1       LD    HL,$C15A
-3c51: 3A 5B C1       LD    A,(FIRST_NUMBER_FROM_4F7E)
+3c51: 3A 5B C1       LD    A,(TANKS_SHOT_SPEED)
 3c54: 86             ADD   A,(HL)
 3c55: 77             LD    (HL),A
 3c56: DC 90 4B       CALL  C,$4B90
@@ -6729,7 +6634,7 @@ TANK_PROCESS_CONTROLS_INPUT:
 TANK_UPDATE_POSITION_AND_PIC_OF_TANK_FROM_C000_TO_C002:
 40d0: 21 04 F0       LD    HL,TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT
 40d3: 3A 00 C0       LD    A,(CPU_RAM_OR_GS_DISK_X_TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
-40d6: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
+40d6: CD 65 71       CALL  ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
 40d9: 77             LD    (HL),A
 40da: 23             INC   HL
 40db: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BLOCKS)
@@ -6737,20 +6642,20 @@ TANK_UPDATE_POSITION_AND_PIC_OF_TANK_FROM_C000_TO_C002:
 40df: 23             INC   HL
 40e0: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
 40e3: C6 04          ADD   A,#$04
-40e5: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+40e5: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 40e8: 77             LD    (HL),A
 40e9: C9             RET   
 
 TANK_UPDATE_POSITION:
 40ea: 3A 00 C0       LD    A,(CPU_RAM_OR_GS_DISK_X_TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
-40ed: FE 81          CP    A,#$81
+40ed: FE 81          CP    A,#$81         ;If tank's X position is not 81, skip warp
 40ef: 20 33          JR    NZ,$4124
 
 40f1: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
-40f4: FE 7E          CP    A,#$7E
+40f4: FE 7E          CP    A,#$7E         ;If tank's Y position is 7E (top warp), jump to warp
 40f6: 28 04          JR    Z,TANK_WARP
 
-40f8: FE 91          CP    A,#$91
+40f8: FE 91          CP    A,#$91         ;If tank's Y position is not 91 (bottom warp), skip warp
 40fa: 20 28          JR    NZ,$4124
 
 TANK_WARP:
@@ -6863,7 +6768,7 @@ TANK_DATA_FOR_?:
 4228: 11 04 00       LD    DE,$0004
 422b: 19             ADD   HL,DE
 422c: DD 7E 00       LD    A,(IX+$00)
-422f: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
+422f: CD 65 71       CALL  ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
 4232: 77             LD    (HL),A
 4233: 23             INC   HL
 4234: 7E             LD    A,(HL)
@@ -6871,7 +6776,7 @@ TANK_DATA_FOR_?:
 4237: 77             LD    (HL),A
 4238: 23             INC   HL
 4239: DD 7E 02       LD    A,(IX+$02)
-423c: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+423c: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 423f: 77             LD    (HL),A
 4240: C5             PUSH  BC
 4241: CD B3 42       CALL  $42B3
@@ -6910,9 +6815,9 @@ TANK_DATA_FOR_?:
 4282: 23             INC   HL
 4283: 10 F4          DJNZ  $4279
 
-4285: 3A 4A C1       LD    A,(NUMBER_OF_TANKS)
+4285: 3A 4A C1       LD    A,(TANKS_NUMBER_OF_ENEMIES)
 4288: 3D             DEC   A
-4289: 32 4A C1       LD    (NUMBER_OF_TANKS),A
+4289: 32 4A C1       LD    (TANKS_NUMBER_OF_ENEMIES),A
 428c: 20 20          JR    NZ,$42AE
 
 428e: 21 07 C4       LD    HL,$C407
@@ -7290,7 +7195,7 @@ TANK_PROCESS_ENEMY_TANKS_ON_STARTUP_SOMEHOW?_USES_IX:
 4516: 87             ADD   A,A
 4517: DD 86 08       ADD   A,(IX+$08)
 451a: DD 86 00       ADD   A,(IX+$00)
-451d: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
+451d: CD 65 71       CALL  ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
 4520: 77             LD    (HL),A
 4521: 23             INC   HL
 4522: 7E             LD    A,(HL)
@@ -7299,7 +7204,7 @@ TANK_PROCESS_ENEMY_TANKS_ON_STARTUP_SOMEHOW?_USES_IX:
 4526: 23             INC   HL
 4527: DD 7E 02       LD    A,(IX+$02)
 452a: C6 06          ADD   A,#$06
-452c: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+452c: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 452f: 77             LD    (HL),A
 4530: C9             RET   
 
@@ -7313,7 +7218,7 @@ TANK_PROCESS_ENEMY_TANKS_ON_STARTUP_SOMEHOW?_USES_IX:
 4539: CD 5A 45       CALL  $455A
 453c: DD 7E 00       LD    A,(IX+$00)
 453f: C6 06          ADD   A,#$06
-4541: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
+4541: CD 65 71       CALL  ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
 4544: 77             LD    (HL),A
 4545: 23             INC   HL
 4546: 7E             LD    A,(HL)         ;Mirror Y of explosion sprite on tank to make it look like fire
@@ -7324,7 +7229,7 @@ TANK_PROCESS_ENEMY_TANKS_ON_STARTUP_SOMEHOW?_USES_IX:
 454e: 87             ADD   A,A
 454f: DD 86 08       ADD   A,(IX+$08)
 4552: DD 86 02       ADD   A,(IX+$02)
-4555: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+4555: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 4558: 77             LD    (HL),A
 4559: C9             RET   
 
@@ -7546,14 +7451,14 @@ DATA_USED_FOR_???_TO_45FE:
 46d9: 24             INC   H
 46da: 6F             LD    L,A
 46db: FD 7E 00       LD    A,(IY+$00)
-46de: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
+46de: CD 65 71       CALL  ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
 46e1: 77             LD    (HL),A
 46e2: 23             INC   HL
 46e3: 36 00          LD    (HL),#$00
 46e5: 23             INC   HL
 46e6: FD 7E 02       LD    A,(IY+$02)
 46e9: C6 04          ADD   A,#$04
-46eb: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+46eb: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 46ee: 77             LD    (HL),A
 46ef: FD 36 0E 04    LD    (IY+$0E),#$04
 46f3: E1             POP   HL
@@ -7681,14 +7586,14 @@ COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?:
 47c7: FD 6E 0B       LD    L,(IY+$0B)
 47ca: FD 66 0C       LD    H,(IY+$0C)
 47cd: FD 7E 00       LD    A,(IY+$00)
-47d0: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
+47d0: CD 65 71       CALL  ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
 47d3: 77             LD    (HL),A
 47d4: 23             INC   HL
 47d5: 36 07          LD    (HL),#$07
 47d7: 23             INC   HL
 47d8: FD 7E 02       LD    A,(IY+$02)
 47db: C6 04          ADD   A,#$04
-47dd: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+47dd: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 47e0: 77             LD    (HL),A
 47e1: C9             RET   
 
@@ -7696,7 +7601,7 @@ TANK_POSITION_THE_ONE_AT_IX:
 47e2: DD 6E 16       LD    L,(IX+$16)
 47e5: DD 66 17       LD    H,(IX+$17)
 47e8: DD 7E 00       LD    A,(IX+$00)
-47eb: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
+47eb: CD 65 71       CALL  ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
 47ee: 77             LD    (HL),A
 47ef: 23             INC   HL
 47f0: DD 7E 01       LD    A,(IX+$01)
@@ -7704,7 +7609,7 @@ TANK_POSITION_THE_ONE_AT_IX:
 47f4: 23             INC   HL
 47f5: DD 7E 02       LD    A,(IX+$02)
 47f8: C6 04          ADD   A,#$04
-47fa: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+47fa: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 47fd: 77             LD    (HL),A
 47fe: C9             RET   
 
@@ -7844,7 +7749,7 @@ TANK_TURRET_DRAW:
 49f8: 3A 0B C0       LD    A,($C00B)
 49fb: 80             ADD   A,B
 49fc: 86             ADD   A,(HL)
-49fd: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
+49fd: CD 65 71       CALL  ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
 4a00: DD 77 00       LD    (IX+$00),A
 4a03: 23             INC   HL
 4a04: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y)
@@ -7853,7 +7758,7 @@ TANK_TURRET_DRAW:
 4a0b: 80             ADD   A,B
 4a0c: 86             ADD   A,(HL)
 4a0d: C6 04          ADD   A,#$04
-4a0f: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+4a0f: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 4a12: DD 77 02       LD    (IX+$02),A
 4a15: 23             INC   HL
 4a16: 7E             LD    A,(HL)
@@ -8043,7 +7948,7 @@ TANK_BULLET?_DRAW_USES_IY:
 4b70: FD 6E 03       LD    L,(IY+$03)
 4b73: FD 66 04       LD    H,(IY+$04)
 4b76: FD 7E 00       LD    A,(IY+$00)
-4b79: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
+4b79: CD 65 71       CALL  ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
 4b7c: 77             LD    (HL),A
 4b7d: FD 7E 01       LD    A,(IY+$01)
 4b80: 23             INC   HL
@@ -8051,7 +7956,7 @@ TANK_BULLET?_DRAW_USES_IY:
 4b82: FD 7E 02       LD    A,(IY+$02)
 4b85: C6 04          ADD   A,#$04
 4b87: 23             INC   HL
-4b88: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+4b88: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 4b8b: 77             LD    (HL),A
 4b8c: C9             RET   
 
@@ -8269,7 +8174,11 @@ TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE:
 4f52: 0E 02 01 00 30 08 E8 00 01 0E 0E 01 01 00 E8 88 
 4f62: E8 00 01 0E 0E 02 FF 00 B8 88 70 00 01 0E 0E 02 
 4f72: FF 00 B8 88 A0 00 01 0E 0E 02 FF 00 
-TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA:
+
+*** Tank game setup data.
+*** 11x4 bytes: shot speed, number of tanks, vector to tank(s) setup data
+*** If high bit (7) set in number of tanks, recognizers instead of tanks
+TANK_SET_UP_DATA:
 4f7e: 80 01 9E 4D 
 4f82: 90 02 A8 4D 
 4f86: A0 03 BC 4D 
@@ -8282,16 +8191,27 @@ TANK_SET_UP_DATA_11X4_?_NUMBER_OF_TANKS_VECTOR_TO_MORE_DATA:
 4fa2: FF 86 2A 4E 
 4fa6: FF 06 42 4F 
 
-
 *** Tank warp locations (X, picture, Y) 16x3
-4faa: 31 A0 40 31 48 20 E9 A0 10 61 B8 08 61 38 40 19 
-4fba: 8A 20 48 28 10 31 B8 08 B9 80 40 B9 48 20 BA D0 
-4fca: 10 31 58 08 31 88 40 D1 A0 20 69 D0 10 8C E8 08 
+4faa: 31 A0 40 
+4fad: 31 48 20 
+4fb0: E9 A0 10 
+4fb3: 61 B8 08 
+4fb6: 61 38 40 
+4fb9: 19 8A 20 
+4fbc: 48 28 10 
+4fbf: 31 B8 08 
+4fc2: B9 80 40 
+4fc5: B9 48 20 
+4fc8: BA D0 10 
+4fcb: 31 58 08 
+4fce: 31 88 40 
+4fd1: D1 A0 20 
+4fd4: 69 D0 10 
+4fd7: 8C E8 08 
 
 4fda: EF FF AB 69 B7 DF 8B ED EF F1 ED 7C 03 74 31 FA 
 4fea: B7 F7 60 3B BD 73 EB 67 0B CD 7F BD 4F E7 B3 FD 
 4ffa: AF CF FD F2 27 6F 
-
 PLAY_LC:
 5000: CD 49 70       CALL  INITIALIZE_SPRITES
 5003: 21 80 90       LD    HL,LC_COLOR_PALETTE
@@ -8300,17 +8220,17 @@ PLAY_LC:
 500c: 3E 05          LD    A,#$05
 500e: 32 5B C4       LD    (GS_DIRECTION:1=DOWN,2=?,3=?,5=?,OTHER=?),A
 5011: 21 00 89       LD    HL,BACKGROUND_LC
-5014: CD 35 70       CALL  COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
+5014: CD 35 70       CALL  BACKGROUND_RAM_FILL_FROM_HL_0780_BYTES_TO_F800
 5017: 3E 01          LD    A,#$01
 5019: 32 08 C4       LD    ($C408),A
 501c: 3E FD          LD    A,#$FD
-501e: 21 00 C2       LD    HL,$C200
+501e: 21 00 C2       LD    HL,LC_ENEMY_1_X
 5021: CD 34 52       CALL  $5234
 5024: 3E F8          LD    A,#$F8
-5026: 21 04 C2       LD    HL,$C204
+5026: 21 04 C2       LD    HL,LC_ENEMY_1_Y
 5029: CD 34 52       CALL  $5234
 502c: 3E EF          LD    A,#$EF
-502e: 21 EA C1       LD    HL,$C1EA
+502e: 21 EA C1       LD    HL,LC_ENEMY_1_SPRITE
 5031: CD 34 52       CALL  $5234
 5034: 3A 19 C4       LD    A,(HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?))
 5037: FE 13          CP    A,#$13
@@ -8326,7 +8246,7 @@ PLAY_LC:
 5045: 80             ADD   A,B
 5046: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 5049: 7E             LD    A,(HL)
-504a: 32 10 C2       LD    ($C210),A
+504a: 32 10 C2       LD    (LC_ENEMIES_STILL_ALIVE_BITS_0_1_2?),A
 504d: 23             INC   HL
 504e: 7E             LD    A,(HL)
 504f: 32 23 C2       LD    ($C223),A
@@ -8409,11 +8329,11 @@ PLAY_LC:
 50db: 3E EE          LD    A,#$EE
 50dd: 16 05          LD    D,#$05
 50df: 1E 00          LD    E,#$00
-50e1: 32 ED C1       LD    ($C1ED),A
+50e1: 32 ED C1       LD    (LC_USER_SPRITE),A
 50e4: 7A             LD    A,D
-50e5: 32 03 C2       LD    ($C203),A
+50e5: 32 03 C2       LD    (LC_USER_X),A
 50e8: 7B             LD    A,E
-50e9: 32 07 C2       LD    ($C207),A
+50e9: 32 07 C2       LD    (LC_USER_Y),A
 50ec: 7C             LD    A,H
 50ed: 81             ADD   A,C
 50ee: 5F             LD    E,A
@@ -8424,12 +8344,12 @@ PLAY_LC:
 50f6: 21 09 C2       LD    HL,$C209
 50f9: 71             LD    (HL),C
 50fa: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
-50fd: CD F4 56       CALL  $56F4
-5100: C3 3B 52       JP    $523B
+50fd: CD F4 56       CALL  LC_SET_UP_TRAILS_DATA_STRUCTURE_AT_C000_TO_C1DF
+5100: C3 3B 52       JP    LC_SET_UP_USER_AND_LC_1_2_3
 
 LC_INSTRUCTIONS:
 5103: 21 00 91       LD    HL,BACKGROUND_TRAINING_FOR_LC
-5106: CD 35 70       CALL  COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
+5106: CD 35 70       CALL  BACKGROUND_RAM_FILL_FROM_HL_0780_BYTES_TO_F800
 5109: CD 49 70       CALL  INITIALIZE_SPRITES
 510c: 21 80 90       LD    HL,LC_COLOR_PALETTE
 510f: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
@@ -8439,11 +8359,11 @@ LC_INSTRUCTIONS:
 5119: 32 08 C4       LD    ($C408),A
 511c: FD 21 04 F0    LD    IY,TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT
 5120: 3E 75          LD    A,#$75
-5122: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
+5122: CD 65 71       CALL  ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
 5125: FD 77 00       LD    (IY+$00),A
 5128: FD 36 01 2D    LD    (IY+$01),#$2D
 512c: 3E E8          LD    A,#$E8
-512e: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+512e: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 5131: FD 77 02       LD    (IY+$02),A
 5134: DD 21 51 51    LD    IX,LC_INSTRUCTION_STRINGS_SOURCE_AND_DESTINATION_DATA
 5138: DD 4E 00       LD    C,(IX+$00)
@@ -8461,11 +8381,15 @@ LC_INSTRUCTIONS:
 
 
 *** 5x4: 4 = destination vector and source vector
-*** at 57ba
 LC_INSTRUCTION_STRINGS_SOURCE_AND_DESTINATION_DATA:
-5151: E4 FD 67 51 E6 FD 75 51 E8 FD 82 51 EA FD 8C 51 
-5161: EC FD 9C 51 00 00 
+5151: E4 FD 67 51 
+5155: E6 FD 75 51 
+5159: E8 FD 82 51 
+515d: EA FD 8C 51 
+5161: EC FD 9C 51 
 
+5165: 00             NOP   
+5166: 00             NOP   
 AVOID_HITTING_S:
 5167: AVOID HITTING
 
@@ -8568,74 +8492,84 @@ SPEED_CONTROL_S:
 
 523a: C9             RET   
 
+
+*** LC set up user data
+LC_SET_UP_USER_AND_LC_1_2_3:
 523b: 21 38 FC       LD    HL,$FC38
 523e: 16 04          LD    D,#$04
-5240: CD 1A 5A       CALL  $5A1A
+5240: CD 1A 5A       CALL  LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4
 5243: 21 38 FC       LD    HL,$FC38
-5246: 22 E0 C1       LD    ($C1E0),HL
+5246: 22 E0 C1       LD    (LC_USER_TRAIL_POSITION_VECTOR),HL
 5249: CD 95 59       CALL  $5995
-524c: 21 FD C1       LD    HL,$C1FD
+524c: 21 FD C1       LD    HL,LC_USER_?1
 524f: 77             LD    (HL),A
-5250: 11 03 C2       LD    DE,$C203
+5250: 11 03 C2       LD    DE,LC_USER_X
 5253: CD E8 52       CALL  $52E8
-5256: 21 FE C1       LD    HL,$C1FE
+5256: 21 FE C1       LD    HL,LC_USER_?2
 5259: 71             LD    (HL),C
-525a: 11 07 C2       LD    DE,$C207
+525a: 11 07 C2       LD    DE,LC_USER_Y
 525d: CD F6 52       CALL  $52F6
 5260: CD 8D 55       CALL  $558D
-5263: 3A 10 C2       LD    A,($C210)
+5263: 3A 10 C2       LD    A,(LC_ENEMIES_STILL_ALIVE_BITS_0_1_2?)
 5266: CB 47          BIT   0,A
 5268: 28 25          JR    Z,$528F
 
+
+*** LC set up enemy 1 data
 526a: 21 0E FC       LD    HL,$FC0E
 526d: 16 01          LD    D,#$01
-526f: CD 1A 5A       CALL  $5A1A
+526f: CD 1A 5A       CALL  LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4
 5272: 21 0E FC       LD    HL,$FC0E
-5275: 22 E2 C1       LD    ($C1E2),HL
+5275: 22 E2 C1       LD    (LC_ENEMY_1_TRAIL_POSITION_VECTOR),HL
 5278: CD 95 59       CALL  $5995
-527b: 21 F7 C1       LD    HL,$C1F7
+527b: 21 F7 C1       LD    HL,LC_ENEMY_1_?1
 527e: 77             LD    (HL),A
-527f: 11 00 C2       LD    DE,$C200
+527f: 11 00 C2       LD    DE,LC_ENEMY_1_X
 5282: CD E8 52       CALL  $52E8
-5285: 21 FA C1       LD    HL,$C1FA
+5285: 21 FA C1       LD    HL,LC_ENEMY_1_?2
 5288: 71             LD    (HL),C
-5289: 11 04 C2       LD    DE,$C204
+5289: 11 04 C2       LD    DE,LC_ENEMY_1_Y
 528c: CD F6 52       CALL  $52F6
-528f: 3A 10 C2       LD    A,($C210)
+528f: 3A 10 C2       LD    A,(LC_ENEMIES_STILL_ALIVE_BITS_0_1_2?)
 5292: CB 4F          BIT   1,A
 5294: 28 25          JR    Z,$52BB
 
+
+*** LC set up enemy 2 data
 5296: 21 4E FB       LD    HL,$FB4E
 5299: 16 02          LD    D,#$02
-529b: CD 1A 5A       CALL  $5A1A
+529b: CD 1A 5A       CALL  LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4
 529e: 21 4E FB       LD    HL,$FB4E
-52a1: 22 E4 C1       LD    ($C1E4),HL
+52a1: 22 E4 C1       LD    (LC_ENEMY_2_TRAIL_POSITION_VECTOR),HL
 52a4: CD 95 59       CALL  $5995
-52a7: 21 F8 C1       LD    HL,$C1F8
+52a7: 21 F8 C1       LD    HL,LC_ENEMY_2_?1
 52aa: 77             LD    (HL),A
-52ab: 11 01 C2       LD    DE,$C201
+52ab: 11 01 C2       LD    DE,LC_ENEMY_2_X
 52ae: CD E8 52       CALL  $52E8
-52b1: 21 FB C1       LD    HL,$C1FB
+52b1: 21 FB C1       LD    HL,LC_ENEMY_2_?2
 52b4: 71             LD    (HL),C
-52b5: 11 05 C2       LD    DE,$C205
+52b5: 11 05 C2       LD    DE,LC_ENEMY_2_Y
 52b8: CD F6 52       CALL  $52F6
-52bb: 3A 10 C2       LD    A,($C210)
+52bb: 3A 10 C2       LD    A,(LC_ENEMIES_STILL_ALIVE_BITS_0_1_2?)
 52be: CB 57          BIT   2,A
 52c0: 28 25          JR    Z,$52E7
 
+
+*** LC set up enemy 3 data
+*** at 57ba
 52c2: 21 CE FC       LD    HL,$FCCE
 52c5: 16 03          LD    D,#$03
-52c7: CD 1A 5A       CALL  $5A1A
+52c7: CD 1A 5A       CALL  LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4
 52ca: 21 CE FC       LD    HL,$FCCE
-52cd: 22 E6 C1       LD    ($C1E6),HL
+52cd: 22 E6 C1       LD    (LC_ENEMY_3_TRAIL_POSITION_VECTOR),HL
 52d0: CD 95 59       CALL  $5995
-52d3: 21 F9 C1       LD    HL,$C1F9
+52d3: 21 F9 C1       LD    HL,LC_ENEMY_3_?1
 52d6: 77             LD    (HL),A
-52d7: 11 02 C2       LD    DE,$C202
+52d7: 11 02 C2       LD    DE,LC_ENEMY_3_X
 52da: CD E8 52       CALL  $52E8
-52dd: 21 FC C1       LD    HL,$C1FC
+52dd: 21 FC C1       LD    HL,LC_ENEMY_3_?2
 52e0: 71             LD    (HL),C
-52e1: 11 06 C2       LD    DE,$C206
+52e1: 11 06 C2       LD    DE,LC_ENEMY_3_Y
 52e4: CD F6 52       CALL  $52F6
 52e7: C9             RET   
 
@@ -8678,7 +8612,7 @@ SPEED_CONTROL_S:
 531a: ED 53 EE C1    LD    ($C1EE),DE
 531e: C9             RET   
 
-531f: 3A 10 C2       LD    A,($C210)
+531f: 3A 10 C2       LD    A,(LC_ENEMIES_STILL_ALIVE_BITS_0_1_2?)
 5322: E6 0F          AND   A,#$0F
 5324: C8             RET   Z
 
@@ -8755,10 +8689,10 @@ SPEED_CONTROL_S:
 5396: 20 24          JR    NZ,$53BC
 
 5398: 3E ED          LD    A,#$ED
-539a: 32 ED C1       LD    ($C1ED),A
-539d: 3A 07 C2       LD    A,($C207)
+539a: 32 ED C1       LD    (LC_USER_SPRITE),A
+539d: 3A 07 C2       LD    A,(LC_USER_Y)
 53a0: CD 75 54       CALL  $5475
-53a3: 32 07 C2       LD    ($C207),A
+53a3: 32 07 C2       LD    (LC_USER_Y),A
 53a6: 21 0F C2       LD    HL,$C20F
 53a9: AF             XOR   A,A
 53aa: BE             CP    A,(HL)
@@ -8766,17 +8700,17 @@ SPEED_CONTROL_S:
 
 53ac: 21 14 C2       LD    HL,$C214
 53af: CD 6B 58       CALL  $586B
-53b2: 21 FE C1       LD    HL,$C1FE
+53b2: 21 FE C1       LD    HL,LC_USER_?2
 53b5: 34             INC   (HL)
 53b6: 4E             LD    C,(HL)
-53b7: 3A FD C1       LD    A,($C1FD)
+53b7: 3A FD C1       LD    A,(LC_USER_?1)
 53ba: 18 6C          JR    $5428
 
 53bc: 3E 2D          LD    A,#$2D
-53be: 32 ED C1       LD    ($C1ED),A
-53c1: 3A 07 C2       LD    A,($C207)
+53be: 32 ED C1       LD    (LC_USER_SPRITE),A
+53c1: 3A 07 C2       LD    A,(LC_USER_Y)
 53c4: CD 7A 54       CALL  $547A
-53c7: 32 07 C2       LD    ($C207),A
+53c7: 32 07 C2       LD    (LC_USER_Y),A
 53ca: 21 0F C2       LD    HL,$C20F
 53cd: AF             XOR   A,A
 53ce: BE             CP    A,(HL)
@@ -8784,17 +8718,17 @@ SPEED_CONTROL_S:
 
 53d0: 21 14 C2       LD    HL,$C214
 53d3: CD 73 58       CALL  $5873
-53d6: 21 FE C1       LD    HL,$C1FE
+53d6: 21 FE C1       LD    HL,LC_USER_?2
 53d9: 35             DEC   (HL)
 53da: 4E             LD    C,(HL)
-53db: 3A FD C1       LD    A,($C1FD)
+53db: 3A FD C1       LD    A,(LC_USER_?1)
 53de: 18 48          JR    $5428
 
 53e0: 3E 2E          LD    A,#$2E
-53e2: 32 ED C1       LD    ($C1ED),A
-53e5: 3A 03 C2       LD    A,($C203)
+53e2: 32 ED C1       LD    (LC_USER_SPRITE),A
+53e5: 3A 03 C2       LD    A,(LC_USER_X)
 53e8: CD 75 54       CALL  $5475
-53eb: 32 03 C2       LD    ($C203),A
+53eb: 32 03 C2       LD    (LC_USER_X),A
 53ee: 21 0F C2       LD    HL,$C20F
 53f1: AF             XOR   A,A
 53f2: BE             CP    A,(HL)
@@ -8802,18 +8736,18 @@ SPEED_CONTROL_S:
 
 53f4: 21 13 C2       LD    HL,$C213
 53f7: CD 6B 58       CALL  $586B
-53fa: 21 FD C1       LD    HL,$C1FD
+53fa: 21 FD C1       LD    HL,LC_USER_?1
 53fd: 35             DEC   (HL)
-53fe: 3A FE C1       LD    A,($C1FE)
+53fe: 3A FE C1       LD    A,(LC_USER_?2)
 5401: 4F             LD    C,A
 5402: 7E             LD    A,(HL)
 5403: 18 23          JR    $5428
 
 5405: 3E EE          LD    A,#$EE
-5407: 32 ED C1       LD    ($C1ED),A
-540a: 3A 03 C2       LD    A,($C203)
+5407: 32 ED C1       LD    (LC_USER_SPRITE),A
+540a: 3A 03 C2       LD    A,(LC_USER_X)
 540d: CD 7A 54       CALL  $547A
-5410: 32 03 C2       LD    ($C203),A
+5410: 32 03 C2       LD    (LC_USER_X),A
 5413: 21 0F C2       LD    HL,$C20F
 5416: AF             XOR   A,A
 5417: BE             CP    A,(HL)
@@ -8821,9 +8755,9 @@ SPEED_CONTROL_S:
 
 5419: 21 13 C2       LD    HL,$C213
 541c: CD 73 58       CALL  $5873
-541f: 21 FD C1       LD    HL,$C1FD
+541f: 21 FD C1       LD    HL,LC_USER_?1
 5422: 34             INC   (HL)
-5423: 3A FE C1       LD    A,($C1FE)
+5423: 3A FE C1       LD    A,(LC_USER_?2)
 5426: 4F             LD    C,A
 5427: 7E             LD    A,(HL)
 5428: F5             PUSH  AF
@@ -8840,14 +8774,14 @@ SPEED_CONTROL_S:
 543b: F5             PUSH  AF
 543c: C5             PUSH  BC
 543d: CD A9 59       CALL  $59A9
-5440: 22 E0 C1       LD    ($C1E0),HL
+5440: 22 E0 C1       LD    (LC_USER_TRAIL_POSITION_VECTOR),HL
 5443: C1             POP   BC
 5444: F1             POP   AF
 5445: 16 04          LD    D,#$04
 5447: CD F4 59       CALL  $59F4
 544a: C9             RET   
 
-544b: 3A ED C1       LD    A,($C1ED)
+544b: 3A ED C1       LD    A,(LC_USER_SPRITE)
 544e: 21 11 C2       LD    HL,$C211
 5451: FE 2D          CP    A,#$2D
 5453: 36 00          LD    (HL),#$00
@@ -8902,7 +8836,7 @@ SPEED_CONTROL_S:
 549f: CD 51 55       CALL  LC_ERASE_TRAIL_OF_DESTROYED_LC
 54a2: 21 F4 C1       LD    HL,$C1F4
 54a5: 36 08          LD    (HL),#$08
-54a7: 21 ED C1       LD    HL,$C1ED
+54a7: 21 ED C1       LD    HL,LC_USER_SPRITE
 54aa: 36 00          LD    (HL),#$00
 54ac: 21 F0 C1       LD    HL,$C1F0
 54af: 34             INC   (HL)
@@ -8943,7 +8877,7 @@ SPEED_CONTROL_S:
 54f0: CD 35 55       CALL  $5535
 54f3: 3E 01          LD    A,#$01
 54f5: CD 51 55       CALL  LC_ERASE_TRAIL_OF_DESTROYED_LC
-54f8: 21 10 C2       LD    HL,$C210
+54f8: 21 10 C2       LD    HL,LC_ENEMIES_STILL_ALIVE_BITS_0_1_2?
 54fb: CB 86          RES   0,(HL)
 54fd: 3A E8 C1       LD    A,($C1E8)
 5500: CB 57          BIT   2,A
@@ -8955,7 +8889,7 @@ SPEED_CONTROL_S:
 550c: CD 35 55       CALL  $5535
 550f: 3E 02          LD    A,#$02
 5511: CD 51 55       CALL  LC_ERASE_TRAIL_OF_DESTROYED_LC
-5514: 21 10 C2       LD    HL,$C210
+5514: 21 10 C2       LD    HL,LC_ENEMIES_STILL_ALIVE_BITS_0_1_2?
 5517: CB 8E          RES   1,(HL)
 5519: 3A E8 C1       LD    A,($C1E8)
 551c: CB 5F          BIT   3,A
@@ -8967,14 +8901,14 @@ SPEED_CONTROL_S:
 5527: CD 35 55       CALL  $5535
 552a: 3E 03          LD    A,#$03
 552c: CD 51 55       CALL  LC_ERASE_TRAIL_OF_DESTROYED_LC
-552f: 21 10 C2       LD    HL,$C210
+552f: 21 10 C2       LD    HL,LC_ENEMIES_STILL_ALIVE_BITS_0_1_2?
 5532: CB 96          RES   2,(HL)
 5534: C9             RET   
 
 5535: 21 F1 C1       LD    HL,$C1F1
 5538: 19             ADD   HL,DE
 5539: 36 08          LD    (HL),#$08
-553b: 21 EA C1       LD    HL,$C1EA
+553b: 21 EA C1       LD    HL,LC_ENEMY_1_SPRITE
 553e: 19             ADD   HL,DE
 553f: 36 00          LD    (HL),#$00
 5541: 0E 0E          LD    C,#$0E
@@ -8989,13 +8923,13 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 5551: 11 00 89       LD    DE,BACKGROUND_LC
 5554: 21 00 F8       LD    HL,BACKGROUND_VIDEO_RAM_TO_FF7F
 5557: 01 80 07       LD    BC,$0780
-555a: 32 E9 C1       LD    ($C1E9),A
+555a: 32 E9 C1       LD    (LC_WHICH_LC_TO_DESTROY),A
 555d: E5             PUSH  HL
 555e: D5             PUSH  DE
 555f: C5             PUSH  BC
 5560: CD C2 59       CALL  $59C2
 5563: 47             LD    B,A
-5564: 3A E9 C1       LD    A,($C1E9)
+5564: 3A E9 C1       LD    A,(LC_WHICH_LC_TO_DESTROY)
 5567: B8             CP    A,B
 5568: 28 0E          JR    Z,$5578
 
@@ -9025,15 +8959,15 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 5582: 2B             DEC   HL
 5583: 2B             DEC   HL
 5584: 16 00          LD    D,#$00
-5586: CD 1A 5A       CALL  $5A1A
+5586: CD 1A 5A       CALL  LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4
 5589: D1             POP   DE
 558a: E1             POP   HL
 558b: 18 D0          JR    $555D
 
-558d: 3A ED C1       LD    A,($C1ED)
+558d: 3A ED C1       LD    A,(LC_USER_SPRITE)
 5590: 21 F5 C1       LD    HL,$C1F5
 5593: 11 F6 C1       LD    DE,$C1F6
-5596: 01 FE C1       LD    BC,$C1FE
+5596: 01 FE C1       LD    BC,LC_USER_?2
 5599: FE 2D          CP    A,#$2D
 559b: 28 10          JR    Z,$55AD
 
@@ -9043,7 +8977,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 55a1: FE EE          CP    A,#$EE
 55a3: 28 18          JR    Z,$55BD
 
-55a5: 3A FD C1       LD    A,($C1FD)
+55a5: 3A FD C1       LD    A,(LC_USER_?1)
 55a8: 3D             DEC   A
 55a9: 77             LD    (HL),A
 55aa: 0A             LD    A,(BC)
@@ -9053,39 +8987,39 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 55ad: 0A             LD    A,(BC)
 55ae: 3D             DEC   A
 55af: 12             LD    (DE),A
-55b0: 3A FD C1       LD    A,($C1FD)
+55b0: 3A FD C1       LD    A,(LC_USER_?1)
 55b3: 77             LD    (HL),A
 55b4: C9             RET   
 
 55b5: 0A             LD    A,(BC)
 55b6: 3C             INC   A
 55b7: 12             LD    (DE),A
-55b8: 3A FD C1       LD    A,($C1FD)
+55b8: 3A FD C1       LD    A,(LC_USER_?1)
 55bb: 77             LD    (HL),A
 55bc: C9             RET   
 
-55bd: 3A FD C1       LD    A,($C1FD)
+55bd: 3A FD C1       LD    A,(LC_USER_?1)
 55c0: 3C             INC   A
 55c1: 77             LD    (HL),A
 55c2: 0A             LD    A,(BC)
 55c3: 12             LD    (DE),A
 55c4: C9             RET   
 
-55c5: 3A 10 C2       LD    A,($C210)
+55c5: 3A 10 C2       LD    A,(LC_ENEMIES_STILL_ALIVE_BITS_0_1_2?)
 55c8: CB 47          BIT   0,A
 55ca: C8             RET   Z
 
 55cb: 01 00 00       LD    BC,$0000
 55ce: 18 16          JR    $55E6
 
-55d0: 3A 10 C2       LD    A,($C210)
+55d0: 3A 10 C2       LD    A,(LC_ENEMIES_STILL_ALIVE_BITS_0_1_2?)
 55d3: CB 4F          BIT   1,A
 55d5: C8             RET   Z
 
 55d6: 01 01 00       LD    BC,$0001
 55d9: 18 0B          JR    $55E6
 
-55db: 3A 10 C2       LD    A,($C210)
+55db: 3A 10 C2       LD    A,(LC_ENEMIES_STILL_ALIVE_BITS_0_1_2?)
 55de: CB 57          BIT   2,A
 55e0: C8             RET   Z
 
@@ -9132,7 +9066,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 561e: 32 E8 C1       LD    ($C1E8),A
 5621: C9             RET   
 
-5622: 21 EA C1       LD    HL,$C1EA
+5622: 21 EA C1       LD    HL,LC_ENEMY_1_SPRITE
 5625: 09             ADD   HL,BC
 5626: 7E             LD    A,(HL)
 5627: 21 15 C2       LD    HL,$C215
@@ -9152,7 +9086,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 563d: 36 03          LD    (HL),#$03
 563f: 3E F0          LD    A,#$F0
 5641: CD 2F 57       CALL  $572F
-5644: 21 00 C2       LD    HL,$C200
+5644: 21 00 C2       LD    HL,LC_ENEMY_1_X
 5647: CD 39 57       CALL  $5739
 564a: 21 0E C2       LD    HL,$C20E
 564d: AF             XOR   A,A
@@ -9162,18 +9096,18 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 5650: 21 1B C2       LD    HL,$C21B
 5653: 09             ADD   HL,BC
 5654: CD 73 58       CALL  $5873
-5657: 21 F7 C1       LD    HL,$C1F7
+5657: 21 F7 C1       LD    HL,LC_ENEMY_1_?1
 565a: 09             ADD   HL,BC
 565b: 34             INC   (HL)
 565c: 7E             LD    A,(HL)
-565d: 21 FA C1       LD    HL,$C1FA
+565d: 21 FA C1       LD    HL,LC_ENEMY_1_?2
 5660: 09             ADD   HL,BC
 5661: 5E             LD    E,(HL)
 5662: 18 6D          JR    $56D1
 
 5664: 3E EF          LD    A,#$EF
 5666: CD 2F 57       CALL  $572F
-5669: 21 04 C2       LD    HL,$C204
+5669: 21 04 C2       LD    HL,LC_ENEMY_1_Y
 566c: CD 45 57       CALL  $5745
 566f: 21 0E C2       LD    HL,$C20E
 5672: AF             XOR   A,A
@@ -9183,18 +9117,18 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 5675: 21 1E C2       LD    HL,$C21E
 5678: 09             ADD   HL,BC
 5679: CD 6B 58       CALL  $586B
-567c: 21 FA C1       LD    HL,$C1FA
+567c: 21 FA C1       LD    HL,LC_ENEMY_1_?2
 567f: 09             ADD   HL,BC
 5680: 34             INC   (HL)
 5681: 5E             LD    E,(HL)
-5682: 21 F7 C1       LD    HL,$C1F7
+5682: 21 F7 C1       LD    HL,LC_ENEMY_1_?1
 5685: 09             ADD   HL,BC
 5686: 7E             LD    A,(HL)
 5687: 18 48          JR    $56D1
 
 5689: 3E 30          LD    A,#$30
 568b: CD 2F 57       CALL  $572F
-568e: 21 00 C2       LD    HL,$C200
+568e: 21 00 C2       LD    HL,LC_ENEMY_1_X
 5691: CD 45 57       CALL  $5745
 5694: 21 0E C2       LD    HL,$C20E
 5697: AF             XOR   A,A
@@ -9204,18 +9138,18 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 569a: 21 1B C2       LD    HL,$C21B
 569d: 09             ADD   HL,BC
 569e: CD 6B 58       CALL  $586B
-56a1: 21 F7 C1       LD    HL,$C1F7
+56a1: 21 F7 C1       LD    HL,LC_ENEMY_1_?1
 56a4: 09             ADD   HL,BC
 56a5: 35             DEC   (HL)
 56a6: 7E             LD    A,(HL)
-56a7: 21 FA C1       LD    HL,$C1FA
+56a7: 21 FA C1       LD    HL,LC_ENEMY_1_?2
 56aa: 09             ADD   HL,BC
 56ab: 5E             LD    E,(HL)
 56ac: 18 23          JR    $56D1
 
 56ae: 3E 2F          LD    A,#$2F
 56b0: CD 2F 57       CALL  $572F
-56b3: 21 04 C2       LD    HL,$C204
+56b3: 21 04 C2       LD    HL,LC_ENEMY_1_Y
 56b6: CD 39 57       CALL  $5739
 56b9: 21 0E C2       LD    HL,$C20E
 56bc: AF             XOR   A,A
@@ -9225,11 +9159,11 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 56bf: 21 1E C2       LD    HL,$C21E
 56c2: 09             ADD   HL,BC
 56c3: CD 73 58       CALL  $5873
-56c6: 21 FA C1       LD    HL,$C1FA
+56c6: 21 FA C1       LD    HL,LC_ENEMY_1_?2
 56c9: 09             ADD   HL,BC
 56ca: 35             DEC   (HL)
 56cb: 5E             LD    E,(HL)
-56cc: 21 F7 C1       LD    HL,$C1F7
+56cc: 21 F7 C1       LD    HL,LC_ENEMY_1_?1
 56cf: 09             ADD   HL,BC
 56d0: 7E             LD    A,(HL)
 56d1: 0C             INC   C
@@ -9246,7 +9180,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 56e4: E5             PUSH  HL
 56e5: ED 4B 0B C2    LD    BC,($C20B)
 56e9: CB 21          SLA   C
-56eb: 21 E2 C1       LD    HL,$C1E2
+56eb: 21 E2 C1       LD    HL,LC_ENEMY_1_TRAIL_POSITION_VECTOR
 56ee: 09             ADD   HL,BC
 56ef: C1             POP   BC
 56f0: 71             LD    (HL),C
@@ -9254,11 +9188,12 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 56f2: 70             LD    (HL),B
 56f3: C9             RET   
 
+LC_SET_UP_TRAILS_DATA_STRUCTURE_AT_C000_TO_C1DF:
 56f4: 16 0F          LD    D,#$0F
 56f6: 21 00 F8       LD    HL,BACKGROUND_VIDEO_RAM_TO_FF7F
 56f9: 06 20          LD    B,#$20
 56fb: E5             PUSH  HL
-56fc: CD 1A 5A       CALL  $5A1A
+56fc: CD 1A 5A       CALL  LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4
 56ff: E1             POP   HL
 5700: 23             INC   HL
 5701: 23             INC   HL
@@ -9267,7 +9202,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 5704: 21 40 FF       LD    HL,$FF40
 5707: 06 20          LD    B,#$20
 5709: E5             PUSH  HL
-570a: CD 1A 5A       CALL  $5A1A
+570a: CD 1A 5A       CALL  LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4
 570d: E1             POP   HL
 570e: 23             INC   HL
 570f: 23             INC   HL
@@ -9281,7 +9216,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 
 571f: 06 1C          LD    B,#$1C
 5721: E5             PUSH  HL
-5722: CD 1A 5A       CALL  $5A1A
+5722: CD 1A 5A       CALL  LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4
 5725: E1             POP   HL
 5726: 11 40 00       LD    DE,$0040
 5729: 19             ADD   HL,DE
@@ -9291,7 +9226,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 572e: C9             RET   
 
 572f: ED 4B 0B C2    LD    BC,($C20B)
-5733: 21 EA C1       LD    HL,$C1EA
+5733: 21 EA C1       LD    HL,LC_ENEMY_1_SPRITE
 5736: 09             ADD   HL,BC
 5737: 77             LD    (HL),A
 5738: C9             RET   
@@ -9324,7 +9259,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 5761: CB 20          SLA   B
 5763: 80             ADD   A,B
 5764: F5             PUSH  AF
-5765: 3A ED C1       LD    A,($C1ED)
+5765: 3A ED C1       LD    A,(LC_USER_SPRITE)
 5768: FE 2D          CP    A,#$2D
 576a: 06 00          LD    B,#$00
 576c: 28 0E          JR    Z,$577C
@@ -9384,7 +9319,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 57c8: AF             XOR   A,A
 57c9: 12             LD    (DE),A
 57ca: 11 34 C2       LD    DE,$C234
-57cd: ED 4B E0 C1    LD    BC,($C1E0)
+57cd: ED 4B E0 C1    LD    BC,(LC_USER_TRAIL_POSITION_VECTOR)
 57d1: C3 7E 70       JP    ADD_MESSAGE_TO_Q2
 
 57d4: 3A 09 C2       LD    A,($C209)
@@ -9423,7 +9358,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 5809: CB 22          SLA   D
 580b: 82             ADD   A,D
 580c: F5             PUSH  AF
-580d: 21 EA C1       LD    HL,$C1EA
+580d: 21 EA C1       LD    HL,LC_ENEMY_1_SPRITE
 5810: 09             ADD   HL,BC
 5811: 7E             LD    A,(HL)
 5812: FE 2F          CP    A,#$2F
@@ -9459,7 +9394,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 5842: 19             ADD   HL,DE
 5843: E5             PUSH  HL
 5844: CB 21          SLA   C
-5846: 21 E2 C1       LD    HL,$C1E2
+5846: 21 E2 C1       LD    HL,LC_ENEMY_1_TRAIL_POSITION_VECTOR
 5849: 09             ADD   HL,BC
 584a: 4E             LD    C,(HL)
 584b: 23             INC   HL
@@ -9542,7 +9477,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 58c0: B6             OR    A,(HL)
 58c1: C0             RET   NZ
 
-58c2: 3A 10 C2       LD    A,($C210)
+58c2: 3A 10 C2       LD    A,(LC_ENEMIES_STILL_ALIVE_BITS_0_1_2?)
 58c5: E6 0F          AND   A,#$0F
 58c7: CA B1 54       JP    Z,$54B1
 
@@ -9562,13 +9497,13 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 58da: 77             LD    (HL),A
 58db: 20 11          JR    NZ,$58EE
 
-58dd: 21 00 C2       LD    HL,$C200
+58dd: 21 00 C2       LD    HL,LC_ENEMY_1_X
 58e0: 19             ADD   HL,DE
 58e1: 77             LD    (HL),A
-58e2: 21 04 C2       LD    HL,$C204
+58e2: 21 04 C2       LD    HL,LC_ENEMY_1_Y
 58e5: 19             ADD   HL,DE
 58e6: 77             LD    (HL),A
-58e7: 21 EA C1       LD    HL,$C1EA
+58e7: 21 EA C1       LD    HL,LC_ENEMY_1_SPRITE
 58ea: 19             ADD   HL,DE
 58eb: 36 3F          LD    (HL),#$3F
 58ed: C9             RET   
@@ -9577,7 +9512,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 58f0: 20 08          JR    NZ,$58FA
 
 58f2: 3E 00          LD    A,#$00
-58f4: 21 EA C1       LD    HL,$C1EA
+58f4: 21 EA C1       LD    HL,LC_ENEMY_1_SPRITE
 58f7: 19             ADD   HL,DE
 58f8: 77             LD    (HL),A
 58f9: C9             RET   
@@ -9589,43 +9524,43 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 5900: C9             RET   
 
 5901: DD 21 04 F0    LD    IX,TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT
-5905: 3A 03 C2       LD    A,($C203)
-5908: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
+5905: 3A 03 C2       LD    A,(LC_USER_X)
+5908: CD 65 71       CALL  ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
 590b: DD 77 00       LD    (IX+$00),A
-590e: 3A 07 C2       LD    A,($C207)
-5911: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+590e: 3A 07 C2       LD    A,(LC_USER_Y)
+5911: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 5914: DD 77 02       LD    (IX+$02),A
-5917: 3A 00 C2       LD    A,($C200)
-591a: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
+5917: 3A 00 C2       LD    A,(LC_ENEMY_1_X)
+591a: CD 65 71       CALL  ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
 591d: DD 77 04       LD    (IX+$04),A
-5920: 3A 04 C2       LD    A,($C204)
-5923: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+5920: 3A 04 C2       LD    A,(LC_ENEMY_1_Y)
+5923: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 5926: DD 77 06       LD    (IX+$06),A
-5929: 3A 01 C2       LD    A,($C201)
-592c: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
+5929: 3A 01 C2       LD    A,(LC_ENEMY_2_X)
+592c: CD 65 71       CALL  ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
 592f: DD 77 08       LD    (IX+$08),A
-5932: 3A 05 C2       LD    A,($C205)
-5935: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+5932: 3A 05 C2       LD    A,(LC_ENEMY_2_Y)
+5935: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 5938: DD 77 0A       LD    (IX+$0A),A
-593b: 3A 02 C2       LD    A,($C202)
-593e: CD 65 71       CALL  RETURN_C687-2_IF_NZ_IN_A
+593b: 3A 02 C2       LD    A,(LC_ENEMY_3_X)
+593e: CD 65 71       CALL  ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
 5941: DD 77 0C       LD    (IX+$0C),A
-5944: 3A 06 C2       LD    A,($C206)
-5947: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+5944: 3A 06 C2       LD    A,(LC_ENEMY_3_Y)
+5947: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 594a: DD 77 0E       LD    (IX+$0E),A
-594d: 3A ED C1       LD    A,($C1ED)
+594d: 3A ED C1       LD    A,(LC_USER_SPRITE)
 5950: DD 77 01       LD    (IX+$01),A
-5953: 3A EA C1       LD    A,($C1EA)
+5953: 3A EA C1       LD    A,(LC_ENEMY_1_SPRITE)
 5956: DD 77 05       LD    (IX+$05),A
-5959: 3A EB C1       LD    A,($C1EB)
+5959: 3A EB C1       LD    A,(LC_ENEMY_2_SPRITE)
 595c: DD 77 09       LD    (IX+$09),A
-595f: 3A EC C1       LD    A,($C1EC)
+595f: 3A EC C1       LD    A,(LC_ENEMY_3_SPRITE)
 5962: DD 77 0D       LD    (IX+$0D),A
 5965: 3A 22 C2       LD    A,($C222)
 5968: B7             OR    A,A
 5969: C0             RET   NZ
 
-596a: 3A 03 C2       LD    A,($C203)
+596a: 3A 03 C2       LD    A,(LC_USER_X)
 596d: CB 3F          SRL   A
 596f: CB 3F          SRL   A
 5971: E6 38          AND   A,#$38
@@ -9750,6 +9685,7 @@ LC_DRAW_A_TRAIL?:
 5a17: ED 67          RRD   
 5a19: C9             RET   
 
+LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4:
 5a1a: D5             PUSH  DE
 5a1b: A7             AND   A,A
 5a1c: 11 00 F8       LD    DE,BACKGROUND_VIDEO_RAM_TO_FF7F
@@ -9846,10 +9782,10 @@ LC_DRAW_A_TRAIL?:
 
 LC_MULTIPLE_CYCLES_DO_SOMETHING?:
 5ac9: ED 5B 0B C2    LD    DE,($C20B)
-5acd: 21 FA C1       LD    HL,$C1FA
+5acd: 21 FA C1       LD    HL,LC_ENEMY_1_?2
 5ad0: 19             ADD   HL,DE
 5ad1: 4E             LD    C,(HL)
-5ad2: 21 F7 C1       LD    HL,$C1F7
+5ad2: 21 F7 C1       LD    HL,LC_ENEMY_1_?1
 5ad5: 19             ADD   HL,DE
 5ad6: 66             LD    H,(HL)
 5ad7: 78             LD    A,B
@@ -9876,10 +9812,10 @@ LC_MULTIPLE_CYCLES_DO_SOMETHING?:
 5aee: C3 16 5B       JP    $5B16
 
 5af1: ED 4B 0B C2    LD    BC,($C20B)
-5af5: 21 F7 C1       LD    HL,$C1F7
+5af5: 21 F7 C1       LD    HL,LC_ENEMY_1_?1
 5af8: 09             ADD   HL,BC
 5af9: 7E             LD    A,(HL)
-5afa: 21 FA C1       LD    HL,$C1FA
+5afa: 21 FA C1       LD    HL,LC_ENEMY_1_?2
 5afd: 09             ADD   HL,BC
 5afe: 4E             LD    C,(HL)
 5aff: 0D             DEC   C
@@ -9988,7 +9924,7 @@ PLAY_IO_TOWER:
 5d08: 3E 01          LD    A,#$01
 5d0a: 32 08 C4       LD    ($C408),A
 5d0d: 21 00 7A       LD    HL,BACKGROUND_IO_TOWER_GAME
-5d10: CD 35 70       CALL  COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
+5d10: CD 35 70       CALL  BACKGROUND_RAM_FILL_FROM_HL_0780_BYTES_TO_F800
 5d13: 21 C0 79       LD    HL,IO_COLOR_PALETTE
 5d16: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 5d19: 21 C6 68       LD    HL,DATA_TO_?_USED_AT_5D19
@@ -10151,7 +10087,7 @@ IO_TOWER_INSTRUCTIONS:
 5e39: 3E 01          LD    A,#$01
 5e3b: 32 08 C4       LD    ($C408),A
 5e3e: 21 00 7A       LD    HL,BACKGROUND_IO_TOWER_GAME
-5e41: CD 35 70       CALL  COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800)
+5e41: CD 35 70       CALL  BACKGROUND_RAM_FILL_FROM_HL_0780_BYTES_TO_F800
 5e44: 21 B7 5E       LD    HL,IO_TOWER_COLOR_PALETTE
 5e47: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 5e4a: CD 49 70       CALL  INITIALIZE_SPRITES
@@ -10427,11 +10363,11 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 6072: 47             LD    B,A
 6073: 3A 28 C0       LD    A,(IO_TRON_Y)
 6076: 4F             LD    C,A
-6077: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+6077: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 607a: 32 06 F0       LD    ($F006),A
 607d: 79             LD    A,C
 607e: C6 10          ADD   A,#$10
-6080: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+6080: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 6083: 32 0A F0       LD    ($F00A),A
 6086: 3A 2A C0       LD    A,($C02A)
 6089: 21 2C C0       LD    HL,$C02C
@@ -10459,7 +10395,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 60b4: 32 14 F0       LD    ($F014),A
 60b7: 79             LD    A,C
 60b8: DD 86 0C       ADD   A,(IX+$0C)
-60bb: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+60bb: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 60be: 32 16 F0       LD    ($F016),A
 60c1: DD 7E 0A       LD    A,(IX+$0A)
 60c4: 32 15 F0       LD    ($F015),A
@@ -10475,7 +10411,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 60d4: 32 0C F0       LD    (TANK_DISKS_F00C_TO_F01B(SPRITES_3_TO_6)),A
 60d7: 79             LD    A,C
 60d8: DD 86 09       ADD   A,(IX+$09)
-60db: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+60db: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 60de: 32 0E F0       LD    ($F00E),A
 60e1: DD 7E 07       LD    A,(IX+$07)
 60e4: 32 0D F0       LD    ($F00D),A
@@ -10488,7 +10424,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 60f1: 32 0C F0       LD    (TANK_DISKS_F00C_TO_F01B(SPRITES_3_TO_6)),A
 60f4: 79             LD    A,C
 60f5: DD 86 06       ADD   A,(IX+$06)
-60f8: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+60f8: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 60fb: 32 0E F0       LD    ($F00E),A
 60fe: DD 7E 04       LD    A,(IX+$04)
 6101: 32 0D F0       LD    ($F00D),A
@@ -10501,7 +10437,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 610e: 32 10 F0       LD    ($F010),A
 6111: 79             LD    A,C
 6112: DD 86 0E       ADD   A,(IX+$0E)
-6115: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+6115: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 6118: 32 12 F0       LD    ($F012),A
 611b: 3E 07          LD    A,#$07
 611d: 32 11 F0       LD    ($F011),A
@@ -10707,7 +10643,7 @@ IO_OR_MCP?_SET_TRON_INITIAL_POSITION_AND_ROTATION:
 6267: 21 00 00       LD    HL,$0000
 626a: 22 29 C0       LD    (JOYSTICK_INPUT_ARRAY_TO_C02C),HL
 626d: 22 2B C0       LD    ($C02B),HL
-6270: 21 80 81       LD    HL,$8180
+6270: 21 80 81       LD    HL,BACKGROUND_IO_TOWER_AFTER_ENTERING_BEAM
 6273: 11 00 F8       LD    DE,BACKGROUND_VIDEO_RAM_TO_FF7F
 6276: 01 80 07       LD    BC,$0780
 6279: ED B0          LDIR  
@@ -10794,7 +10730,7 @@ DATA_USED_FOR_???_TO_62F1:
 630f: 7E             LD    A,(HL)
 6310: C6 02          ADD   A,#$02
 6312: 77             LD    (HL),A
-6313: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+6313: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 6316: FD 77 02       LD    (IY+$02),A
 6319: CB 50          BIT   2,B
 631b: 20 04          JR    NZ,$6321
@@ -10813,7 +10749,7 @@ DATA_USED_FOR_???_TO_62F1:
 632a: 7E             LD    A,(HL)
 632b: D6 02          SUB   A,#$02
 632d: 77             LD    (HL),A
-632e: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+632e: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 6331: FD 77 02       LD    (IY+$02),A
 6334: CB 50          BIT   2,B
 6336: 20 1C          JR    NZ,$6354
@@ -10824,7 +10760,7 @@ DATA_USED_FOR_???_TO_62F1:
 633a: 3A 00 C0       LD    A,(CPU_RAM_OR_GS_DISK_X_TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
 633d: 32 28 F0       LD    (MCP_BLOCKS_TOP_LEFT_MOVING_DOWN_AND_WRAP_TO_TOP_RIGHT_TO_F09F),A
 6340: 3A 01 C0       LD    A,(TANK_PIC_OR_MCP_ROWS_OF_BLOCKS)
-6343: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+6343: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 6346: 32 2A F0       LD    ($F02A),A
 6349: 3E 0C          LD    A,#$0C
 634b: 32 29 F0       LD    ($F029),A
@@ -10927,7 +10863,7 @@ DATA_USED_FOR_???_TO_62F1:
 640f: DD 75 06       LD    (IX+$06),L
 6412: DD 74 07       LD    (IX+$07),H
 6415: DD 7E 03       LD    A,(IX+$03)
-6418: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+6418: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 641b: FD 77 02       LD    (IY+$02),A
 641e: CD A6 64       CALL  $64A6
 6421: 11 0A 00       LD    DE,$000A
@@ -10981,7 +10917,7 @@ DATA_USED_FOR_???_TO_62F1:
 6492: DD 36 08 18    LD    (IX+$08),#$18
 6496: FD E1          POP   IY
 6498: FD 70 00       LD    (IY+$00),B
-649b: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+649b: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 649e: FD 77 02       LD    (IY+$02),A
 64a1: FD 36 01 07    LD    (IY+$01),#$07
 64a5: C9             RET   
@@ -11152,7 +11088,7 @@ DATA_USED_FOR_???_TO_62F1:
 
 65d7: DD 77 03       LD    (IX+$03),A
 65da: DD 75 02       LD    (IX+$02),L
-65dd: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+65dd: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 65e0: FD 77 02       LD    (IY+$02),A
 65e3: 7C             LD    A,H
 65e4: FE 96          CP    A,#$96
@@ -11230,7 +11166,7 @@ DATA_USED_FOR_???_TO_62F1:
 665f: FD 72 00       LD    (IY+$00),D
 6662: DD 73 03       LD    (IX+$03),E
 6665: 7B             LD    A,E
-6666: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+6666: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 6669: FD 77 02       LD    (IY+$02),A
 666c: 7E             LD    A,(HL)
 666d: DD 77 04       LD    (IX+$04),A
@@ -11423,7 +11359,7 @@ DATA_USED_FOR_???_TO_6776:
 67e3: FD 77 00       LD    (IY+$00),A
 67e6: 7E             LD    A,(HL)
 67e7: DD 77 03       LD    (IX+$03),A
-67ea: CD 59 71       CALL  RETURN_C687-7_IF_NZ_IN_A
+67ea: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 67ed: FD 77 02       LD    (IY+$02),A
 67f0: 23             INC   HL
 67f1: DD 36 0A 80    LD    (IX+$0A),#$80
@@ -11697,7 +11633,7 @@ RESET_WATCHDOG_UNTIL_C400_IS_ONE:
 6f1e: 38 F7          JR    C,RESET_WATCHDOG_UNTIL_C400_IS_ONE
 
 
-*** This line is hit for every tick of the teletype (which strikes twice per charac
+*** This line is hit for every tick of the teletype (which strikes twice per character)
 6f20: AF             XOR   A,A
 6f21: 32 00 C4       LD    ($C400),A
 6f24: C9             RET   
@@ -11898,7 +11834,7 @@ ZERO_RAM_C000-C479:
 
 7034: C9             RET   
 
-COPY_0780_BYTES_FROM_HL_TO_BACKGROUND_RAM(F800):
+BACKGROUND_RAM_FILL_FROM_HL_0780_BYTES_TO_F800:
 7035: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 7038: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 703b: 11 00 F8       LD    DE,BACKGROUND_VIDEO_RAM_TO_FF7F
@@ -12044,7 +11980,7 @@ GAME_SELECT_COUNTDOWN_DIGITS:
 
 
 *** Return C687 in A.  If non-zero, subtract 7.  Do not affect other registers.
-RETURN_C687-7_IF_NZ_IN_A:
+ADJUST_SPRITE_X_IF_FLIPPED_SCREEN:
 7159: C5             PUSH  BC
 715a: 47             LD    B,A
 715b: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
@@ -12058,7 +11994,7 @@ RETURN_C687-7_IF_NZ_IN_A:
 
 
 *** Return C687 in A.  If non-zero, subtract 2.  Do not affect other registers.
-RETURN_C687-2_IF_NZ_IN_A:
+ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN:
 7165: C5             PUSH  BC
 7166: 47             LD    B,A
 7167: 3A 87 C6       LD    A,(FLIP_SCREEN_IF_VALUE_IS_01)
@@ -12341,1926 +12277,128 @@ BACKGROUND_IO_TOWER_GAME:
 8160: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
 8170: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 89 41 89 41 
 
-8180: 89             ADC   A,C
-8181: 41             LD    B,C
-8182: 89             ADC   A,C
-8183: 41             LD    B,C
-8184: 89             ADC   A,C
-8185: 41             LD    B,C
-8186: 89             ADC   A,C
-8187: 41             LD    B,C
-8188: 8D             ADC   A,L
-8189: 41             LD    B,C
-818a: 8C             ADC   A,H
-818b: 41             LD    B,C
-818c: 8D             ADC   A,L
-818d: 41             LD    B,C
-818e: 8C             ADC   A,H
-818f: 41             LD    B,C
-8190: 8D             ADC   A,L
-8191: 41             LD    B,C
-8192: 8C             ADC   A,H
-8193: 41             LD    B,C
-8194: 8D             ADC   A,L
-8195: 41             LD    B,C
-8196: 8C             ADC   A,H
-8197: 41             LD    B,C
-8198: 8D             ADC   A,L
-8199: 41             LD    B,C
-819a: 8C             ADC   A,H
-819b: 41             LD    B,C
-819c: 8D             ADC   A,L
-819d: 41             LD    B,C
-819e: 8C             ADC   A,H
-819f: 41             LD    B,C
-81a0: 8D             ADC   A,L
-81a1: 41             LD    B,C
-81a2: 8C             ADC   A,H
-81a3: 41             LD    B,C
-81a4: 8D             ADC   A,L
-81a5: 41             LD    B,C
-81a6: 8C             ADC   A,H
-81a7: 41             LD    B,C
-81a8: 8D             ADC   A,L
-81a9: 41             LD    B,C
-81aa: 8C             ADC   A,H
-81ab: 41             LD    B,C
-81ac: 8D             ADC   A,L
-81ad: 41             LD    B,C
-81ae: 8C             ADC   A,H
-81af: 41             LD    B,C
-81b0: 8D             ADC   A,L
-81b1: 41             LD    B,C
-81b2: 8C             ADC   A,H
-81b3: 41             LD    B,C
-81b4: 8D             ADC   A,L
-81b5: 41             LD    B,C
-81b6: 8C             ADC   A,H
-81b7: 41             LD    B,C
-81b8: 8D             ADC   A,L
-81b9: 41             LD    B,C
-81ba: 8C             ADC   A,H
-81bb: 41             LD    B,C
-81bc: 8D             ADC   A,L
-81bd: 41             LD    B,C
-81be: 8C             ADC   A,H
-81bf: 41             LD    B,C
-81c0: 89             ADC   A,C
-81c1: 41             LD    B,C
-81c2: 89             ADC   A,C
-81c3: 41             LD    B,C
-81c4: 89             ADC   A,C
-81c5: 41             LD    B,C
-81c6: 89             ADC   A,C
-81c7: 41             LD    B,C
-81c8: 8C             ADC   A,H
-81c9: 41             LD    B,C
-81ca: 8D             ADC   A,L
-81cb: 41             LD    B,C
-81cc: 8C             ADC   A,H
-81cd: 41             LD    B,C
-81ce: 8D             ADC   A,L
-81cf: 41             LD    B,C
-81d0: 8C             ADC   A,H
-81d1: 41             LD    B,C
-81d2: 8D             ADC   A,L
-81d3: 41             LD    B,C
-81d4: 8C             ADC   A,H
-81d5: 41             LD    B,C
-81d6: 8D             ADC   A,L
-81d7: 41             LD    B,C
-81d8: 8C             ADC   A,H
-81d9: 41             LD    B,C
-81da: 8D             ADC   A,L
-81db: 41             LD    B,C
-81dc: 8C             ADC   A,H
-81dd: 41             LD    B,C
-81de: 8D             ADC   A,L
-81df: 41             LD    B,C
-81e0: 8C             ADC   A,H
-81e1: 41             LD    B,C
-81e2: 8D             ADC   A,L
-81e3: 41             LD    B,C
-81e4: 8C             ADC   A,H
-81e5: 41             LD    B,C
-81e6: 8D             ADC   A,L
-81e7: 41             LD    B,C
-81e8: 8C             ADC   A,H
-81e9: 41             LD    B,C
-81ea: 8D             ADC   A,L
-81eb: 41             LD    B,C
-81ec: 8C             ADC   A,H
-81ed: 41             LD    B,C
-81ee: 8D             ADC   A,L
-81ef: 41             LD    B,C
-81f0: 8C             ADC   A,H
-81f1: 41             LD    B,C
-81f2: 8D             ADC   A,L
-81f3: 41             LD    B,C
-81f4: 8C             ADC   A,H
-81f5: 41             LD    B,C
-81f6: 8D             ADC   A,L
-81f7: 41             LD    B,C
-81f8: 8C             ADC   A,H
-81f9: 41             LD    B,C
-81fa: 8D             ADC   A,L
-81fb: 41             LD    B,C
-81fc: 8C             ADC   A,H
-81fd: 41             LD    B,C
-81fe: 8D             ADC   A,L
-81ff: 41             LD    B,C
-8200: 89             ADC   A,C
-8201: 41             LD    B,C
-8202: 89             ADC   A,C
-8203: 41             LD    B,C
-8204: 89             ADC   A,C
-8205: 41             LD    B,C
-8206: 89             ADC   A,C
-8207: 41             LD    B,C
-8208: 8D             ADC   A,L
-8209: 41             LD    B,C
-820a: 8C             ADC   A,H
-820b: 41             LD    B,C
-820c: 8D             ADC   A,L
-820d: 41             LD    B,C
-820e: 8C             ADC   A,H
-820f: 41             LD    B,C
-8210: 8D             ADC   A,L
-8211: 41             LD    B,C
-8212: 8C             ADC   A,H
-8213: 41             LD    B,C
-8214: 8D             ADC   A,L
-8215: 41             LD    B,C
-8216: 8C             ADC   A,H
-8217: 41             LD    B,C
-8218: 8D             ADC   A,L
-8219: 41             LD    B,C
-821a: 8C             ADC   A,H
-821b: 41             LD    B,C
-821c: 8D             ADC   A,L
-821d: 41             LD    B,C
-821e: 8C             ADC   A,H
-821f: 41             LD    B,C
-8220: 8D             ADC   A,L
-8221: 41             LD    B,C
-8222: 8C             ADC   A,H
-8223: 41             LD    B,C
-8224: 8D             ADC   A,L
-8225: 41             LD    B,C
-8226: 8C             ADC   A,H
-8227: 41             LD    B,C
-8228: 8D             ADC   A,L
-8229: 41             LD    B,C
-822a: 8C             ADC   A,H
-822b: 41             LD    B,C
-822c: 8D             ADC   A,L
-822d: 41             LD    B,C
-822e: 8C             ADC   A,H
-822f: 41             LD    B,C
-8230: 8D             ADC   A,L
-8231: 41             LD    B,C
-8232: 8C             ADC   A,H
-8233: 41             LD    B,C
-8234: 8D             ADC   A,L
-8235: 41             LD    B,C
-8236: 8C             ADC   A,H
-8237: 41             LD    B,C
-8238: 8D             ADC   A,L
-8239: 41             LD    B,C
-823a: 8C             ADC   A,H
-823b: 41             LD    B,C
-823c: 8D             ADC   A,L
-823d: 41             LD    B,C
-823e: 8C             ADC   A,H
-823f: 41             LD    B,C
-8240: 89             ADC   A,C
-8241: 41             LD    B,C
-8242: 89             ADC   A,C
-8243: 41             LD    B,C
-8244: 89             ADC   A,C
-8245: 41             LD    B,C
-8246: 89             ADC   A,C
-8247: 41             LD    B,C
-8248: 8C             ADC   A,H
-8249: 41             LD    B,C
-824a: 8D             ADC   A,L
-824b: 41             LD    B,C
-824c: 8C             ADC   A,H
-824d: 41             LD    B,C
-824e: 8D             ADC   A,L
-824f: 41             LD    B,C
-8250: 8C             ADC   A,H
-8251: 41             LD    B,C
-8252: 8D             ADC   A,L
-8253: 41             LD    B,C
-8254: 8C             ADC   A,H
-8255: 41             LD    B,C
-8256: 8D             ADC   A,L
-8257: 41             LD    B,C
-8258: 8C             ADC   A,H
-8259: 41             LD    B,C
-825a: 8D             ADC   A,L
-825b: 41             LD    B,C
-825c: 8C             ADC   A,H
-825d: 41             LD    B,C
-825e: 8D             ADC   A,L
-825f: 41             LD    B,C
-8260: 8C             ADC   A,H
-8261: 41             LD    B,C
-8262: 8D             ADC   A,L
-8263: 41             LD    B,C
-8264: 8C             ADC   A,H
-8265: 41             LD    B,C
-8266: 8D             ADC   A,L
-8267: 41             LD    B,C
-8268: 8C             ADC   A,H
-8269: 41             LD    B,C
-826a: 8D             ADC   A,L
-826b: 41             LD    B,C
-826c: 8C             ADC   A,H
-826d: 41             LD    B,C
-826e: 8D             ADC   A,L
-826f: 41             LD    B,C
-8270: 8C             ADC   A,H
-8271: 41             LD    B,C
-8272: 8D             ADC   A,L
-8273: 41             LD    B,C
-8274: 8C             ADC   A,H
-8275: 41             LD    B,C
-8276: 8D             ADC   A,L
-8277: 41             LD    B,C
-8278: 8C             ADC   A,H
-8279: 41             LD    B,C
-827a: 8D             ADC   A,L
-827b: 41             LD    B,C
-827c: 8C             ADC   A,H
-827d: 41             LD    B,C
-827e: 8D             ADC   A,L
-827f: 41             LD    B,C
-8280: 89             ADC   A,C
-8281: 41             LD    B,C
-8282: 89             ADC   A,C
-8283: 41             LD    B,C
-8284: 89             ADC   A,C
-8285: 41             LD    B,C
-8286: 89             ADC   A,C
-8287: 41             LD    B,C
-8288: 8D             ADC   A,L
-8289: 41             LD    B,C
-828a: 8C             ADC   A,H
-828b: 41             LD    B,C
-828c: 8D             ADC   A,L
-828d: 41             LD    B,C
-828e: 8C             ADC   A,H
-828f: 41             LD    B,C
-8290: 8D             ADC   A,L
-8291: 41             LD    B,C
-8292: 8C             ADC   A,H
-8293: 41             LD    B,C
-8294: 8D             ADC   A,L
-8295: 41             LD    B,C
-8296: 8C             ADC   A,H
-8297: 41             LD    B,C
-8298: 8D             ADC   A,L
-8299: 41             LD    B,C
-829a: 8C             ADC   A,H
-829b: 41             LD    B,C
-829c: 8D             ADC   A,L
-829d: 41             LD    B,C
-829e: 8C             ADC   A,H
-829f: 41             LD    B,C
-82a0: 8D             ADC   A,L
-82a1: 41             LD    B,C
-82a2: 8C             ADC   A,H
-82a3: 41             LD    B,C
-82a4: 8D             ADC   A,L
-82a5: 41             LD    B,C
-82a6: 8C             ADC   A,H
-82a7: 41             LD    B,C
-82a8: 8D             ADC   A,L
-82a9: 41             LD    B,C
-82aa: 8C             ADC   A,H
-82ab: 41             LD    B,C
-82ac: 8D             ADC   A,L
-82ad: 41             LD    B,C
-82ae: 8C             ADC   A,H
-82af: 41             LD    B,C
-82b0: 8D             ADC   A,L
-82b1: 41             LD    B,C
-82b2: 8C             ADC   A,H
-82b3: 41             LD    B,C
-82b4: 8D             ADC   A,L
-82b5: 41             LD    B,C
-82b6: 8C             ADC   A,H
-82b7: 41             LD    B,C
-82b8: 8D             ADC   A,L
-82b9: 41             LD    B,C
-82ba: 8C             ADC   A,H
-82bb: 41             LD    B,C
-82bc: 8D             ADC   A,L
-82bd: 41             LD    B,C
-82be: 8C             ADC   A,H
-82bf: 41             LD    B,C
-82c0: 89             ADC   A,C
-82c1: 41             LD    B,C
-82c2: 89             ADC   A,C
-82c3: 41             LD    B,C
-82c4: 89             ADC   A,C
-82c5: 41             LD    B,C
-82c6: 89             ADC   A,C
-82c7: 41             LD    B,C
-82c8: 8C             ADC   A,H
-82c9: 41             LD    B,C
-82ca: 8D             ADC   A,L
-82cb: 41             LD    B,C
-82cc: 8C             ADC   A,H
-82cd: 41             LD    B,C
-82ce: 8D             ADC   A,L
-82cf: 41             LD    B,C
-82d0: 8C             ADC   A,H
-82d1: 41             LD    B,C
-82d2: 8D             ADC   A,L
-82d3: 41             LD    B,C
-82d4: 8C             ADC   A,H
-82d5: 41             LD    B,C
-82d6: 8D             ADC   A,L
-82d7: 41             LD    B,C
-82d8: 8C             ADC   A,H
-82d9: 41             LD    B,C
-82da: 8D             ADC   A,L
-82db: 41             LD    B,C
-82dc: 8C             ADC   A,H
-82dd: 41             LD    B,C
-82de: 8D             ADC   A,L
-82df: 41             LD    B,C
-82e0: 8C             ADC   A,H
-82e1: 41             LD    B,C
-82e2: 8D             ADC   A,L
-82e3: 41             LD    B,C
-82e4: 8C             ADC   A,H
-82e5: 41             LD    B,C
-82e6: 8D             ADC   A,L
-82e7: 41             LD    B,C
-82e8: 8C             ADC   A,H
-82e9: 41             LD    B,C
-82ea: 8D             ADC   A,L
-82eb: 41             LD    B,C
-82ec: 8C             ADC   A,H
-82ed: 41             LD    B,C
-82ee: 8D             ADC   A,L
-82ef: 41             LD    B,C
-82f0: 8C             ADC   A,H
-82f1: 41             LD    B,C
-82f2: 8D             ADC   A,L
-82f3: 41             LD    B,C
-82f4: 8C             ADC   A,H
-82f5: 41             LD    B,C
-82f6: 8D             ADC   A,L
-82f7: 41             LD    B,C
-82f8: 8C             ADC   A,H
-82f9: 41             LD    B,C
-82fa: 8D             ADC   A,L
-82fb: 41             LD    B,C
-82fc: 8C             ADC   A,H
-82fd: 41             LD    B,C
-82fe: 8D             ADC   A,L
-82ff: 41             LD    B,C
-8300: 89             ADC   A,C
-8301: 41             LD    B,C
-8302: 89             ADC   A,C
-8303: 41             LD    B,C
-8304: 89             ADC   A,C
-8305: 41             LD    B,C
-8306: 89             ADC   A,C
-8307: 41             LD    B,C
-8308: 8D             ADC   A,L
-8309: 41             LD    B,C
-830a: 8C             ADC   A,H
-830b: 41             LD    B,C
-830c: 8D             ADC   A,L
-830d: 41             LD    B,C
-830e: 8C             ADC   A,H
-830f: 41             LD    B,C
-8310: 8D             ADC   A,L
-8311: 41             LD    B,C
-8312: 8C             ADC   A,H
-8313: 41             LD    B,C
-8314: 8D             ADC   A,L
-8315: 41             LD    B,C
-8316: 8C             ADC   A,H
-8317: 41             LD    B,C
-8318: 89             ADC   A,C
-8319: 41             LD    B,C
-831a: 89             ADC   A,C
-831b: 41             LD    B,C
-831c: 8D             ADC   A,L
-831d: 41             LD    B,C
-831e: 8C             ADC   A,H
-831f: 41             LD    B,C
-8320: 8D             ADC   A,L
-8321: 41             LD    B,C
-8322: 8C             ADC   A,H
-8323: 41             LD    B,C
-8324: 8D             ADC   A,L
-8325: 41             LD    B,C
-8326: 8C             ADC   A,H
-8327: 41             LD    B,C
-8328: 8D             ADC   A,L
-8329: 41             LD    B,C
-832a: 8C             ADC   A,H
-832b: 41             LD    B,C
-832c: 8D             ADC   A,L
-832d: 41             LD    B,C
-832e: 8C             ADC   A,H
-832f: 41             LD    B,C
-8330: 8D             ADC   A,L
-8331: 41             LD    B,C
-8332: 8C             ADC   A,H
-8333: 41             LD    B,C
-8334: 8D             ADC   A,L
-8335: 41             LD    B,C
-8336: 8C             ADC   A,H
-8337: 41             LD    B,C
-8338: 8D             ADC   A,L
-8339: 41             LD    B,C
-833a: 8C             ADC   A,H
-833b: 41             LD    B,C
-833c: 8D             ADC   A,L
-833d: 41             LD    B,C
-833e: 8C             ADC   A,H
-833f: 41             LD    B,C
-8340: 89             ADC   A,C
-8341: 41             LD    B,C
-8342: 89             ADC   A,C
-8343: 41             LD    B,C
-8344: 89             ADC   A,C
-8345: 41             LD    B,C
-8346: 89             ADC   A,C
-8347: 41             LD    B,C
-8348: 8C             ADC   A,H
-8349: 41             LD    B,C
-834a: 8D             ADC   A,L
-834b: 41             LD    B,C
-834c: 8C             ADC   A,H
-834d: 41             LD    B,C
-834e: 8D             ADC   A,L
-834f: 41             LD    B,C
-8350: 8C             ADC   A,H
-8351: 41             LD    B,C
-8352: 8D             ADC   A,L
-8353: 41             LD    B,C
-8354: 8C             ADC   A,H
-8355: 41             LD    B,C
-8356: 89             ADC   A,C
-8357: 41             LD    B,C
-8358: 89             ADC   A,C
-8359: 41             LD    B,C
-835a: 89             ADC   A,C
-835b: 41             LD    B,C
-835c: 89             ADC   A,C
-835d: 41             LD    B,C
-835e: 8D             ADC   A,L
-835f: 41             LD    B,C
-8360: 8C             ADC   A,H
-8361: 41             LD    B,C
-8362: 8D             ADC   A,L
-8363: 41             LD    B,C
-8364: 8C             ADC   A,H
-8365: 41             LD    B,C
-8366: 8D             ADC   A,L
-8367: 41             LD    B,C
-8368: 8C             ADC   A,H
-8369: 41             LD    B,C
-836a: 8D             ADC   A,L
-836b: 41             LD    B,C
-836c: 8C             ADC   A,H
-836d: 41             LD    B,C
-836e: 8D             ADC   A,L
-836f: 41             LD    B,C
-8370: 8C             ADC   A,H
-8371: 41             LD    B,C
-8372: 8D             ADC   A,L
-8373: 41             LD    B,C
-8374: 8C             ADC   A,H
-8375: 41             LD    B,C
-8376: 8D             ADC   A,L
-8377: 41             LD    B,C
-8378: 8C             ADC   A,H
-8379: 41             LD    B,C
-837a: 8D             ADC   A,L
-837b: 41             LD    B,C
-837c: 8C             ADC   A,H
-837d: 41             LD    B,C
-837e: 8D             ADC   A,L
-837f: 41             LD    B,C
-8380: 89             ADC   A,C
-8381: 41             LD    B,C
-8382: 89             ADC   A,C
-8383: 41             LD    B,C
-8384: 89             ADC   A,C
-8385: 41             LD    B,C
-8386: 89             ADC   A,C
-8387: 41             LD    B,C
-8388: 8D             ADC   A,L
-8389: 41             LD    B,C
-838a: 8C             ADC   A,H
-838b: 41             LD    B,C
-838c: 8D             ADC   A,L
-838d: 41             LD    B,C
-838e: 8C             ADC   A,H
-838f: 41             LD    B,C
-8390: 8D             ADC   A,L
-8391: 41             LD    B,C
-8392: 8C             ADC   A,H
-8393: 41             LD    B,C
-8394: 89             ADC   A,C
-8395: 41             LD    B,C
-8396: 89             ADC   A,C
-8397: 41             LD    B,C
-8398: 89             ADC   A,C
-8399: 41             LD    B,C
-839a: 89             ADC   A,C
-839b: 41             LD    B,C
-839c: 89             ADC   A,C
-839d: 41             LD    B,C
-839e: 89             ADC   A,C
-839f: 41             LD    B,C
-83a0: 8D             ADC   A,L
-83a1: 41             LD    B,C
-83a2: 8C             ADC   A,H
-83a3: 41             LD    B,C
-83a4: 8D             ADC   A,L
-83a5: 41             LD    B,C
-83a6: 8C             ADC   A,H
-83a7: 41             LD    B,C
-83a8: 8D             ADC   A,L
-83a9: 41             LD    B,C
-83aa: 8C             ADC   A,H
-83ab: 41             LD    B,C
-83ac: 8D             ADC   A,L
-83ad: 41             LD    B,C
-83ae: 8C             ADC   A,H
-83af: 41             LD    B,C
-83b0: 8D             ADC   A,L
-83b1: 41             LD    B,C
-83b2: 8C             ADC   A,H
-83b3: 41             LD    B,C
-83b4: 8D             ADC   A,L
-83b5: 41             LD    B,C
-83b6: 8C             ADC   A,H
-83b7: 41             LD    B,C
-83b8: 8D             ADC   A,L
-83b9: 41             LD    B,C
-83ba: 8C             ADC   A,H
-83bb: 41             LD    B,C
-83bc: 8D             ADC   A,L
-83bd: 41             LD    B,C
-83be: 8C             ADC   A,H
-83bf: 41             LD    B,C
-83c0: 89             ADC   A,C
-83c1: 41             LD    B,C
-83c2: 89             ADC   A,C
-83c3: 41             LD    B,C
-83c4: 89             ADC   A,C
-83c5: 41             LD    B,C
-83c6: 89             ADC   A,C
-83c7: 41             LD    B,C
-83c8: 8C             ADC   A,H
-83c9: 41             LD    B,C
-83ca: 8D             ADC   A,L
-83cb: 41             LD    B,C
-83cc: 8C             ADC   A,H
-83cd: 41             LD    B,C
-83ce: 8D             ADC   A,L
-83cf: 41             LD    B,C
-83d0: 92             SUB   A,D
-83d1: 45             LD    B,L
-83d2: 92             SUB   A,D
-83d3: 45             LD    B,L
-83d4: 70             LD    (HL),B
-83d5: 47             LD    B,A
-83d6: 89             ADC   A,C
-83d7: 47             LD    B,A
-83d8: 95             SUB   A,L
-83d9: 5D             LD    E,L
-83da: 95             SUB   A,L
-83db: 5F             LD    E,A
-83dc: 89             ADC   A,C
-83dd: 45             LD    B,L
-83de: 70             LD    (HL),B
-83df: 45             LD    B,L
-83e0: 92             SUB   A,D
-83e1: 45             LD    B,L
-83e2: 92             SUB   A,D
-83e3: 45             LD    B,L
-83e4: 8C             ADC   A,H
-83e5: 41             LD    B,C
-83e6: 8D             ADC   A,L
-83e7: 41             LD    B,C
-83e8: 8C             ADC   A,H
-83e9: 41             LD    B,C
-83ea: 8D             ADC   A,L
-83eb: 41             LD    B,C
-83ec: 8C             ADC   A,H
-83ed: 41             LD    B,C
-83ee: 8D             ADC   A,L
-83ef: 41             LD    B,C
-83f0: 8C             ADC   A,H
-83f1: 41             LD    B,C
-83f2: 8D             ADC   A,L
-83f3: 41             LD    B,C
-83f4: 8C             ADC   A,H
-83f5: 41             LD    B,C
-83f6: 8D             ADC   A,L
-83f7: 41             LD    B,C
-83f8: 8C             ADC   A,H
-83f9: 41             LD    B,C
-83fa: 8D             ADC   A,L
-83fb: 41             LD    B,C
-83fc: 8C             ADC   A,H
-83fd: 41             LD    B,C
-83fe: 8D             ADC   A,L
-83ff: 41             LD    B,C
-8400: 89             ADC   A,C
-8401: 41             LD    B,C
-8402: 89             ADC   A,C
-8403: 41             LD    B,C
-8404: 89             ADC   A,C
-8405: 41             LD    B,C
-8406: 89             ADC   A,C
-8407: 41             LD    B,C
-8408: 8D             ADC   A,L
-8409: 41             LD    B,C
-840a: 8C             ADC   A,H
-840b: 41             LD    B,C
-840c: 8D             ADC   A,L
-840d: 41             LD    B,C
-840e: 8C             ADC   A,H
-840f: 41             LD    B,C
-8410: 93             SUB   A,E
-8411: 41             LD    B,C
-8412: 73             LD    (HL),E
-8413: 47             LD    B,A
-8414: 71             LD    (HL),C
-8415: 47             LD    B,A
-8416: 6F             LD    L,A
-8417: 47             LD    B,A
-8418: 96             SUB   A,(HL)
-8419: 5D             LD    E,L
-841a: 96             SUB   A,(HL)
-841b: 5F             LD    E,A
-841c: 6F             LD    L,A
-841d: 45             LD    B,L
-841e: 71             LD    (HL),C
-841f: 45             LD    B,L
-8420: 73             LD    (HL),E
-8421: 45             LD    B,L
-8422: 93             SUB   A,E
-8423: 41             LD    B,C
-8424: 8D             ADC   A,L
-8425: 41             LD    B,C
-8426: 8C             ADC   A,H
-8427: 41             LD    B,C
-8428: 8D             ADC   A,L
-8429: 41             LD    B,C
-842a: 8C             ADC   A,H
-842b: 41             LD    B,C
-842c: 8D             ADC   A,L
-842d: 41             LD    B,C
-842e: 8C             ADC   A,H
-842f: 41             LD    B,C
-8430: 8D             ADC   A,L
-8431: 41             LD    B,C
-8432: 8C             ADC   A,H
-8433: 41             LD    B,C
-8434: 8D             ADC   A,L
-8435: 41             LD    B,C
-8436: 8C             ADC   A,H
-8437: 41             LD    B,C
-8438: 8D             ADC   A,L
-8439: 41             LD    B,C
-843a: 8C             ADC   A,H
-843b: 41             LD    B,C
-843c: 8D             ADC   A,L
-843d: 41             LD    B,C
-843e: 8C             ADC   A,H
-843f: 41             LD    B,C
-8440: 89             ADC   A,C
-8441: 41             LD    B,C
-8442: 89             ADC   A,C
-8443: 41             LD    B,C
-8444: 89             ADC   A,C
-8445: 41             LD    B,C
-8446: 89             ADC   A,C
-8447: 41             LD    B,C
-8448: 8C             ADC   A,H
-8449: 41             LD    B,C
-844a: 8D             ADC   A,L
-844b: 41             LD    B,C
-844c: 8C             ADC   A,H
-844d: 41             LD    B,C
-844e: 8D             ADC   A,L
-844f: 41             LD    B,C
-8450: 79             LD    A,C
-8451: 47             LD    B,A
-8452: 74             LD    (HL),H
-8453: 47             LD    B,A
-8454: 72             LD    (HL),D
-8455: 47             LD    B,A
-8456: 8E             ADC   A,(HL)
-8457: 47             LD    B,A
-8458: 89             ADC   A,C
-8459: 41             LD    B,C
-845a: 89             ADC   A,C
-845b: 41             LD    B,C
-845c: 89             ADC   A,C
-845d: 45             LD    B,L
-845e: 80             ADD   A,B
-845f: 47             LD    B,A
-8460: 74             LD    (HL),H
-8461: 45             LD    B,L
-8462: 79             LD    A,C
-8463: 45             LD    B,L
-8464: 8C             ADC   A,H
-8465: 41             LD    B,C
-8466: 8D             ADC   A,L
-8467: 41             LD    B,C
-8468: 8C             ADC   A,H
-8469: 41             LD    B,C
-846a: 8D             ADC   A,L
-846b: 41             LD    B,C
-846c: 8C             ADC   A,H
-846d: 41             LD    B,C
-846e: 8D             ADC   A,L
-846f: 41             LD    B,C
-8470: 8C             ADC   A,H
-8471: 41             LD    B,C
-8472: 8D             ADC   A,L
-8473: 41             LD    B,C
-8474: 8C             ADC   A,H
-8475: 41             LD    B,C
-8476: 8D             ADC   A,L
-8477: 41             LD    B,C
-8478: 8C             ADC   A,H
-8479: 41             LD    B,C
-847a: 8D             ADC   A,L
-847b: 41             LD    B,C
-847c: 8C             ADC   A,H
-847d: 41             LD    B,C
-847e: 8D             ADC   A,L
-847f: 41             LD    B,C
-8480: 89             ADC   A,C
-8481: 41             LD    B,C
-8482: 89             ADC   A,C
-8483: 41             LD    B,C
-8484: 89             ADC   A,C
-8485: 41             LD    B,C
-8486: 89             ADC   A,C
-8487: 41             LD    B,C
-8488: 8D             ADC   A,L
-8489: 41             LD    B,C
-848a: 8C             ADC   A,H
-848b: 41             LD    B,C
-848c: 8D             ADC   A,L
-848d: 41             LD    B,C
-848e: 8C             ADC   A,H
-848f: 41             LD    B,C
-8490: 7A             LD    A,D
-8491: 47             LD    B,A
-8492: 75             LD    (HL),L
-8493: 47             LD    B,A
-8494: 82             ADD   A,D
-8495: 47             LD    B,A
-8496: 83             ADD   A,E
-8497: 47             LD    B,A
-8498: 82             ADD   A,D
-8499: 47             LD    B,A
-849a: 82             ADD   A,D
-849b: 47             LD    B,A
-849c: 81             ADD   A,C
-849d: 47             LD    B,A
-849e: 90             SUB   A,B
-849f: 47             LD    B,A
-84a0: 84             ADD   A,H
-84a1: 47             LD    B,A
-84a2: 7A             LD    A,D
-84a3: 45             LD    B,L
-84a4: 8D             ADC   A,L
-84a5: 41             LD    B,C
-84a6: 8C             ADC   A,H
-84a7: 41             LD    B,C
-84a8: 8D             ADC   A,L
-84a9: 41             LD    B,C
-84aa: 8C             ADC   A,H
-84ab: 41             LD    B,C
-84ac: 8D             ADC   A,L
-84ad: 41             LD    B,C
-84ae: 8C             ADC   A,H
-84af: 41             LD    B,C
-84b0: 8D             ADC   A,L
-84b1: 41             LD    B,C
-84b2: 8C             ADC   A,H
-84b3: 41             LD    B,C
-84b4: 8D             ADC   A,L
-84b5: 41             LD    B,C
-84b6: 8C             ADC   A,H
-84b7: 41             LD    B,C
-84b8: 8D             ADC   A,L
-84b9: 41             LD    B,C
-84ba: 8C             ADC   A,H
-84bb: 41             LD    B,C
-84bc: 8D             ADC   A,L
-84bd: 41             LD    B,C
-84be: 8C             ADC   A,H
-84bf: 41             LD    B,C
-84c0: A3             AND   A,E
-84c1: 45             LD    B,L
-84c2: A3             AND   A,E
-84c3: 45             LD    B,L
-84c4: A2             AND   A,D
-84c5: 45             LD    B,L
-84c6: A1             AND   A,C
-84c7: 45             LD    B,L
-84c8: A0             AND   A,B
-84c9: 45             LD    B,L
-84ca: 9F             SBC   A,A
-84cb: 45             LD    B,L
-84cc: 9E             SBC   A,(HL)
-84cd: 45             LD    B,L
-84ce: 9D             SBC   A,L
-84cf: 45             LD    B,L
-84d0: 9C             SBC   A,H
-84d1: 45             LD    B,L
-84d2: 9B             SBC   A,E
-84d3: 45             LD    B,L
-84d4: 9A             SBC   A,D
-84d5: 45             LD    B,L
-84d6: 99             SBC   A,C
-84d7: 45             LD    B,L
-84d8: 98             SBC   A,B
-84d9: 45             LD    B,L
-84da: 97             SUB   A,A
-84db: 45             LD    B,L
-84dc: 7F             LD    A,A
-84dd: 5F             LD    E,A
-84de: 89             ADC   A,C
-84df: 45             LD    B,L
-84e0: 85             ADD   A,L
-84e1: 47             LD    B,A
-84e2: 7B             LD    A,E
-84e3: 45             LD    B,L
-84e4: 8C             ADC   A,H
-84e5: 41             LD    B,C
-84e6: 8D             ADC   A,L
-84e7: 41             LD    B,C
-84e8: 8C             ADC   A,H
-84e9: 41             LD    B,C
-84ea: 8D             ADC   A,L
-84eb: 41             LD    B,C
-84ec: 8C             ADC   A,H
-84ed: 41             LD    B,C
-84ee: 8D             ADC   A,L
-84ef: 41             LD    B,C
-84f0: 8C             ADC   A,H
-84f1: 41             LD    B,C
-84f2: 8D             ADC   A,L
-84f3: 41             LD    B,C
-84f4: 8C             ADC   A,H
-84f5: 41             LD    B,C
-84f6: 8D             ADC   A,L
-84f7: 41             LD    B,C
-84f8: 8C             ADC   A,H
-84f9: 41             LD    B,C
-84fa: 8D             ADC   A,L
-84fb: 41             LD    B,C
-84fc: 8C             ADC   A,H
-84fd: 41             LD    B,C
-84fe: 8D             ADC   A,L
-84ff: 41             LD    B,C
-8500: A4             AND   A,H
-8501: 45             LD    B,L
-8502: A4             AND   A,H
-8503: 45             LD    B,L
-8504: A4             AND   A,H
-8505: 45             LD    B,L
-8506: A4             AND   A,H
-8507: 45             LD    B,L
-8508: A4             AND   A,H
-8509: 45             LD    B,L
-850a: A4             AND   A,H
-850b: 45             LD    B,L
-850c: A4             AND   A,H
-850d: 45             LD    B,L
-850e: A4             AND   A,H
-850f: 45             LD    B,L
-8510: A4             AND   A,H
-8511: 45             LD    B,L
-8512: A4             AND   A,H
-8513: 45             LD    B,L
-8514: A4             AND   A,H
-8515: 45             LD    B,L
-8516: A4             AND   A,H
-8517: 45             LD    B,L
-8518: A4             AND   A,H
-8519: 45             LD    B,L
-851a: A4             AND   A,H
-851b: 45             LD    B,L
-851c: 7E             LD    A,(HL)
-851d: 5F             LD    E,A
-851e: 89             ADC   A,C
-851f: 41             LD    B,C
-8520: 86             ADD   A,(HL)
-8521: 47             LD    B,A
-8522: 7C             LD    A,H
-8523: 45             LD    B,L
-8524: 8D             ADC   A,L
-8525: 41             LD    B,C
-8526: 8C             ADC   A,H
-8527: 41             LD    B,C
-8528: 8D             ADC   A,L
-8529: 41             LD    B,C
-852a: 8C             ADC   A,H
-852b: 41             LD    B,C
-852c: 8D             ADC   A,L
-852d: 41             LD    B,C
-852e: 8C             ADC   A,H
-852f: 41             LD    B,C
-8530: 8D             ADC   A,L
-8531: 41             LD    B,C
-8532: 8C             ADC   A,H
-8533: 41             LD    B,C
-8534: 8D             ADC   A,L
-8535: 41             LD    B,C
-8536: 8C             ADC   A,H
-8537: 41             LD    B,C
-8538: 8D             ADC   A,L
-8539: 41             LD    B,C
-853a: 8C             ADC   A,H
-853b: 41             LD    B,C
-853c: 8D             ADC   A,L
-853d: 41             LD    B,C
-853e: 8C             ADC   A,H
-853f: 41             LD    B,C
-8540: A4             AND   A,H
-8541: 41             LD    B,C
-8542: A4             AND   A,H
-8543: 41             LD    B,C
-8544: A4             AND   A,H
-8545: 41             LD    B,C
-8546: A4             AND   A,H
-8547: 41             LD    B,C
-8548: A4             AND   A,H
-8549: 41             LD    B,C
-854a: A4             AND   A,H
-854b: 41             LD    B,C
-854c: A4             AND   A,H
-854d: 41             LD    B,C
-854e: A4             AND   A,H
-854f: 41             LD    B,C
-8550: A4             AND   A,H
-8551: 41             LD    B,C
-8552: A4             AND   A,H
-8553: 41             LD    B,C
-8554: A4             AND   A,H
-8555: 41             LD    B,C
-8556: A4             AND   A,H
-8557: 41             LD    B,C
-8558: A4             AND   A,H
-8559: 41             LD    B,C
-855a: A4             AND   A,H
-855b: 41             LD    B,C
-855c: 7E             LD    A,(HL)
-855d: 5B             LD    E,E
-855e: 89             ADC   A,C
-855f: 45             LD    B,L
-8560: 86             ADD   A,(HL)
-8561: 43             LD    B,E
-8562: 7C             LD    A,H
-8563: 41             LD    B,C
-8564: 8C             ADC   A,H
-8565: 41             LD    B,C
-8566: 8D             ADC   A,L
-8567: 41             LD    B,C
-8568: 8C             ADC   A,H
-8569: 41             LD    B,C
-856a: 8D             ADC   A,L
-856b: 41             LD    B,C
-856c: 8C             ADC   A,H
-856d: 41             LD    B,C
-856e: 8D             ADC   A,L
-856f: 41             LD    B,C
-8570: 8C             ADC   A,H
-8571: 41             LD    B,C
-8572: 8D             ADC   A,L
-8573: 41             LD    B,C
-8574: 8C             ADC   A,H
-8575: 41             LD    B,C
-8576: 8D             ADC   A,L
-8577: 41             LD    B,C
-8578: 8C             ADC   A,H
-8579: 41             LD    B,C
-857a: 8D             ADC   A,L
-857b: 41             LD    B,C
-857c: 8C             ADC   A,H
-857d: 41             LD    B,C
-857e: 8D             ADC   A,L
-857f: 41             LD    B,C
-8580: A3             AND   A,E
-8581: 41             LD    B,C
-8582: A3             AND   A,E
-8583: 41             LD    B,C
-8584: A2             AND   A,D
-8585: 41             LD    B,C
-8586: A1             AND   A,C
-8587: 41             LD    B,C
-8588: A0             AND   A,B
-8589: 41             LD    B,C
-858a: 9F             SBC   A,A
-858b: 41             LD    B,C
-858c: 9E             SBC   A,(HL)
-858d: 41             LD    B,C
-858e: 9D             SBC   A,L
-858f: 41             LD    B,C
-8590: 9C             SBC   A,H
-8591: 41             LD    B,C
-8592: 9B             SBC   A,E
-8593: 41             LD    B,C
-8594: 9A             SBC   A,D
-8595: 41             LD    B,C
-8596: 99             SBC   A,C
-8597: 41             LD    B,C
-8598: 98             SBC   A,B
-8599: 41             LD    B,C
-859a: 97             SUB   A,A
-859b: 41             LD    B,C
-859c: 7F             LD    A,A
-859d: 5B             LD    E,E
-859e: 89             ADC   A,C
-859f: 45             LD    B,L
-85a0: 85             ADD   A,L
-85a1: 43             LD    B,E
-85a2: 7B             LD    A,E
-85a3: 41             LD    B,C
-85a4: 8D             ADC   A,L
-85a5: 41             LD    B,C
-85a6: 8C             ADC   A,H
-85a7: 41             LD    B,C
-85a8: 8D             ADC   A,L
-85a9: 41             LD    B,C
-85aa: 8C             ADC   A,H
-85ab: 41             LD    B,C
-85ac: 8D             ADC   A,L
-85ad: 41             LD    B,C
-85ae: 8C             ADC   A,H
-85af: 41             LD    B,C
-85b0: 8D             ADC   A,L
-85b1: 41             LD    B,C
-85b2: 8C             ADC   A,H
-85b3: 41             LD    B,C
-85b4: 8D             ADC   A,L
-85b5: 41             LD    B,C
-85b6: 8C             ADC   A,H
-85b7: 41             LD    B,C
-85b8: 8D             ADC   A,L
-85b9: 41             LD    B,C
-85ba: 8C             ADC   A,H
-85bb: 41             LD    B,C
-85bc: 8D             ADC   A,L
-85bd: 41             LD    B,C
-85be: 8C             ADC   A,H
-85bf: 41             LD    B,C
-85c0: 89             ADC   A,C
-85c1: 41             LD    B,C
-85c2: 89             ADC   A,C
-85c3: 41             LD    B,C
-85c4: 89             ADC   A,C
-85c5: 41             LD    B,C
-85c6: 89             ADC   A,C
-85c7: 41             LD    B,C
-85c8: 8C             ADC   A,H
-85c9: 41             LD    B,C
-85ca: 8D             ADC   A,L
-85cb: 41             LD    B,C
-85cc: 8C             ADC   A,H
-85cd: 41             LD    B,C
-85ce: 8D             ADC   A,L
-85cf: 41             LD    B,C
-85d0: 7A             LD    A,D
-85d1: 43             LD    B,E
-85d2: 75             LD    (HL),L
-85d3: 43             LD    B,E
-85d4: 82             ADD   A,D
-85d5: 43             LD    B,E
-85d6: 83             ADD   A,E
-85d7: 43             LD    B,E
-85d8: 82             ADD   A,D
-85d9: 43             LD    B,E
-85da: 82             ADD   A,D
-85db: 41             LD    B,C
-85dc: 81             ADD   A,C
-85dd: 43             LD    B,E
-85de: 90             SUB   A,B
-85df: 43             LD    B,E
-85e0: 84             ADD   A,H
-85e1: 43             LD    B,E
-85e2: 7A             LD    A,D
-85e3: 41             LD    B,C
-85e4: 8C             ADC   A,H
-85e5: 41             LD    B,C
-85e6: 8D             ADC   A,L
-85e7: 41             LD    B,C
-85e8: 8C             ADC   A,H
-85e9: 41             LD    B,C
-85ea: 8D             ADC   A,L
-85eb: 41             LD    B,C
-85ec: 8C             ADC   A,H
-85ed: 41             LD    B,C
-85ee: 8D             ADC   A,L
-85ef: 41             LD    B,C
-85f0: 8C             ADC   A,H
-85f1: 41             LD    B,C
-85f2: 8D             ADC   A,L
-85f3: 41             LD    B,C
-85f4: 8C             ADC   A,H
-85f5: 41             LD    B,C
-85f6: 8D             ADC   A,L
-85f7: 41             LD    B,C
-85f8: 8C             ADC   A,H
-85f9: 41             LD    B,C
-85fa: 8D             ADC   A,L
-85fb: 41             LD    B,C
-85fc: 8C             ADC   A,H
-85fd: 41             LD    B,C
-85fe: 8D             ADC   A,L
-85ff: 41             LD    B,C
-8600: 89             ADC   A,C
-8601: 41             LD    B,C
-8602: 89             ADC   A,C
-8603: 41             LD    B,C
-8604: 89             ADC   A,C
-8605: 41             LD    B,C
-8606: 89             ADC   A,C
-8607: 41             LD    B,C
-8608: 8D             ADC   A,L
-8609: 41             LD    B,C
-860a: 8C             ADC   A,H
-860b: 41             LD    B,C
-860c: 8D             ADC   A,L
-860d: 41             LD    B,C
-860e: 8C             ADC   A,H
-860f: 41             LD    B,C
-8610: 79             LD    A,C
-8611: 43             LD    B,E
-8612: 74             LD    (HL),H
-8613: 43             LD    B,E
-8614: 72             LD    (HL),D
-8615: 43             LD    B,E
-8616: 8E             ADC   A,(HL)
-8617: 43             LD    B,E
-8618: 89             ADC   A,C
-8619: 41             LD    B,C
-861a: 89             ADC   A,C
-861b: 41             LD    B,C
-861c: 89             ADC   A,C
-861d: 41             LD    B,C
-861e: 80             ADD   A,B
-861f: 43             LD    B,E
-8620: 74             LD    (HL),H
-8621: 41             LD    B,C
-8622: 79             LD    A,C
-8623: 41             LD    B,C
-8624: 8D             ADC   A,L
-8625: 41             LD    B,C
-8626: 8C             ADC   A,H
-8627: 41             LD    B,C
-8628: 8D             ADC   A,L
-8629: 41             LD    B,C
-862a: 8C             ADC   A,H
-862b: 41             LD    B,C
-862c: 8D             ADC   A,L
-862d: 41             LD    B,C
-862e: 8C             ADC   A,H
-862f: 41             LD    B,C
-8630: 8D             ADC   A,L
-8631: 41             LD    B,C
-8632: 8C             ADC   A,H
-8633: 41             LD    B,C
-8634: 8D             ADC   A,L
-8635: 41             LD    B,C
-8636: 8C             ADC   A,H
-8637: 41             LD    B,C
-8638: 8D             ADC   A,L
-8639: 41             LD    B,C
-863a: 8C             ADC   A,H
-863b: 41             LD    B,C
-863c: 8D             ADC   A,L
-863d: 41             LD    B,C
-863e: 8C             ADC   A,H
-863f: 41             LD    B,C
-8640: 89             ADC   A,C
-8641: 41             LD    B,C
-8642: 89             ADC   A,C
-8643: 41             LD    B,C
-8644: 89             ADC   A,C
-8645: 41             LD    B,C
-8646: 89             ADC   A,C
-8647: 41             LD    B,C
-8648: 8C             ADC   A,H
-8649: 41             LD    B,C
-864a: 8D             ADC   A,L
-864b: 41             LD    B,C
-864c: 8C             ADC   A,H
-864d: 41             LD    B,C
-864e: 8D             ADC   A,L
-864f: 41             LD    B,C
-8650: 93             SUB   A,E
-8651: 41             LD    B,C
-8652: 73             LD    (HL),E
-8653: 43             LD    B,E
-8654: 71             LD    (HL),C
-8655: 43             LD    B,E
-8656: 6F             LD    L,A
-8657: 43             LD    B,E
-8658: 96             SUB   A,(HL)
-8659: 59             LD    E,C
-865a: 96             SUB   A,(HL)
-865b: 5B             LD    E,E
-865c: 6F             LD    L,A
-865d: 41             LD    B,C
-865e: 71             LD    (HL),C
-865f: 41             LD    B,C
-8660: 73             LD    (HL),E
-8661: 41             LD    B,C
-8662: 93             SUB   A,E
-8663: 41             LD    B,C
-8664: 8C             ADC   A,H
-8665: 41             LD    B,C
-8666: 8D             ADC   A,L
-8667: 41             LD    B,C
-8668: 8C             ADC   A,H
-8669: 41             LD    B,C
-866a: 8D             ADC   A,L
-866b: 41             LD    B,C
-866c: 8C             ADC   A,H
-866d: 41             LD    B,C
-866e: 8D             ADC   A,L
-866f: 41             LD    B,C
-8670: 8C             ADC   A,H
-8671: 41             LD    B,C
-8672: 8D             ADC   A,L
-8673: 41             LD    B,C
-8674: 8C             ADC   A,H
-8675: 41             LD    B,C
-8676: 8D             ADC   A,L
-8677: 41             LD    B,C
-8678: 8C             ADC   A,H
-8679: 41             LD    B,C
-867a: 8D             ADC   A,L
-867b: 41             LD    B,C
-867c: 8C             ADC   A,H
-867d: 41             LD    B,C
-867e: 8D             ADC   A,L
-867f: 41             LD    B,C
-8680: 89             ADC   A,C
-8681: 41             LD    B,C
-8682: 89             ADC   A,C
-8683: 41             LD    B,C
-8684: 89             ADC   A,C
-8685: 41             LD    B,C
-8686: 89             ADC   A,C
-8687: 41             LD    B,C
-8688: 8D             ADC   A,L
-8689: 41             LD    B,C
-868a: 8C             ADC   A,H
-868b: 41             LD    B,C
-868c: 8D             ADC   A,L
-868d: 41             LD    B,C
-868e: 8C             ADC   A,H
-868f: 41             LD    B,C
-8690: 92             SUB   A,D
-8691: 41             LD    B,C
-8692: 92             SUB   A,D
-8693: 41             LD    B,C
-8694: 70             LD    (HL),B
-8695: 43             LD    B,E
-8696: 89             ADC   A,C
-8697: 43             LD    B,E
-8698: 95             SUB   A,L
-8699: 59             LD    E,C
-869a: 95             SUB   A,L
-869b: 5B             LD    E,E
-869c: 89             ADC   A,C
-869d: 41             LD    B,C
-869e: 70             LD    (HL),B
-869f: 41             LD    B,C
-86a0: 92             SUB   A,D
-86a1: 41             LD    B,C
-86a2: 92             SUB   A,D
-86a3: 41             LD    B,C
-86a4: 8D             ADC   A,L
-86a5: 41             LD    B,C
-86a6: 8C             ADC   A,H
-86a7: 41             LD    B,C
-86a8: 8D             ADC   A,L
-86a9: 41             LD    B,C
-86aa: 8C             ADC   A,H
-86ab: 41             LD    B,C
-86ac: 8D             ADC   A,L
-86ad: 41             LD    B,C
-86ae: 8C             ADC   A,H
-86af: 41             LD    B,C
-86b0: 8D             ADC   A,L
-86b1: 41             LD    B,C
-86b2: 8C             ADC   A,H
-86b3: 41             LD    B,C
-86b4: 8D             ADC   A,L
-86b5: 41             LD    B,C
-86b6: 8C             ADC   A,H
-86b7: 41             LD    B,C
-86b8: 8D             ADC   A,L
-86b9: 41             LD    B,C
-86ba: 8C             ADC   A,H
-86bb: 41             LD    B,C
-86bc: 8D             ADC   A,L
-86bd: 41             LD    B,C
-86be: 8C             ADC   A,H
-86bf: 41             LD    B,C
-86c0: 89             ADC   A,C
-86c1: 41             LD    B,C
-86c2: 89             ADC   A,C
-86c3: 41             LD    B,C
-86c4: 89             ADC   A,C
-86c5: 41             LD    B,C
-86c6: 89             ADC   A,C
-86c7: 41             LD    B,C
-86c8: 8C             ADC   A,H
-86c9: 41             LD    B,C
-86ca: 8D             ADC   A,L
-86cb: 41             LD    B,C
-86cc: 8C             ADC   A,H
-86cd: 41             LD    B,C
-86ce: 8D             ADC   A,L
-86cf: 41             LD    B,C
-86d0: 8C             ADC   A,H
-86d1: 41             LD    B,C
-86d2: 8D             ADC   A,L
-86d3: 41             LD    B,C
-86d4: 89             ADC   A,C
-86d5: 41             LD    B,C
-86d6: 89             ADC   A,C
-86d7: 41             LD    B,C
-86d8: 89             ADC   A,C
-86d9: 41             LD    B,C
-86da: 89             ADC   A,C
-86db: 41             LD    B,C
-86dc: 89             ADC   A,C
-86dd: 41             LD    B,C
-86de: 89             ADC   A,C
-86df: 41             LD    B,C
-86e0: 8C             ADC   A,H
-86e1: 41             LD    B,C
-86e2: 8D             ADC   A,L
-86e3: 41             LD    B,C
-86e4: 8C             ADC   A,H
-86e5: 41             LD    B,C
-86e6: 8D             ADC   A,L
-86e7: 41             LD    B,C
-86e8: 8C             ADC   A,H
-86e9: 41             LD    B,C
-86ea: 8D             ADC   A,L
-86eb: 41             LD    B,C
-86ec: 8C             ADC   A,H
-86ed: 41             LD    B,C
-86ee: 8D             ADC   A,L
-86ef: 41             LD    B,C
-86f0: 8C             ADC   A,H
-86f1: 41             LD    B,C
-86f2: 8D             ADC   A,L
-86f3: 41             LD    B,C
-86f4: 8C             ADC   A,H
-86f5: 41             LD    B,C
-86f6: 8D             ADC   A,L
-86f7: 41             LD    B,C
-86f8: 8C             ADC   A,H
-86f9: 41             LD    B,C
-86fa: 8D             ADC   A,L
-86fb: 41             LD    B,C
-86fc: 8C             ADC   A,H
-86fd: 41             LD    B,C
-86fe: 8D             ADC   A,L
-86ff: 41             LD    B,C
-8700: 89             ADC   A,C
-8701: 41             LD    B,C
-8702: 89             ADC   A,C
-8703: 41             LD    B,C
-8704: 89             ADC   A,C
-8705: 41             LD    B,C
-8706: 89             ADC   A,C
-8707: 41             LD    B,C
-8708: 8D             ADC   A,L
-8709: 41             LD    B,C
-870a: 8C             ADC   A,H
-870b: 41             LD    B,C
-870c: 8D             ADC   A,L
-870d: 41             LD    B,C
-870e: 8C             ADC   A,H
-870f: 41             LD    B,C
-8710: 8D             ADC   A,L
-8711: 41             LD    B,C
-8712: 8C             ADC   A,H
-8713: 41             LD    B,C
-8714: 8D             ADC   A,L
-8715: 41             LD    B,C
-8716: 89             ADC   A,C
-8717: 41             LD    B,C
-8718: 89             ADC   A,C
-8719: 41             LD    B,C
-871a: 89             ADC   A,C
-871b: 41             LD    B,C
-871c: 89             ADC   A,C
-871d: 41             LD    B,C
-871e: 8C             ADC   A,H
-871f: 41             LD    B,C
-8720: 8D             ADC   A,L
-8721: 41             LD    B,C
-8722: 8C             ADC   A,H
-8723: 41             LD    B,C
-8724: 8D             ADC   A,L
-8725: 41             LD    B,C
-8726: 8C             ADC   A,H
-8727: 41             LD    B,C
-8728: 8D             ADC   A,L
-8729: 41             LD    B,C
-872a: 8C             ADC   A,H
-872b: 41             LD    B,C
-872c: 8D             ADC   A,L
-872d: 41             LD    B,C
-872e: 8C             ADC   A,H
-872f: 41             LD    B,C
-8730: 8D             ADC   A,L
-8731: 41             LD    B,C
-8732: 8C             ADC   A,H
-8733: 41             LD    B,C
-8734: 8D             ADC   A,L
-8735: 41             LD    B,C
-8736: 8C             ADC   A,H
-8737: 41             LD    B,C
-8738: 8D             ADC   A,L
-8739: 41             LD    B,C
-873a: 8C             ADC   A,H
-873b: 41             LD    B,C
-873c: 8D             ADC   A,L
-873d: 41             LD    B,C
-873e: 8C             ADC   A,H
-873f: 41             LD    B,C
-8740: 89             ADC   A,C
-8741: 41             LD    B,C
-8742: 89             ADC   A,C
-8743: 41             LD    B,C
-8744: 89             ADC   A,C
-8745: 41             LD    B,C
-8746: 89             ADC   A,C
-8747: 41             LD    B,C
-8748: 8C             ADC   A,H
-8749: 41             LD    B,C
-874a: 8D             ADC   A,L
-874b: 41             LD    B,C
-874c: 8C             ADC   A,H
-874d: 41             LD    B,C
-874e: 8D             ADC   A,L
-874f: 41             LD    B,C
-8750: 8C             ADC   A,H
-8751: 41             LD    B,C
-8752: 8D             ADC   A,L
-8753: 41             LD    B,C
-8754: 8C             ADC   A,H
-8755: 41             LD    B,C
-8756: 8D             ADC   A,L
-8757: 41             LD    B,C
-8758: 89             ADC   A,C
-8759: 41             LD    B,C
-875a: 89             ADC   A,C
-875b: 41             LD    B,C
-875c: 8C             ADC   A,H
-875d: 41             LD    B,C
-875e: 8D             ADC   A,L
-875f: 41             LD    B,C
-8760: 8C             ADC   A,H
-8761: 41             LD    B,C
-8762: 8D             ADC   A,L
-8763: 41             LD    B,C
-8764: 8C             ADC   A,H
-8765: 41             LD    B,C
-8766: 8D             ADC   A,L
-8767: 41             LD    B,C
-8768: 8C             ADC   A,H
-8769: 41             LD    B,C
-876a: 8D             ADC   A,L
-876b: 41             LD    B,C
-876c: 8C             ADC   A,H
-876d: 41             LD    B,C
-876e: 8D             ADC   A,L
-876f: 41             LD    B,C
-8770: 8C             ADC   A,H
-8771: 41             LD    B,C
-8772: 8D             ADC   A,L
-8773: 41             LD    B,C
-8774: 8C             ADC   A,H
-8775: 41             LD    B,C
-8776: 8D             ADC   A,L
-8777: 41             LD    B,C
-8778: 8C             ADC   A,H
-8779: 41             LD    B,C
-877a: 8D             ADC   A,L
-877b: 41             LD    B,C
-877c: 8C             ADC   A,H
-877d: 41             LD    B,C
-877e: 8D             ADC   A,L
-877f: 41             LD    B,C
-8780: 89             ADC   A,C
-8781: 41             LD    B,C
-8782: 89             ADC   A,C
-8783: 41             LD    B,C
-8784: 89             ADC   A,C
-8785: 41             LD    B,C
-8786: 89             ADC   A,C
-8787: 41             LD    B,C
-8788: 8D             ADC   A,L
-8789: 41             LD    B,C
-878a: 8C             ADC   A,H
-878b: 41             LD    B,C
-878c: 8D             ADC   A,L
-878d: 41             LD    B,C
-878e: 8C             ADC   A,H
-878f: 41             LD    B,C
-8790: 8D             ADC   A,L
-8791: 41             LD    B,C
-8792: 8C             ADC   A,H
-8793: 41             LD    B,C
-8794: 8D             ADC   A,L
-8795: 41             LD    B,C
-8796: 8C             ADC   A,H
-8797: 41             LD    B,C
-8798: 8D             ADC   A,L
-8799: 41             LD    B,C
-879a: 8C             ADC   A,H
-879b: 41             LD    B,C
-879c: 8D             ADC   A,L
-879d: 41             LD    B,C
-879e: 8C             ADC   A,H
-879f: 41             LD    B,C
-87a0: 8D             ADC   A,L
-87a1: 41             LD    B,C
-87a2: 8C             ADC   A,H
-87a3: 41             LD    B,C
-87a4: 8D             ADC   A,L
-87a5: 41             LD    B,C
-87a6: 8C             ADC   A,H
-87a7: 41             LD    B,C
-87a8: 8D             ADC   A,L
-87a9: 41             LD    B,C
-87aa: 8C             ADC   A,H
-87ab: 41             LD    B,C
-87ac: 8D             ADC   A,L
-87ad: 41             LD    B,C
-87ae: 8C             ADC   A,H
-87af: 41             LD    B,C
-87b0: 8D             ADC   A,L
-87b1: 41             LD    B,C
-87b2: 8C             ADC   A,H
-87b3: 41             LD    B,C
-87b4: 8D             ADC   A,L
-87b5: 41             LD    B,C
-87b6: 8C             ADC   A,H
-87b7: 41             LD    B,C
-87b8: 8D             ADC   A,L
-87b9: 41             LD    B,C
-87ba: 8C             ADC   A,H
-87bb: 41             LD    B,C
-87bc: 8D             ADC   A,L
-87bd: 41             LD    B,C
-87be: 8C             ADC   A,H
-87bf: 41             LD    B,C
-87c0: 89             ADC   A,C
-87c1: 41             LD    B,C
-87c2: 89             ADC   A,C
-87c3: 41             LD    B,C
-87c4: 89             ADC   A,C
-87c5: 41             LD    B,C
-87c6: 89             ADC   A,C
-87c7: 41             LD    B,C
-87c8: 8C             ADC   A,H
-87c9: 41             LD    B,C
-87ca: 8D             ADC   A,L
-87cb: 41             LD    B,C
-87cc: 8C             ADC   A,H
-87cd: 41             LD    B,C
-87ce: 8D             ADC   A,L
-87cf: 41             LD    B,C
-87d0: 8C             ADC   A,H
-87d1: 41             LD    B,C
-87d2: 8D             ADC   A,L
-87d3: 41             LD    B,C
-87d4: 8C             ADC   A,H
-87d5: 41             LD    B,C
-87d6: 8D             ADC   A,L
-87d7: 41             LD    B,C
-87d8: 8C             ADC   A,H
-87d9: 41             LD    B,C
-87da: 8D             ADC   A,L
-87db: 41             LD    B,C
-87dc: 8C             ADC   A,H
-87dd: 41             LD    B,C
-87de: 8D             ADC   A,L
-87df: 41             LD    B,C
-87e0: 8C             ADC   A,H
-87e1: 41             LD    B,C
-87e2: 8D             ADC   A,L
-87e3: 41             LD    B,C
-87e4: 8C             ADC   A,H
-87e5: 41             LD    B,C
-87e6: 8D             ADC   A,L
-87e7: 41             LD    B,C
-87e8: 8C             ADC   A,H
-87e9: 41             LD    B,C
-87ea: 8D             ADC   A,L
-87eb: 41             LD    B,C
-87ec: 8C             ADC   A,H
-87ed: 41             LD    B,C
-87ee: 8D             ADC   A,L
-87ef: 41             LD    B,C
-87f0: 8C             ADC   A,H
-87f1: 41             LD    B,C
-87f2: 8D             ADC   A,L
-87f3: 41             LD    B,C
-87f4: 8C             ADC   A,H
-87f5: 41             LD    B,C
-87f6: 8D             ADC   A,L
-87f7: 41             LD    B,C
-87f8: 8C             ADC   A,H
-87f9: 41             LD    B,C
-87fa: 8D             ADC   A,L
-87fb: 41             LD    B,C
-87fc: 8C             ADC   A,H
-87fd: 41             LD    B,C
-87fe: 8D             ADC   A,L
-87ff: 41             LD    B,C
-8800: 89             ADC   A,C
-8801: 41             LD    B,C
-8802: 89             ADC   A,C
-8803: 41             LD    B,C
-8804: 89             ADC   A,C
-8805: 41             LD    B,C
-8806: 89             ADC   A,C
-8807: 41             LD    B,C
-8808: 8D             ADC   A,L
-8809: 41             LD    B,C
-880a: 8C             ADC   A,H
-880b: 41             LD    B,C
-880c: 8D             ADC   A,L
-880d: 41             LD    B,C
-880e: 8C             ADC   A,H
-880f: 41             LD    B,C
-8810: 8D             ADC   A,L
-8811: 41             LD    B,C
-8812: 8C             ADC   A,H
-8813: 41             LD    B,C
-8814: 8D             ADC   A,L
-8815: 41             LD    B,C
-8816: 8C             ADC   A,H
-8817: 41             LD    B,C
-8818: 8D             ADC   A,L
-8819: 41             LD    B,C
-881a: 8C             ADC   A,H
-881b: 41             LD    B,C
-881c: 8D             ADC   A,L
-881d: 41             LD    B,C
-881e: 8C             ADC   A,H
-881f: 41             LD    B,C
-8820: 8D             ADC   A,L
-8821: 41             LD    B,C
-8822: 8C             ADC   A,H
-8823: 41             LD    B,C
-8824: 8D             ADC   A,L
-8825: 41             LD    B,C
-8826: 8C             ADC   A,H
-8827: 41             LD    B,C
-8828: 8D             ADC   A,L
-8829: 41             LD    B,C
-882a: 8C             ADC   A,H
-882b: 41             LD    B,C
-882c: 8D             ADC   A,L
-882d: 41             LD    B,C
-882e: 8C             ADC   A,H
-882f: 41             LD    B,C
-8830: 8D             ADC   A,L
-8831: 41             LD    B,C
-8832: 8C             ADC   A,H
-8833: 41             LD    B,C
-8834: 8D             ADC   A,L
-8835: 41             LD    B,C
-8836: 8C             ADC   A,H
-8837: 41             LD    B,C
-8838: 8D             ADC   A,L
-8839: 41             LD    B,C
-883a: 8C             ADC   A,H
-883b: 41             LD    B,C
-883c: 8D             ADC   A,L
-883d: 41             LD    B,C
-883e: 8C             ADC   A,H
-883f: 41             LD    B,C
-8840: 89             ADC   A,C
-8841: 41             LD    B,C
-8842: 89             ADC   A,C
-8843: 41             LD    B,C
-8844: 89             ADC   A,C
-8845: 41             LD    B,C
-8846: 89             ADC   A,C
-8847: 41             LD    B,C
-8848: 8C             ADC   A,H
-8849: 41             LD    B,C
-884a: 8D             ADC   A,L
-884b: 41             LD    B,C
-884c: 8C             ADC   A,H
-884d: 41             LD    B,C
-884e: 8D             ADC   A,L
-884f: 41             LD    B,C
-8850: 8C             ADC   A,H
-8851: 41             LD    B,C
-8852: 8D             ADC   A,L
-8853: 41             LD    B,C
-8854: 8C             ADC   A,H
-8855: 41             LD    B,C
-8856: 8D             ADC   A,L
-8857: 41             LD    B,C
-8858: 8C             ADC   A,H
-8859: 41             LD    B,C
-885a: 8D             ADC   A,L
-885b: 41             LD    B,C
-885c: 8C             ADC   A,H
-885d: 41             LD    B,C
-885e: 8D             ADC   A,L
-885f: 41             LD    B,C
-8860: 8C             ADC   A,H
-8861: 41             LD    B,C
-8862: 8D             ADC   A,L
-8863: 41             LD    B,C
-8864: 8C             ADC   A,H
-8865: 41             LD    B,C
-8866: 8D             ADC   A,L
-8867: 41             LD    B,C
-8868: 8C             ADC   A,H
-8869: 41             LD    B,C
-886a: 8D             ADC   A,L
-886b: 41             LD    B,C
-886c: 8C             ADC   A,H
-886d: 41             LD    B,C
-886e: 8D             ADC   A,L
-886f: 41             LD    B,C
-8870: 8C             ADC   A,H
-8871: 41             LD    B,C
-8872: 8D             ADC   A,L
-8873: 41             LD    B,C
-8874: 8C             ADC   A,H
-8875: 41             LD    B,C
-8876: 8D             ADC   A,L
-8877: 41             LD    B,C
-8878: 8C             ADC   A,H
-8879: 41             LD    B,C
-887a: 8D             ADC   A,L
-887b: 41             LD    B,C
-887c: 8C             ADC   A,H
-887d: 41             LD    B,C
-887e: 8D             ADC   A,L
-887f: 41             LD    B,C
-8880: 89             ADC   A,C
-8881: 41             LD    B,C
-8882: 89             ADC   A,C
-8883: 41             LD    B,C
-8884: 89             ADC   A,C
-8885: 41             LD    B,C
-8886: 89             ADC   A,C
-8887: 41             LD    B,C
-8888: 8D             ADC   A,L
-8889: 41             LD    B,C
-888a: 8C             ADC   A,H
-888b: 41             LD    B,C
-888c: 8D             ADC   A,L
-888d: 41             LD    B,C
-888e: 8C             ADC   A,H
-888f: 41             LD    B,C
-8890: 8D             ADC   A,L
-8891: 41             LD    B,C
-8892: 8C             ADC   A,H
-8893: 41             LD    B,C
-8894: 8D             ADC   A,L
-8895: 41             LD    B,C
-8896: 8C             ADC   A,H
-8897: 41             LD    B,C
-8898: 8D             ADC   A,L
-8899: 41             LD    B,C
-889a: 8C             ADC   A,H
-889b: 41             LD    B,C
-889c: 8D             ADC   A,L
-889d: 41             LD    B,C
-889e: 8C             ADC   A,H
-889f: 41             LD    B,C
-88a0: 8D             ADC   A,L
-88a1: 41             LD    B,C
-88a2: 8C             ADC   A,H
-88a3: 41             LD    B,C
-88a4: 8D             ADC   A,L
-88a5: 41             LD    B,C
-88a6: 8C             ADC   A,H
-88a7: 41             LD    B,C
-88a8: 8D             ADC   A,L
-88a9: 41             LD    B,C
-88aa: 8C             ADC   A,H
-88ab: 41             LD    B,C
-88ac: 8D             ADC   A,L
-88ad: 41             LD    B,C
-88ae: 8C             ADC   A,H
-88af: 41             LD    B,C
-88b0: 8D             ADC   A,L
-88b1: 41             LD    B,C
-88b2: 8C             ADC   A,H
-88b3: 41             LD    B,C
-88b4: 8D             ADC   A,L
-88b5: 41             LD    B,C
-88b6: 8C             ADC   A,H
-88b7: 41             LD    B,C
-88b8: 8D             ADC   A,L
-88b9: 41             LD    B,C
-88ba: 8C             ADC   A,H
-88bb: 41             LD    B,C
-88bc: 8D             ADC   A,L
-88bd: 41             LD    B,C
-88be: 89             ADC   A,C
-88bf: 41             LD    B,C
-88c0: 89             ADC   A,C
-88c1: 41             LD    B,C
-88c2: 89             ADC   A,C
-88c3: 41             LD    B,C
-88c4: 89             ADC   A,C
-88c5: 41             LD    B,C
-88c6: 89             ADC   A,C
-88c7: 41             LD    B,C
-88c8: 8C             ADC   A,H
-88c9: 41             LD    B,C
-88ca: 8D             ADC   A,L
-88cb: 41             LD    B,C
-88cc: 8C             ADC   A,H
-88cd: 41             LD    B,C
-88ce: 8D             ADC   A,L
-88cf: 41             LD    B,C
-88d0: 8C             ADC   A,H
-88d1: 41             LD    B,C
-88d2: 8D             ADC   A,L
-88d3: 41             LD    B,C
-88d4: 8C             ADC   A,H
-88d5: 41             LD    B,C
-88d6: 8D             ADC   A,L
-88d7: 41             LD    B,C
-88d8: 8C             ADC   A,H
-88d9: 41             LD    B,C
-88da: 8D             ADC   A,L
-88db: 41             LD    B,C
-88dc: 8C             ADC   A,H
-88dd: 41             LD    B,C
-88de: 8D             ADC   A,L
-88df: 41             LD    B,C
-88e0: 8C             ADC   A,H
-88e1: 41             LD    B,C
-88e2: 8D             ADC   A,L
-88e3: 41             LD    B,C
-88e4: 8C             ADC   A,H
-88e5: 41             LD    B,C
-88e6: 8D             ADC   A,L
-88e7: 41             LD    B,C
-88e8: 8C             ADC   A,H
-88e9: 41             LD    B,C
-88ea: 8D             ADC   A,L
-88eb: 41             LD    B,C
-88ec: 8C             ADC   A,H
-88ed: 41             LD    B,C
-88ee: 8D             ADC   A,L
-88ef: 41             LD    B,C
-88f0: 8C             ADC   A,H
-88f1: 41             LD    B,C
-88f2: 8D             ADC   A,L
-88f3: 41             LD    B,C
-88f4: 8C             ADC   A,H
-88f5: 41             LD    B,C
-88f6: 8D             ADC   A,L
-88f7: 41             LD    B,C
-88f8: 8C             ADC   A,H
-88f9: 41             LD    B,C
-88fa: 8D             ADC   A,L
-88fb: 41             LD    B,C
-88fc: 89             ADC   A,C
-88fd: 41             LD    B,C
-88fe: 89             ADC   A,C
-88ff: 41             LD    B,C
+BACKGROUND_IO_TOWER_AFTER_ENTERING_BEAM:
+8180: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+8190: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+81a0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+81b0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+81c0: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+81d0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+81e0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+81f0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8200: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+8210: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+8220: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+8230: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+8240: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+8250: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8260: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8270: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8280: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+8290: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+82a0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+82b0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+82c0: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+82d0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+82e0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+82f0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8300: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+8310: 8D 41 8C 41 8D 41 8C 41 89 41 89 41 8D 41 8C 41 
+8320: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+8330: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+8340: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+8350: 8C 41 8D 41 8C 41 89 41 89 41 89 41 89 41 8D 41 
+8360: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8370: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8380: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+8390: 8D 41 8C 41 89 41 89 41 89 41 89 41 89 41 89 41 
+83a0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+83b0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+83c0: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+83d0: 92 45 92 45 70 47 89 47 95 5D 95 5F 89 45 70 45 
+83e0: 92 45 92 45 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+83f0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8400: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+8410: 93 41 73 47 71 47 6F 47 96 5D 96 5F 6F 45 71 45 
+8420: 73 45 93 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+8430: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+8440: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+8450: 79 47 74 47 72 47 8E 47 89 41 89 41 89 45 80 47 
+8460: 74 45 79 45 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8470: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8480: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+8490: 7A 47 75 47 82 47 83 47 82 47 82 47 81 47 90 47 
+84a0: 84 47 7A 45 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+84b0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+84c0: A3 45 A3 45 A2 45 A1 45 A0 45 9F 45 9E 45 9D 45 
+84d0: 9C 45 9B 45 9A 45 99 45 98 45 97 45 7F 5F 89 45 
+84e0: 85 47 7B 45 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+84f0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8500: A4 45 A4 45 A4 45 A4 45 A4 45 A4 45 A4 45 A4 45 
+8510: A4 45 A4 45 A4 45 A4 45 A4 45 A4 45 7E 5F 89 41 
+8520: 86 47 7C 45 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+8530: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+8540: A4 41 A4 41 A4 41 A4 41 A4 41 A4 41 A4 41 A4 41 
+8550: A4 41 A4 41 A4 41 A4 41 A4 41 A4 41 7E 5B 89 45 
+8560: 86 43 7C 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8570: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8580: A3 41 A3 41 A2 41 A1 41 A0 41 9F 41 9E 41 9D 41 
+8590: 9C 41 9B 41 9A 41 99 41 98 41 97 41 7F 5B 89 45 
+85a0: 85 43 7B 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+85b0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+85c0: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+85d0: 7A 43 75 43 82 43 83 43 82 43 82 41 81 43 90 43 
+85e0: 84 43 7A 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+85f0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8600: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+8610: 79 43 74 43 72 43 8E 43 89 41 89 41 89 41 80 43 
+8620: 74 41 79 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+8630: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+8640: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+8650: 93 41 73 43 71 43 6F 43 96 59 96 5B 6F 41 71 41 
+8660: 73 41 93 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8670: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8680: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+8690: 92 41 92 41 70 43 89 43 95 59 95 5B 89 41 70 41 
+86a0: 92 41 92 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+86b0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+86c0: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+86d0: 8C 41 8D 41 89 41 89 41 89 41 89 41 89 41 89 41 
+86e0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+86f0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8700: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+8710: 8D 41 8C 41 8D 41 89 41 89 41 89 41 89 41 8C 41 
+8720: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+8730: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+8740: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+8750: 8C 41 8D 41 8C 41 8D 41 89 41 89 41 8C 41 8D 41 
+8760: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8770: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8780: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+8790: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+87a0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+87b0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+87c0: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+87d0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+87e0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+87f0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8800: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+8810: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+8820: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+8830: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+8840: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+8850: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8860: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8870: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+8880: 89 41 89 41 89 41 89 41 8D 41 8C 41 8D 41 8C 41 
+8890: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+88a0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 
+88b0: 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 89 41 
+88c0: 89 41 89 41 89 41 89 41 8C 41 8D 41 8C 41 8D 41 
+88d0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+88e0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 
+88f0: 8C 41 8D 41 8C 41 8D 41 8C 41 8D 41 89 41 89 41 
+
 BACKGROUND_LC:
 8900: BE 50 BE 50 BE 50 BE 50 62 41 62 41 62 41 62 41 
 8910: 62 41 62 41 62 41 62 41 62 41 62 41 62 41 62 41 
@@ -15975,7 +14113,7 @@ ab1b: AF             XOR   A,A
 ab1c: C9             RET   
 
 
-*** 10 bytes: 2x source for RAM ERROR, 2x destination, 2x destination?, 2x RAM@B2 2
+*** 10 bytes: 2x source for RAM ERROR, 2x destination, 2x destination?, 2x RAM@B2 2x RAM@F6
 DATA_USED_TO_DISPLAY_RAM_ERROR(S):
 ab1d: 27 AB CC FD D0 FD 31 AB 35 AB 
 
@@ -16056,7 +14194,7 @@ aba6: C3 2D 6F       JP    COPY_10_FROM_HL_TO_FFC0
 aba9: 00 00 01 C0 00 38 00 07 
 
 
-*** Clear background (same as 6fc7?)
+*** Clear background (identical to code at 6fdc!)
 abb1: 21 00 F8       LD    HL,BACKGROUND_VIDEO_RAM_TO_FF7F
 abb4: 01 C0 03       LD    BC,$03C0
 abb7: 36 5E          LD    (HL),#$5E
@@ -16256,10 +14394,10 @@ ad12: F6 01          OR    A,#$01
 ad14: C9             RET   
 
 
-*** 6x(6 bytes: 2x size, 2x location, checksum, (bit mapped) location), 2x 00 to si
+*** 6x(6 bytes: 2x size, 2x location, checksum, (bit mapped) location), 2x 00 to signal end
 DATA_USED_TO_TEST_ROM:
 ad15: 00 20 00 00 78 01 
-                                          ;this used or is it just an unused byte between data tables?  Or the checksum by
+                                          ;this used or is it just an unused byte between data tables?  Or the checksum byte for this ROM?
 
 ad1b: 00 20 00 20 DC 02 
 
@@ -16415,7 +14553,7 @@ SOUND_BOARD_S:
 ae4c: SOUND BOARD
 
 
-*** 2x SOUND BOARD, 2x destination, 2x destination of ROM(s), 5x2 bytes: source of 
+*** 2x SOUND BOARD, 2x destination, 2x destination of ROM(s), 5x2 bytes: source of sound board devices
 ae58: 4C AE EA FD EC FD 68 AE 6C AE 70 AE 74 AE 79 AE 
 
 A7_S:
@@ -16618,7 +14756,7 @@ USER_S:
 b17e: USER
 
 
-*** It looks like data until the end of ROM space.  I want to figure out what it's 
+*** It looks like data until the end of ROM space.  I want to figure out what it's for.
 b183: 95 F6 3E FB 74 2E EC 1F 7D 95 14 7F 59 3F 0E EE 
 b193: 4F E6 AF 8D FD 57 4F 19 7F A5 97 8F FD BE 15 F3 
 b1a3: BB D7 56 A7 19 B5 4F 35 B8 A6 E3 9E 87 92 1E DF 
