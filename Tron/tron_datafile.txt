@@ -1212,27 +1212,27 @@ commentline 4d9e This data is copied to C051!
 commentline 4d9e number of tanks x 10 bytes
 commentline 4d9e 10 bytes: X, picture, Y, ?, ?, ?, ?, ?, ?, ?
 commentline 4d9e tank 0 hardness data
-data 4d9e-4da7
+data 4d9e,1,10
 commentline 4da8 tank 1 hardness data
-data 4da8-4dbb
+data 4da8,2,10
 commentline 4dbc tank 2 hardness data
-data 4dbc-4dd9
+data 4dbc,3,10
 commentline 4dda tank 3 hardness data
-data 4dda-4e01
+data 4dda,4,10
 commentline 4e02 tank 4 hardness data
-data 4e02-4e29
+data 4e02,4,10
 commentline 4e2a tank 9 hardness data
-data 4e2a-4e65
+data 4e2a,6,10
 commentline 4e66 tank 6 hardness data
-data 4e66-4e97
+data 4e66,5,10
 commentline 4e98 tank 7 hardness data
-data 4e98-4ed3
+data 4e98,6,10
 commentline 4ed4 tank 8 hardness data
-data 4ed4-4f05
+data 4ed4,5,10
 commentline 4f06 tank 5 hardness data
-data 4f06-4f41
+data 4f06,6,10
 commentline 4f42 tank A hardness data
-data 4f42-4f7d
+data 4f42,6,10
 
 commentline 4f7e Tank game setup data.
 commentline 4f7e 11x4 bytes: shot speed, number of tanks, vector to tank(s) setup data
@@ -1299,10 +1299,11 @@ comment 68c1 Invincibility I/O Tower Game = C9 (RET)
 
 data 68c6-6b38
 
-commentline 6b39 Table of 16x 4 bytes used by joystick direction input @5FB3. There are 8 valid
+commentline 6b39 Table of 16x4 bytes used by joystick direction input @5FB3. There are 8 valid
 commentline 6b39 inputs (D,U,R,L,DR,DL,UR,UL).  All others (no input or invalid input) are set
 commentline 6b39 to all zeroes effectively giving you no input.
-data 6b39-6b78
+data 6b39,16,4
+
 data 6b79-6eff
 
 commentline 6f20 This line is hit for every tick of the teletype (which strikes twice per character)
