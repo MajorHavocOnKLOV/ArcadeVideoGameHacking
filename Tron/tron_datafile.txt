@@ -1246,6 +1246,19 @@ data 4faa,16,3
 
 data 4fda-4fff
 
+commentline 5000 Light cycles: the sprite number and orientation is used for some processing
+commentline 5000       User Enemy
+commentline 5000 Up    2F   2D
+commentline 5000 Down  EF   ED
+commentline 5000 Left  F0   EE
+commentline 5000 Right 30   2E
+
+comment 50bd LC enemy down (ED)
+comment 50c7 LC enemy up (2D)
+comment 50d3 LC enemy right (2E)
+comment 50db LC enemy left (EE)
+comment 5128 LC enemy up (2D)
+
 commentline 5151 5x4: 4 = destination vector and source vector
 data 5151,5,4
 ;data 5151-5166
@@ -1261,7 +1274,20 @@ commentline 526a LC set up enemy 1 data
 commentline 5296 LC set up enemy 2 data
 commentline 52c2 LC set up enemy 3 data
 
+comment 53bc LC enemy up (2D)
+comment 5451 LC enemy up (2D)
+comment 5458 LC enemy down (ED)
+comment 545f LC enemy left (EE)
+
 data 554c-5550
+
+comment 5599 LC enemy up (2D)
+comment 559d LC enemy down (ED)
+comment 55a1 LC enemy left (EE)
+
+comment 5768 LC enemy up (2D)
+comment 576e LC enemy down (ED)
+comment 5774 LC enemy right (2E)
 
 commentline used at 57ba
 data 5b62-5c20
