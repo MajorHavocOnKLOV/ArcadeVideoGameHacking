@@ -280,12 +280,13 @@ label 5175 LIGHT_TRACES2_S
 label 5182 AND_WALLS_S
 label 518c USE_TRIGGER_FOR_S
 label 519c SPEED_CONTROL_S
-label 523b LC_SET_UP_USER_AND_LC_1_2_3
+label 523b LC_SET_UP_USER_AND_ENEMIES_C1E0_TO_C230?
 label 554c DATA_USED_FOR_???_TO_5550
 label 5551 LC_ERASE_TRAIL_OF_DESTROYED_LC
-label 56f4 LC_SET_UP_TRAILS_DATA_STRUCTURE_AT_C000_TO_C1DF
+label 56f4 LC_SET_UP_BOUNDARIES_IN_RAM_DATA_STRUCTURE_FROM_C000_TO_C1DF
+label 5995 LC_(HL-F800)/2_RETURN_HOW_MANY_0x20s_IN_A
 label 59e5 LC_DRAW_A_TRAIL?
-label 5a1a LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4
+label 5a1a LC_DRAW_D_INTO_LC_RAM_DATA_STRUCTURE
 label 5ac9 LC_MULTIPLE_CYCLES_DO_SOMETHING?
 label 5d00 PLAY_IO_TOWER
 label 5e36 IO_TOWER_INSTRUCTIONS
@@ -1247,17 +1248,19 @@ data 4faa,16,3
 data 4fda-4fff
 
 commentline 5000 Light cycles: the sprite number and orientation is used for some processing
-commentline 5000       User Enemy
-commentline 5000 Up    2F   2D
-commentline 5000 Down  EF   ED
-commentline 5000 Left  F0   EE
-commentline 5000 Right 30   2E
+commentline 5000 ----- Enemy User
+commentline 5000 Up    2F    2D
+commentline 5000 Down  EF    ED
+commentline 5000 Left  F0    EE
+commentline 5000 Right 30    2E
 
-comment 50bd LC enemy down (ED)
-comment 50c7 LC enemy up (2D)
-comment 50d3 LC enemy right (2E)
-comment 50db LC enemy left (EE)
-comment 5128 LC enemy up (2D)
+comment 502c LC enemy down (EF)
+
+comment 50bd LC user down (ED)
+comment 50c7 LC user up (2D)
+comment 50d3 LC user right (2E)
+comment 50db LC user left (EE)
+comment 5128 LC user up (2D)
 
 commentline 5151 5x4: 4 = destination vector and source vector
 data 5151,5,4
@@ -1274,20 +1277,48 @@ commentline 526a LC set up enemy 1 data
 commentline 5296 LC set up enemy 2 data
 commentline 52c2 LC set up enemy 3 data
 
-comment 53bc LC enemy up (2D)
-comment 5451 LC enemy up (2D)
-comment 5458 LC enemy down (ED)
-comment 545f LC enemy left (EE)
+comment 53bc LC user up (2D)
+comment 5451 LC user up (2D)
+comment 5458 LC user down (ED)
+comment 545f LC user left (EE)
 
 data 554c-5550
 
-comment 5599 LC enemy up (2D)
-comment 559d LC enemy down (ED)
-comment 55a1 LC enemy left (EE)
+comment 5599 LC user up (2D)
+comment 559d LC user down (ED)
+comment 55a1 LC user left (EE)
+comment 562b LC enemy up (2F)
+comment 5631 LC enemy down (EF)
+comment 5664 LC enemy down (EF)
+comment 5637 LC enemy right (30)
+comment 563f LC enemy left (F0)
+comment 5689 LC enemy right (30)
+comment 56ae LC enemy up (2F)
 
-comment 5768 LC enemy up (2D)
-comment 576e LC enemy down (ED)
-comment 5774 LC enemy right (2E)
+commentline 56f4 Rotate the data structure right 90 degrees to match what you see on the screen.
+commentline 56f4 Each byte has two nybbles, one nybble for each screen background location.
+commentline 56f4 0 is no trail; 1,2, & 3 are enemy trails.  4 is User/Tron's trail.
+commentline 56f4 Why separate trails for enemies?  Because the separate trail is erased when
+commentline 56f4 a LC is destroyed!
+commentline 56f4 Tron keeps track of the background RAM location that is being used for
+commentline 56f4 each LC trail location.  This location has f800 subtracted, divided by 4 (?),
+commentline 56f4 and C000 added to point to the correct location in the RAM data structure.
+
+commentline 56f6 Create right boundary in RAM
+commentline 5704 Create left boundary in RAM
+commentline 5712 Create top boundary in RAM
+commentline 5718 Create bottom boundary in RAM
+
+comment 5768 LC user up (2D)
+comment 576e LC user down (ED)
+comment 5774 LC user right (2E)
+comment 5812 LC enemy up (2F)
+comment 5818 LC enemy down (EF)
+comment 581e LC enemy right (30)
+
+comment 5a08 If lowest bit in HL was set (C = true), process upper nybble
+comment 5a08 Process lower nybble
+comment 5a12 Process upper nybble
 
 commentline used at 57ba
 data 5b62-5c20

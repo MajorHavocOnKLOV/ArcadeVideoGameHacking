@@ -1,3 +1,9 @@
+`comment 5637 LC enemy right (30)'
+COMMENT out of order
+
+`comment 563f LC enemy left (F0)'
+COMMENT out of order
+
 IO_0 EQU $00
 IO_1 EQU $01
 IO_2 EQU $02
@@ -223,12 +229,13 @@ LIGHT_TRACES2_S EQU $5175
 AND_WALLS_S EQU $5182
 USE_TRIGGER_FOR_S EQU $518c
 SPEED_CONTROL_S EQU $519c
-LC_SET_UP_USER_AND_LC_1_2_3 EQU $523b
+LC_SET_UP_USER_AND_ENEMIES_C1E0_TO_C230? EQU $523b
 DATA_USED_FOR_???_TO_5550 EQU $554c
 LC_ERASE_TRAIL_OF_DESTROYED_LC EQU $5551
-LC_SET_UP_TRAILS_DATA_STRUCTURE_AT_C000_TO_C1DF EQU $56f4
+LC_SET_UP_BOUNDARIES_IN_RAM_DATA_STRUCTURE_FROM_C000_TO_C1DF EQU $56f4
+LC_(HL-F800)/2_RETURN_HOW_MANY_0x20s_IN_A EQU $5995
 LC_DRAW_A_TRAIL? EQU $59e5
-LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4 EQU $5a1a
+LC_DRAW_D_INTO_LC_RAM_DATA_STRUCTURE EQU $5a1a
 LC_MULTIPLE_CYCLES_DO_SOMETHING? EQU $5ac9
 PLAY_IO_TOWER EQU $5d00
 IO_TOWER_INSTRUCTIONS EQU $5e36
@@ -8214,6 +8221,13 @@ TANK_SET_UP_DATA:
 4fda: EF FF AB 69 B7 DF 8B ED EF F1 ED 7C 03 74 31 FA 
 4fea: B7 F7 60 3B BD 73 EB 67 0B CD 7F BD 4F E7 B3 FD 
 4ffa: AF CF FD F2 27 6F 
+
+*** Light cycles: the sprite number and orientation is used for some processing
+*** ----- Enemy User
+*** Up    2F    2D
+*** Down  EF    ED
+*** Left  F0    EE
+*** Right 30    2E
 PLAY_LC:
 5000: CD 49 70       CALL  INITIALIZE_SPRITES
 5003: 21 80 90       LD    HL,LC_COLOR_PALETTE
@@ -8231,7 +8245,7 @@ PLAY_LC:
 5024: 3E F8          LD    A,#$F8
 5026: 21 04 C2       LD    HL,LC_ENEMY_1_Y
 5029: CD 34 52       CALL  $5234
-502c: 3E EF          LD    A,#$EF
+502c: 3E EF          LD    A,#$EF         ;LC enemy down (EF)
 502e: 21 EA C1       LD    HL,LC_ENEMY_1_SPRITE
 5031: CD 34 52       CALL  $5234
 5034: 3A 19 C4       LD    A,(HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?))
@@ -8310,25 +8324,25 @@ PLAY_LC:
 50b8: 26 00          LD    H,#$00
 50ba: 47             LD    B,A
 50bb: CB 58          BIT   3,B
-50bd: 3E ED          LD    A,#$ED
+50bd: 3E ED          LD    A,#$ED         ;LC user down (ED)
 50bf: 16 FD          LD    D,#$FD
 50c1: 1E F8          LD    E,#$F8
 50c3: 20 1C          JR    NZ,$50E1
 
 50c5: CB 50          BIT   2,B
-50c7: 3E 2D          LD    A,#$2D
+50c7: 3E 2D          LD    A,#$2D         ;LC user up (2D)
 50c9: 16 FD          LD    D,#$FD
 50cb: 1E 08          LD    E,#$08
 50cd: 20 12          JR    NZ,$50E1
 
 50cf: 26 02          LD    H,#$02
 50d1: CB 48          BIT   1,B
-50d3: 3E 2E          LD    A,#$2E
+50d3: 3E 2E          LD    A,#$2E         ;LC user right (2E)
 50d5: 16 F5          LD    D,#$F5
 50d7: 1E 00          LD    E,#$00
 50d9: 20 06          JR    NZ,$50E1
 
-50db: 3E EE          LD    A,#$EE
+50db: 3E EE          LD    A,#$EE         ;LC user left (EE)
 50dd: 16 05          LD    D,#$05
 50df: 1E 00          LD    E,#$00
 50e1: 32 ED C1       LD    (LC_USER_SPRITE),A
@@ -8346,8 +8360,8 @@ PLAY_LC:
 50f6: 21 09 C2       LD    HL,$C209
 50f9: 71             LD    (HL),C
 50fa: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
-50fd: CD F4 56       CALL  LC_SET_UP_TRAILS_DATA_STRUCTURE_AT_C000_TO_C1DF
-5100: C3 3B 52       JP    LC_SET_UP_USER_AND_LC_1_2_3
+50fd: CD F4 56       CALL  LC_SET_UP_BOUNDARIES_IN_RAM_DATA_STRUCTURE_FROM_C000_TO_C1DF
+5100: C3 3B 52       JP    LC_SET_UP_USER_AND_ENEMIES_C1E0_TO_C230?
 
 LC_INSTRUCTIONS:
 5103: 21 00 91       LD    HL,BACKGROUND_TRAINING_FOR_LC
@@ -8363,7 +8377,7 @@ LC_INSTRUCTIONS:
 5120: 3E 75          LD    A,#$75
 5122: CD 65 71       CALL  ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
 5125: FD 77 00       LD    (IY+$00),A
-5128: FD 36 01 2D    LD    (IY+$01),#$2D
+5128: FD 36 01 2D    LD    (IY+$01),#$2D  ;LC user up (2D)
 512c: 3E E8          LD    A,#$E8
 512e: CD 59 71       CALL  ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 5131: FD 77 02       LD    (IY+$02),A
@@ -8496,13 +8510,13 @@ SPEED_CONTROL_S:
 
 
 *** LC set up user data
-LC_SET_UP_USER_AND_LC_1_2_3:
+LC_SET_UP_USER_AND_ENEMIES_C1E0_TO_C230?:
 523b: 21 38 FC       LD    HL,$FC38
 523e: 16 04          LD    D,#$04
-5240: CD 1A 5A       CALL  LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4
+5240: CD 1A 5A       CALL  LC_DRAW_D_INTO_LC_RAM_DATA_STRUCTURE
 5243: 21 38 FC       LD    HL,$FC38
 5246: 22 E0 C1       LD    (LC_USER_TRAIL_POSITION_VECTOR),HL
-5249: CD 95 59       CALL  $5995
+5249: CD 95 59       CALL  LC_(HL-F800)/2_RETURN_HOW_MANY_0x20s_IN_A
 524c: 21 FD C1       LD    HL,LC_USER_?1
 524f: 77             LD    (HL),A
 5250: 11 03 C2       LD    DE,LC_USER_X
@@ -8520,10 +8534,10 @@ LC_SET_UP_USER_AND_LC_1_2_3:
 *** LC set up enemy 1 data
 526a: 21 0E FC       LD    HL,$FC0E
 526d: 16 01          LD    D,#$01
-526f: CD 1A 5A       CALL  LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4
+526f: CD 1A 5A       CALL  LC_DRAW_D_INTO_LC_RAM_DATA_STRUCTURE
 5272: 21 0E FC       LD    HL,$FC0E
 5275: 22 E2 C1       LD    (LC_ENEMY_1_TRAIL_POSITION_VECTOR),HL
-5278: CD 95 59       CALL  $5995
+5278: CD 95 59       CALL  LC_(HL-F800)/2_RETURN_HOW_MANY_0x20s_IN_A
 527b: 21 F7 C1       LD    HL,LC_ENEMY_1_?1
 527e: 77             LD    (HL),A
 527f: 11 00 C2       LD    DE,LC_ENEMY_1_X
@@ -8540,10 +8554,10 @@ LC_SET_UP_USER_AND_LC_1_2_3:
 *** LC set up enemy 2 data
 5296: 21 4E FB       LD    HL,$FB4E
 5299: 16 02          LD    D,#$02
-529b: CD 1A 5A       CALL  LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4
+529b: CD 1A 5A       CALL  LC_DRAW_D_INTO_LC_RAM_DATA_STRUCTURE
 529e: 21 4E FB       LD    HL,$FB4E
 52a1: 22 E4 C1       LD    (LC_ENEMY_2_TRAIL_POSITION_VECTOR),HL
-52a4: CD 95 59       CALL  $5995
+52a4: CD 95 59       CALL  LC_(HL-F800)/2_RETURN_HOW_MANY_0x20s_IN_A
 52a7: 21 F8 C1       LD    HL,LC_ENEMY_2_?1
 52aa: 77             LD    (HL),A
 52ab: 11 01 C2       LD    DE,LC_ENEMY_2_X
@@ -8558,13 +8572,12 @@ LC_SET_UP_USER_AND_LC_1_2_3:
 
 
 *** LC set up enemy 3 data
-*** at 57ba
 52c2: 21 CE FC       LD    HL,$FCCE
 52c5: 16 03          LD    D,#$03
-52c7: CD 1A 5A       CALL  LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4
+52c7: CD 1A 5A       CALL  LC_DRAW_D_INTO_LC_RAM_DATA_STRUCTURE
 52ca: 21 CE FC       LD    HL,$FCCE
 52cd: 22 E6 C1       LD    (LC_ENEMY_3_TRAIL_POSITION_VECTOR),HL
-52d0: CD 95 59       CALL  $5995
+52d0: CD 95 59       CALL  LC_(HL-F800)/2_RETURN_HOW_MANY_0x20s_IN_A
 52d3: 21 F9 C1       LD    HL,LC_ENEMY_3_?1
 52d6: 77             LD    (HL),A
 52d7: 11 02 C2       LD    DE,LC_ENEMY_3_X
@@ -8708,7 +8721,7 @@ LC_SET_UP_USER_AND_LC_1_2_3:
 53b7: 3A FD C1       LD    A,(LC_USER_?1)
 53ba: 18 6C          JR    $5428
 
-53bc: 3E 2D          LD    A,#$2D
+53bc: 3E 2D          LD    A,#$2D         ;LC user up (2D)
 53be: 32 ED C1       LD    (LC_USER_SPRITE),A
 53c1: 3A 07 C2       LD    A,(LC_USER_Y)
 53c4: CD 7A 54       CALL  $547A
@@ -8785,15 +8798,15 @@ LC_SET_UP_USER_AND_LC_1_2_3:
 
 544b: 3A ED C1       LD    A,(LC_USER_SPRITE)
 544e: 21 11 C2       LD    HL,$C211
-5451: FE 2D          CP    A,#$2D
+5451: FE 2D          CP    A,#$2D         ;LC user up (2D)
 5453: 36 00          LD    (HL),#$00
 5455: CA BC 53       JP    Z,$53BC
 
-5458: FE ED          CP    A,#$ED
+5458: FE ED          CP    A,#$ED         ;LC user down (ED)
 545a: 36 01          LD    (HL),#$01
 545c: CA 98 53       JP    Z,$5398
 
-545f: FE EE          CP    A,#$EE
+545f: FE EE          CP    A,#$EE         ;LC user left (EE)
 5461: 36 03          LD    (HL),#$03
 5463: 28 A0          JR    Z,$5405
 
@@ -8961,7 +8974,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 5582: 2B             DEC   HL
 5583: 2B             DEC   HL
 5584: 16 00          LD    D,#$00
-5586: CD 1A 5A       CALL  LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4
+5586: CD 1A 5A       CALL  LC_DRAW_D_INTO_LC_RAM_DATA_STRUCTURE
 5589: D1             POP   DE
 558a: E1             POP   HL
 558b: 18 D0          JR    $555D
@@ -8970,13 +8983,13 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 5590: 21 F5 C1       LD    HL,$C1F5
 5593: 11 F6 C1       LD    DE,$C1F6
 5596: 01 FE C1       LD    BC,LC_USER_?2
-5599: FE 2D          CP    A,#$2D
+5599: FE 2D          CP    A,#$2D         ;LC user up (2D)
 559b: 28 10          JR    Z,$55AD
 
-559d: FE ED          CP    A,#$ED
+559d: FE ED          CP    A,#$ED         ;LC user down (ED)
 559f: 28 14          JR    Z,$55B5
 
-55a1: FE EE          CP    A,#$EE
+55a1: FE EE          CP    A,#$EE         ;LC user left (EE)
 55a3: 28 18          JR    Z,$55BD
 
 55a5: 3A FD C1       LD    A,(LC_USER_?1)
@@ -9073,11 +9086,11 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 5626: 7E             LD    A,(HL)
 5627: 21 15 C2       LD    HL,$C215
 562a: 09             ADD   HL,BC
-562b: FE 2F          CP    A,#$2F
+562b: FE 2F          CP    A,#$2F         ;LC enemy up (2F)
 562d: 36 00          LD    (HL),#$00
 562f: 28 7D          JR    Z,$56AE
 
-5631: FE EF          CP    A,#$EF
+5631: FE EF          CP    A,#$EF         ;LC enemy down (EF)
 5633: 36 01          LD    (HL),#$01
 5635: 28 2D          JR    Z,$5664
 
@@ -9107,7 +9120,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 5661: 5E             LD    E,(HL)
 5662: 18 6D          JR    $56D1
 
-5664: 3E EF          LD    A,#$EF
+5664: 3E EF          LD    A,#$EF         ;LC enemy down (EF)
 5666: CD 2F 57       CALL  $572F
 5669: 21 04 C2       LD    HL,LC_ENEMY_1_Y
 566c: CD 45 57       CALL  $5745
@@ -9128,7 +9141,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 5686: 7E             LD    A,(HL)
 5687: 18 48          JR    $56D1
 
-5689: 3E 30          LD    A,#$30
+5689: 3E 30          LD    A,#$30         ;LC enemy right (30)
 568b: CD 2F 57       CALL  $572F
 568e: 21 00 C2       LD    HL,LC_ENEMY_1_X
 5691: CD 45 57       CALL  $5745
@@ -9149,7 +9162,7 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 56ab: 5E             LD    E,(HL)
 56ac: 18 23          JR    $56D1
 
-56ae: 3E 2F          LD    A,#$2F
+56ae: 3E 2F          LD    A,#$2F         ;LC enemy up (2F)
 56b0: CD 2F 57       CALL  $572F
 56b3: 21 04 C2       LD    HL,LC_ENEMY_1_Y
 56b6: CD 39 57       CALL  $5739
@@ -9190,35 +9203,52 @@ LC_ERASE_TRAIL_OF_DESTROYED_LC:
 56f2: 70             LD    (HL),B
 56f3: C9             RET   
 
-LC_SET_UP_TRAILS_DATA_STRUCTURE_AT_C000_TO_C1DF:
+
+*** Rotate the data structure right 90 degrees to match what you see on the screen.
+*** Each byte has two nybbles, one nybble for each screen background location.
+*** 0 is no trail; 1,2, & 3 are enemy trails.  4 is User/Tron's trail.
+*** Why separate trails for enemies?  Because the separate trail is erased when
+*** a LC is destroyed!
+*** Tron keeps track of the background RAM location that is being used for
+*** each LC trail location.  This location has f800 subtracted, divided by 4 (?),
+*** and C000 added to point to the correct location in the RAM data structure.
+LC_SET_UP_BOUNDARIES_IN_RAM_DATA_STRUCTURE_FROM_C000_TO_C1DF:
 56f4: 16 0F          LD    D,#$0F
+
+*** Create right boundary in RAM
 56f6: 21 00 F8       LD    HL,BACKGROUND_VIDEO_RAM_TO_FF7F
 56f9: 06 20          LD    B,#$20
 56fb: E5             PUSH  HL
-56fc: CD 1A 5A       CALL  LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4
+56fc: CD 1A 5A       CALL  LC_DRAW_D_INTO_LC_RAM_DATA_STRUCTURE
 56ff: E1             POP   HL
 5700: 23             INC   HL
 5701: 23             INC   HL
 5702: 10 F7          DJNZ  $56FB
 
+
+*** Create left boundary in RAM
 5704: 21 40 FF       LD    HL,$FF40
 5707: 06 20          LD    B,#$20
 5709: E5             PUSH  HL
-570a: CD 1A 5A       CALL  LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4
+570a: CD 1A 5A       CALL  LC_DRAW_D_INTO_LC_RAM_DATA_STRUCTURE
 570d: E1             POP   HL
 570e: 23             INC   HL
 570f: 23             INC   HL
 5710: 10 F7          DJNZ  $5709
 
+
+*** Create top boundary in RAM
 5712: 21 48 F8       LD    HL,$F848
 5715: CD 1F 57       CALL  $571F
+
+*** Create bottom boundary in RAM
 5718: 21 7E F8       LD    HL,$F87E
 571b: CD 1F 57       CALL  $571F
 571e: C9             RET   
 
 571f: 06 1C          LD    B,#$1C
 5721: E5             PUSH  HL
-5722: CD 1A 5A       CALL  LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4
+5722: CD 1A 5A       CALL  LC_DRAW_D_INTO_LC_RAM_DATA_STRUCTURE
 5725: E1             POP   HL
 5726: 11 40 00       LD    DE,$0040
 5729: 19             ADD   HL,DE
@@ -9262,15 +9292,15 @@ LC_SET_UP_TRAILS_DATA_STRUCTURE_AT_C000_TO_C1DF:
 5763: 80             ADD   A,B
 5764: F5             PUSH  AF
 5765: 3A ED C1       LD    A,(LC_USER_SPRITE)
-5768: FE 2D          CP    A,#$2D
+5768: FE 2D          CP    A,#$2D         ;LC user up (2D)
 576a: 06 00          LD    B,#$00
 576c: 28 0E          JR    Z,$577C
 
-576e: FE ED          CP    A,#$ED
+576e: FE ED          CP    A,#$ED         ;LC user down (ED)
 5770: 06 01          LD    B,#$01
 5772: 28 08          JR    Z,$577C
 
-5774: FE 2E          CP    A,#$2E
+5774: FE 2E          CP    A,#$2E         ;LC user right (2E)
 5776: 06 02          LD    B,#$02
 5778: 28 02          JR    Z,$577C
 
@@ -9363,15 +9393,15 @@ LC_SET_UP_TRAILS_DATA_STRUCTURE_AT_C000_TO_C1DF:
 580d: 21 EA C1       LD    HL,LC_ENEMY_1_SPRITE
 5810: 09             ADD   HL,BC
 5811: 7E             LD    A,(HL)
-5812: FE 2F          CP    A,#$2F
+5812: FE 2F          CP    A,#$2F         ;LC enemy up (2F)
 5814: 16 00          LD    D,#$00
 5816: 28 0E          JR    Z,$5826
 
-5818: FE EF          CP    A,#$EF
+5818: FE EF          CP    A,#$EF         ;LC enemy down (EF)
 581a: 16 01          LD    D,#$01
 581c: 28 08          JR    Z,$5826
 
-581e: FE 30          CP    A,#$30
+581e: FE 30          CP    A,#$30         ;LC enemy right (30)
 5820: 16 02          LD    D,#$02
 5822: 28 02          JR    Z,$5826
 
@@ -9593,6 +9623,7 @@ LC_SET_UP_TRAILS_DATA_STRUCTURE_AT_C000_TO_C1DF:
 5992: 36 00          LD    (HL),#$00
 5994: C9             RET   
 
+LC_(HL-F800)/2_RETURN_HOW_MANY_0x20s_IN_A:
 5995: AF             XOR   A,A
 5996: 11 00 F8       LD    DE,BACKGROUND_VIDEO_RAM_TO_FF7F
 5999: ED 52          SBC   HL,DE
@@ -9671,7 +9702,8 @@ LC_DRAW_A_TRAIL?:
 5a01: 11 00 C0       LD    DE,CPU_RAM_OR_GS_DISK_X_TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF
 5a04: CB 3C          SRL   H
 5a06: CB 1D          RR    L
-5a08: 38 08          JR    C,$5A12
+5a08: 38 08          JR    C,$5A12        ;If lowest bit in HL was set (C = true), process upper nybble
+                                          ;Process lower nybble
 
 5a0a: 19             ADD   HL,DE
 5a0b: ED 67          RRD   
@@ -9680,14 +9712,16 @@ LC_DRAW_A_TRAIL?:
 5a0f: ED 6F          RLD   
 5a11: C9             RET   
 
-5a12: 19             ADD   HL,DE
+
+*** at 57ba
+5a12: 19             ADD   HL,DE          ;Process upper nybble
 5a13: ED 6F          RLD   
 5a15: D1             POP   DE
 5a16: 7A             LD    A,D
 5a17: ED 67          RRD   
 5a19: C9             RET   
 
-LC_DRAW_D_INTO_DATA_STRUCTURE_AT_C000_BASED_ON_HL_MINUS_F800_DIV_4:
+LC_DRAW_D_INTO_LC_RAM_DATA_STRUCTURE:
 5a1a: D5             PUSH  DE
 5a1b: A7             AND   A,A
 5a1c: 11 00 F8       LD    DE,BACKGROUND_VIDEO_RAM_TO_FF7F
