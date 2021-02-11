@@ -283,11 +283,15 @@ label 519c SPEED_CONTROL_S
 label 523b LC_SET_UP_USER_AND_ENEMIES_C1E0_TO_C230?
 label 554c DATA_USED_FOR_???_TO_5550
 label 5551 LC_ERASE_TRAIL_OF_DESTROYED_LC
+label 558d LC_DEPENDING_ON_USER_SPRITE_COPY_AND_INC/DEC_BETWEEN_C1F5_AND_C1FD
 label 56f4 LC_SET_UP_BOUNDARIES_IN_RAM_DATA_STRUCTURE_FROM_C000_TO_C1DF
+label 57ef LC_DATA_FOR_TRIGGER_PULLED_AND_UP_DOWN_VS_LEFT_RIGHT
+label 598a LC_INC_C20E_IF_08_SET_TO_00
 label 5995 LC_(HL-F800)/2_RETURN_HOW_MANY_0x20s_IN_A
 label 59e5 LC_DRAW_A_TRAIL?
 label 5a1a LC_DRAW_D_INTO_LC_RAM_DATA_STRUCTURE
 label 5ac9 LC_MULTIPLE_CYCLES_DO_SOMETHING?
+label 5c1b LC_DATA_STRUCTURE_TO_SETUP_LIGHT_CYCLES
 label 5d00 PLAY_IO_TOWER
 label 5e36 IO_TOWER_INSTRUCTIONS
 label 5e7e IO_TOWER_STRING_DESTINATION_AND_SOURCE_LOCATIONS_00
@@ -616,7 +620,15 @@ label c204 LC_ENEMY_1_Y
 label c205 LC_ENEMY_2_Y
 label c206 LC_ENEMY_3_Y
 label c207 LC_USER_Y
-label c210 LC_ENEMIES_STILL_ALIVE_BITS_0_1_2?
+label c209 LC_TRIGGER_PULLED_AND_UP_DOWN_VS_LEFT_RIGHT
+label c20b LC_ENEMY_NUMBER_2_BYTES
+label c20d LC_TRIGGER_STATE_0_IS_PULLED
+label c210 LC_ENEMIES_STILL_ALIVE_BITS_0_1_2
+label c223 LC_SETUP2?
+label c224 LC_SETUP3?
+label c225 LC_SETUP4?
+label c226 LC_SETUP5?
+label c227 LC_SETUP6?
 label c402 COUNTDOWN_TIMER_SECONDS
 label c403 COUNTDOWN_TIMER_FRAMES
 label c404 TANK_SPINNER_LAST_INPUT
@@ -1264,7 +1276,8 @@ comment 5128 LC user up (2D)
 
 commentline 5151 5x4: 4 = destination vector and source vector
 data 5151,5,4
-;data 5151-5166
+; 00 00 marks end of data at 5151
+data 5165-5166
 
 ascii 5167-5174
 ascii 5175-5181
@@ -1289,9 +1302,9 @@ comment 559d LC user down (ED)
 comment 55a1 LC user left (EE)
 comment 562b LC enemy up (2F)
 comment 5631 LC enemy down (EF)
-comment 5664 LC enemy down (EF)
 comment 5637 LC enemy right (30)
 comment 563f LC enemy left (F0)
+comment 5664 LC enemy down (EF)
 comment 5689 LC enemy right (30)
 comment 56ae LC enemy up (2F)
 
@@ -1312,6 +1325,13 @@ commentline 5718 Create bottom boundary in RAM
 comment 5768 LC user up (2D)
 comment 576e LC user down (ED)
 comment 5774 LC user right (2E)
+
+commentline 57ef 1F = Up/down
+commentline 57ef 1D = Trigger and up/down
+commentline 57ef 0A = Left/right
+commentline 57ef 09 = Trigger and left/right
+data 57ef-57f2
+
 comment 5812 LC enemy up (2F)
 comment 5818 LC enemy down (EF)
 comment 581e LC enemy right (30)
@@ -1321,10 +1341,13 @@ comment 5a08 Process lower nybble
 comment 5a12 Process upper nybble
 
 commentline used at 57ba
-data 5b62-5c20
+data 5b62-5c1a
 
-commentline 5c21 Data used where for what?
-data 5c21-5cff
+commentline 5c1b 19x6: enemy LCs, ?, ?, ?, ?, ?
+data 5c1b,19,6
+
+commentline 5c8d Data used where for what?
+data 5c8d-5cff
 
 commentline 5e6d if BC was 0, return.  Does this mean skip instructions?
 

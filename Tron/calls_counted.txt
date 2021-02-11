@@ -67,6 +67,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       2 NC,$4AFF
       2 MCP_DISK_END_FLIGHT
       2 LC_DRAW_A_TRAIL?
+      2 LC_DEPENDING_ON_USER_SPRITE_COPY_AND_INC/DEC_BETWEEN_C1F5_AND_C1FD
       2 IO_OR_MCP?_SET_TRON_INITIAL_POSITION_AND_ROTATION
       2 INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
       2 INITIALIZE_LEVEL?
@@ -91,7 +92,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       2 $5745
       2 $5739
       2 $571F
-      2 $558D
       2 $5489
       2 $547A
       2 $5475
@@ -133,6 +133,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 MCP_PROCESS_HIT_BLOCK
       1 MCP_PROCESS_DISK_POSITION(S)?
       1 LC_SET_UP_BOUNDARIES_IN_RAM_DATA_STRUCTURE_FROM_C000_TO_C1DF
+      1 LC_INC_C20E_IF_08_SET_TO_00
       1 HANDLE_JOYSTICK_INPUT?_TO_601F
       1 GET_INPUT_FROM_JOYSTICK_TRIGGER_+?
       1 DRAW_SPRITES_FOR_GAME_SELECTION_SCREEN
@@ -168,7 +169,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $5AF1
       1 $5A27
       1 $59C2
-      1 $598A
       1 $597F
       1 $58A5
       1 $588B
