@@ -105,7 +105,7 @@ label 0d52 READ_AND_PROCESS_INPUT_PORTS
 label 0baf ALL_RIGHTS_RESERVED_S
 label 0d38 READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS
 label 0e32 SHOULD_I_UPDATE_CONE_COLOR?
-label 0e55 MCP_ATTRACT_COLORS?
+label 0e55 MCP_ATTRACT_COLORS
 label 1001 DATA_TO_101A_USED_AT_0F86?
 label 101b PLEASE_S
 label 1022 ENTER_S
@@ -634,7 +634,7 @@ label c403 COUNTDOWN_TIMER_FRAMES
 label c404 TANK_SPINNER_LAST_INPUT
 label c405 MCP_TRON_ARM_OR_TANK_TURRET_ROTATION
 label c40f ATTRACT_MCP_ROTATE_COLORS_IF_NON_ZERO
-label c410 MCP_BLOCKS_COLOR_VECTOR_POINTER_0E55
+label c410 MCP_BLOCKS_COLORS_STARTPOINT_VECTOR_INTO_0E55
 label c406 MCP_DISK_NUMBER_BEING_PROCESSED
 label c409 MCP_SPRITE_BLOCK_HIT_BY_DISK
 label c40b MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK
@@ -817,11 +817,9 @@ data 0e0b,13,3
 commentline 0e55 These are color WORDS!  If bit 8 is set, write the color to the next byte up
 commentline 0e55 to set the A0 line high which sets bit 8 in the color WORD RAM.
 commentline 0e55 See Bally/Midway's MCR II System manual top-right corner of page MCR-6
-commentline 0e55 for more information.
-data 0e55-0e60
-
-commentline 0e61 Data used where for what?  Copy of 12 bytes at 0e55!
-data 0e61-0e6c
+commentline 0e55 for more information.  Color table is doubled so wraparound does not
+commentline 0e55 need to be calculated or handled.
+data 0e55-0e6c
 
 commentline 0ebe Data used where for what?
 data 0ebe-0eff
