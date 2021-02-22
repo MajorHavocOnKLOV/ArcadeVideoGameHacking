@@ -751,7 +751,8 @@ commentline 016f 2 - Reset (0 continuous operation/1 software reset)
 commentline 016f 1 - Time Constant (1 time constant follows)
 commentline 016f 0 - Timer Trigger (0 when loaded/1 pulse starts timer)
 commentline 016f Initialize CTC
-commentline 016f Set interrupt vector to 0x08 (just the top 5 bits are used. Bit zero is always 0 and bits 1 & 2 are set by CTC based on channel that interrupted)
+commentline 016f Set interrupt vector to 0x08 (just the top 5 bits are used. Bit zero is always
+commentline 016f 0 and bits 1 & 2 are set by the CTC based on channel that threw the interrupt)
 comment 0173 Set CTC channel 3: Disable interrupts, timer mode, prescaler 16, falling edge,
 comment 0175 automatic trigger, time constant follows, software reset, control word
 comment 0179 Set CTC channel 3 time constant: 0x01
@@ -765,7 +766,7 @@ commentline 01bb Data used where for what?
 ; data 01bb-01cb
 data 01bb-01ca
 
-commentline 01cb CTC channel 3 interrupt vector starts here?
+commentline 01cb CTC channel 3 interrupt vector starts here
 
 comment 01d5 Set CTC channel 0: Enable interrupts, timer mode, prescaler 16, falling edge,
 comment 01d7 automatic trigger, time constant follows, software reset, control word

@@ -49,7 +49,7 @@ READ_AND_PROCESS_INPUT_PORTS EQU $0d52
 ALL_RIGHTS_RESERVED_S EQU $0baf
 READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS EQU $0d38
 SHOULD_I_UPDATE_CONE_COLOR? EQU $0e32
-MCP_ATTRACT_COLORS? EQU $0e55
+MCP_ATTRACT_COLORS EQU $0e55
 DATA_TO_101A_USED_AT_0F86? EQU $1001
 PLEASE_S EQU $101b
 ENTER_S EQU $1022
@@ -556,7 +556,7 @@ COUNTDOWN_TIMER_FRAMES EQU $c403
 TANK_SPINNER_LAST_INPUT EQU $c404
 MCP_TRON_ARM_OR_TANK_TURRET_ROTATION EQU $c405
 ATTRACT_MCP_ROTATE_COLORS_IF_NON_ZERO EQU $c40f
-MCP_BLOCKS_COLOR_VECTOR_POINTER_0E55 EQU $c410
+MCP_BLOCKS_COLORS_STARTPOINT_VECTOR_INTO_0E55 EQU $c410
 MCP_DISK_NUMBER_BEING_PROCESSED EQU $c406
 MCP_SPRITE_BLOCK_HIT_BY_DISK EQU $c409
 MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK EQU $c40b
@@ -622,17 +622,24 @@ COLOR_RAM_TO_FFFF EQU $ff80
 ORG $0000
 
 *** Dissasembly of the Tron 8/9 ROMs used by MAME (labelled as tron)
-0000: C3 00 01       JP    $0100
+0000: C3 00 01       JP    $0100          ;Z80 starts executing code at 0x0000
 
 
 *** Data used where for what?
-0003: 34 19 85 0A 0E 22 02 34 02 10 00 CB 01 18 FE 24 
-0013: 70 3B E4 D8 1B 87 C5 35 96 C7 E1 69 60 45 0D 04 
-0023: 04 06 05 E1 79 46 01 1D A5 66 07 6F 41 05 45 A7 
-0033: 39 2C C6 40 84 65 8F 35 EA 2C C1 B4 2D F6 6E FF 
-0043: EA 78 FF 8D DE FE 61 CE AB DD 73 72 F3 BF 45 0B 
-0053: 27 F3 E8 BB 8C 30 FA 2B A9 60 B5 91 D9 AF 64 3F 
-0063: CB 79 AA 3E 07 D3 E8 76 
+0003: 34 19 85 0A 0E 
+
+*** Vectors for CTC interrupt channels 0, 1, 2 (not used), and 3
+0008: 22 02 
+000a: 34 02 
+000c: 10 00 
+000e: CB 01 
+
+0010: 18 FE 24 70 3B E4 D8 1B 87 C5 35 96 C7 E1 69 60 
+0020: 45 0D 04 04 06 05 E1 79 46 01 1D A5 66 07 6F 41 
+0030: 05 45 A7 39 2C C6 40 84 65 8F 35 EA 2C C1 B4 2D 
+0040: F6 6E FF EA 78 FF 8D DE FE 61 CE AB DD 73 72 F3 
+0050: BF 45 0B 27 F3 E8 BB 8C 30 FA 2B A9 60 B5 91 D9 
+0060: AF 64 3F CB 79 AA 3E 07 D3 E8 76 
 
 COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S:
 006b: COPYRIGHT 1982 BALLY MIDWAY MFG 
@@ -649,7 +656,10 @@ COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S:
 00ed: 3E 9B 0F E6 78 0F 8B F1 4F 9E 1B 75 FF 1F F2 DA 
 00fd: 79 EA 6A 
 
-0100: F3             DI    
+
+*** Initialize arcade machine
+0100: F3             DI                   ;Disable interrupts
+                                          ;Wait for a little bit (50 loop iterations)
 0101: 21 32 00       LD    HL,$0032
 0104: 2B             DEC   HL
 0105: 7C             LD    A,H
@@ -659,6 +669,8 @@ COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S:
 0109: D3 E0          OUT   (IO_WATCHDOG_RESET),A
 010b: AF             XOR   A,A
 010c: D3 00          OUT   (IO_0),A
+
+*** Write 20 bytes to an unknown location
 010e: 3E 02          LD    A,#$02
 0110: D3 E8          OUT   (IO_UNKNOWN_WRITTEN_AT_INITIALIZATION),A
 0112: 06 09          LD    B,#$09
@@ -670,7 +682,7 @@ COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S:
 
 011c: 3E 05          LD    A,#$05
 011e: D3 E8          OUT   (IO_UNKNOWN_WRITTEN_AT_INITIALIZATION),A
-0120: 31 FE C7       LD    SP,$C7FE
+0120: 31 FE C7       LD    SP,$C7FE       ;Set stack pointer
 0123: CD 15 AF       CALL  $AF15
 0126: CD E6 AA       CALL  $AAE6
 0129: 28 04          JR    Z,$012F
@@ -679,7 +691,7 @@ COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S:
 012d: 18 FC          JR    $012B
 
 012f: CD 1C 04       CALL  CHECK_DATA_C4F0_TO_C657?
-0132: ED 5E          IM    2
+0132: ED 5E          IM    2              ;Set interrupt mode to 2 (external - from CTC)
 0134: 21 7A C4       LD    HL,PSEUDO_RANDOM_VALUE_LAST_GENERATED
 0137: CD 29 70       CALL  ZERO_RAM_C000-C479
 013a: 3E 55          LD    A,#$55
@@ -700,18 +712,33 @@ COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S:
 0162: 22 8E C4       LD    (ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED3!),HL
 0165: 21 BE C4       LD    HL,SCREEN_MESSAGE_QUEUE_2_TO_C4D5
 0168: 22 BC C4       LD    ($C4BC),HL
+
+*** Initialize interrupt (vector) register to 0
 016b: 3E 00          LD    A,#$00
 016d: ED 47          LD    I,A
+
+*** CTC bits:
+*** 7 - Interrupt (1 enables)
+*** 6 - Mode (0 timer/1 counter)
+*** 5 - Prescaler (0 16/ 1 256)
+*** 4 - CLK/TRG Edge Selection (0 falling/1 rising)
+*** 3 - Control or Vector (0 vector/1 control)
+*** 2 - Reset (0 continuous operation/1 software reset)
+*** 1 - Time Constant (1 time constant follows)
+*** 0 - Timer Trigger (0 when loaded/1 pulse starts timer)
+*** Initialize CTC
+*** Set interrupt vector to 0x08 (just the top 5 bits are used. Bit zero is always
+*** 0 and bits 1 & 2 are set by the CTC based on channel that threw the interrupt)
 016f: 3E 08          LD    A,#$08
 0171: D3 F0          OUT   (IO_CTC0),A
-0173: 3E C7          LD    A,#$C7
-0175: D3 F3          OUT   (IO_CTC3),A
+0173: 3E C7          LD    A,#$C7         ;Set CTC channel 3: Disable interrupts, timer mode, prescaler 16, falling edge,
+0175: D3 F3          OUT   (IO_CTC3),A    ;automatic trigger, time constant follows, software reset, control word
 0177: 3E 01          LD    A,#$01
-0179: D3 F3          OUT   (IO_CTC3),A
-017b: 3E A7          LD    A,#$A7
-017d: D3 F1          OUT   (IO_CTC1),A
+0179: D3 F3          OUT   (IO_CTC3),A    ;Set CTC channel 3 time constant: 0x01
+017b: 3E A7          LD    A,#$A7         ;Set CTC channel 1: Disable interrupts, timer mode, prescaler 256, falling edge,
+017d: D3 F1          OUT   (IO_CTC1),A    ;automatic trigger, time constant follows, software reset, control word
 017f: 3E 4E          LD    A,#$4E
-0181: D3 F1          OUT   (IO_CTC1),A
+0181: D3 F1          OUT   (IO_CTC1),A    ;Set CTC channel 1 time constant: 0x4E
 0183: 21 82 C4       LD    HL,$C482
 0186: 22 80 C4       LD    ($C480),HL
 0189: FB             EI    
@@ -735,15 +762,19 @@ COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?:
 *** Data used where for what?
 01bb: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 38 
 
+
+*** CTC channel 3 interrupt vector starts here
+SERVICE_INTERRUPT_ROUTINE:
+01cb: 08             EX    AF,AF'
 01cc: D9             EXX   
 01cd: DD E5          PUSH  IX
 01cf: FD E5          PUSH  IY
 01d1: AF             XOR   A,A
 01d2: 32 62 C4       LD    ($C462),A
-01d5: 3E 87          LD    A,#$87
-01d7: D3 F0          OUT   (IO_CTC0),A
+01d5: 3E 87          LD    A,#$87         ;Set CTC channel 0: Enable interrupts, timer mode, prescaler 16, falling edge,
+01d7: D3 F0          OUT   (IO_CTC0),A    ;automatic trigger, time constant follows, software reset, control word
 01d9: 3E BB          LD    A,#$BB
-01db: D3 F0          OUT   (IO_CTC0),A
+01db: D3 F0          OUT   (IO_CTC0),A    ;Set CTC channel 0 time constant: 0xBB
 01dd: FB             EI    
 01de: CD C3 05       CALL  ROTATE_MCP_BLOCK_COLORS
 01e1: CD 4F 07       CALL  TANK_UPDATE_COLOR_CYCLING
@@ -787,16 +818,20 @@ COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?:
 021f: FB             EI    
 0220: ED 4D          RETI  
 
+
+*** CTC channel 0 interrupt vector starts here
 0222: F5             PUSH  AF
 0223: 3A 00 C4       LD    A,($C400)
 0226: 3C             INC   A
 0227: 32 00 C4       LD    ($C400),A
-022a: 3E 03          LD    A,#$03
-022c: D3 F0          OUT   (IO_CTC0),A
+022a: 3E 03          LD    A,#$03         ;Set CTC channel 0: Disable interrupts, timer mode, prescaler 16, falling edge
+022c: D3 F0          OUT   (IO_CTC0),A    ;automatic trigger, no time constant, software reset, control word
 022e: 32 62 C4       LD    ($C462),A
 0231: F1             POP   AF
 0232: ED 4D          RETI  
 
+
+*** CTC channel 1 interrupt vector starts here
 0234: F5             PUSH  AF
 0235: E5             PUSH  HL
 0236: C5             PUSH  BC
@@ -1391,7 +1426,7 @@ ROTATE_MCP_BLOCK_COLORS:
 05c9: 32 0F C4       LD    (ATTRACT_MCP_ROTATE_COLORS_IF_NON_ZERO),A
 05cc: DD 21 EC 05    LD    IX,MCP_BLOCKS_COLOR_POSITIONS_LEFT_TO_RIGHT
 05d0: 06 06          LD    B,#$06
-05d2: ED 5B 10 C4    LD    DE,(MCP_BLOCKS_COLOR_VECTOR_POINTER_0E55)
+05d2: ED 5B 10 C4    LD    DE,(MCP_BLOCKS_COLORS_STARTPOINT_VECTOR_INTO_0E55)
 05d6: DD 6E 00       LD    L,(IX+$00)
 05d9: DD 66 01       LD    H,(IX+$01)
 05dc: DD 23          INC   IX
@@ -2427,9 +2462,9 @@ SHOULD_I_UPDATE_CONE_COLOR?:
 0e42: 3E 05          LD    A,#$05
 0e44: 96             SUB   A,(HL)
 0e45: 87             ADD   A,A
-0e46: 21 55 0E       LD    HL,MCP_ATTRACT_COLORS?
+0e46: 21 55 0E       LD    HL,MCP_ATTRACT_COLORS
 0e49: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
-0e4c: 22 10 C4       LD    (MCP_BLOCKS_COLOR_VECTOR_POINTER_0E55),HL
+0e4c: 22 10 C4       LD    (MCP_BLOCKS_COLORS_STARTPOINT_VECTOR_INTO_0E55),HL
 0e4f: 3E 01          LD    A,#$01
 0e51: 32 0F C4       LD    (ATTRACT_MCP_ROTATE_COLORS_IF_NON_ZERO),A
 0e54: C9             RET   
@@ -2438,13 +2473,11 @@ SHOULD_I_UPDATE_CONE_COLOR?:
 *** These are color WORDS!  If bit 8 is set, write the color to the next byte up
 *** to set the A0 line high which sets bit 8 in the color WORD RAM.
 *** See Bally/Midway's MCR II System manual top-right corner of page MCR-6
-*** for more information.
-MCP_ATTRACT_COLORS?:
-0e55: 01 C0 00 38 00 07 01 C7 01 F8 00 3F 
-
-
-*** Data used where for what?  Copy of 12 bytes at 0e55!
-0e61: 01 C0 00 38 00 07 01 C7 01 F8 00 3F 
+*** for more information.  Color table is doubled so wraparound does not
+*** need to be calculated or handled.
+MCP_ATTRACT_COLORS:
+0e55: 01 C0 00 38 00 07 01 C7 01 F8 00 3F 01 C0 00 38 
+0e65: 00 07 01 C7 01 F8 00 3F 
 
 0e6d: 3A 86 C6       LD    A,($C686)
 0e70: 32 1F C4       LD    (LIVES_REMAINING),A
@@ -5303,7 +5336,7 @@ MCP_ROTATE_LEFT:
 31e6: 87             ADD   A,A
 31e7: 21 DA 35       LD    HL,_???_
 31ea: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
-31ed: 22 10 C4       LD    (MCP_BLOCKS_COLOR_VECTOR_POINTER_0E55),HL
+31ed: 22 10 C4       LD    (MCP_BLOCKS_COLORS_STARTPOINT_VECTOR_INTO_0E55),HL
 31f0: 3E 01          LD    A,#$01
 31f2: 32 0F C4       LD    (ATTRACT_MCP_ROTATE_COLORS_IF_NON_ZERO),A
 31f5: 0E 39          LD    C,#$39
