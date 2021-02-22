@@ -720,6 +720,7 @@ label ff80 COLOR_RAM_TO_FFFF
 
 org 0000
 commentline 0000 Dissasembly of the Tron 8/9 ROMs used by MAME (labelled as tron)
+comment 0000 Z80 starts executing code at 0x0000
 
 commentline 0003 Data used where for what?
 data 0003-006a
@@ -729,13 +730,48 @@ ascii 006b-008c
 commentline 008d Data used where for what?
 data 008d-00ff
 
+commentline 0100 Initialize arcade machine
+comment 0100 Disable interrupts
+comment 0100 Wait for a little bit (50 loop iterations)
+commentline 010e Write 20 bytes to an unknown location
+comment 0120 Set stack pointer
+comment 0132 Set interrupt mode to 2 (external - from CTC)
+commentline 016b Initialize interrupt vector to 0
+
+
+commentline 016f CTC bits:
+commentline 016f 7 - Interrupt (1 enables)
+commentline 016f 6 - Mode (0 timer/1 counter)
+commentline 016f 5 - Prescaler (0 16/ 1 256)
+commentline 016f 4 - CLK/TRG Edge Selection (0 falling/1 rising)
+commentline 016f 3 - Control or Vector (0 vector/1 control)
+commentline 016f 2 - Reset (0 continuous operation/1 software reset)
+commentline 016f 1 - Time Constant (1 time constant follows)
+commentline 016f 0 - Timer Trigger (0 when loaded/1 pulse starts timer)
+commentline 016f Initialize CTC
+comment 0171 Set 0: Enable interrupts, timer mode, prescaler 16, falling edge
+comment 0171 CLK/TRG pulse starts timer, no time constant, continuous, vector
+comment 0175 Set 3: Disable interrupts, timer mode, prescaler 16, falling edge,
+comment 0175 automatic trigger, time constant follows, software reset, control word
+comment 0179 Set 3 time constant: 0x01
+comment 017d Set 1: Disable interrupts, timer mode, prescaler 256, falling edge,
+comment 017d automatic trigger, time constant follows, software reset, control word
+comment 0181 Set 1 time constant: 0x4E
+
 data 01ab-01ba
 
 commentline 01bb Data used where for what?
 data 01bb-01cb
 
+comment 01d7 Set 0: Enable interrupts, timer mode, prescaler 16, falling edge,
+comment 01d7 automatic trigger, time constant follows, software reset, control word
+comment 01db Set 0 time constant: 0xBB
+
 commentline 01f6 How long has this user been playing?  C41A = BCD minutes, C41B = BCD seconds,
 commentline 01f6 C41C = countdown of 30 frames? (reset to 30 once count goes negative)
+
+comment 022c Set 0: Disable interrupts, timer mode, prescaler 16, falling edge
+comment 022c automatic trigger, no time constant, software reset, control word
 
 commentline 0289 Get spinner value.  Subtract from last. Store last spinner value to C404
 commentline 0289 And ???
