@@ -746,19 +746,19 @@ commentline 016f 7 - Interrupt (1 enables)
 commentline 016f 6 - Mode (0 timer/1 counter)
 commentline 016f 5 - Prescaler (0 16/ 1 256)
 commentline 016f 4 - CLK/TRG Edge Selection (0 falling/1 rising)
-commentline 016f 3 - Control or Vector (0 vector/1 control)
-commentline 016f 2 - Reset (0 continuous operation/1 software reset)
-commentline 016f 1 - Time Constant (1 time constant follows)
-commentline 016f 0 - Timer Trigger (0 when loaded/1 pulse starts timer)
+commentline 016f 3 - Timer Trigger (0 when loaded/1 pulse starts timer)
+commentline 016f 2 - Time Constant (1 time constant follows)
+commentline 016f 1 - Reset (0 continuous operation/1 software reset)
+commentline 016f 0 - Control or Vector (0 vector/1 control)
 commentline 016f Initialize CTC
-commentline 016f Set interrupt vector to 0x08 (just the top 5 bits are used. Bit zero is always
-commentline 016f 0 and bits 1 & 2 are set by the CTC based on channel that threw the interrupt)
-comment 0173 Set CTC channel 3: Disable interrupts, timer mode, prescaler 16, falling edge,
+comment 016f Set interrupt vector to 0x08 (just the top 5 bits are used. Bit zero is always
+comment 0171 0 and bits 1 & 2 are set by the CTC based on channel that threw the interrupt)
+comment 0173 Set CTC channel 3: Enable interrupts, counter mode, prescaler 16, falling edge,
 comment 0175 automatic trigger, time constant follows, software reset, control word
 comment 0179 Set CTC channel 3 time constant: 0x01
-comment 017b Set CTC channel 1: Disable interrupts, timer mode, prescaler 256, falling edge,
+comment 017b Set CTC channel 1: Enable interrupts, timer mode, prescaler 256, falling edge,
 comment 017d automatic trigger, time constant follows, software reset, control word
-comment 0181 Set CTC channel 1 time constant: 0x4E
+comment 0181 Set CTC channel 1 time constant: 0x4E (78)
 
 data 01ab-01ba
 
@@ -770,7 +770,7 @@ commentline 01cb CTC channel 3 interrupt vector starts here
 
 comment 01d5 Set CTC channel 0: Enable interrupts, timer mode, prescaler 16, falling edge,
 comment 01d7 automatic trigger, time constant follows, software reset, control word
-comment 01db Set CTC channel 0 time constant: 0xBB
+comment 01db Set CTC channel 0 time constant: 0xBB (187)
 
 commentline 01f6 How long has this user been playing?  C41A = BCD minutes, C41B = BCD seconds,
 commentline 01f6 C41C = countdown of 30 frames? (reset to 30 once count goes negative)
