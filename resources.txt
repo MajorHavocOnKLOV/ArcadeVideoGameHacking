@@ -5,6 +5,8 @@ https://docs.mamedev.org/debugger/registerpoints.html
 https://wiki.mamedev.org/index.php/Address_Maps
 
 z80:
+http://www.z80.info/zip/z80b8400_OCR.pdf (searchable)
+https://arcarc.xmission.com/Tech/Datasheets/Z80%20CTC.pdf
 https://clrhome.org/table/
 http://www.z80.info/z80sflag.htm
 https://www.seanriddle.com/midway.html
