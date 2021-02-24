@@ -20,10 +20,10 @@ cat tron.asm | grep 'CALL  ' | cut -c28- | sort | uniq -c | sort -nr > calls_cou
       9 LC_MULTIPLE_CYCLES_DO_SOMETHING?
       8 LC_DRAW_D_INTO_LC_RAM_DATA_STRUCTURE
       6 PSEUDO_RANDOM_VALUE_IN_A_AND_C47A
+      6 COMPLEMENT_AND_INCREMENT_HL
       6 BACKGROUND_RAM_FILL_FROM_HL_0780_BYTES_TO_F800
       6 $A069
       6 $99CA
-      6 $6F25
       5 STRING_IN_DE_TO_HL
       5 $A077
       4 TANK_UPDATE_POSITION_AND_PIC_OF_TANK_FROM_C000_TO_C002
@@ -52,11 +52,11 @@ cat tron.asm | grep 'CALL  ' | cut -c28- | sort | uniq -c | sort -nr > calls_cou
       4 $0720
       3 TANK_PROCESS_ENEMY_TANKS_ON_STARTUP_SOMEHOW?_USES_IX
       3 TANK_POSITION_THE_ONE_AT_IX
-      3 Print ROM error(s)
       3 PUT_STRINGS_IN_MSG_Q_DEST=IX+0_SRC=IX+2_END_WHEN_SRC=0000
       3 PUT_GAME_SELECT_COUNTDOWN_DIGIT_MESSAGE_IN_Q2
       3 PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LC
       3 PROCESS_GAME_SELECT_COUNTDOWN_TIMER
+      3 PRINT_ROM_ERRORS
       3 $99EA
       3 $9958
       3 $5535
@@ -140,11 +140,11 @@ cat tron.asm | grep 'CALL  ' | cut -c28- | sort | uniq -c | sort -nr > calls_cou
       1 DRAW_GAME_SELECT_SCREEN?
       1 DRAW_ATTRACT_MCP_CONE
       1 DISPLAY_MCP_CONE_WITH_COPYRIGHTS_AND_NEXT_INSTRUCTIONS
+      1 CLEAR_BACKGROUND
       1 CHECK_DATA_C4F0_TO_C657?
       1 C,$420D
       1 C,$0F7F
       1 ADD_MESSAGE_TO_Q2
-      1 $ABB1
       1 $AB39
       1 $A4B0
       1 $A03D

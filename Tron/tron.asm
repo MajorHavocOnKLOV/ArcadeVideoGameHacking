@@ -257,11 +257,12 @@ DATA_FOR_SETTING_UP_TRON_SPRITES? EQU $6b79
 ADD_A_TO_HL_WITH_CARRY EQU $6f00
 PSEUDO_RANDOM_VALUE_IN_A_AND_C47A EQU $6f05
 RESET_WATCHDOG_UNTIL_C400_IS_ONE EQU $6f17
+COMPLEMENT_AND_INCREMENT_HL EQU $6f25
 COPY_10_FROM_HL_TO_FFC0 EQU $6f2d
 COPY_20_FROM_HL_TO_FF80 EQU $6f35
 PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LC EQU $6f52
 PUT_C_ON_STACK_TO_SEND_TO_AUDIO EQU $6fb8
-CLEAR_BACKGROUND EQU $6fc7
+RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND EQU $6fc7
 SET_C40D_TO_FDD0_AND_ADD_A_MESSAGE_TO_Q EQU $6fee
 INCREASE_C40D_BY_4_AND_ADD_A_MESSAGE_TO_Q EQU $6ff4
 ADD_A_MESSAGE_TO_Q EQU $6fff
@@ -426,8 +427,10 @@ DATA_USED_TO_DISPLAY_RAM_ERROR(S) EQU $ab1d
 RAM_ERROR_S EQU $ab27
 B2_S EQU $ab31
 F6_S EQU $ab35
+CLEAR_BACKGROUND EQU $abb1
 TEST_RAM EQU $abc3
-Print ROM error(s) EQU $aca2
+PRINT_ROM_ERRORS EQU $aca2
+RAM_TEST_FAILED EQU $ac6b
 INFORMATION_USED_TO_RUN_RAM_TEST EQU $ac70
 INFORMATION_USED_TO_RUN_ROM_TEST EQU $ad15
 DATA_USED_TO_DISPLAY_ROM_ERROR(S) EQU $ad3c
@@ -439,9 +442,11 @@ D5_S EQU $ad64
 D6_S EQU $ad68
 D7_S EQU $ad6c
 PRINT_A_NULL_TERMINATED_ASCII_STRING_FROM_BC_TO_HL EQU $ad70
+DATA_TO_TEST_AUDIO_LATCHES EQU $ae2a
 INTERFACE_ERROR_S EQU $ae2e
 BOARD_TIMEOUT_S EQU $ae3e
 SOUND_BOARD_S EQU $ae4c
+DATA_USED_TO_DISPLAY_SOUND_ERROR(S) EQU $ae58
 A7_S EQU $ae68
 A8_S EQU $ae6c
 A9_S EQU $ae70
@@ -739,7 +744,7 @@ COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S:
 017b: 3E A7          LD    A,#$A7         ;Set CTC channel 1: Enable interrupts, timer mode, prescaler 256, falling edge,
 017d: D3 F1          OUT   (IO_CTC1),A    ;automatic trigger, time constant follows, software reset, control word
 017f: 3E 4E          LD    A,#$4E
-0181: D3 F1          OUT   (IO_CTC1),A    ;Set CTC channel 1 time constant: 0x4E (78)
+0181: D3 F1          OUT   (IO_CTC1),A    ;Set CTC channel 1 time constant: 0x4E (78) (total timer is 0x4E00)
 0183: 21 82 C4       LD    HL,$C482
 0186: 22 80 C4       LD    ($C480),HL
 0189: FB             EI    
@@ -1242,7 +1247,7 @@ INITIALIZE_HIGH_SCORES_AND_?:
 0484: 11 F0 C4       LD    DE,?_AND_HIGH_SCORE_INITIALS_AND_?_TO_C686
 0487: 21 9C 04       LD    HL,$049C
 048a: 01 5A 00       LD    BC,$005A
-048d: ED B0          LDIR  
+048d: ED B0          LDIR                 ;Copy HL to DE for count of BC
 048f: AF             XOR   A,A
 0490: 01 3D 01       LD    BC,$013D
 0493: AF             XOR   A,A
@@ -1837,13 +1842,13 @@ ATTRACT_MODE_LOOP:
 092d: B7             OR    A,A
 092e: 20 16          JR    NZ,$0946
 
-0930: CD C7 6F       CALL  CLEAR_BACKGROUND
+0930: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 0933: CD 20 70       CALL  ZERO_RAM_C000-C418
 0936: 3E 01          LD    A,#$01
 0938: 32 65 C4       LD    ($C465),A
 093b: CD F1 0A       CALL  DISPLAY_MCP_CONE_WITH_COPYRIGHTS_AND_NEXT_INSTRUCTIONS
 093e: CD 49 70       CALL  INITIALIZE_SPRITES
-0941: CD C7 6F       CALL  CLEAR_BACKGROUND
+0941: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 0944: 18 0D          JR    $0953
 
 0946: CD 20 70       CALL  ZERO_RAM_C000-C418
@@ -1947,7 +1952,7 @@ ATTRACT_MODE_LOOP:
 0a06: 30 2F          JR    NC,$0A37
 
 0a08: 32 15 C4       LD    ($C415),A
-0a0b: CD C7 6F       CALL  CLEAR_BACKGROUND
+0a0b: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 0a0e: CD AC 70       CALL  PUT_GAME_SELECT_COUNTDOWN_DIGIT_MESSAGE_IN_Q2
 0a11: CD 10 0D       CALL  $0D10
 0a14: 11 43 B0       LD    DE,TO_CONTINUE_GAME_S
@@ -1967,7 +1972,7 @@ ATTRACT_MODE_LOOP:
 
 0a35: 18 64          JR    $0A9B
 
-0a37: CD C7 6F       CALL  CLEAR_BACKGROUND
+0a37: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 0a3a: CD AC 70       CALL  PUT_GAME_SELECT_COUNTDOWN_DIGIT_MESSAGE_IN_Q2
 0a3d: CD 10 0D       CALL  $0D10
 0a40: 11 43 B0       LD    DE,TO_CONTINUE_GAME_S
@@ -2033,7 +2038,7 @@ ATTRACT_MODE_LOOP:
 0aaf: 10 F7          DJNZ  $0AA8
 
 0ab1: CD 49 70       CALL  INITIALIZE_SPRITES
-0ab4: CD C7 6F       CALL  CLEAR_BACKGROUND
+0ab4: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 0ab7: DB 03          IN    A,(IO_3)
 0ab9: E6 02          AND   A,#$02
 0abb: 28 13          JR    Z,$0AD0
@@ -2163,7 +2168,7 @@ ALL_RIGHTS_RESERVED_S:
 0c09: D0             RET   NC
 
 0c0a: CD 49 70       CALL  INITIALIZE_SPRITES
-0c0d: CD C7 6F       CALL  CLEAR_BACKGROUND
+0c0d: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 0c10: FD 21 04 F0    LD    IY,TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT
 0c14: 3E 01          LD    A,#$01
 0c16: 32 65 C4       LD    ($C465),A
@@ -2264,7 +2269,7 @@ ALL_RIGHTS_RESERVED_S:
 0ccc: 32 5A C4       LD    ($C45A),A
 0ccf: AF             XOR   A,A
 0cd0: 32 65 C4       LD    ($C465),A
-0cd3: CD C7 6F       CALL  CLEAR_BACKGROUND
+0cd3: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 0cd6: CD 49 70       CALL  INITIALIZE_SPRITES
 0cd9: 11 CF B0       LD    DE,BONUS_BASES_AWARDED_S
 0cdc: CD EE 6F       CALL  SET_C40D_TO_FDD0_AND_ADD_A_MESSAGE_TO_Q
@@ -2508,7 +2513,7 @@ MCP_ATTRACT_COLORS:
 0ea3: 21 19 C4       LD    HL,HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?)
 0ea6: 11 2F C4       LD    DE,OTHER_PLAYER_DATA
 0ea9: 01 16 00       LD    BC,$0016
-0eac: ED B0          LDIR  
+0eac: ED B0          LDIR                 ;Copy HL to DE for count of BC
 0eae: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 0eb1: B7             OR    A,A
 0eb2: CC 15 21       CALL  Z,INITIALIZE_LEVEL?
@@ -2562,7 +2567,7 @@ MCP_ATTRACT_COLORS:
 
 0f39: CD 20 70       CALL  ZERO_RAM_C000-C418
 0f3c: CD 49 70       CALL  INITIALIZE_SPRITES
-0f3f: CD C7 6F       CALL  CLEAR_BACKGROUND
+0f3f: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 0f42: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_5?
 0f45: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 0f48: 11 BB B0       LD    DE,GAME_OVER_S
@@ -2591,7 +2596,7 @@ MCP_ATTRACT_COLORS:
 
 0f7f: AF             XOR   A,A
 0f80: 32 65 C4       LD    ($C465),A
-0f83: CD C7 6F       CALL  CLEAR_BACKGROUND
+0f83: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 0f86: DD 21 01 10    LD    IX,DATA_TO_101A_USED_AT_0F86?
 0f8a: DD 4E 00       LD    C,(IX+$00)
 0f8d: DD 46 01       LD    B,(IX+$01)
@@ -3236,7 +3241,7 @@ PICK_WHICH_INSTRUCTIONS_TO_PRINT:
 1500: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_5?
 1503: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 1506: CD 49 70       CALL  INITIALIZE_SPRITES
-1509: CD C7 6F       CALL  CLEAR_BACKGROUND
+1509: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 150c: 21 27 15       LD    HL,$1527
 150f: 3A 61 C4       LD    A,(WHICH_INSTRUCTIONS_TO_DISPLAY?_VECTOR_LIST_AT_1527?)
 1512: 87             ADD   A,A
@@ -3527,7 +3532,7 @@ PUT_STRINGS_IN_MSG_Q_DEST=IX+0_SRC=IX+2_END_WHEN_SRC=0000:
 DISPLAY_MAP_OF_GAME_GRID_SCREENS:
 1755: DD 21 66 17    LD    IX,$1766
 1759: CD 32 17       CALL  PUT_STRINGS_IN_MSG_Q_DEST=IX+0_SRC=IX+2_END_WHEN_SRC=0000
-175c: CD C7 6F       CALL  CLEAR_BACKGROUND
+175c: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 175f: DD 21 8A 17    LD    IX,$178A
 1763: C3 32 17       JP    PUT_STRINGS_IN_MSG_Q_DEST=IX+0_SRC=IX+2_END_WHEN_SRC=0000
 
@@ -3693,7 +3698,7 @@ LIGHT_TRACES_S:
 DISPLAY_IO_TOWER_GAME_SCREENS:
 1b69: DD 21 7A 1B    LD    IX,$1B7A
 1b6d: CD 32 17       CALL  PUT_STRINGS_IN_MSG_Q_DEST=IX+0_SRC=IX+2_END_WHEN_SRC=0000
-1b70: CD C7 6F       CALL  CLEAR_BACKGROUND
+1b70: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 1b73: DD 21 9E 1B    LD    IX,$1B9E
 1b77: C3 32 17       JP    PUT_STRINGS_IN_MSG_Q_DEST=IX+0_SRC=IX+2_END_WHEN_SRC=0000
 
@@ -3757,7 +3762,7 @@ ENTERS_THE_TOWER_S:
 DISPLAY_MCP_GAME_SCREENS:
 1cb9: DD 21 CA 1C    LD    IX,$1CCA
 1cbd: CD 32 17       CALL  PUT_STRINGS_IN_MSG_Q_DEST=IX+0_SRC=IX+2_END_WHEN_SRC=0000
-1cc0: CD C7 6F       CALL  CLEAR_BACKGROUND
+1cc0: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 1cc3: DD 21 EE 1C    LD    IX,$1CEE
 1cc7: C3 32 17       JP    PUT_STRINGS_IN_MSG_Q_DEST=IX+0_SRC=IX+2_END_WHEN_SRC=0000
 
@@ -4098,7 +4103,7 @@ INITIALIZE_LEVEL?:
 2115: 21 08 23       LD    HL,$2308
 2118: 11 04 C0       LD    DE,$C004
 211b: 01 08 00       LD    BC,$0008
-211e: ED B0          LDIR  
+211e: ED B0          LDIR                 ;Copy HL to DE for count of BC
 2120: 06 04          LD    B,#$04
 2122: DD 21 26 C4    LD    IX,VECTOR_OF_GAMES_TO_C42D
 2126: CD 05 6F       CALL  PSEUDO_RANDOM_VALUE_IN_A_AND_C47A
@@ -4610,7 +4615,7 @@ MCP_INSTRUCTIONS:
 2c87: 3E 01          LD    A,#$01
 2c89: 32 08 C4       LD    ($C408),A
 2c8c: CD 49 70       CALL  INITIALIZE_SPRITES
-2c8f: CD C7 6F       CALL  CLEAR_BACKGROUND
+2c8f: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 2c92: 3E 01          LD    A,#$01
 2c94: 32 65 C4       LD    ($C465),A
 2c97: 3E 56          LD    A,#$56
@@ -4672,7 +4677,7 @@ PLAY_MCP:
 2d20: 3E 01          LD    A,#$01
 2d22: 32 08 C4       LD    ($C408),A
 2d25: CD 49 70       CALL  INITIALIZE_SPRITES
-2d28: CD C7 6F       CALL  CLEAR_BACKGROUND
+2d28: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 2d2b: 3E 01          LD    A,#$01
 2d2d: 32 65 C4       LD    ($C465),A
 2d30: 3A 19 C4       LD    A,(HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?))
@@ -4761,7 +4766,7 @@ PLAY_MCP:
 2db0: 18 E3          JR    $2D95
 
 
-*** 
+*** ???
 2db2: 3A E5 C0       LD    A,(MCP_ROTATION_SPEED_LOWER_IS_FASTER)
 2db5: 32 DE C0       LD    ($C0DE),A
 2db8: C3 D9 2F       JP    $2FD9
@@ -4808,7 +4813,7 @@ PLAY_MCP:
 2dfe: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 2e01: 11 0A C0       LD    DE,$C00A
 2e04: 01 04 00       LD    BC,$0004
-2e07: ED B0          LDIR  
+2e07: ED B0          LDIR                 ;Copy HL to DE for count of BC
 2e09: 2A 06 C0       LD    HL,($C006)
 2e0c: ED 5B 0A C0    LD    DE,($C00A)
 2e10: 19             ADD   HL,DE
@@ -5143,7 +5148,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 3061: 30 07          JR    NC,$306A
 
 3063: EB             EX    DE,HL
-3064: CD 25 6F       CALL  $6F25
+3064: CD 25 6F       CALL  COMPLEMENT_AND_INCREMENT_HL
 3067: 78             LD    A,B
 3068: 18 09          JR    $3073
 
@@ -5151,7 +5156,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 306b: 38 0F          JR    C,$307C
 
 306d: EB             EX    DE,HL
-306e: CD 25 6F       CALL  $6F25
+306e: CD 25 6F       CALL  COMPLEMENT_AND_INCREMENT_HL
 3071: 79             LD    A,C
 3072: 3D             DEC   A
 3073: DD 77 01       LD    (IX+$01),A
@@ -5171,7 +5176,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 3098: 38 08          JR    C,$30A2
 
 309a: EB             EX    DE,HL
-309b: CD 25 6F       CALL  $6F25
+309b: CD 25 6F       CALL  COMPLEMENT_AND_INCREMENT_HL
 309e: 3E F6          LD    A,#$F6
 30a0: 18 0D          JR    $30AF
 
@@ -5180,7 +5185,7 @@ MCP_PROCESS_DISK_POSITION(S)?:
 30a6: 30 10          JR    NC,$30B8
 
 30a8: EB             EX    DE,HL
-30a9: CD 25 6F       CALL  $6F25
+30a9: CD 25 6F       CALL  COMPLEMENT_AND_INCREMENT_HL
 30ac: 3A DC C0       LD    A,(MCP_TOWER_Y)
 30af: DD 77 03       LD    (IX+$03),A
 30b2: DD 75 06       LD    (IX+$06),L
@@ -6290,7 +6295,7 @@ PLAY_TANKS:
 TANKS_INSTRUCTIONS:
 3cdf: CD 20 70       CALL  ZERO_RAM_C000-C418
 3ce2: CD 49 70       CALL  INITIALIZE_SPRITES
-3ce5: CD C7 6F       CALL  CLEAR_BACKGROUND
+3ce5: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 3ce8: 21 80 79       LD    HL,TANK_COLOR_PALETTE
 3ceb: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 3cee: AF             XOR   A,A
@@ -10352,7 +10357,7 @@ HANDLE_JOYSTICK_INPUT?_TO_601F:
 5fb6: CD 00 6F       CALL  ADD_A_TO_HL_WITH_CARRY
 5fb9: 11 29 C0       LD    DE,JOYSTICK_INPUT_ARRAY_TO_C02C
 5fbc: 01 04 00       LD    BC,$0004
-5fbf: ED B0          LDIR  
+5fbf: ED B0          LDIR                 ;Copy HL to DE for count of BC
 5fc1: 2A 25 C0       LD    HL,($C025)
 5fc4: ED 5B 29 C0    LD    DE,(JOYSTICK_INPUT_ARRAY_TO_C02C)
 5fc8: 19             ADD   HL,DE
@@ -10745,7 +10750,7 @@ IO_OR_MCP?_SET_TRON_INITIAL_POSITION_AND_ROTATION:
 6270: 21 80 81       LD    HL,BACKGROUND_IO_TOWER_AFTER_ENTERING_BEAM
 6273: 11 00 F8       LD    DE,BACKGROUND_VIDEO_RAM_TO_FF7F
 6276: 01 80 07       LD    BC,$0780
-6279: ED B0          LDIR  
+6279: ED B0          LDIR                 ;Copy HL to DE for count of BC
 627b: CD 23 5F       CALL  CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?
 627e: 0E 22          LD    C,#$22
 6280: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
@@ -10922,7 +10927,7 @@ DATA_USED_FOR_???_TO_62F1:
 63bf: 3E AF          LD    A,#$AF
 63c1: DD 77 01       LD    (IX+$01),A
 63c4: EB             EX    DE,HL
-63c5: CD 25 6F       CALL  $6F25
+63c5: CD 25 6F       CALL  COMPLEMENT_AND_INCREMENT_HL
 63c8: DD 75 04       LD    (IX+$04),L
 63cb: DD 74 05       LD    (IX+$05),H
 63ce: DD 7E 01       LD    A,(IX+$01)
@@ -10958,7 +10963,7 @@ DATA_USED_FOR_???_TO_62F1:
 6406: 3E 8F          LD    A,#$8F
 6408: DD 77 03       LD    (IX+$03),A
 640b: EB             EX    DE,HL
-640c: CD 25 6F       CALL  $6F25
+640c: CD 25 6F       CALL  COMPLEMENT_AND_INCREMENT_HL
 640f: DD 75 06       LD    (IX+$06),L
 6412: DD 74 07       LD    (IX+$07),H
 6415: DD 7E 03       LD    A,(IX+$03)
@@ -11748,6 +11753,9 @@ RESET_WATCHDOG_UNTIL_C400_IS_ONE:
 6f21: 32 00 C4       LD    ($C400),A
 6f24: C9             RET   
 
+
+*** Could this reverse the direction of disks that strike a wall?
+COMPLEMENT_AND_INCREMENT_HL:
 6f25: 7C             LD    A,H
 6f26: 2F             CPL   
 6f27: 67             LD    H,A
@@ -11868,7 +11876,7 @@ PUT_C_ON_STACK_TO_SEND_TO_AUDIO:
 
 
 *** Clear background screen (set graphic to 51 and attributes to 5E)
-CLEAR_BACKGROUND:
+RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND:
 6fc7: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 6fca: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 6fcd: F3             DI    
@@ -11949,7 +11957,7 @@ BACKGROUND_RAM_FILL_FROM_HL_0780_BYTES_TO_F800:
 7038: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 703b: 11 00 F8       LD    DE,BACKGROUND_VIDEO_RAM_TO_FF7F
 703e: 01 80 07       LD    BC,$0780
-7041: ED B0          LDIR  
+7041: ED B0          LDIR                 ;Copy HL to DE for count of BC
 7043: 3E 01          LD    A,#$01
 7045: 32 65 C4       LD    ($C465),A
 7048: C9             RET   
@@ -12798,7 +12806,7 @@ DATA_TO_?_USED_AT_6954:
 9922: CD 49 70       CALL  INITIALIZE_SPRITES
 9925: 0E 02          LD    C,#$02
 9927: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
-992a: CD C7 6F       CALL  CLEAR_BACKGROUND
+992a: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 992d: CD A4 99       CALL  $99A4
 9930: DD 2A 00 C0    LD    IX,(CPU_RAM_OR_GS_DISK_X_TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF)
 9934: DD 7E 07       LD    A,(IX+$07)
@@ -12985,7 +12993,7 @@ HIT_FIRE_BUTTON_FOR_TEST_S:
 9b39: AF             XOR   A,A
 9b3a: 32 03 C0       LD    ($C003),A
 9b3d: 32 05 C0       LD    ($C005),A
-9b40: CD C7 6F       CALL  CLEAR_BACKGROUND
+9b40: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 9b43: CD 49 70       CALL  INITIALIZE_SPRITES
 9b46: 0E 02          LD    C,#$02
 9b48: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
@@ -13180,7 +13188,7 @@ SELECT_A_SOUND_S:
 9ea0: AF             XOR   A,A
 9ea1: 32 03 C0       LD    ($C003),A
 9ea4: 32 05 C0       LD    ($C005),A
-9ea7: CD C7 6F       CALL  CLEAR_BACKGROUND
+9ea7: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 9eaa: CD 49 70       CALL  INITIALIZE_SPRITES
 9ead: 0E 02          LD    C,#$02
 9eaf: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
@@ -13378,7 +13386,7 @@ a0c6: 01 02 02       LD    BC,$0202
 a0c9: CD 77 A0       CALL  $A077
 a0cc: C9             RET   
 
-a0cd: CD C7 6F       CALL  CLEAR_BACKGROUND
+a0cd: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 a0d0: CD 49 70       CALL  INITIALIZE_SPRITES
 a0d3: DD 21 20 A1    LD    IX,$A120
 a0d7: CD B1 99       CALL  $99B1
@@ -13465,7 +13473,7 @@ a1dc: HIT FIRE BUTTON TO EXIT
 a1f4: C6 F9 CA F9 CE F9 D2 F9 D6 F9 DA F9 DE F9 E2 F9 
 a204: E6 F9 EA F9 
 
-a208: CD C7 6F       CALL  CLEAR_BACKGROUND
+a208: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 a20b: CD 49 70       CALL  INITIALIZE_SPRITES
 a20e: DD 21 59 A2    LD    IX,$A259
 a212: CD B1 99       CALL  $99B1
@@ -13548,7 +13556,7 @@ a340: OVER 150000 PTS
 a350: C6 F9 CA F9 CE F9 D2 F9 D6 F9 DA F9 DE F9 E2 F9 
 a360: E6 F9 EA F9 
 
-a364: CD C7 6F       CALL  CLEAR_BACKGROUND
+a364: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 a367: CD 49 70       CALL  INITIALIZE_SPRITES
 a36a: 0E 02          LD    C,#$02
 a36c: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
@@ -13610,7 +13618,7 @@ a418: CHANNEL 5
 CHANNEL_6_S:
 a422: CHANNEL 6
 
-a42c: CD C7 6F       CALL  CLEAR_BACKGROUND
+a42c: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 a42f: CD 49 70       CALL  INITIALIZE_SPRITES
 a432: 0E 02          LD    C,#$02
 a434: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
@@ -13851,7 +13859,7 @@ a730: EC FD
 PL2_DOWN_S:
 a732: PL2 DOWN
 
-a73b: CD C7 6F       CALL  CLEAR_BACKGROUND
+a73b: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 a73e: CD 49 70       CALL  INITIALIZE_SPRITES
 a741: DD 21 73 A8    LD    IX,$A873
 a745: CD B1 99       CALL  $99B1
@@ -14131,7 +14139,7 @@ aa43: D3 E0          OUT   (IO_WATCHDOG_RESET),A
 aa45: 18 F2          JR    $AA39
 
 aa47: CD 39 AB       CALL  $AB39
-aa4a: CD C7 6F       CALL  CLEAR_BACKGROUND
+aa4a: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 aa4d: CD A3 AD       CALL  $ADA3
 aa50: F5             PUSH  AF
 aa51: 0E 02          LD    C,#$02
@@ -14159,7 +14167,7 @@ aa7f: C0             RET   NZ
 aa80: D3 E0          OUT   (IO_WATCHDOG_RESET),A
 aa82: 18 F2          JR    $AA76
 
-aa84: CD C7 6F       CALL  CLEAR_BACKGROUND
+aa84: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 aa87: 21 CC FD       LD    HL,$FDCC
 aa8a: 01 CE AA       LD    BC,HIT_FIRE_BUTTON2_S
 aa8d: CD 70 AD       CALL  PRINT_A_NULL_TERMINATED_ASCII_STRING_FROM_BC_TO_HL
@@ -14180,7 +14188,7 @@ aaa8: 7A             LD    A,D
 aaa9: B3             OR    A,E
 aaaa: 20 F0          JR    NZ,$AA9C
 
-aaac: CD C7 6F       CALL  CLEAR_BACKGROUND
+aaac: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 aaaf: C3 00 AA       JP    $AA00
 
 HIT_FIRE_BUTTON_S:
@@ -14205,13 +14213,13 @@ aaf4: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_5?
 aaf7: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 aafa: 21 AB 01       LD    HL,COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?
 aafd: CD 2D 6F       CALL  COPY_10_FROM_HL_TO_FFC0
-ab00: CD B1 AB       CALL  $ABB1
+ab00: CD B1 AB       CALL  CLEAR_BACKGROUND
 ab03: F1             POP   AF
 ab04: B7             OR    A,A
 ab05: 28 0D          JR    Z,$AB14
 
 ab07: DD 21 1D AB    LD    IX,DATA_USED_TO_DISPLAY_RAM_ERROR(S)
-ab0b: CD A2 AC       CALL  Print ROM error(s)
+ab0b: CD A2 AC       CALL  PRINT_ROM_ERRORS
 ab0e: CD D6 AC       CALL  $ACD6
 ab11: F6 01          OR    A,#$01
 ab13: C9             RET   
@@ -14305,6 +14313,7 @@ aba6: C3 2D 6F       JP    COPY_10_FROM_HL_TO_FFC0
 aba9: 00 00 01 C0 00 38 00 07 
 
 *** Clear background (identical to code at 6fdc!)
+CLEAR_BACKGROUND:
 abb1: 21 00 F8       LD    HL,BACKGROUND_VIDEO_RAM_TO_FF7F
 abb4: 01 C0 03       LD    BC,$03C0
 abb7: 36 5E          LD    (HL),#$5E
@@ -14327,7 +14336,7 @@ abc5: DD 6E 00       LD    L,(IX+$00)
 abc8: DD 66 01       LD    H,(IX+$01)
 abcb: 7C             LD    A,H
 abcc: B5             OR    A,L
-abcd: 20 02          JR    NZ,$ABD1
+abcd: 20 02          JR    NZ,$ABD1       ;JR if another RAM to process
 
 abcf: F1             POP   AF
 abd0: C9             RET   
@@ -14338,25 +14347,25 @@ abd1: DD 5E 04       LD    E,(IX+$04)
 abd4: DD 56 05       LD    D,(IX+$05)
 abd7: DD 4E 02       LD    C,(IX+$02)
 abda: DD 46 03       LD    B,(IX+$03)
-abdd: ED B0          LDIR  
+abdd: ED B0          LDIR                 ;Copy HL to DE for count of BC
 abdf: DD 7E 07       LD    A,(IX+$07)
 abe2: 32 FF C7       LD    ($C7FF),A
 abe5: D3 E0          OUT   (IO_WATCHDOG_RESET),A
-abe7: DD 6E 00       LD    L,(IX+$00)
+abe7: DD 6E 00       LD    L,(IX+$00)     ;Set source and size (HL & DE) for 00 & FF RAM test
 abea: DD 66 01       LD    H,(IX+$01)
 abed: DD 5E 02       LD    E,(IX+$02)
 abf0: DD 56 03       LD    D,(IX+$03)
 abf3: 7A             LD    A,D
 abf4: B3             OR    A,E
-abf5: 28 11          JR    Z,$AC08
+abf5: 28 11          JR    Z,$AC08        ;If destination is 0x0000, JR
 
 
-*** Test RAM from IX+0 sized IX+2 to IX+4 with 00 and FF
+*** Test RAM from IX+0 sized IX+2 with 00 and FF
 abf7: 06 02          LD    B,#$02
 abf9: 3E 00          LD    A,#$00
 abfb: 77             LD    (HL),A
 abfc: BE             CP    A,(HL)
-abfd: C2 6B AC       JP    NZ,$AC6B
+abfd: C2 6B AC       JP    NZ,RAM_TEST_FAILED;JP if 00 or FF test fails
 
 ac00: F6 FF          OR    A,#$FF
 ac02: 10 F7          DJNZ  $ABFB
@@ -14365,13 +14374,14 @@ ac04: 23             INC   HL
 ac05: 1B             DEC   DE
 ac06: 18 EB          JR    $ABF3
 
-ac08: DD 66 01       LD    H,(IX+$01)
+ac08: DD 66 01       LD    H,(IX+$01)     ;Set source and size (HL & DE) for setting RAM to zero
+                                          ;Set source and size (HL & DE) for walking 1s RAM test
 ac0b: DD 6E 00       LD    L,(IX+$00)
 ac0e: DD 5E 02       LD    E,(IX+$02)
 ac11: DD 56 03       LD    D,(IX+$03)
 ac14: D3 E0          OUT   (IO_WATCHDOG_RESET),A
 
-*** Zero RAM from IX+0 to (IX+2)-1
+*** Zero RAM from IX+0 for size IX+2 (HL & DE)
 ac16: 7A             LD    A,D
 ac17: B3             OR    A,E
 ac18: 28 06          JR    Z,$AC20
@@ -14391,14 +14401,14 @@ ac2e: 28 15          JR    Z,$AC45
 
 ac30: 7E             LD    A,(HL)
 ac31: FE 00          CP    A,#$00
-ac33: C2 6B AC       JP    NZ,$AC6B
+ac33: C2 6B AC       JP    NZ,RAM_TEST_FAILED
 
 ac36: 3E 01          LD    A,#$01
 
-*** Walking 1s from IX+0 to (IX+2)-1
+*** Walking 1s from IX+0 for size IX+2 (HL & DE)
 ac38: 77             LD    (HL),A
 ac39: BE             CP    A,(HL)
-ac3a: C2 6B AC       JP    NZ,$AC6B
+ac3a: C2 6B AC       JP    NZ,RAM_TEST_FAILED
 
 ac3d: CB 27          SLA   A
 ac3f: 30 F7          JR    NC,$AC38
@@ -14409,7 +14419,7 @@ ac43: 18 E7          JR    $AC2C
 
 ac45: AF             XOR   A,A
 
-*** Copy back RAM from IX+4 sized IX+2 to IX+0
+*** Copy RAM from IX+4 sized IX+2 to IX+0
 ac46: DD 66 05       LD    H,(IX+$05)
 ac49: DD 6E 04       LD    L,(IX+$04)
 ac4c: DD 56 01       LD    D,(IX+$01)
@@ -14417,7 +14427,7 @@ ac4f: DD 5E 00       LD    E,(IX+$00)
 ac52: DD 4E 02       LD    C,(IX+$02)
 ac55: DD 46 03       LD    B,(IX+$03)
 ac58: D3 E0          OUT   (IO_WATCHDOG_RESET),A
-ac5a: ED B0          LDIR  
+ac5a: ED B0          LDIR                 ;Copy HL to DE for count of BC
 ac5c: 47             LD    B,A
 ac5d: AF             XOR   A,A
 ac5e: 32 FF C7       LD    ($C7FF),A
@@ -14427,24 +14437,24 @@ ac63: 11 08 00       LD    DE,$0008
 ac66: DD 19          ADD   IX,DE
 ac68: C3 C4 AB       JP    $ABC4
 
+RAM_TEST_FAILED:
 ac6b: DD 7E 06       LD    A,(IX+$06)
 ac6e: 18 D6          JR    $AC46
 
 
 *** 8 bytes: Source vector, Size x2, Destination vector, ? watchdog setting?
+*** DE    BC    HL   xx  A, @AF22 & @AF34
 INFORMATION_USED_TO_RUN_RAM_TEST:
-ac70: 00 C0 00 02 00 C2 
-ac76: 01 01 00 C2 00 02 
-ac7c: 00 C0 01 02 00 C4 
-ac82: 00 02 00 C2 01 03 
-ac88: 00 C6 FF 01 00 C0 
-ac8e: 01 04 00 F8 00 04 
-ac94: 00 C0 20 05 00 FC 
-ac9a: 00 04 00 C0 20 05 
+ac70: 00 C0 00 02 00 C2 01 01 
+ac78: 00 C2 00 02 00 C0 01 02 
+ac80: 00 C4 00 02 00 C2 01 03 
+ac88: 00 C6 FF 01 00 C0 01 04 
+ac90: 00 F8 00 04 00 C0 20 05 
+ac98: 00 FC 00 04 00 C0 20 05 
 
 aca0: 00 00                                           ;Marks end of information to test RAMs
 
-Print ROM error(s):
+PRINT_ROM_ERRORS:
 aca2: F5             PUSH  AF
 aca3: DD 6E 02       LD    L,(IX+$02)
 aca6: DD 66 03       LD    H,(IX+$03)
@@ -14506,7 +14516,7 @@ ad09: B7             OR    A,A
 ad0a: C8             RET   Z
 
 ad0b: DD 21 3C AD    LD    IX,DATA_USED_TO_DISPLAY_ROM_ERROR(S)
-ad0f: CD A2 AC       CALL  Print ROM error(s)
+ad0f: CD A2 AC       CALL  PRINT_ROM_ERRORS
 ad12: F6 01          OR    A,#$01
 ad14: C9             RET   
 
@@ -14592,21 +14602,21 @@ ada3: 0E 02          LD    C,#$02
 ada5: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 ada8: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 adab: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
-adae: CD C7 6F       CALL  CLEAR_BACKGROUND
+adae: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 adb1: CD 49 70       CALL  INITIALIZE_SPRITES
 adb4: 0E 02          LD    C,#$02
 adb6: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 adb9: 0E 06          LD    C,#$06
 adbb: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 adbe: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
-adc1: DD 21 2A AE    LD    IX,$AE2A
+adc1: DD 21 2A AE    LD    IX,DATA_TO_TEST_AUDIO_LATCHES
 adc5: 01 00 04       LD    BC,$0400
 adc8: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 adcb: C5             PUSH  BC
 adcc: 0E 1F          LD    C,#$1F
 adce: DD 7E 00       LD    A,(IX+$00)
 add1: 06 04          LD    B,#$04
-add3: ED 79          OUT   (C),A
+add3: ED 79          OUT   (C),A          ;Output 00 then FF then 55 then AA to audio latches at 1F 1E 1D 1C
 add5: 0D             DEC   C
 add6: 10 FB          DJNZ  $ADD3
 
@@ -14614,7 +14624,7 @@ add8: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 addb: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 adde: DB 07          IN    A,(IO_AUDIO_STATUS)
 ade0: C1             POP   BC
-ade1: DD BE 00       CP    A,(IX+$00)
+ade1: DD BE 00       CP    A,(IX+$00)     ;Compare audio status reads to 00 FF 55 AA
 ade4: 28 01          JR    Z,$ADE7
 
 ade6: 0C             INC   C
@@ -14648,8 +14658,8 @@ ae15: DB 07          IN    A,(IO_AUDIO_STATUS)
 ae17: B7             OR    A,A
 ae18: C8             RET   Z
 
-ae19: DD 21 58 AE    LD    IX,$AE58
-ae1d: CD A2 AC       CALL  Print ROM error(s)
+ae19: DD 21 58 AE    LD    IX,DATA_USED_TO_DISPLAY_SOUND_ERROR(S)
+ae1d: CD A2 AC       CALL  PRINT_ROM_ERRORS
 ae20: 06 60          LD    B,#$60
 ae22: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 ae25: 10 FB          DJNZ  $AE22
@@ -14657,6 +14667,7 @@ ae25: 10 FB          DJNZ  $AE22
 ae27: F6 01          OR    A,#$01
 ae29: C9             RET   
 
+DATA_TO_TEST_AUDIO_LATCHES:
 ae2a: 00 FF 55 AA 
 
 INTERFACE_ERROR_S:
@@ -14670,7 +14681,12 @@ ae4c: SOUND BOARD
 
 
 *** 2x SOUND BOARD, 2x destination, 2x destination of ROM(s), 5x2 bytes: source of sound board devices
-ae58: 4C AE EA FD EC FD 68 AE 6C AE 70 AE 74 AE 79 AE 
+DATA_USED_TO_DISPLAY_SOUND_ERROR(S):
+ae58: 4C AE EA FD 
+                                          ;Source vector, Destination vector
+
+ae5c: EC FD 68 AE 6C AE 70 AE 74 AE 79 AE 
+                                          ;Destination vector,  Source vector(s) for sound ROMs and devices
 
 A7_S:
 ae68: A7 
@@ -14696,7 +14712,7 @@ ae84: 11 00 F8       LD    DE,BACKGROUND_VIDEO_RAM_TO_FF7F
 ae87: 3E 0F          LD    A,#$0F
 ae89: 21 95 AE       LD    HL,DATA_TO_DRAW_WHITE_ON_BLACK_CROSSHATCH_PATTERN
 ae8c: 01 80 00       LD    BC,$0080
-ae8f: ED B0          LDIR  
+ae8f: ED B0          LDIR                 ;Copy HL to DE for count of BC
 ae91: 3D             DEC   A
 ae92: 20 F5          JR    NZ,$AE89
 
@@ -14738,7 +14754,7 @@ af3d: DD 5E 00       LD    E,(IX+$00)
 af40: DD 4E 02       LD    C,(IX+$02)
 af43: DD 46 03       LD    B,(IX+$03)
 af46: D3 E0          OUT   (IO_WATCHDOG_RESET),A
-af48: ED B0          LDIR  
+af48: ED B0          LDIR                 ;Copy HL to DE for count of BC
 af4a: AF             XOR   A,A
 af4b: 32 FF C7       LD    ($C7FF),A
 af4e: C9             RET   
@@ -14873,7 +14889,7 @@ USER_S:
 b17e: USER
 
 
-*** It looks like data until the end of ROM space.  I want to figure out what it's for.
+*** It looks like data until the end of ROM space
 b183: 95 F6 3E FB 74 2E EC 1F 7D 95 14 7F 59 3F 0E EE 
 b193: 4F E6 AF 8D FD 57 4F 19 7F A5 97 8F FD BE 15 F3 
 b1a3: BB D7 56 A7 19 B5 4F 35 B8 A6 E3 9E 87 92 1E DF 
