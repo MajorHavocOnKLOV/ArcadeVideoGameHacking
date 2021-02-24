@@ -18,6 +18,7 @@ TANK_ROTATE_TURRET? EQU $0289
 GET_INPUT_FROM_JOYSTICK_TRIGGER_+? EQU $02e3
 STRING_IN_DE_TO_HL EQU $0401
 CHECK_DATA_C4F0_TO_C657? EQU $041c
+INITIALIZE_HIGH_SCORES_AND_? EQU $0484
 DEFAULT_HIGH_SCORE_TABLE EQU $04b0
 BA_S EQU $04b3
 GG_S EQU $04b6
@@ -420,13 +421,15 @@ HIT_FIRE_BUTTON_S EQU $aab2
 TO_CONTINUE_S EQU $aac2
 HIT_FIRE_BUTTON2_S EQU $aace
 TO_EXIT_S EQU $aade
+TEST_AND_INITIALIZE_SYSTEM_CALLED_AT_START_AND_ONE_OTHER_PLACE_WHY_OTHER? EQU $aae6
 DATA_USED_TO_DISPLAY_RAM_ERROR(S) EQU $ab1d
 RAM_ERROR_S EQU $ab27
 B2_S EQU $ab31
 F6_S EQU $ab35
+TEST_RAM EQU $abc3
 Print ROM error(s) EQU $aca2
-DATA_USED_TO_TEST_RAM EQU $ac70
-DATA_USED_TO_TEST_ROM EQU $ad15
+INFORMATION_USED_TO_RUN_RAM_TEST EQU $ac70
+INFORMATION_USED_TO_RUN_ROM_TEST EQU $ad15
 DATA_USED_TO_DISPLAY_ROM_ERROR(S) EQU $ad3c
 ROM_ERROR_S EQU $ad4e
 D2_S EQU $ad58
@@ -445,7 +448,8 @@ A9_S EQU $ae70
 A10_S EQU $ae74
 A6_S EQU $ae79
 DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN EQU $ae7c
-DATA_TO_DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN EQU $ae95
+DATA_TO_DRAW_WHITE_ON_BLACK_CROSSHATCH_PATTERN EQU $ae95
+TEST_RAM_ONLY_CALLED_AT_MACHINE_INITIALIZATION EQU $af15
 1ST_S EQU $b000
 2ND_S EQU $b004
 PLAYER_1_UP_S EQU $b008
@@ -594,7 +598,7 @@ SOURCE? EQU $c4ba
 SCREEN_MESSAGE_QUEUE_2_TO_C4D5 EQU $c4be
 SCREEN_MESSAGE_QUEUE_TO_CD60? EQU $c4d6
 SCREEN_MESSAGE_QUEUE EQU $c4d8
-?_AND_HIGH_SCORE_INITIALS_AND_?_TO_C549 EQU $c4f0
+?_AND_HIGH_SCORE_INITIALS_AND_?_TO_C686 EQU $c4f0
 DIFFICULTY_LEVEL EQU $c4f6
 HIGH_SCORES_DIGITS EQU $c4f7
 CREDITS EQU $c501
@@ -659,18 +663,17 @@ COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S:
 
 *** Initialize arcade machine
 0100: F3             DI                   ;Disable interrupts
-                                          ;Wait for a little bit (50 loop iterations)
 0101: 21 32 00       LD    HL,$0032
 0104: 2B             DEC   HL
 0105: 7C             LD    A,H
 0106: B5             OR    A,L
-0107: 20 FB          JR    NZ,$0104
+0107: 20 FB          JR    NZ,$0104       ;Wait for a little bit (50 loop iterations)
 
 0109: D3 E0          OUT   (IO_WATCHDOG_RESET),A
 010b: AF             XOR   A,A
 010c: D3 00          OUT   (IO_0),A
 
-*** Write 20 bytes to an unknown location
+*** Write 20 bytes to the unknown IO location
 010e: 3E 02          LD    A,#$02
 0110: D3 E8          OUT   (IO_UNKNOWN_WRITTEN_AT_INITIALIZATION),A
 0112: 06 09          LD    B,#$09
@@ -683,8 +686,8 @@ COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S:
 011c: 3E 05          LD    A,#$05
 011e: D3 E8          OUT   (IO_UNKNOWN_WRITTEN_AT_INITIALIZATION),A
 0120: 31 FE C7       LD    SP,$C7FE       ;Set stack pointer
-0123: CD 15 AF       CALL  $AF15
-0126: CD E6 AA       CALL  $AAE6
+0123: CD 15 AF       CALL  TEST_RAM_ONLY_CALLED_AT_MACHINE_INITIALIZATION
+0126: CD E6 AA       CALL  TEST_AND_INITIALIZE_SYSTEM_CALLED_AT_START_AND_ONE_OTHER_PLACE_WHY_OTHER?
 0129: 28 04          JR    Z,$012F
 
 012b: D3 E0          OUT   (IO_WATCHDOG_RESET),A
@@ -722,23 +725,21 @@ COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S:
 *** 6 - Mode (0 timer/1 counter)
 *** 5 - Prescaler (0 16/ 1 256)
 *** 4 - CLK/TRG Edge Selection (0 falling/1 rising)
-*** 3 - Control or Vector (0 vector/1 control)
-*** 2 - Reset (0 continuous operation/1 software reset)
-*** 1 - Time Constant (1 time constant follows)
-*** 0 - Timer Trigger (0 when loaded/1 pulse starts timer)
+*** 3 - Timer Trigger (0 when loaded/1 pulse starts timer)
+*** 2 - Time Constant (1 time constant follows)
+*** 1 - Reset (0 continuous operation/1 software reset)
+*** 0 - Control or Vector (0 vector/1 control)
 *** Initialize CTC
-*** Set interrupt vector to 0x08 (just the top 5 bits are used. Bit zero is always
-*** 0 and bits 1 & 2 are set by the CTC based on channel that threw the interrupt)
-016f: 3E 08          LD    A,#$08
-0171: D3 F0          OUT   (IO_CTC0),A
-0173: 3E C7          LD    A,#$C7         ;Set CTC channel 3: Disable interrupts, timer mode, prescaler 16, falling edge,
+016f: 3E 08          LD    A,#$08         ;Set interrupt vector to 0x08 (just the top 5 bits are used. Bit zero is always
+0171: D3 F0          OUT   (IO_CTC0),A    ;0 and bits 1 & 2 are set by the CTC based on channel that threw the interrupt)
+0173: 3E C7          LD    A,#$C7         ;Set CTC channel 3: Enable interrupts, counter mode, prescaler 16, falling edge,
 0175: D3 F3          OUT   (IO_CTC3),A    ;automatic trigger, time constant follows, software reset, control word
 0177: 3E 01          LD    A,#$01
 0179: D3 F3          OUT   (IO_CTC3),A    ;Set CTC channel 3 time constant: 0x01
-017b: 3E A7          LD    A,#$A7         ;Set CTC channel 1: Disable interrupts, timer mode, prescaler 256, falling edge,
+017b: 3E A7          LD    A,#$A7         ;Set CTC channel 1: Enable interrupts, timer mode, prescaler 256, falling edge,
 017d: D3 F1          OUT   (IO_CTC1),A    ;automatic trigger, time constant follows, software reset, control word
 017f: 3E 4E          LD    A,#$4E
-0181: D3 F1          OUT   (IO_CTC1),A    ;Set CTC channel 1 time constant: 0x4E
+0181: D3 F1          OUT   (IO_CTC1),A    ;Set CTC channel 1 time constant: 0x4E (78)
 0183: 21 82 C4       LD    HL,$C482
 0186: 22 80 C4       LD    ($C480),HL
 0189: FB             EI    
@@ -774,7 +775,7 @@ SERVICE_INTERRUPT_ROUTINE:
 01d5: 3E 87          LD    A,#$87         ;Set CTC channel 0: Enable interrupts, timer mode, prescaler 16, falling edge,
 01d7: D3 F0          OUT   (IO_CTC0),A    ;automatic trigger, time constant follows, software reset, control word
 01d9: 3E BB          LD    A,#$BB
-01db: D3 F0          OUT   (IO_CTC0),A    ;Set CTC channel 0 time constant: 0xBB
+01db: D3 F0          OUT   (IO_CTC0),A    ;Set CTC channel 0 time constant: 0xBB (187)
 01dd: FB             EI    
 01de: CD C3 05       CALL  ROTATE_MCP_BLOCK_COLORS
 01e1: CD 4F 07       CALL  TANK_UPDATE_COLOR_CYCLING
@@ -985,7 +986,7 @@ GET_INPUT_FROM_JOYSTICK_TRIGGER_+?:
 0311: 34             INC   (HL)
 0312: 3A 02 C5       LD    A,($C502)
 0315: 3C             INC   A
-0316: 21 F0 C4       LD    HL,?_AND_HIGH_SCORE_INITIALS_AND_?_TO_C549
+0316: 21 F0 C4       LD    HL,?_AND_HIGH_SCORE_INITIALS_AND_?_TO_C686
 0319: BE             CP    A,(HL)
 031a: 38 09          JR    C,$0325
 
@@ -1157,14 +1158,14 @@ STRING_IN_DE_TO_HL:
 041a: 18 E8          JR    $0404
 
 CHECK_DATA_C4F0_TO_C657?:
-041c: 21 F0 C4       LD    HL,?_AND_HIGH_SCORE_INITIALS_AND_?_TO_C549
+041c: 21 F0 C4       LD    HL,?_AND_HIGH_SCORE_INITIALS_AND_?_TO_C686
 041f: 06 07          LD    B,#$07
 0421: 7E             LD    A,(HL)
 0422: B7             OR    A,A
-0423: 28 5F          JR    Z,$0484
+0423: 28 5F          JR    Z,INITIALIZE_HIGH_SCORES_AND_?
 
 0425: FE 0A          CP    A,#$0A
-0427: 30 5B          JR    NC,$0484
+0427: 30 5B          JR    NC,INITIALIZE_HIGH_SCORES_AND_?
 
 0429: 23             INC   HL
 042a: 10 F5          DJNZ  $0421
@@ -1172,7 +1173,7 @@ CHECK_DATA_C4F0_TO_C657?:
 042c: 06 0A          LD    B,#$0A
 042e: 7E             LD    A,(HL)
 042f: FE 0A          CP    A,#$0A
-0431: 30 51          JR    NC,$0484
+0431: 30 51          JR    NC,INITIALIZE_HIGH_SCORES_AND_?
 
 0433: 23             INC   HL
 0434: 10 F8          DJNZ  $042E
@@ -1180,20 +1181,20 @@ CHECK_DATA_C4F0_TO_C657?:
 0436: 7E             LD    A,(HL)
 0437: 23             INC   HL
 0438: FE 0A          CP    A,#$0A
-043a: 30 48          JR    NC,$0484
+043a: 30 48          JR    NC,INITIALIZE_HIGH_SCORES_AND_?
 
-043c: 3A F0 C4       LD    A,(?_AND_HIGH_SCORE_INITIALS_AND_?_TO_C549)
+043c: 3A F0 C4       LD    A,(?_AND_HIGH_SCORE_INITIALS_AND_?_TO_C686)
 043f: BE             CP    A,(HL)
-0440: 38 42          JR    C,$0484
+0440: 38 42          JR    C,INITIALIZE_HIGH_SCORES_AND_?
 
-0442: 28 40          JR    Z,$0484
+0442: 28 40          JR    Z,INITIALIZE_HIGH_SCORES_AND_?
 
 0444: 23             INC   HL
 0445: 3A F2 C4       LD    A,($C4F2)
 0448: BE             CP    A,(HL)
-0449: 38 39          JR    C,$0484
+0449: 38 39          JR    C,INITIALIZE_HIGH_SCORES_AND_?
 
-044b: 28 37          JR    Z,$0484
+044b: 28 37          JR    Z,INITIALIZE_HIGH_SCORES_AND_?
 
 044d: 23             INC   HL
 044e: 06 1E          LD    B,#$1E
@@ -1209,10 +1210,10 @@ CHECK_DATA_C4F0_TO_C657?:
 045c: 28 08          JR    Z,$0466
 
 045e: FE 41          CP    A,#$41
-0460: 38 22          JR    C,$0484
+0460: 38 22          JR    C,INITIALIZE_HIGH_SCORES_AND_?
 
 0462: FE 5B          CP    A,#$5B
-0464: 30 1E          JR    NC,$0484
+0464: 30 1E          JR    NC,INITIALIZE_HIGH_SCORES_AND_?
 
 0466: 23             INC   HL
 0467: 10 E9          DJNZ  $0452
@@ -1222,12 +1223,12 @@ CHECK_DATA_C4F0_TO_C657?:
 046f: 7E             LD    A,(HL)
 0470: E6 F0          AND   A,#$F0
 0472: FE A0          CP    A,#$A0
-0474: 30 0E          JR    NC,$0484
+0474: 30 0E          JR    NC,INITIALIZE_HIGH_SCORES_AND_?
 
 0476: 7E             LD    A,(HL)
 0477: E6 0F          AND   A,#$0F
 0479: FE 0A          CP    A,#$0A
-047b: 30 07          JR    NC,$0484
+047b: 30 07          JR    NC,INITIALIZE_HIGH_SCORES_AND_?
 
 047d: 23             INC   HL
 047e: 0B             DEC   BC
@@ -1237,7 +1238,8 @@ CHECK_DATA_C4F0_TO_C657?:
 
 0483: C9             RET   
 
-0484: 11 F0 C4       LD    DE,?_AND_HIGH_SCORE_INITIALS_AND_?_TO_C549
+INITIALIZE_HIGH_SCORES_AND_?:
+0484: 11 F0 C4       LD    DE,?_AND_HIGH_SCORE_INITIALS_AND_?_TO_C686
 0487: 21 9C 04       LD    HL,$049C
 048a: 01 5A 00       LD    BC,$005A
 048d: ED B0          LDIR  
@@ -14096,7 +14098,7 @@ a9e4: 45 8C 76 05 DF 45 8F 42 84 85 20 34 27 CD 0E 04
 a9f4: 8C 16 0A BC C5 25 35 F4 25 04 44 05 
 
 aa00: F3             DI    
-aa01: CD E6 AA       CALL  $AAE6
+aa01: CD E6 AA       CALL  TEST_AND_INITIALIZE_SYSTEM_CALLED_AT_START_AND_ONE_OTHER_PLACE_WHY_OTHER?
 aa04: F5             PUSH  AF
 aa05: 21 7A C4       LD    HL,PSEUDO_RANDOM_VALUE_LAST_GENERATED
 aa08: CD 29 70       CALL  ZERO_RAM_C000-C479
@@ -14193,10 +14195,11 @@ aace: HIT FIRE BUTTON
 TO_EXIT_S:
 aade: TO EXIT
 
+TEST_AND_INITIALIZE_SYSTEM_CALLED_AT_START_AND_ONE_OTHER_PLACE_WHY_OTHER?:
 aae6: CD 49 70       CALL  INITIALIZE_SPRITES
 aae9: CD 49 70       CALL  INITIALIZE_SPRITES
-aaec: DD 21 70 AC    LD    IX,DATA_USED_TO_TEST_RAM
-aaf0: CD C3 AB       CALL  $ABC3
+aaec: DD 21 70 AC    LD    IX,INFORMATION_USED_TO_RUN_RAM_TEST
+aaf0: CD C3 AB       CALL  TEST_RAM
 aaf3: F5             PUSH  AF
 aaf4: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_5?
 aaf7: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
@@ -14301,7 +14304,6 @@ aba6: C3 2D 6F       JP    COPY_10_FROM_HL_TO_FFC0
 
 aba9: 00 00 01 C0 00 38 00 07 
 
-
 *** Clear background (identical to code at 6fdc!)
 abb1: 21 00 F8       LD    HL,BACKGROUND_VIDEO_RAM_TO_FF7F
 abb4: 01 C0 03       LD    BC,$03C0
@@ -14318,6 +14320,7 @@ abc2: C9             RET
 
 
 *** Test RAM at C000, C200, C400, C600 (0x0200 each),F800,FC00 ((0x0400 each)
+TEST_RAM:
 abc3: AF             XOR   A,A
 abc4: F5             PUSH  AF
 abc5: DD 6E 00       LD    L,(IX+$00)
@@ -14428,12 +14431,18 @@ ac6b: DD 7E 06       LD    A,(IX+$06)
 ac6e: 18 D6          JR    $AC46
 
 
-*** 8 bytes: 2x source, 2x count, 2x destination, ? watchdog setting?
-DATA_USED_TO_TEST_RAM:
-ac70: 00 C0 00 02 00 C2 01 01 00 C2 00 02 00 C0 01 02 
-ac80: 00 C4 00 02 00 C2 01 03 00 C6 FF 01 00 C0 01 04 
-ac90: 00 F8 00 04 00 C0 20 05 00 FC 00 04 00 C0 20 05 
-aca0: 00 00 
+*** 8 bytes: Source vector, Size x2, Destination vector, ? watchdog setting?
+INFORMATION_USED_TO_RUN_RAM_TEST:
+ac70: 00 C0 00 02 00 C2 
+ac76: 01 01 00 C2 00 02 
+ac7c: 00 C0 01 02 00 C4 
+ac82: 00 02 00 C2 01 03 
+ac88: 00 C6 FF 01 00 C0 
+ac8e: 01 04 00 F8 00 04 
+ac94: 00 C0 20 05 00 FC 
+ac9a: 00 04 00 C0 20 05 
+
+aca0: 00 00                                           ;Marks end of information to test RAMs
 
 Print ROM error(s):
 aca2: F5             PUSH  AF
@@ -14462,7 +14471,7 @@ acd3: 20 E9          JR    NZ,$ACBE
 
 acd5: C9             RET   
 
-acd6: DD 21 15 AD    LD    IX,DATA_USED_TO_TEST_ROM
+acd6: DD 21 15 AD    LD    IX,INFORMATION_USED_TO_RUN_ROM_TEST
 acda: 16 00          LD    D,#$00
 acdc: DD 6E 02       LD    L,(IX+$02)
 acdf: DD 66 03       LD    H,(IX+$03)
@@ -14502,28 +14511,27 @@ ad12: F6 01          OR    A,#$01
 ad14: C9             RET   
 
 
-*** 6x(6 bytes: 2x size, 2x location, checksum, (bit mapped) location), 2x 00 to signal end
-DATA_USED_TO_TEST_ROM:
+*** 6 bytes: Size x2, Source Vector, checksum, (bit mapped) location
+INFORMATION_USED_TO_RUN_ROM_TEST:
 ad15: 00 20 00 00 78 01 
-                                          ;this used or is it just an unused byte between data tables?  Or the checksum byte for this ROM?
-
 ad1b: 00 20 00 20 DC 02 
-
 ad21: 00 20 00 40 DD 04 
-
 ad27: 00 20 00 60 19 08 
-
 ad2d: 00 20 00 80 51 10 
-
 ad33: 00 20 00 A0 07 20 
 
 ad39: 00 00 
+                                          ;Marks end of information to test ROMs
 
 ad3b: F9 
+                                          ;is this used or is it just an unused byte between data tables?  Or the checksum byte for this ROM?
 
 DATA_USED_TO_DISPLAY_ROM_ERROR(S):
-ad3c: 4E AD D4 FD D8 FC 58 AD 5C AD 60 AD 64 AD 68 AD 
-ad4c: 6C AD 
+ad3c: 4E AD D4 FD 
+                                          ;Vectors to display ROM_ERROR_S: Source, Destination
+
+ad40: D8 FC 58 AD 5C AD 60 AD 64 AD 68 AD 6C AD 
+                                          ;Vectors to display ROM(s) with an error: Destination, Source(s)
 
 ROM_ERROR_S:
 ad4e: ROM ERROR
@@ -14551,19 +14559,19 @@ ad70: 0A             LD    A,(BC)
 ad71: B7             OR    A,A
 ad72: C8             RET   Z
 
-ad73: FE 20          CP    A,#$20
+ad73: FE 20          CP    A,#$20         ;Check for a space character
 ad75: 20 07          JR    NZ,$AD7E
 
-ad77: 36 5E          LD    (HL),#$5E
+ad77: 36 5E          LD    (HL),#$5E      ;Handle a space character
 ad79: 23             INC   HL
 ad7a: 36 51          LD    (HL),#$51
 ad7c: 18 04          JR    $AD82
 
-ad7e: 77             LD    (HL),A
+ad7e: 77             LD    (HL),A         ;Handle a non-space character
 ad7f: 23             INC   HL
 ad80: 36 50          LD    (HL),#$50
 ad82: 11 BF FF       LD    DE,$FFBF
-ad85: 19             ADD   HL,DE
+ad85: 19             ADD   HL,DE          ;Move right one character
 ad86: 03             INC   BC
 ad87: 18 E7          JR    PRINT_A_NULL_TERMINATED_ASCII_STRING_FROM_BC_TO_HL
 
@@ -14686,7 +14694,7 @@ ae80: 3D             DEC   A
 ae81: 32 9F FF       LD    ($FF9F),A
 ae84: 11 00 F8       LD    DE,BACKGROUND_VIDEO_RAM_TO_FF7F
 ae87: 3E 0F          LD    A,#$0F
-ae89: 21 95 AE       LD    HL,DATA_TO_DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN
+ae89: 21 95 AE       LD    HL,DATA_TO_DRAW_WHITE_ON_BLACK_CROSSHATCH_PATTERN
 ae8c: 01 80 00       LD    BC,$0080
 ae8f: ED B0          LDIR  
 ae91: 3D             DEC   A
@@ -14694,7 +14702,7 @@ ae92: 20 F5          JR    NZ,$AE89
 
 ae94: C9             RET   
 
-DATA_TO_DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN:
+DATA_TO_DRAW_WHITE_ON_BLACK_CROSSHATCH_PATTERN:
 ae95: BB 40 BD 40 BB 40 BD 40 BB 40 BD 40 BB 40 BD 40 
 aea5: BB 40 BD 40 BB 40 BD 40 BB 40 BD 40 BB 40 BD 40 
 aeb5: BB 40 BD 40 BB 40 BD 40 BB 40 BD 40 BB 40 BD 40 
@@ -14704,11 +14712,12 @@ aee5: BE 40 BC 40 BE 40 BC 40 BE 40 BC 40 BE 40 BC 40
 aef5: BE 40 BC 40 BE 40 BC 40 BE 40 BC 40 BE 40 BC 40 
 af05: BE 40 BC 40 BE 40 BC 40 BE 40 BC 40 BE 40 BC 40 
 
+TEST_RAM_ONLY_CALLED_AT_MACHINE_INITIALIZATION:
 af15: 3A FF C7       LD    A,($C7FF)
 af18: B7             OR    A,A
-af19: C8             RET   Z
+af19: C8             RET   Z              ;Exit RAM test if C7FF is zero.  How would that ever happen?
 
-af1a: DD 21 70 AC    LD    IX,DATA_USED_TO_TEST_RAM
+af1a: DD 21 70 AC    LD    IX,INFORMATION_USED_TO_RUN_RAM_TEST
 af1e: 11 08 00       LD    DE,$0008
 af21: 47             LD    B,A
 af22: DD 7E 07       LD    A,(IX+$07)
@@ -14718,9 +14727,9 @@ af26: 28 0C          JR    Z,$AF34
 af28: DD 19          ADD   IX,DE
 af2a: DD 7E 00       LD    A,(IX+$00)
 af2d: DD B6 01       OR    A,(IX+$01)
-af30: 20 F0          JR    NZ,$AF22
+af30: 20 F0          JR    NZ,$AF22       ;Not end of RAM to test
 
-af32: 18 17          JR    $AF4B
+af32: 18 17          JR    $AF4B          ;End of RAM to test
 
 af34: DD 66 05       LD    H,(IX+$05)
 af37: DD 6E 04       LD    L,(IX+$04)

@@ -64,6 +64,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       3 $521A
       3 $47C7
       2 ZERO_RAM_C000-C479
+      2 TEST_AND_INITIALIZE_SYSTEM_CALLED_AT_START_AND_ONE_OTHER_PLACE_WHY_OTHER?
       2 NC,$4AFF
       2 MCP_DISK_END_FLIGHT
       2 LC_DRAW_A_TRAIL?
@@ -77,7 +78,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       2 C,$4AFF
       2 $ADA3
       2 $ACD6
-      2 $AAE6
       2 $A83E
       2 $A0B7
       2 $6F3B
@@ -113,14 +113,14 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 Z,$33FA
       1 Z,$31A1
       1 UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE
+      1 TEST_RAM_ONLY_CALLED_AT_MACHINE_INITIALIZATION
+      1 TEST_RAM
       1 TANK_UPDATE_POSITION
       1 TANK_UPDATE_COLOR_CYCLING
       1 TANK_TURRET_DRAW
       1 TANK_SET_BULLET_X_AND_?_OFFSCREEN_CALL_UPDATE_POSITION?
       1 TANK_ROTATE_TURRET?
       1 TANK_PROCESS_CONTROLS_INPUT
-      1 SCREEN_CALL_UPDATE_POSITION?:
-      1 SCREEN_CALL_UPDATE_POSITION? EQU $4bfd
       1 ROTATE_MCP_BLOCK_COLORS
       1 READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS
       1 READ_AND_PROCESS_INPUT_PORTS
@@ -144,8 +144,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 C,$420D
       1 C,$0F7F
       1 ADD_MESSAGE_TO_Q2
-      1 $AF15
-      1 $ABC3
       1 $ABB1
       1 $AB39
       1 $A4B0
