@@ -478,13 +478,15 @@ label aab2 HIT_FIRE_BUTTON_S
 label aac2 TO_CONTINUE_S
 label aace HIT_FIRE_BUTTON2_S
 label aade TO_EXIT_S
+label aae6 TEST_AND_INITIALIZE_SYSTEM_CALLED_AT_START_AND_ONE_OTHER_PLACE_WHY_OTHER?
 label ab1d DATA_USED_TO_DISPLAY_RAM_ERROR(S)
 label ab27 RAM_ERROR_S
 label ab31 B2_S
 label ab35 F6_S
+label abc3 TEST_RAM
 label aca2 Print ROM error(s)
-label ac70 DATA_USED_TO_TEST_RAM
-label ad15 DATA_USED_TO_TEST_ROM
+label ac70 INFORMATION_USED_TO_RUN_RAM_TEST
+label ad15 INFORMATION_USED_TO_RUN_ROM_TEST
 label ad3c DATA_USED_TO_DISPLAY_ROM_ERROR(S)
 label ad4e ROM_ERROR_S
 label ad58 D2_S
@@ -503,7 +505,8 @@ label ae70 A9_S
 label ae74 A10_S
 label ae79 A6_S
 label ae7c DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN
-label ae95 DATA_TO_DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN
+label ae95 DATA_TO_DRAW_WHITE_ON_BLACK_CROSSHATCH_PATTERN
+label af15 TEST_RAM_ONLY_CALLED_AT_MACHINE_INITIALIZATION
 label b000 1ST_S
 label b004 2ND_S
 label b008 PLAYER_1_UP_S
@@ -736,8 +739,8 @@ data 008d-00ff
 
 commentline 0100 Initialize arcade machine
 comment 0100 Disable interrupts
-comment 0100 Wait for a little bit (50 loop iterations)
-commentline 010e Write 20 bytes to an unknown location
+comment 0107 Wait for a little bit (50 loop iterations)
+commentline 010e Write 20 bytes to the unknown IO location
 comment 0120 Set stack pointer
 comment 0132 Set interrupt mode to 2 (external - from CTC)
 commentline 016b Initialize interrupt (vector) register to 0
@@ -1705,22 +1708,23 @@ commentline ac16 Zero RAM from IX+0 to (IX+2)-1
 commentline ac38 Walking 1s from IX+0 to (IX+2)-1
 commentline ac46 Copy back RAM from IX+4 sized IX+2 to IX+0
 
-commentline ac70 8 bytes: 2x source, 2x count, 2x destination, ? watchdog setting?
-data ac70-aca1
+commentline ac70 8 bytes: Source vector, Size x2, Destination vector, ? watchdog setting?
+data ac70,8,6
+comment aca0 Marks end of information to test RAMs
+data aca0-aca1
 
-commentline ad15 6x(6 bytes: 2x size, 2x location, checksum, (bit mapped) location), 2x 00 to signal end
-data ad15-ad1a
-data ad1b-ad20
-data ad21-ad26
-data ad27-ad2c
-data ad2d-ad32
-data ad33-ad38
+commentline ad15 6 bytes: Size x2, Source Vector, checksum, (bit mapped) location
+data ad15,6,6
+comment ad39 Marks end of information to test ROMs
 data ad39-ad3a
 
-comment is this used or is it just an unused byte between data tables?  Or the checksum byte for this ROM?
+comment ad3b is this used or is it just an unused byte between data tables?  Or the checksum byte for this ROM?
 data ad3b-ad3b
 
-data ad3c-ad4d
+comment ad3c Vectors to display ROM_ERROR_S: Source, Destination
+data ad3c-ad3f
+comment ad40 Vectors to display ROM(s) with an error: Destination, Source(s)
+data ad40-ad4d
 
 ascii ad4e-ad57
 ascii ad58-ad5b
@@ -1729,6 +1733,11 @@ ascii ad60-ad63
 ascii ad64-ad67
 ascii ad68-ad6b
 ascii ad6c-ad6f
+
+comment ad73 Check for a space character
+comment ad77 Handle a space character
+comment ad7e Handle a non-space character
+comment ad85 Move right one character
 
 data ae2a-ae2d
 
@@ -1746,6 +1755,11 @@ ascii ae74-ae78
 ascii ae79-ae7b
 
 data ae95-af14
+
+comment af19 Exit RAM test if C7FF is zero.  How would that ever happen?
+comment af30 Not end of RAM to test
+comment af32 End of RAM to test
+
 commentline af4f It looks like data.  I want to figure out what it's for.
 data af4f-afff
 
