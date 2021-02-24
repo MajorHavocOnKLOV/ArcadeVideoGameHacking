@@ -1,6 +1,6 @@
 # In *nix (or WSL with *nix), type:
 cd /mnt/c/Users/PCAdmin.SIERRA/Desktop/Franklin/ArcadeVideoGameHacking.git/Tron
-cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted.txt
+cat tron.asm | grep 'CALL  ' | cut -c28- | sort | uniq -c | sort -nr > calls_counted.txt
 
      56 PUT_C_ON_STACK_TO_SEND_TO_AUDIO
      43 RESET_WATCHDOG_UNTIL_C400_IS_ONE
