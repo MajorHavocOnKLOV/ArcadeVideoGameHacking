@@ -314,11 +314,12 @@ label 6b79 DATA_FOR_SETTING_UP_TRON_SPRITES?
 label 6f00 ADD_A_TO_HL_WITH_CARRY
 label 6f05 PSEUDO_RANDOM_VALUE_IN_A_AND_C47A
 label 6f17 RESET_WATCHDOG_UNTIL_C400_IS_ONE
+label 6f25 COMPLEMENT_AND_INCREMENT_HL
 label 6f2d COPY_10_FROM_HL_TO_FFC0
 label 6f35 COPY_20_FROM_HL_TO_FF80
 label 6f52 PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LC
 label 6fb8 PUT_C_ON_STACK_TO_SEND_TO_AUDIO
-label 6fc7 CLEAR_BACKGROUND
+label 6fc7 RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 label 6fee SET_C40D_TO_FDD0_AND_ADD_A_MESSAGE_TO_Q
 label 6ff4 INCREASE_C40D_BY_4_AND_ADD_A_MESSAGE_TO_Q
 label 6fff ADD_A_MESSAGE_TO_Q
@@ -483,8 +484,10 @@ label ab1d DATA_USED_TO_DISPLAY_RAM_ERROR(S)
 label ab27 RAM_ERROR_S
 label ab31 B2_S
 label ab35 F6_S
+label abb1 CLEAR_BACKGROUND
 label abc3 TEST_RAM
-label aca2 Print ROM error(s)
+label aca2 PRINT_ROM_ERRORS
+label ac6b RAM_TEST_FAILED
 label ac70 INFORMATION_USED_TO_RUN_RAM_TEST
 label ad15 INFORMATION_USED_TO_RUN_ROM_TEST
 label ad3c DATA_USED_TO_DISPLAY_ROM_ERROR(S)
@@ -496,9 +499,11 @@ label ad64 D5_S
 label ad68 D6_S
 label ad6c D7_S
 label ad70 PRINT_A_NULL_TERMINATED_ASCII_STRING_FROM_BC_TO_HL
+label ae2a DATA_TO_TEST_AUDIO_LATCHES
 label ae2e INTERFACE_ERROR_S
 label ae3e BOARD_TIMEOUT_S
 label ae4c SOUND_BOARD_S
+label ae58 DATA_USED_TO_DISPLAY_SOUND_ERROR(S)
 label ae68 A7_S
 label ae6c A8_S
 label ae70 A9_S
@@ -762,7 +767,7 @@ comment 0175 automatic trigger, time constant follows, software reset, control w
 comment 0179 Set CTC channel 3 time constant: 0x01
 comment 017b Set CTC channel 1: Enable interrupts, timer mode, prescaler 256, falling edge,
 comment 017d automatic trigger, time constant follows, software reset, control word
-comment 0181 Set CTC channel 1 time constant: 0x4E (78)
+comment 0181 Set CTC channel 1 time constant: 0x4E (78) (total timer is 0x4E00)
 
 data 01ab-01ba
 
@@ -793,6 +798,8 @@ commentline 0289 (#36 )
 commentline 02d9 Tank (only?) turret rotation overflow (0x24) so set to 0
 commentline 0401 Copy null-terminated string in DE to HL
 commentline 040b Handle a space character (0x20 or 32)
+
+comment 048d Copy HL to DE for count of BC
 
 commentline 049c Data copied with initial high scores to c4f0
 data 049c-04af
@@ -868,6 +875,8 @@ commentline 0e55 See Bally/Midway's MCR II System manual top-right corner of pag
 commentline 0e55 for more information.  Color table is doubled so wraparound does not
 commentline 0e55 need to be calculated or handled.
 data 0e55-0e6c
+
+comment 0eac Copy HL to DE for count of BC
 
 commentline 0ebe Data used where for what?
 data 0ebe-0eff
@@ -1046,6 +1055,8 @@ data 2103-2109
 data 210a-210f
 data 2110-2114
 
+comment 211e Copy HL to DE for count of BC
+
 commentline 2162 show games on game selection screen
 
 commentline 2207 Modify game selection screen to disable completed and show type of game if already attempted
@@ -1132,7 +1143,10 @@ commentline 2d82 Set MCP tower at 40x and 56y
 commentline 2d8c Fill $05x$1E of RAM $C063-C0DB with $80 or $00.  Why?
 commentline 2d8c Column (6) x Row (5) x 4: 4= X, Y, ?, ? (starts as 80.  Lowest bit set when hit)
 commentline 2d8c If a row is empty, the 4 bytes for it are all 00
-commentline 2db2 
+commentline 2db2 ???
+
+comment 2e07 Copy HL to DE for count of BC
+
 commentline 2e19 MCP: Tron has gone too far left. Set him to 21 x
 commentline 2e21 MCP: Tron has gone too far right. Set him to E7 x
 
@@ -1413,7 +1427,11 @@ commentline 5f73 IO:0002 - xxxxDURL
 
 comment 5fb3 look at 6b39 for more info!
 
+comment 5fbf Copy HL to DE for count of BC
+
 commentline 60ce Tron fires his disk here (so don't set up disk in hand, maybe?)
+
+comment 6279 Copy HL to DE for count of BC
 
 data 62ed-62f1
 
@@ -1433,6 +1451,9 @@ data 6b39,16,4
 data 6b79-6eff
 
 commentline 6f20 This line is hit for every tick of the teletype (which strikes twice per character)
+
+commentline 6f25 Could this reverse the direction of disks that strike a wall?
+
 commentline 6f2d Set color RAMs in some way?
 commentline 6f35 Another entry point to: Set color RAMs in some way?
 commentline 6f3e Color RAM: if bit 8 of word set, write to odd byte. Else, write to even byte
@@ -1442,6 +1463,8 @@ commentline 6f52 HL passed in
 commentline 6fc7 Clear background screen (set graphic to 51 and attributes to 5E)
 commentline 6fff Add a message to the output queue (max of 6) DE is source and BC is destination
 commentline 6fff if Q is full, call RESET_WATCHDOG_UNTIL_C400_IS_ONE
+
+comment 7041 Copy HL to DE for count of BC
 
 commentline 7049 Initialize sprites (X=0, picture=3F, Y=0, unused=0)
 
@@ -1702,14 +1725,26 @@ data aba9-abb0
 
 commentline abb1 Clear background (identical to code at 6fdc!)
 commentline abc3 Test RAM at C000, C200, C400, C600 (0x0200 each),F800,FC00 ((0x0400 each)
+comment abcd JR if another RAM to process
 commentline abd1 Copy RAM from IX+0 sized IX+2 to IX+4
-commentline abf7 Test RAM from IX+0 sized IX+2 to IX+4 with 00 and FF
-commentline ac16 Zero RAM from IX+0 to (IX+2)-1
-commentline ac38 Walking 1s from IX+0 to (IX+2)-1
-commentline ac46 Copy back RAM from IX+4 sized IX+2 to IX+0
+
+comment abdd Copy HL to DE for count of BC
+comment abe7 Set source and size (HL & DE) for 00 & FF RAM test
+comment abf5 If destination is 0x0000, JR
+
+commentline abf7 Test RAM from IX+0 sized IX+2 with 00 and FF
+comment abfd JP if 00 or FF test fails
+comment ac08 Set source and size (HL & DE) for setting RAM to zero
+commentline ac16 Zero RAM from IX+0 for size IX+2 (HL & DE)
+comment ac08 Set source and size (HL & DE) for walking 1s RAM test
+commentline ac38 Walking 1s from IX+0 for size IX+2 (HL & DE)
+commentline ac46 Copy RAM from IX+4 sized IX+2 to IX+0
+
+comment ac5a Copy HL to DE for count of BC
 
 commentline ac70 8 bytes: Source vector, Size x2, Destination vector, ? watchdog setting?
-data ac70,8,6
+commentline ac70     DE    BC    HL   xx  A, @AF22 & @AF34
+data ac70,6,8
 comment aca0 Marks end of information to test RAMs
 data aca0-aca1
 
@@ -1739,6 +1774,9 @@ comment ad77 Handle a space character
 comment ad7e Handle a non-space character
 comment ad85 Move right one character
 
+comment add3 Output 00 then FF then 55 then AA to audio latches at 1F 1E 1D 1C
+comment ade1 Compare audio status reads to 00 FF 55 AA
+
 data ae2a-ae2d
 
 ascii ae2e-ae3d
@@ -1746,7 +1784,10 @@ ascii ae3e-ae4b
 ascii ae4c-ae57
 
 commentline ae58 2x SOUND BOARD, 2x destination, 2x destination of ROM(s), 5x2 bytes: source of sound board devices
-data ae58-ae67
+comment ae58 Source vector, Destination vector
+data ae58-ae5b
+comment ae5c Destination vector,  Source vector(s) for sound ROMs and devices
+data ae5c-ae67
 
 ascii ae68-ae6b
 ascii ae6c-ae6f
@@ -1754,11 +1795,14 @@ ascii ae70-ae73
 ascii ae74-ae78
 ascii ae79-ae7b
 
+comment ae8f Copy HL to DE for count of BC
+
 data ae95-af14
 
 comment af19 Exit RAM test if C7FF is zero.  How would that ever happen?
 comment af30 Not end of RAM to test
 comment af32 End of RAM to test
+comment af48 Copy HL to DE for count of BC
 
 commentline af4f It looks like data.  I want to figure out what it's for.
 data af4f-afff
@@ -1804,7 +1848,7 @@ ascii b177-b179
 ascii b17a-b17d
 ascii b17e-b182
 
-commentline b183 It looks like data until the end of ROM space.  I want to figure out what it's for.
+commentline b183 It looks like data until the end of ROM space
 data b183-bfff
 
 ; F000-F1FF Sprite RAM (X, picture, Y, unused)
