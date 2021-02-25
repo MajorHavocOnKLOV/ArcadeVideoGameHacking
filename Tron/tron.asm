@@ -39,6 +39,7 @@ TANK_UPDATE_COLOR_CYCLING EQU $074f
 OUTPUT_IO_TOWER_TIMER?/TELETYPE_PRINTING_TO_THE_SCREEN_UNTIL_NULL_BYTE? EQU $0792
 UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE EQU $0825
 ATTRACT_MODE_LOOP EQU $0900
+DRAW_CREDITS_SCREEN EQU $0946
 DATA_TO_0B57_USED_AT_0AFE? EQU $0b54
 DRAW_ATTRACT_MCP_CONE EQU $0d7c
 DISPLAY_MCP_CONE_WITH_COPYRIGHTS_AND_NEXT_INSTRUCTIONS EQU $0af1
@@ -286,9 +287,10 @@ BACKGROUND_IO_TOWER_GAME EQU $7a00
 BACKGROUND_IO_TOWER_AFTER_ENTERING_BEAM EQU $8180
 BACKGROUND_LC EQU $8900
 LC_COLOR_PALETTE EQU $9080
-COLOR_PALETTE_FOR_5? EQU $90c0
+COLOR_PALETTE_FOR_GAME_SELECT_AND_MORE EQU $90c0
 BACKGROUND_TRAINING_FOR_LC EQU $9100
 DATA_TO_?_USED_AT_6954 EQU $9884
+SERVICE_SWITCH_ON_ROUTINE? EQU $9900
 GET_TRIGGER_INPUT_FOR_SERVICE_MENU EQU $998c
 ?_DATA_USED_FOR_?1 EQU $9bd8
 SOUND_TEST_STRINGS_VECTORSET_DESTINATION_AND_SOURCE_30X EQU $9c14
@@ -429,7 +431,8 @@ B2_S EQU $ab31
 F6_S EQU $ab35
 CLEAR_BACKGROUND EQU $abb1
 TEST_RAM EQU $abc3
-PRINT_ROM_ERRORS EQU $aca2
+PRINT_ERROR_MESSAGES EQU $aca2
+TEST_ROM EQU $acd6
 RAM_TEST_FAILED EQU $ac6b
 INFORMATION_USED_TO_RUN_RAM_TEST EQU $ac70
 INFORMATION_USED_TO_RUN_ROM_TEST EQU $ad15
@@ -442,6 +445,7 @@ D5_S EQU $ad64
 D6_S EQU $ad68
 D7_S EQU $ad6c
 PRINT_A_NULL_TERMINATED_ASCII_STRING_FROM_BC_TO_HL EQU $ad70
+TEST_SOUND_BOARD EQU $ada3
 DATA_TO_TEST_AUDIO_LATCHES EQU $ae2a
 INTERFACE_ERROR_S EQU $ae2e
 BOARD_TIMEOUT_S EQU $ae3e
@@ -608,6 +612,7 @@ DIFFICULTY_LEVEL EQU $c4f6
 HIGH_SCORES_DIGITS EQU $c4f7
 CREDITS EQU $c501
 HIGH_SCORES_INITIALS_AND_LEVEL EQU $c504
+HIGH_SCORES_DIGITS?_GETS_CHECKED_AT_046C EQU $c522
 HIGH_SCORES_DIGITS_3BYTES_BCD EQU $c52c
 FLIP_SCREEN_IF_VALUE_IS_01 EQU $c687
 NVRAM EQU $c000
@@ -748,7 +753,7 @@ COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S:
 0183: 21 82 C4       LD    HL,$C482
 0186: 22 80 C4       LD    ($C480),HL
 0189: FB             EI    
-018a: CD A3 AD       CALL  $ADA3
+018a: CD A3 AD       CALL  TEST_SOUND_BOARD
 018d: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 0190: 0E 02          LD    C,#$02
 0192: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
@@ -1211,20 +1216,22 @@ CHECK_DATA_C4F0_TO_C657?:
 0456: 0E 03          LD    C,#$03
 0458: 18 0C          JR    $0466
 
-045a: FE 20          CP    A,#$20
+045a: FE 20          CP    A,#$20         ;If space character, go to next character
 045c: 28 08          JR    Z,$0466
 
-045e: FE 41          CP    A,#$41
+045e: FE 41          CP    A,#$41         ;If less than A character, initialize saved data
 0460: 38 22          JR    C,INITIALIZE_HIGH_SCORES_AND_?
 
-0462: FE 5B          CP    A,#$5B
+0462: FE 5B          CP    A,#$5B         ;If greater than Z character, initialize saved data
 0464: 30 1E          JR    NC,INITIALIZE_HIGH_SCORES_AND_?
 
 0466: 23             INC   HL
 0467: 10 E9          DJNZ  $0452
 
+
+*** Verify C522-C657 each nibble is a BCD digit for high scores and maybe more?
 0469: 01 36 01       LD    BC,$0136
-046c: 21 22 C5       LD    HL,$C522
+046c: 21 22 C5       LD    HL,HIGH_SCORES_DIGITS?_GETS_CHECKED_AT_046C
 046f: 7E             LD    A,(HL)
 0470: E6 F0          AND   A,#$F0
 0472: FE A0          CP    A,#$A0
@@ -1246,12 +1253,12 @@ CHECK_DATA_C4F0_TO_C657?:
 INITIALIZE_HIGH_SCORES_AND_?:
 0484: 11 F0 C4       LD    DE,?_AND_HIGH_SCORE_INITIALS_AND_?_TO_C686
 0487: 21 9C 04       LD    HL,$049C
-048a: 01 5A 00       LD    BC,$005A
+048a: 01 5A 00       LD    BC,$005A       ;Copy 049C-04F5 to C4F0-C549
 048d: ED B0          LDIR                 ;Copy HL to DE for count of BC
 048f: AF             XOR   A,A
 0490: 01 3D 01       LD    BC,$013D
 0493: AF             XOR   A,A
-0494: 12             LD    (DE),A
+0494: 12             LD    (DE),A         ;Zero out C54A-6C86
 0495: 13             INC   DE
 0496: 0B             DEC   BC
 0497: 78             LD    A,B
@@ -1829,10 +1836,10 @@ ATTRACT_MODE_LOOP:
 090d: 32 87 C6       LD    (FLIP_SCREEN_IF_VALUE_IS_01),A
 0910: DB 00          IN    A,(IO_0)
 0912: E6 80          AND   A,#$80
-0914: CA 00 99       JP    Z,$9900
+0914: CA 00 99       JP    Z,SERVICE_SWITCH_ON_ROUTINE?
 
 0917: CD 49 70       CALL  INITIALIZE_SPRITES
-091a: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_5?
+091a: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_GAME_SELECT_AND_MORE
 091d: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 0920: 3E 01          LD    A,#$01
 0922: 32 7B C4       LD    (IN_ATTRACT_MODE?),A
@@ -1840,7 +1847,7 @@ ATTRACT_MODE_LOOP:
 0927: 32 6E C4       LD    ($C46E),A
 092a: 3A 01 C5       LD    A,(CREDITS)
 092d: B7             OR    A,A
-092e: 20 16          JR    NZ,$0946
+092e: 20 16          JR    NZ,DRAW_CREDITS_SCREEN
 
 0930: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 0933: CD 20 70       CALL  ZERO_RAM_C000-C418
@@ -1851,6 +1858,7 @@ ATTRACT_MODE_LOOP:
 0941: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 0944: 18 0D          JR    $0953
 
+DRAW_CREDITS_SCREEN:
 0946: CD 20 70       CALL  ZERO_RAM_C000-C418
 0949: CD C3 0B       CALL  $0BC3
 094c: AF             XOR   A,A
@@ -2568,7 +2576,7 @@ MCP_ATTRACT_COLORS:
 0f39: CD 20 70       CALL  ZERO_RAM_C000-C418
 0f3c: CD 49 70       CALL  INITIALIZE_SPRITES
 0f3f: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
-0f42: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_5?
+0f42: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_GAME_SELECT_AND_MORE
 0f45: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 0f48: 11 BB B0       LD    DE,GAME_OVER_S
 0f4b: CD EE 6F       CALL  SET_C40D_TO_FDD0_AND_ADD_A_MESSAGE_TO_Q
@@ -3159,7 +3167,7 @@ DATA_FOR_???_TO_133E:
 139a: DD 23          INC   IX
 139c: 10 E5          DJNZ  $1383
 
-139e: 21 22 C5       LD    HL,$C522
+139e: 21 22 C5       LD    HL,HIGH_SCORES_DIGITS?_GETS_CHECKED_AT_046C
 13a1: 3A 16 C4       LD    A,($C416)
 13a4: BE             CP    A,(HL)
 13a5: 38 25          JR    C,$13CC
@@ -3179,7 +3187,7 @@ DATA_FOR_???_TO_133E:
 13b7: 38 13          JR    C,$13CC
 
 13b9: 3A 16 C4       LD    A,($C416)
-13bc: 32 22 C5       LD    ($C522),A
+13bc: 32 22 C5       LD    (HIGH_SCORES_DIGITS?_GETS_CHECKED_AT_046C),A
 13bf: 3A 17 C4       LD    A,($C417)
 13c2: 32 23 C5       LD    ($C523),A
 13c5: 3A 18 C4       LD    A,($C418)
@@ -3238,7 +3246,7 @@ DATA_FOR_???_TO_14FF:
 14f6: 83 E6 36 F7 B7 8B B3 2C B8 4B 
 
 PICK_WHICH_INSTRUCTIONS_TO_PRINT:
-1500: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_5?
+1500: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_GAME_SELECT_AND_MORE
 1503: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 1506: CD 49 70       CALL  INITIALIZE_SPRITES
 1509: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
@@ -4370,12 +4378,11 @@ DRAW_SPRITES_FOR_GAME_SELECTION_SCREEN:
 22fc: 08 B5 22 
 22ff: 08 B5 22 
 2302: 08 B5 22 
+2305: 08 B5 22 
 
-2305: 08             EX    AF,AF'
-2306: B5             OR    A,L
-2307: 22 10 23       LD    ($2310),HL
-Error: missed a comment line at 2308, line=230B
-230a: 16 23 1C 23 22 23 
+
+*** Used at 2115.  Set what game is at what quadrant?  Then 4x vector table.  Then 
+2308: 10 23 16 23 1C 23 22 23 
 
 
 *** Vector of games to quadrants at C426 points to these blocks of data
@@ -12646,7 +12653,7 @@ LC_COLOR_PALETTE:
 90a0: 00 00 00 2B 01 80 00 18 01 D4 01 EA 01 C2 01 C5 
 90b0: 00 04 00 7E 01 FF 00 0F 00 00 00 08 00 28 00 38 
 
-COLOR_PALETTE_FOR_5?:
+COLOR_PALETTE_FOR_GAME_SELECT_AND_MORE:
 90c0: 00 00 00 00 01 C0 01 E0 00 38 00 10 00 87 01 F8 
 90d0: 00 3C 00 A8 00 80 01 00 00 3F 00 DB 00 03 01 FF 
 
@@ -12789,6 +12796,7 @@ DATA_TO_?_USED_AT_6954:
 98e4: 55 CE C4 CE 7C E4 74 6F FC A4 DC D9 E8 CD 5C 3B 
 98f4: 64 47 2C 74 65 7C 7A 86 50 45 6C CC 
 
+SERVICE_SWITCH_ON_ROUTINE?:
 9900: CD 20 70       CALL  ZERO_RAM_C000-C418
 9903: 3E 78          LD    A,#$78
 9905: 32 6E C4       LD    ($C46E),A
@@ -12824,7 +12832,7 @@ DATA_TO_?_USED_AT_6954:
 9951: 28 EA          JR    Z,$993D
 
 9953: CD EA 99       CALL  $99EA
-9956: 18 A8          JR    $9900
+9956: 18 A8          JR    SERVICE_SWITCH_ON_ROUTINE?
 
 9958: 21 02 C0       LD    HL,TANK_Y_OR_GS_DISK_Y
 995b: 35             DEC   (HL)
@@ -13286,7 +13294,7 @@ a004: CD B7 A0       CALL  $A0B7
 a007: 06 06          LD    B,#$06
 a009: 0E 00          LD    C,#$00
 a00b: DD 21 56 FA    LD    IX,$FA56
-a00f: 21 22 C5       LD    HL,$C522
+a00f: 21 22 C5       LD    HL,HIGH_SCORES_DIGITS?_GETS_CHECKED_AT_046C
 a012: CD 77 A0       CALL  $A077
 a015: 06 06          LD    B,#$06
 a017: 0E 00          LD    C,#$00
@@ -14140,7 +14148,7 @@ aa45: 18 F2          JR    $AA39
 
 aa47: CD 39 AB       CALL  $AB39
 aa4a: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
-aa4d: CD A3 AD       CALL  $ADA3
+aa4d: CD A3 AD       CALL  TEST_SOUND_BOARD
 aa50: F5             PUSH  AF
 aa51: 0E 02          LD    C,#$02
 aa53: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
@@ -14209,7 +14217,7 @@ aae9: CD 49 70       CALL  INITIALIZE_SPRITES
 aaec: DD 21 70 AC    LD    IX,INFORMATION_USED_TO_RUN_RAM_TEST
 aaf0: CD C3 AB       CALL  TEST_RAM
 aaf3: F5             PUSH  AF
-aaf4: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_5?
+aaf4: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_GAME_SELECT_AND_MORE
 aaf7: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 aafa: 21 AB 01       LD    HL,COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?
 aafd: CD 2D 6F       CALL  COPY_10_FROM_HL_TO_FFC0
@@ -14219,12 +14227,12 @@ ab04: B7             OR    A,A
 ab05: 28 0D          JR    Z,$AB14
 
 ab07: DD 21 1D AB    LD    IX,DATA_USED_TO_DISPLAY_RAM_ERROR(S)
-ab0b: CD A2 AC       CALL  PRINT_ROM_ERRORS
-ab0e: CD D6 AC       CALL  $ACD6
+ab0b: CD A2 AC       CALL  PRINT_ERROR_MESSAGES
+ab0e: CD D6 AC       CALL  TEST_ROM
 ab11: F6 01          OR    A,#$01
 ab13: C9             RET   
 
-ab14: CD D6 AC       CALL  $ACD6
+ab14: CD D6 AC       CALL  TEST_ROM
 ab17: C0             RET   NZ
 
 ab18: CD 7C AE       CALL  DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN
@@ -14305,7 +14313,7 @@ ab97: 5F             LD    E,A
 ab98: FE 21          CP    A,#$21
 ab9a: C2 3F AB       JP    NZ,$AB3F
 
-ab9d: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_5?
+ab9d: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_GAME_SELECT_AND_MORE
 aba0: CD 35 6F       CALL  COPY_20_FROM_HL_TO_FF80
 aba3: 21 AB 01       LD    HL,COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?
 aba6: C3 2D 6F       JP    COPY_10_FROM_HL_TO_FFC0
@@ -14328,7 +14336,9 @@ abc0: 20 F5          JR    NZ,$ABB7
 abc2: C9             RET   
 
 
-*** Test RAM at C000, C200, C400, C600 (0x0200 each),F800,FC00 ((0x0400 each)
+*** Test RAM at C000, C200, C400, C600 (0x0200 each),F800,FC00 (0x0400 each)
+*** RAM C000-C3FF will be overwritten
+*** C400-C7FF, F800-FFFF will be preserved
 TEST_RAM:
 abc3: AF             XOR   A,A
 abc4: F5             PUSH  AF
@@ -14454,7 +14464,7 @@ ac98: 00 FC 00 04 00 C0 20 05
 
 aca0: 00 00                                           ;Marks end of information to test RAMs
 
-PRINT_ROM_ERRORS:
+PRINT_ERROR_MESSAGES:
 aca2: F5             PUSH  AF
 aca3: DD 6E 02       LD    L,(IX+$02)
 aca6: DD 66 03       LD    H,(IX+$03)
@@ -14481,18 +14491,19 @@ acd3: 20 E9          JR    NZ,$ACBE
 
 acd5: C9             RET   
 
+TEST_ROM:
 acd6: DD 21 15 AD    LD    IX,INFORMATION_USED_TO_RUN_ROM_TEST
 acda: 16 00          LD    D,#$00
-acdc: DD 6E 02       LD    L,(IX+$02)
+acdc: DD 6E 02       LD    L,(IX+$02)     ;Load source and size (HL & BC)
 acdf: DD 66 03       LD    H,(IX+$03)
 ace2: DD 4E 00       LD    C,(IX+$00)
 ace5: DD 46 01       LD    B,(IX+$01)
 ace8: 78             LD    A,B
 ace9: B1             OR    A,C
-acea: 28 1C          JR    Z,$AD08
+acea: 28 1C          JR    Z,$AD08        ;Jump if out of ROMs to checksum
 
 acec: AF             XOR   A,A
-aced: 86             ADD   A,(HL)
+aced: 86             ADD   A,(HL)         ;Compute checksum (just add all the bytes discarding carries)
 acee: 23             INC   HL
 acef: 0D             DEC   C
 acf0: 20 FB          JR    NZ,$ACED
@@ -14501,10 +14512,10 @@ acf2: 05             DEC   B
 acf3: 20 F8          JR    NZ,$ACED
 
 acf5: DD BE 04       CP    A,(IX+$04)
-acf8: 28 05          JR    Z,$ACFF
+acf8: 28 05          JR    Z,$ACFF        ;Jump if checksum matches
 
 acfa: 7A             LD    A,D
-acfb: DD B6 05       OR    A,(IX+$05)
+acfb: DD B6 05       OR    A,(IX+$05)     ;Add bit of bad ROM to D
 acfe: 57             LD    D,A
 acff: 01 06 00       LD    BC,$0006
 ad02: DD 09          ADD   IX,BC
@@ -14515,8 +14526,10 @@ ad08: 7A             LD    A,D
 ad09: B7             OR    A,A
 ad0a: C8             RET   Z
 
+
+*** Display ROM errors
 ad0b: DD 21 3C AD    LD    IX,DATA_USED_TO_DISPLAY_ROM_ERROR(S)
-ad0f: CD A2 AC       CALL  PRINT_ROM_ERRORS
+ad0f: CD A2 AC       CALL  PRINT_ERROR_MESSAGES
 ad12: F6 01          OR    A,#$01
 ad14: C9             RET   
 
@@ -14595,9 +14608,10 @@ ad96: 20 05          JR    NZ,$AD9D
 ad98: CD 8C 99       CALL  GET_TRIGGER_INPUT_FOR_SERVICE_MENU
 ad9b: 28 F2          JR    Z,$AD8F
 
-ad9d: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_5?
+ad9d: 21 C0 90       LD    HL,COLOR_PALETTE_FOR_GAME_SELECT_AND_MORE
 ada0: C3 35 6F       JP    COPY_20_FROM_HL_TO_FF80
 
+TEST_SOUND_BOARD:
 ada3: 0E 02          LD    C,#$02
 ada5: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 ada8: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
@@ -14659,7 +14673,7 @@ ae17: B7             OR    A,A
 ae18: C8             RET   Z
 
 ae19: DD 21 58 AE    LD    IX,DATA_USED_TO_DISPLAY_SOUND_ERROR(S)
-ae1d: CD A2 AC       CALL  PRINT_ROM_ERRORS
+ae1d: CD A2 AC       CALL  PRINT_ERROR_MESSAGES
 ae20: 06 60          LD    B,#$60
 ae22: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
 ae25: 10 FB          DJNZ  $AE22

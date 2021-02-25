@@ -95,6 +95,7 @@ label 074f TANK_UPDATE_COLOR_CYCLING
 label 0792 OUTPUT_IO_TOWER_TIMER?/TELETYPE_PRINTING_TO_THE_SCREEN_UNTIL_NULL_BYTE?
 label 0825 UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE
 label 0900 ATTRACT_MODE_LOOP
+label 0946 DRAW_CREDITS_SCREEN
 label 0b54 DATA_TO_0B57_USED_AT_0AFE?
 label 0d7c DRAW_ATTRACT_MCP_CONE
 label 0af1 DISPLAY_MCP_CONE_WITH_COPYRIGHTS_AND_NEXT_INSTRUCTIONS
@@ -343,9 +344,10 @@ label 7a00 BACKGROUND_IO_TOWER_GAME
 label 8180 BACKGROUND_IO_TOWER_AFTER_ENTERING_BEAM
 label 8900 BACKGROUND_LC
 label 9080 LC_COLOR_PALETTE
-label 90c0 COLOR_PALETTE_FOR_5?
+label 90c0 COLOR_PALETTE_FOR_GAME_SELECT_AND_MORE
 label 9100 BACKGROUND_TRAINING_FOR_LC
 label 9884 DATA_TO_?_USED_AT_6954
+label 9900 SERVICE_SWITCH_ON_ROUTINE?
 label 998c GET_TRIGGER_INPUT_FOR_SERVICE_MENU
 label 9bd8 ?_DATA_USED_FOR_?1
 label 9c14 SOUND_TEST_STRINGS_VECTORSET_DESTINATION_AND_SOURCE_30X
@@ -486,7 +488,8 @@ label ab31 B2_S
 label ab35 F6_S
 label abb1 CLEAR_BACKGROUND
 label abc3 TEST_RAM
-label aca2 PRINT_ROM_ERRORS
+label aca2 PRINT_ERROR_MESSAGES
+label acd6 TEST_ROM
 label ac6b RAM_TEST_FAILED
 label ac70 INFORMATION_USED_TO_RUN_RAM_TEST
 label ad15 INFORMATION_USED_TO_RUN_ROM_TEST
@@ -499,6 +502,7 @@ label ad64 D5_S
 label ad68 D6_S
 label ad6c D7_S
 label ad70 PRINT_A_NULL_TERMINATED_ASCII_STRING_FROM_BC_TO_HL
+label ada3 TEST_SOUND_BOARD
 label ae2a DATA_TO_TEST_AUDIO_LATCHES
 label ae2e INTERFACE_ERROR_S
 label ae3e BOARD_TIMEOUT_S
@@ -688,6 +692,7 @@ label c4f6 DIFFICULTY_LEVEL
 label c4f7 HIGH_SCORES_DIGITS
 label c501 CREDITS
 label c504 HIGH_SCORES_INITIALS_AND_LEVEL
+label c522 HIGH_SCORES_DIGITS?_GETS_CHECKED_AT_046C
 label c52c HIGH_SCORES_DIGITS_3BYTES_BCD
 label c687 FLIP_SCREEN_IF_VALUE_IS_01
 
@@ -799,7 +804,13 @@ commentline 02d9 Tank (only?) turret rotation overflow (0x24) so set to 0
 commentline 0401 Copy null-terminated string in DE to HL
 commentline 040b Handle a space character (0x20 or 32)
 
+comment 045a If space character, go to next character
+comment 045e If less than A character, initialize saved data
+comment 0462 If greater than Z character, initialize saved data
+commentline 0469 Verify C522-C657 each nibble is a BCD digit for high scores and maybe more?
+comment 048a Copy 049C-04F5 to C4F0-C549
 comment 048d Copy HL to DE for count of BC
+comment 0494 Zero out C54A-6C86
 
 commentline 049c Data copied with initial high scores to c4f0
 data 049c-04af
@@ -1079,8 +1090,7 @@ commentline 22d8 Vectors are: 22b5, 22ac, 22af, 22b2
 commentline 22d8 Data used at 1f22
 commentline 22d8 I have a hard time understanding why use 15 data structures
 commentline 22d8 to point to 4 data structures of directions.  Anyone know?
-data 22d8,15,3
-;data 22d8-2307
+data 22d8,16,3
 
 commentline 2308 Used at 2115.  Set what game is at what quadrant?  Then 4x vector table.  Then 
 data 2308-230F
@@ -1724,7 +1734,10 @@ ascii ab35-ab38
 data aba9-abb0
 
 commentline abb1 Clear background (identical to code at 6fdc!)
-commentline abc3 Test RAM at C000, C200, C400, C600 (0x0200 each),F800,FC00 ((0x0400 each)
+
+commentline abc3 Test RAM at C000, C200, C400, C600 (0x0200 each),F800,FC00 (0x0400 each)
+commentline abc3 RAM C000-C3FF will be overwritten
+commentline abc3 C400-C7FF, F800-FFFF will be preserved
 comment abcd JR if another RAM to process
 commentline abd1 Copy RAM from IX+0 sized IX+2 to IX+4
 
@@ -1747,6 +1760,13 @@ commentline ac70     DE    BC    HL   xx  A, @AF22 & @AF34
 data ac70,6,8
 comment aca0 Marks end of information to test RAMs
 data aca0-aca1
+
+comment acdc Load source and size (HL & BC)
+comment acea Jump if out of ROMs to checksum
+comment aced Compute checksum (just add all the bytes discarding carries)
+comment acf8 Jump if checksum matches
+comment acfb Add bit of bad ROM to D
+commentline ad0b Display ROM errors
 
 commentline ad15 6 bytes: Size x2, Source Vector, checksum, (bit mapped) location
 data ad15,6,6

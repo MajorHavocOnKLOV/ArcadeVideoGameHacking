@@ -56,7 +56,7 @@ cat tron.asm | grep 'CALL  ' | cut -c28- | sort | uniq -c | sort -nr > calls_cou
       3 PUT_GAME_SELECT_COUNTDOWN_DIGIT_MESSAGE_IN_Q2
       3 PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LC
       3 PROCESS_GAME_SELECT_COUNTDOWN_TIMER
-      3 PRINT_ROM_ERRORS
+      3 PRINT_ERROR_MESSAGES
       3 $99EA
       3 $9958
       3 $5535
@@ -64,6 +64,8 @@ cat tron.asm | grep 'CALL  ' | cut -c28- | sort | uniq -c | sort -nr > calls_cou
       3 $521A
       3 $47C7
       2 ZERO_RAM_C000-C479
+      2 TEST_SOUND_BOARD
+      2 TEST_ROM
       2 TEST_AND_INITIALIZE_SYSTEM_CALLED_AT_START_AND_ONE_OTHER_PLACE_WHY_OTHER?
       2 NC,$4AFF
       2 MCP_DISK_END_FLIGHT
@@ -76,8 +78,6 @@ cat tron.asm | grep 'CALL  ' | cut -c28- | sort | uniq -c | sort -nr > calls_cou
       2 COPY_10_FROM_HL_TO_FFC0
       2 C,$4B90
       2 C,$4AFF
-      2 $ADA3
-      2 $ACD6
       2 $A83E
       2 $A0B7
       2 $6F3B
