@@ -288,6 +288,7 @@ label 5551 LC_ERASE_TRAIL_OF_DESTROYED_LC
 label 558d LC_DEPENDING_ON_USER_SPRITE_COPY_AND_INC/DEC_BETWEEN_C1F5_AND_C1FD
 label 56f4 LC_SET_UP_BOUNDARIES_IN_RAM_DATA_STRUCTURE_FROM_C000_TO_C1DF
 label 57ef LC_DATA_FOR_TRIGGER_PULLED_AND_UP_DOWN_VS_LEFT_RIGHT
+label 597f LC_INC_C20F_IF_08_SET_TO_00
 label 598a LC_INC_C20E_IF_08_SET_TO_00
 label 5995 LC_(HL-F800)/2_RETURN_HOW_MANY_0x20s_IN_A
 label 59e5 LC_DRAW_A_TRAIL?
@@ -1407,7 +1408,7 @@ comment 5818 LC enemy down (EF)
 comment 581e LC enemy right (30)
 
 comment 5a08 If lowest bit in HL was set (C = true), process upper nybble
-comment 5a08 Process lower nybble
+comment 5a0a Process lower nybble
 comment 5a12 Process upper nybble
 
 commentline used at 57ba
@@ -1736,8 +1737,13 @@ data aba9-abb0
 commentline abb1 Clear background (identical to code at 6fdc!)
 
 commentline abc3 Test RAM at C000, C200, C400, C600 (0x0200 each),F800,FC00 (0x0400 each)
-commentline abc3 RAM C000-C3FF will be overwritten
+commentline abc3 RAM C000-C3FF will be clobbered
 commentline abc3 C400-C7FF, F800-FFFF will be preserved
+commentline abc3 All size based, copy from src to dst.  Test RAM at src.  Copy from dst to src
+commentline abc3 0x0200: C000->C200, C200->C000, C400->C200
+commentline abc3 0x01FF: C600->C000
+commentline abc3 0x0400: F800->C000, FC00->C000
+
 comment abcd JR if another RAM to process
 commentline abd1 Copy RAM from IX+0 sized IX+2 to IX+4
 
