@@ -85,6 +85,7 @@ label 04c2 TL_S
 label 04c5 SB_S
 label 04c8 MJ_S
 label 04cb JJ_S
+label 04f6 DISPLAY_NUMBER_OF_CREDITS
 label 0513 CREDITS_S
 label 0557 OUTPUT_TO_SOUND_LATCHES
 label 05c3 ROTATE_MCP_BLOCK_COLORS
@@ -673,6 +674,7 @@ label c42f OTHER_PLAYER_DATA
 label c45b GS_DIRECTION:1=DOWN,2=?,3=?,5=?,OTHER=?
 label c45f PLAYER_NUMBER
 label c461 WHICH_INSTRUCTIONS_TO_DISPLAY?_VECTOR_LIST_AT_1527?
+label c465 USED_AT_05F8_TO_SKIP_OR_ALTER_PROCESSING_0_1_OR_2
 label c466 NUMBER_OF_SCREEN_MESSAGES_FROM_C4D6
 label c467 NUMBER_OF_SCREEN_MESSAGES_2_FROM_C4BE
 label c469 ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED1!
@@ -839,6 +841,11 @@ commentline 05e4 Color RAM: If bit 8 is not set, write to even address. If bit 8
 commentline 05e4 inc to next address to write to odd address in order to make A1 high!
 
 data 05ec-05f7
+
+commentline 05f8 00 = 
+commentline 05f8 01 = DISPLAY_MCP_CONE_WITH_COPYRIGHTS_AND_NEXT_INSTRUCTIONS, DRAW_CREDITS_SCREEN, 
+commentline 05f8 02 = 
+
 
 ; Print messages from two different message queue?
 commentline 06ca Count @C466 and data starting @C4D8. @C4D6 is next entry for Q
