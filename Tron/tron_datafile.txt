@@ -43,7 +43,7 @@
 ; Attract mode actions in game:
 ;  Light Cycles: move up, slow
 ;  MCP: Fire (as fast as possible)
-;  IO Tower: Move up and left while firing.  Enter MCP cone after 402, if Tron still alive
+;  IO Tower: Move up and left while throwing disk(s).  Enter MCP cone after 402, if Tron still alive
 ;  Tank: Fire (as fast as possible), rotating turret counter-clockwise, moving (until can't go any further)
 ;    up, right, down, left and repeat until someone dies
 
@@ -69,8 +69,9 @@ IO_LABEL F3 IO_CTC3
 label 006b COPYRIGHT_1982_BALLY_MIDWAY_MFG_CO_S
 label 01ab COLOR_PALETTE_FOR_6_10_BYTES_TO_01BA?
 label 01cb SERVICE_INTERRUPT_ROUTINE
-label 0289 TANK_ROTATE_TURRET?
-label 02e3 GET_INPUT_FROM_JOYSTICK_TRIGGER_+?
+label 0289 GET_SPINNER_INPUT
+label 02e3 GET_CREDIT_FROM_LEFT_COIN
+label 0358 GET_CREDIT_FROM_RIGHT_COIN
 label 0401 STRING_IN_DE_TO_HL
 label 041c CHECK_DATA_C4F0_TO_C657?
 label 0484 INITIALIZE_HIGH_SCORES_AND_?
@@ -92,7 +93,9 @@ label 05c3 ROTATE_MCP_BLOCK_COLORS
 label 05EC MCP_BLOCKS_COLOR_POSITIONS_LEFT_TO_RIGHT
 label 06ca PRINT_OUT_MESSAGES_IN_QUEUES
 label 06f5 PRINT_OUT_MESSAGES_IN_QUEUE_2
-label 074f TANK_UPDATE_COLOR_CYCLING
+label 0720 PRINT_SCORE
+label 074f PROCESS_COLOR_CYCLING
+label 0786 COLORS_FOR_CYCLING_COLORS
 label 0792 OUTPUT_IO_TOWER_TIMER?/TELETYPE_PRINTING_TO_THE_SCREEN_UNTIL_NULL_BYTE?
 label 0825 UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE
 label 0900 ATTRACT_MODE_LOOP
@@ -107,8 +110,10 @@ label 0b9b BALLY_MIDWAY_MFG_CO_S
 label 0d52 READ_AND_PROCESS_INPUT_PORTS
 label 0baf ALL_RIGHTS_RESERVED_S
 label 0d38 READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS
+label 0dc3 MCP_BLOCKS_RELATIVE_DATA
+label 0e0b MCP_CONE_RELATIVE_DATA
 label 0e32 SHOULD_I_UPDATE_CONE_COLOR?
-label 0e55 MCP_ATTRACT_COLORS
+label 0e55 MCP_BLOCKS_COLORS
 label 1001 DATA_TO_101A_USED_AT_0F86?
 label 101b PLEASE_S
 label 1022 ENTER_S
@@ -125,6 +130,7 @@ label 1231 100_SCORES_S
 label 132d DATA_FOR_???_TO_133E
 label 13f7 DATA_FOR_???_TO_14FF
 label 1500 PICK_WHICH_INSTRUCTIONS_TO_PRINT
+label 1527 VECTORS_TO_ATTRACT_MODE_INSTRUCTIONS
 label 1538 SUBROUTINE_THAT_DOES_WHAT?
 label 1558 DISPLAY_RANKINGS_SCREEN
 label 1653 RANKINGS_S
@@ -248,6 +254,8 @@ label 3554 MCP_BLOCK_DATA_TO_PROCESS_HIT
 label 3559 MCP_BLOCKS_DATA_TO_35B2
 label 35b3 MCP_CONE_RELATIVEX_RELATIVEY_SPRITE_NUMBER_TO_35D9
 label 35da _???_
+label 363a JOYSTICK_INPUT_FOR?
+label 367a DATA_FOR_DISPLAYING_TRON_SPRITES_IDENTICAL_TO_6B79
 label 3926 MCP_COLOR_PALETTE_ALL_ZEROS
 label 3966 DATA_FOR_MCP_SETUP_TO_398D
 label 3a00 PLAY_TANKS
@@ -257,7 +265,7 @@ label 3d41 ENEMY_TANKS_S
 label 3d4d TANK_JOYSTICK_INPUT_TABLE?
 label 3db5 TANK_PROCESS_CONTROLS_INPUT
 label 4063 TANKS_DATA_FOR_x_STARTS_AT_4066
-label 40d0 TANK_UPDATE_POSITION_AND_PIC_OF_TANK_FROM_C000_TO_C002
+label 40d0 TANK_UPDATE_POSITION_AND_SPRITE_OF_TANK_FROM_C000_TO_C002
 label 40ea TANK_UPDATE_POSITION
 label 40fc TANK_WARP
 label 4145 TANK_DATA_FOR_?
@@ -306,14 +314,17 @@ label 5eb7 IO_TOWER_COLOR_PALETTE
 label 5f23 CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?
 label 5f73 HANDLE_JOYSTICK_INPUT?_TO_601F
 label 6065 INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
-label 6127 MOVE_SPIDERS?
-label 621d IO_OR_MCP?_SET_TRON_INITIAL_POSITION_AND_ROTATION
+label 6127 IO_TOWER_GET_TRIGGER_STATE_AND_SET_C02E_BASED_ON_ARM_ROTATION
+label 621d TRON_SPRITE_SET_INITIAL_POSITION_AND_ROTATION
 label 62ed DATA_USED_FOR_???_TO_62F1
+label 636d PROCESS_DISK_THROW?
+label 6433 DISK_INITIALIZE_DATA_AND_SPRITE
+label 64db DISK_TERMINATE_SPRITE_AND_DATA_AND_INC_REMAINING_DISKS
 label 66ae DATA_USED_FOR_???_TO_66D1
 label 6772 DATA_USED_FOR_???_TO_6776
 label 68c6 DATA_TO_?_USED_AT_5D19
 label 6b39 JOYSTICK_INPUT_TABLE
-label 6b79 DATA_FOR_SETTING_UP_TRON_SPRITES?
+label 6b79 DATA_FOR_DISPLAYING_TRON_SPRITES_IDENTICAL_TO_367A
 label 6f00 ADD_A_TO_HL_WITH_CARRY
 label 6f05 PSEUDO_RANDOM_VALUE_IN_A_AND_C47A
 label 6f17 RESET_WATCHDOG_UNTIL_C400_IS_ONE
@@ -336,8 +347,8 @@ label 707e ADD_MESSAGE_TO_Q2
 label 709f PROCESS_GAME_SELECT_COUNTDOWN_TIMER
 label 70ac PUT_GAME_SELECT_COUNTDOWN_DIGIT_MESSAGE_IN_Q2
 label 70cd GAME_SELECT_COUNTDOWN_DIGITS
-label 7159 ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
-label 7165 ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
+label 7159 ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
+label 7165 ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
 label 7200 BACKGROUND_TANK_GAME
 label 7980 TANK_COLOR_PALETTE
 label 79a0 COLOR_PALETTE_FOR_2?
@@ -566,8 +577,9 @@ label b17e USER_S
 ; c000 LC_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY
 ; c000 MCP 00-03 legs open, 04-04 legs closed
 label c000 CPU_RAM_OR_GS_DISK_X_TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF
-label c001 TANK_PIC_OR_MCP_ROWS_OF_BLOCKS
+label c001 TANK_SPRITE_OR_MCP_ROWS_OF_BLOCKS
 label c002 TANK_Y_OR_GS_DISK_Y
+label c004 TANK_ENEMY_DESTROYED?
 label c007 MCP_TRON_X_TANKS_DATA_VECTOR_x_1
 label c009 MCP_TRON_Y_TANKS_DATA_VECTOR_x_2
 label c00d IO_TOWER_TIMER_VALUE_REVERSED_TO_C010
@@ -575,14 +587,14 @@ label c00e INFINITE_TIME_CHEAT
 label c010 TANKS_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020
 label c012 MCP_DISK_1_DATA/IO_TOWER_TIMER_DIGITS_TO_C019
 label c01c MCP_DISK_2_DATA
-label c026 MCP_DISK_3_DATA
-label c030 MCP_DISK_4_DATA
+label c01f TRON_SPRITE_LEGS_APART_COUNTER_0_TO_7
 label c022 IO_TOWER_INCREMENTS_19_TO_1E_FOR_EACH_DISK_THROWN
 label c023 IO_TOWER_TRIGGER_DEBOUNCE?
 label c024 IO_TOWER_ALWAYS_80?
-label c026 IO_TRON_X
+label c026 IO_TRON_X/MCP_DISK_3_DATA
 label c028 IO_TRON_Y
 label c029 JOYSTICK_INPUT_ARRAY_TO_C02C
+label c030 MCP_DISK_4_DATA
 label c03a MCP_DATA_TO_C0D9?
 ; c051: beginning of enemy tank(s) data.  Each takes up 0x20 bytes
 ; c051: offsets 0-9? copied from data structures starting at 
@@ -614,6 +626,7 @@ label c1e0 LC_USER_TRAIL_POSITION_VECTOR
 label c1e2 LC_ENEMY_1_TRAIL_POSITION_VECTOR
 label c1e4 LC_ENEMY_2_TRAIL_POSITION_VECTOR
 label c1e6 LC_ENEMY_3_TRAIL_POSITION_VECTOR
+label c1e8 TRON_DISKS_DATA_0A_EACH_UP_TO_4
 label c1e9 LC_WHICH_LC_TO_DESTROY
 label c1ea LC_ENEMY_1_SPRITE
 label c1eb LC_ENEMY_2_SPRITE
@@ -644,10 +657,11 @@ label c224 LC_SETUP3?
 label c225 LC_SETUP4?
 label c226 LC_SETUP5?
 label c227 LC_SETUP6?
+label c401 SPINNER_LAST_ADDITION?
 label c402 COUNTDOWN_TIMER_SECONDS
 label c403 COUNTDOWN_TIMER_FRAMES
-label c404 TANK_SPINNER_LAST_INPUT
-label c405 MCP_TRON_ARM_OR_TANK_TURRET_ROTATION
+label c404 SPINNER_LAST_INPUT
+label c405 TRON_ARM_OR_TANK_TURRET_ROTATION
 label c40f ATTRACT_MCP_ROTATE_COLORS_IF_NON_ZERO
 label c410 MCP_BLOCKS_COLORS_STARTPOINT_VECTOR_INTO_0E55
 label c406 MCP_DISK_NUMBER_BEING_PROCESSED
@@ -672,8 +686,11 @@ label c426 VECTOR_OF_GAMES_TO_C42D
 label c42e NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_DISKS_MAY_GO_TO_1???
 label c42f OTHER_PLAYER_DATA
 label c45b GS_DIRECTION:1=DOWN,2=?,3=?,5=?,OTHER=?
+label c45c POINTER_INTO_COLORS_FOR_CYCLING_COLORS
+label c45d COLOR_CYCLING_LIMITER
+label c45e DO_COLOR_CYCLING_IF_NON_ZERO
 label c45f PLAYER_NUMBER
-label c461 WHICH_INSTRUCTIONS_TO_DISPLAY?_VECTOR_LIST_AT_1527?
+label c461 WHICH_ATTRACT_MODE_INSTRUCTIONS_TO_DISPLAY_VECTOR_LIST_AT_1527
 label c465 USED_AT_05F8_TO_SKIP_OR_ALTER_PROCESSING_0_1_OR_2
 label c466 NUMBER_OF_SCREEN_MESSAGES_FROM_C4D6
 label c467 NUMBER_OF_SCREEN_MESSAGES_2_FROM_C4BE
@@ -714,19 +731,17 @@ label C000 NVRAM
 ; label e800 VIDEO_RAM_MIRROR
 
 label F000 SPRITE_RAM
-label F004 TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT
-label F008 TANK_TURRET_OR_LC_ENEMIES
-label F00C TANK_DISKS_F00C_TO_F01B(SPRITES_3_TO_6)
-label f018 IO_OR_MCP_OR_TANK_DISKS_1_TO_4
-label f01c IO_OR_MCP_OR_TANK_DISKS_2
-label f020 IO_OR_MCP_OR_TANK_DISKS_3
-label f024 IO_OR_MCP_OR_TANK_DISKS_4
-label f028 MCP_BLOCKS_TOP_LEFT_MOVING_DOWN_AND_WRAP_TO_TOP_RIGHT_TO_F09F
-label f02c TANK_ENEMIES
-label f030 IO_GRID_BUGS
-label f044 TANK_ENEMY_BULLETS
-label f060 TANK_HITS_ON_ENEMIES
-label f0a0 MCP_TOWER_TO_F133
+label F004 SPRITE_TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT
+label F008 SPRITE_TANK_TURRET_OR_LC_ENEMIES
+label F00C SPRITE_TANK_DISKS_F00C_TO_F01B(SPRITES_3_TO_6)
+label f018 SPRITE_TRON_DISKS_1_TO_4
+label 401c SPRITE_TANK_4_OF_?
+label f028 SPRITE_MCP_BLOCKS_TOP_LEFT_MOVING_DOWN_AND_WRAP_TO_TOP_RIGHT_TO_F09F
+label f02c SPRITE_TANK_ENEMIES
+label f030 SPRITE_IO_GRID_BUGS
+label f044 SPRITE_TANK_ENEMY_BULLETS
+label f060 SPRITE_TANK_HITS_ON_ENEMIES
+label f0a0 SPRITE_MCP_TOWER_TO_F133
 ; label F200 SPRITE_RAM_M5
 ; label F400 SPRITE_RAM_M6
 ; label F600 SPRITE_RAM_M7
@@ -800,11 +815,13 @@ comment 022c automatic trigger, no time constant, software reset, control word
 commentline 0234 CTC channel 1 interrupt vector starts here
 
 commentline 0289 Get spinner value.  Subtract from last. Store last spinner value to C404
-commentline 0289 And ???
-commentline 0289 Update spinner value: 0 is right, increases counter clockwise to 0x23
-commentline 0289 (#36 )
+commentline 0289 Update turret/arm rotation value: 0 is right,
+commentline 0289 increases counter clockwise to 0x23 (#36 )
 
-commentline 02d9 Tank (only?) turret rotation overflow (0x24) so set to 0
+comment 028d Player 1 spinner input
+comment 0292 Player 2 spinner input
+
+commentline 02d9 Turret/arm rotation overflow (0x24) so set to 0
 commentline 0401 Copy null-terminated string in DE to HL
 commentline 040b Handle a space character (0x20 or 32)
 
@@ -837,6 +854,13 @@ data 04ce-04f5
 
 ascii 0513-051a
 
+commentline 05c3 MCP cone, if you number colors 0-5 from left to right,
+commentline 05c3 Tron surround is color 1 and 
+commentline 05c3 MCP cone and wall highlights are color 2
+commentline 05c3 Color registers 11, 13, 15, 1B, 1D, 1F correspond to 0-5
+commentline 05c3 These are memory addresses:
+commentline 05c3 FFA2, FFA6, FFAA, FFB6, FFBA, FFBE (see 05ec)
+
 commentline 05e4 Color RAM: If bit 8 is not set, write to even address. If bit 8 is set
 commentline 05e4 inc to next address to write to odd address in order to make A1 high!
 
@@ -854,14 +878,27 @@ commentline 06ca Each entry is 2 bytes destination & 2 bytes source
 commentline 06f5 Count @C467 and data starting @C4BE. @C4BC is next entry for Q
 commentline 06f5 Each entry is 2 bytes destination & 2 bytes source
 
-commentline 0775 Color RAM: if bit 8 is set, write to odd byte. Else write to even byte.
+comment 072e Skip leading zeroes in the score
 
-data 0786-0791
+commentline 074f Color cycling is enabled for all games, but not during game selection
+commentline 074f It is only used by Grid bugs (arrows and circle) and
+commentline 074f and Tanks (some wall blocks and details running through walls)
+commentline 074f 3 color registers are color cycled, but they are all set to the same color at the same time!
+commentline 0754 Limit color cycling to every 3rd frame (1/10th of a second)
+commentline 075b Update pointer into colors wrapping around, if necessary
+commentline 0768 Add pointer to base of colors
+commentline 0770 Handle which color RAM byte to write
+commentline 0775 Color RAM: if bit 8 is set, write to odd byte. Else write to even byte.
+commentline 077a Update colors in registers 0x31, 02, and 04 (FFE2/3, FF84/5, FF88/9)
+
+commentline 0786 Red, Dark red, Dark blue, Blue, Dark green, Green
+data 0786,6,2
 
 commentline 07cc FF byte has some special processing, for (c) only?
 commentline 07e7 00 byte falls here
 
-commentline Is this data? Are the bounds right? Where is this used?
+comment 0acf Toggle the flip screen bit?  If so, this code section switches between players 1 & 2
+commentline 0834 Is this data? Are the bounds right? Where is this used?
 data 0834-08ff
 
 data 0b54-0b57
@@ -883,18 +920,20 @@ commentline 0d9f Draw MCP blocks to sprites 1-24 (0x01-0x18)
 commentline 0dc3 24x3 bytes: relative X, relative Y, picture
 commentline 0dc3 (0x56 is added to X and 0x80 to Y)
 data 0dc3,24,3
-; data 0dc3-0dfd
 
-commentline 0e0b 13x3 bytes: X, Y, picture (0x56 is added to X and 0x80 to Y)
+commentline 0e0b 13x3 bytes: relative X, relative Y, picture
+commentline 0e0b (0x56 is added to X and 0x80 to Y)
 data 0e0b,13,3
-;data 0e0b-0e31
 
+commentline 0e55 Nybbles: xxxx.xxxR.RRGG.GBBB
 commentline 0e55 These are color WORDS!  If bit 8 is set, write the color to the next byte up
 commentline 0e55 to set the A0 line high which sets bit 8 in the color WORD RAM.
 commentline 0e55 See Bally/Midway's MCR II System manual top-right corner of page MCR-6
 commentline 0e55 for more information.  Color table is doubled so wraparound does not
 commentline 0e55 need to be calculated or handled.
-data 0e55-0e6c
+commentline 0e55 Red, Blue, Green, Yellow, Magenta, Cyan (and repeat)
+data 0e55,12,2
+;data 0e55-0e6c
 
 comment 0eac Copy HL to DE for count of BC
 
@@ -925,7 +964,9 @@ commentline 1433 Is this a string or an oops?  Remove and merge data?
 ascii 1433-1435
 data 1436-14ff
 
-data 1527-1534
+comment 1521 Loop attract mode instructions
+data 1527,7,2
+;data 1527-1534
 
 commentline 15c3 print out high scores
 
@@ -1102,7 +1143,7 @@ data 22d8,16,3
 
 commentline 2308 Used at 2115.  Set what game is at what quadrant?  Then 4x vector table.  Then 
 data 2308-230F
-; This doesn't seem right
+; This doesn't seem correct
 ;data 2310-2311
 ;data 2312-2313
 ;data 2314-2315
@@ -1186,12 +1227,33 @@ data 3554-3558
 
 commentline 3559 5 rows (max) by 6 columns (always) by 3 bytes:
 commentline 3559 relative X, relative Y, picture number
-data 3559-35b2
+data 3559,30,3
+;data 3559-35b2
 
-data 35b3-35d9
+data 35b3,13,3
+;data 35b3-35d9
 
 commentline 35da MCP colors?
-data 35da-3925
+data 35da-3639
+;data 35e6-3639
+data 363a,16,4
+;data 363a-3675
+
+commentline 367a Identical to 0x2AC (684) byte data structure at 6b79!
+commentline 367a Data structure for displaying Tron sprites.  19 (0x13) bytes each!
+commentline 367a 0&1:   legs together torso & legs sprites
+commentline 367a 2&3:   legs apart torso & legs sprites
+commentline 367a 4:     disk arm non-throwing sprite,
+commentline 367a 5&6:   disk arm non-throwing X & Y offset,
+commentline 367a 7:     disk arm throwing sprite,
+commentline 367a 8&9:   disk arm throwing X & Y offset,
+commentline 367a a:     pointing arm sprite,
+commentline 367a b&c:   pointing arm X & Y offset,
+commentline 367a d&e:   disk X & Y offset,
+commentline 367a f&10:  delta X (word)
+commentline 367a 11&12: delta Y (word)
+commentline 367a - 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F 10 11 12
+data 367a,36,19
 
 data 3926-3945
 
@@ -1228,7 +1290,7 @@ commentline 3dda User input processing ...
 comment 3f91 Invincibility TANK Game = 18 (JR *) (tank collision?)
 
 ; ??? The data I found below looks like valid code instead. Investigate how I mixed this up?
-; commentline 3f3f This might not be right.  Used by data blocks starting at 4066?
+; commentline 3f3f This might not be correct.  Used by data blocks starting at 4066?
 ; data 3f3f-3f47
 ; data 3f48-3f56
 ; data 3f57-3f5f
@@ -1418,7 +1480,7 @@ comment 5a08 If lowest bit in HL was set (C = true), process upper nybble
 comment 5a0a Process lower nybble
 comment 5a12 Process upper nybble
 
-commentline used at 57ba
+commentline 5b62 used at 57ba
 data 5b62-5c1a
 
 commentline 5c1b 19x6: enemy LCs, ?, ?, ?, ?, ?
@@ -1427,9 +1489,10 @@ data 5c1b,19,6
 commentline 5c8d Data used where for what?
 data 5c8d-5cff
 
-commentline 5e6d if BC was 0, return.  Does this mean skip instructions?
-
-data 5e7e-5e8b
+comment 5e6d If zero, no more strings to add to Q
+data 5e7e,3,4
+comment 5e8a Mark end of IO Tower instructions strings
+data 5e8a-5e8b
 
 ascii 5e8c-5e9a
 ascii 5e9b-5ea8
@@ -1447,11 +1510,68 @@ comment 5fb3 look at 6b39 for more info!
 
 comment 5fbf Copy HL to DE for count of BC
 
+commentline 6065 Tron sprites: 1=torso,2=legs,3=disk arm,5=pointing arm
+comment 6072 B now holds Tron X
+comment 6076 C now holds Tron Y
+comment 607a Set torso Y
+comment 6083 Set legs Y
+comment 6096 Wrap-around legs apart counter
+comment 609b Load legs together sprites
+comment 60a3 Load legs apart sprites
+comment 60a9 Set torso sprite
+comment 60ad Set legs sprite
+commentline 60b0 Process pointing arm
+comment 60b4 Set X
+comment 60be Set Y
+comment 60c4 Set sprite
+commentline 60c7 Check for ?
 commentline 60ce Tron fires his disk here (so don't set up disk in hand, maybe?)
+commentline 60d0 Process disk arm when throwing disk
+comment 60d4 Set X
+comment 60de Set Y
+comment 60e4 Set sprite
+commentline 60ed Process disk arm when disk in hand
+comment 60f1 Set X
+comment 60fb Set Y
+comment 6101 Set sprite
+commentline 6104 Any remaining disks?
+commentline 610a Process disk in hand
+comment 610e Set X
+comment 6118 Set Y
+comment 611d Set sprite to 07 (disk/small dot)
+commentline 6121 No remaining disks so hide disk in hand sprite (set Y to 0)
+
+commentline 6186 If arm rotation not zero, reverse rotation for data lookup
+commentline 618a Multiply A times 19 (HL squared to itself 2x + DE added 3x)
 
 comment 6279 Copy HL to DE for count of BC
 
 data 62ed-62f1
+
+commentline 636d Tron disks data C1E8,4,10
+commentline 636d 16 bit fields and math?
+commentline 636d Does some type of constraining on the X & Y positions
+commentline 636d They appear to be edges and maybe the IO tower?
+commentline 636d Reverses X or Y if the IO Tower is hit.  What about edges?
+commentline 636d 0&1: Disk X
+commentline 636d 2&3: Disk Y
+commentline 636d 4&5: X delta
+commentline 636d 6&7: Y delta
+commentline 636d 8: frames left to live
+commentline 636d bit 7: skip this disk if 0, bit 0: disk just thrown?
+comment 63d1 Set X
+comment 641b Set Y
+
+comment 6441 Skip a disk currently in use
+comment 644f Copy delta X to disk data
+commentline 645f Adjust disk sprite X.  If arm is positive value, add 3.
+commentline 645f If arm is negative value, add -1.
+comment 646e Set X
+comment 647b Copy delta Y to disk data
+comment 6487 Set Y
+comment 648e Set disk flags
+comment 648e Set disk life (24 frames)
+comment 649e Set disk X, Y, sprite (07)
 
 data 66ae-66d1
 
@@ -1466,7 +1586,22 @@ commentline 6b39 inputs (D,U,R,L,DR,DL,UR,UL).  All others (no input or invalid 
 commentline 6b39 to all zeroes effectively giving you no input.
 data 6b39,16,4
 
-data 6b79-6eff
+commentline 6b79 Identical to 0x2AC (684) byte data structure at 367a!
+commentline 6b79 Data structure for displaying Tron sprites.  19 (0x13) bytes each!
+commentline 6b79 0&1:   legs together torso & legs sprites
+commentline 6b79 2&3:   legs apart torso & legs sprites
+commentline 6b79 4:     disk arm non-throwing sprite,
+commentline 6b79 5&6:   disk arm non-throwing X & Y offset,
+commentline 6b79 7:     disk arm throwing sprite,
+commentline 6b79 8&9:   disk arm throwing X & Y offset,
+commentline 6b79 a:     pointing arm sprite,
+commentline 6b79 b&c:   pointing arm X & Y offset,
+commentline 6b79 d&e:   disk X & Y offset,
+commentline 6b79 f&10:  delta X (word)
+commentline 6b79 11&12: delta Y (word)
+commentline 6b79 - 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F 10 11 12
+data 6b79,36,19
+data 6e25-6eff
 
 commentline 6f20 This line is hit for every tick of the teletype (which strikes twice per character)
 

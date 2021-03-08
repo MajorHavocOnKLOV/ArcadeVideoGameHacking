@@ -1,16 +1,12 @@
-# In *nix (or WSL with *nix), type:
-cd /mnt/c/Users/PCAdmin.SIERRA/Desktop/Franklin/ArcadeVideoGameHacking.git/Tron
-cat tron.asm | grep 'CALL  ' | cut -c28- | sort | uniq -c | sort -nr > calls_counted.txt
-
      56 PUT_C_ON_STACK_TO_SEND_TO_AUDIO
      43 RESET_WATCHDOG_UNTIL_C400_IS_ONE
-     42 ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
+     42 ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
      30 INITIALIZE_SPRITES
-     28 CLEAR_BACKGROUND
+     28 RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
      26 ADD_A_TO_HL_WITH_CARRY
      16 INCREASE_C40D_BY_4_AND_ADD_A_MESSAGE_TO_Q
      14 COPY_20_FROM_HL_TO_FF80
-     14 ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
+     14 ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
      14 ADD_A_MESSAGE_TO_Q
      13 ADD_MESSAGE_TO_Q
      12 ZERO_RAM_C000-C418
@@ -26,9 +22,10 @@ cat tron.asm | grep 'CALL  ' | cut -c28- | sort | uniq -c | sort -nr > calls_cou
       6 $99CA
       5 STRING_IN_DE_TO_HL
       5 $A077
-      4 TANK_UPDATE_POSITION_AND_PIC_OF_TANK_FROM_C000_TO_C002
+      4 TANK_UPDATE_POSITION_AND_SPRITE_OF_TANK_FROM_C000_TO_C002
       4 TANK_BULLET?_DRAW_USES_IY
       4 SET_C40D_TO_FDD0_AND_ADD_A_MESSAGE_TO_Q
+      4 PRINT_SCORE
       4 LC_ERASE_TRAIL_OF_DESTROYED_LC
       4 LC_(HL-F800)/2_RETURN_HOW_MANY_0x20s_IN_A
       4 CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?
@@ -49,7 +46,6 @@ cat tron.asm | grep 'CALL  ' | cut -c28- | sort | uniq -c | sort -nr > calls_cou
       4 $455A
       4 $40A5
       4 $0D10
-      4 $0720
       3 TANK_PROCESS_ENEMY_TANKS_ON_STARTUP_SOMEHOW?_USES_IX
       3 TANK_POSITION_THE_ONE_AT_IX
       3 PUT_STRINGS_IN_MSG_Q_DEST=IX+0_SRC=IX+2_END_WHEN_SRC=0000
@@ -64,6 +60,7 @@ cat tron.asm | grep 'CALL  ' | cut -c28- | sort | uniq -c | sort -nr > calls_cou
       3 $521A
       3 $47C7
       2 ZERO_RAM_C000-C479
+      2 TRON_SPRITE_SET_INITIAL_POSITION_AND_ROTATION
       2 TEST_SOUND_BOARD
       2 TEST_ROM
       2 TEST_AND_INITIALIZE_SYSTEM_CALLED_AT_START_AND_ONE_OTHER_PLACE_WHY_OTHER?
@@ -71,10 +68,10 @@ cat tron.asm | grep 'CALL  ' | cut -c28- | sort | uniq -c | sort -nr > calls_cou
       2 MCP_DISK_END_FLIGHT
       2 LC_DRAW_A_TRAIL?
       2 LC_DEPENDING_ON_USER_SPRITE_COPY_AND_INC/DEC_BETWEEN_C1F5_AND_C1FD
-      2 IO_OR_MCP?_SET_TRON_INITIAL_POSITION_AND_ROTATION
       2 INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
       2 INITIALIZE_LEVEL?
       2 DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN
+      2 DISK_TERMINATE_SPRITE_AND_DATA_AND_INC_REMAINING_DISKS
       2 COPY_10_FROM_HL_TO_FFC0
       2 C,$4B90
       2 C,$4AFF
@@ -83,7 +80,6 @@ cat tron.asm | grep 'CALL  ' | cut -c28- | sort | uniq -c | sort -nr > calls_cou
       2 $6F3B
       2 $66F5
       2 $64E8
-      2 $64DB
       2 $6020
       2 $5B4B
       2 $59F4
@@ -116,29 +112,33 @@ cat tron.asm | grep 'CALL  ' | cut -c28- | sort | uniq -c | sort -nr > calls_cou
       1 TEST_RAM_ONLY_CALLED_AT_MACHINE_INITIALIZATION
       1 TEST_RAM
       1 TANK_UPDATE_POSITION
-      1 TANK_UPDATE_COLOR_CYCLING
       1 TANK_TURRET_DRAW
       1 TANK_SET_BULLET_X_AND_?_OFFSCREEN_CALL_UPDATE_POSITION?
-      1 TANK_ROTATE_TURRET?
       1 TANK_PROCESS_CONTROLS_INPUT
       1 ROTATE_MCP_BLOCK_COLORS
       1 READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS
       1 READ_AND_PROCESS_INPUT_PORTS
+      1 PROCESS_DISK_THROW?
+      1 PROCESS_COLOR_CYCLING
       1 PRINT_OUT_MESSAGES_IN_QUEUES
       1 PICK_WHICH_INSTRUCTIONS_TO_PRINT
       1 OUTPUT_IO_TOWER_TIMER?/TELETYPE_PRINTING_TO_THE_SCREEN_UNTIL_NULL_BYTE?
       1 NZ,$66DF
       1 NZ,$0991
-      1 MOVE_SPIDERS?
       1 MCP_PROCESS_HIT_BLOCK
       1 MCP_PROCESS_DISK_POSITION(S)?
       1 LC_SET_UP_BOUNDARIES_IN_RAM_DATA_STRUCTURE_FROM_C000_TO_C1DF
+      1 LC_INC_C20F_IF_08_SET_TO_00
       1 LC_INC_C20E_IF_08_SET_TO_00
+      1 IO_TOWER_GET_TRIGGER_STATE_AND_SET_C02E_BASED_ON_ARM_ROTATION
       1 HANDLE_JOYSTICK_INPUT?_TO_601F
-      1 GET_INPUT_FROM_JOYSTICK_TRIGGER_+?
+      1 GET_SPINNER_INPUT
+      1 GET_CREDIT_FROM_RIGHT_COIN
+      1 GET_CREDIT_FROM_LEFT_COIN
       1 DRAW_SPRITES_FOR_GAME_SELECTION_SCREEN
       1 DRAW_GAME_SELECT_SCREEN?
       1 DRAW_ATTRACT_MCP_CONE
+      1 DISPLAY_NUMBER_OF_CREDITS
       1 DISPLAY_MCP_CONE_WITH_COPYRIGHTS_AND_NEXT_INSTRUCTIONS
       1 CLEAR_BACKGROUND
       1 CHECK_DATA_C4F0_TO_C657?
@@ -159,7 +159,6 @@ cat tron.asm | grep 'CALL  ' | cut -c28- | sort | uniq -c | sort -nr > calls_cou
       1 $6554
       1 $6504
       1 $64A6
-      1 $636D
       1 $6236
       1 $619F
       1 $6177
@@ -167,7 +166,6 @@ cat tron.asm | grep 'CALL  ' | cut -c28- | sort | uniq -c | sort -nr > calls_cou
       1 $5AF1
       1 $5A27
       1 $59C2
-      1 $597F
       1 $58A5
       1 $588B
       1 $587B
@@ -226,6 +224,4 @@ cat tron.asm | grep 'CALL  ' | cut -c28- | sort | uniq -c | sort -nr > calls_cou
       1 $07B0
       1 $06BB
       1 $05F8
-      1 $04F6
       1 $03D9
-      1 $0358
