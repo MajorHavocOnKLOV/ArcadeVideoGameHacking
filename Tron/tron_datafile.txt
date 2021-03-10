@@ -75,6 +75,7 @@ label 0358 GET_CREDIT_FROM_RIGHT_COIN
 label 0401 STRING_IN_DE_TO_HL
 label 041c CHECK_DATA_C4F0_TO_C657?
 label 0484 INITIALIZE_HIGH_SCORES_AND_?
+label 049c DATA_TO_INITIALIZE_?_AND_HIGH_SCORE_AND_?
 label 04b0 DEFAULT_HIGH_SCORE_TABLE
 ; label 04b0 JP_S
 label 04b3 BA_S
@@ -227,7 +228,10 @@ label 1f97 START_GAME
 label 1fd1 DRAW_GAME_SELECT_SCREEN?
 label 20a5 VECTOR_OF_DIFFICULTY_TO_HARDNESS_MAPS_(STARTS_AT_20A7)
 label 2115 INITIALIZE_LEVEL?
+label 2167 GS_GET_AND_PROCESS_JOYSTICK_INPUT?
 label 2207 DRAW_SPRITES_FOR_GAME_SELECTION_SCREEN
+label 22b8 GS_X_AND_Y_DELTA_TO_ADD_TO_DISK_SPRITE_X_AND_Y
+label 2308 GS_VECTOR_TO_GAME_VECTORS
 label 234A BACKGROUND_PICK_A_GAME
 label 2aca GS_COLOR_PALETTE
 label 2c48 DATA_TO_2C4C?_USED_STARTING_AT_6F68
@@ -263,6 +267,7 @@ label 3cdf TANKS_INSTRUCTIONS
 label 3d35 DESTROY_ALL_S
 label 3d41 ENEMY_TANKS_S
 label 3d4d TANK_JOYSTICK_INPUT_TABLE?
+label 3da5 TANKS_ATTRACT_MODE_INPUT?
 label 3db5 TANK_PROCESS_CONTROLS_INPUT
 label 4063 TANKS_DATA_FOR_x_STARTS_AT_4066
 label 40d0 TANK_UPDATE_POSITION_AND_SPRITE_OF_TANK_FROM_C000_TO_C002
@@ -283,6 +288,7 @@ label 4bfd TANK_SET_BULLET_X_AND_?_OFFSCREEN_CALL_UPDATE_POSITION?
 label 4cfb TANK_DATA_FOR?_STARTS_AT_4CFF
 label 4d77 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE
 label 4f7e TANK_SET_UP_DATA
+label 4faa TANK_WARP_LOCATION_DATA_X_SPRITE_Y
 label 5000 PLAY_LC
 label 5103 LC_INSTRUCTIONS
 label 5151 LC_INSTRUCTION_STRINGS_SOURCE_AND_DESTINATION_DATA
@@ -297,9 +303,13 @@ label 5551 LC_ERASE_TRAIL_OF_DESTROYED_LC
 label 558d LC_DEPENDING_ON_USER_SPRITE_COPY_AND_INC/DEC_BETWEEN_C1F5_AND_C1FD
 label 56f4 LC_SET_UP_BOUNDARIES_IN_RAM_DATA_STRUCTURE_FROM_C000_TO_C1DF
 label 57ef LC_DATA_FOR_TRIGGER_PULLED_AND_UP_DOWN_VS_LEFT_RIGHT
+label 5873 DEC_HL_IF_NEGATIVE_SET_TO_02
+label 587b MATH_C212=(3*C214)+C213
 label 597f LC_INC_C20F_IF_08_SET_TO_00
 label 598a LC_INC_C20E_IF_08_SET_TO_00
 label 5995 LC_(HL-F800)/2_RETURN_HOW_MANY_0x20s_IN_A
+;label 59a9 HL=C_IF_A_NOT_ZERO_ADD_0X20_B_TIMES_AND_DOUBLE_ADD_DE
+label 59a9 LC_MATH_SPRITE_X_AND_Y_TO_BACKGROUND_RAM_LOCATION?
 label 59e5 LC_DRAW_A_TRAIL?
 label 5a1a LC_DRAW_D_INTO_LC_RAM_DATA_STRUCTURE
 label 5ac9 LC_MULTIPLE_CYCLES_DO_SOMETHING?
@@ -362,6 +372,8 @@ label 9100 BACKGROUND_TRAINING_FOR_LC
 label 9884 DATA_TO_?_USED_AT_6954
 label 9900 SERVICE_SWITCH_ON_ROUTINE?
 label 998c GET_TRIGGER_INPUT_FOR_SERVICE_MENU
+label 9984 PUT_STRINGS_IN_MESSAGE_Q_FROM_VECTOR_AT_C000_UNTIL_00
+label 99b1 PUT_STRINGS_IN_MESSAGE_Q_FROM_IX_UNTIL_00
 label 9bd8 ?_DATA_USED_FOR_?1
 label 9c14 SOUND_TEST_STRINGS_VECTORSET_DESTINATION_AND_SOURCE_30X
 label 9a11 ?_DATA_USED_FOR_?0
@@ -428,6 +440,7 @@ label a1bb 4_TO_5_MIN_S
 label a1c6 5_TO_6_MIN_S
 label a1d1 OVER_6_MIN_S
 label a1dc HIT_FIRE_BUTTON_TO_EXIT_S
+label a259 SCORE_REPORT_STRINGS
 label a28b SCORE_REPORT2_S
 label a298 0_TO_5000_PTS_S
 label a2a6 5000_TO_10000_PTS_S
@@ -439,6 +452,7 @@ label a304 50000_TO_75000_PTS_S
 label a317 75000_TO_100000_PTS_S
 label a32b 100000_TO_150000_PTS_S
 label a340 OVER_150000_PTS_S
+label a350 VECTOR_OF_SCORE_REPORT_OUTPUT_POSITIONS
 label a3e3 CHANNEL_TEST_S
 label a3f0 CHANNEL_1_S
 label a3fa CHANNEL_2_S
@@ -653,6 +667,9 @@ label c209 LC_TRIGGER_PULLED_AND_UP_DOWN_VS_LEFT_RIGHT
 label c20b LC_ENEMY_NUMBER_2_BYTES
 label c20d LC_TRIGGER_STATE_0_IS_PULLED
 label c210 LC_ENEMIES_STILL_ALIVE_BITS_0_1_2
+label c218 LC_ENEMIES_DATA_FOR_1?
+label c21b LC_ENEMIES_DATA_FOR_2?
+label c21e LC_ENEMIES_DATA_FOR_3?
 label c223 LC_SETUP2?
 label c224 LC_SETUP3?
 label c225 LC_SETUP4?
@@ -814,6 +831,7 @@ comment 022a Set CTC channel 0: Disable interrupts, timer mode, prescaler 16, fa
 comment 022c automatic trigger, no time constant, software reset, control word
 
 commentline 0234 CTC channel 1 interrupt vector starts here
+commentline 0269 Delay by looping $3000 times.  Why?
 
 commentline 0289 Get spinner value.  Subtract from last. Store last spinner value to C404
 commentline 0289 Update turret/arm rotation value: 0 is right,
@@ -1132,34 +1150,29 @@ commentline 22ac what to add to VECTOR_OF_GAMES to use correct 2310 data structu
 commentline 22ac The X or Y position is checked against to start that game
 data 22ac,4,3
 ;data 22ac-22b7
-commentline 22b8 Data used at 217d
-data 22b8-22d7
+commentline 22b8 GS disk delta X & Y data used at 217d
+data 22b8,16,2
 
 commentline 22d8 16x3: Direction, vector to data
 commentline 22d8 Vectors are: 22b5, 22ac, 22af, 22b2
 commentline 22d8 Data used at 1f22
-commentline 22d8 I have a hard time understanding why use 15 data structures
+commentline 22d8 I have a hard time understanding why use 16 data structures
 commentline 22d8 to point to 4 data structures of directions.  Anyone know?
 data 22d8,16,3
 
 commentline 2308 Used at 2115.  Set what game is at what quadrant?  Then 4x vector table.  Then 
-data 2308-230F
-; This doesn't seem correct
-;data 2310-2311
-;data 2312-2313
-;data 2314-2315
-;data 2316-2317
+data 2308,4,2
 
 commentline 2310 Vector of games to quadrants at C426 points to these blocks of data
 commentline 2310 3 vectors: game start, draw sprite(s) for game selection , instructions
 commentline 2310 MCP
-data 2310-2315
+data 2310,3,2
 commentline 2316 IO Tower (Grid Bugs)
-data 2316-231b
+data 2316,3,2
 commentline 231c LC
-data 231c-2321
+data 231c,3,2
 commentline 2322 Tank
-data 2322-2327
+data 2322,3,2
 
 commentline 2328 X offset, Y offset, picture, 00 end otherwise loop to next sprite
 commentline 2328 Draw MCP for game selection screen (3 sprites!  The others are just 1 sprite)
@@ -1284,58 +1297,50 @@ commentline 3ba3 Set up Tron tank (the playa'!)
 ascii 3d35-3d40
 ascii 3d41-3d4c
 data 3d4d,11,8
-data 3da5,1,4
-data 3da9-3db4
+data 3da5,4,4
 
 commentline 3dbb Attract mode input processing ...
 commentline 3dda User input processing ...
 
 comment 3f91 Invincibility TANK Game = 18 (JR *) (tank collision?)
 
-; ??? The data I found below looks like valid code instead. Investigate how I mixed this up?
-; commentline 3f3f This might not be correct.  Used by data blocks starting at 4066?
-; data 3f3f-3f47
-; data 3f48-3f56
-; data 3f57-3f5f
-; data 3f60-3f66
-; data 3f67-3f6e
-; data 3f6f-3f77
-; data 3f78-3f86
-; data 3f87-3f8e
-; data 3f8f-3f8f
-
-commentline 3f9a 18? data blocks used by tanks
+commentline 3f9a 33 data blocks used by tanks, variable size so zero terminated
 data 3f9a-3f9a
-data 3f9b-4010
-
-commentline 4011 Data used where for what?
-data 4011-4065
+data 3f9b-3f9f
+data 3fa0-3fac
+data 3fad-3fb1
+data 3fb2-3fc4
+data 3fc5-3fcb
+data 3fcc-3fd8
+data 3fd9-3fdd
+data 3fde-3fe4
+data 3fe5-3ff5
+data 3ff6-3fff
+data 4000-4010
+data 4011-401f
+data 4020-4024
+data 4025-4035
+data 4036-4040
+data 4041-404f
+data 4050-4054
+data 4055-4061
+data 4062-4064
+data 4065-4065
 
 commentline 4066 This data structure is used at 40C9
-commentline 4066 ??? 18?x3 bytes: ?, vector to other data
-commentline 4066 (they look like variable size 00 terminated data blocks)
-data 4066-40a4
+commentline 4066 33x3 bytes: ?, vector to other data
+data 4066,33,3
 
 comment 40ed If tank's X position is not 81, skip warp
 comment 40f4 If tank's Y position is 7E (top warp), jump to warp
 comment 40f8 If tank's Y position is not 91 (bottom warp), skip warp
 
-; Another data structure may start at 4088
-; data 409f-
-; data 40af-
-; data 40b8-
-; data 40c7-
-; data 40d0-
-; data 40df-
-; data 40e8-
-; data 40f7-
-; data 40ff-
-; data 40dd-
-
+data 4127-4144
+data 4145-4151
 commentline 4152 Data used by tanks around 4414?  The 3 below are educated guesses at this point
 commentline 4152 11?x3: 3= Type, vector to next data structure
 data 4152-4165
-data 4165-41b1
+data 4166-41b1
 data 41b2-420c
 
 comment 4546 Mirror Y of explosion sprite on tank to make it look like fire
@@ -1344,8 +1349,10 @@ data 45ed-45fe
 
 comment 473b Invincibility TANK Game = 18 (JR *) (bullet collision?)
 
-commentline 47b8-47c6 looks like data, not sure for what though ...
-data 47b8-47c6
+commentline 47b8-47c6 Data used 476A-477A for ?
+data 47b8-47bc
+data 47bd-47c1
+data 47c2-47c6
 
 ; commentline 47e2 Position the tank pointed to by IX
 
@@ -1397,9 +1404,7 @@ commentline 4f7e If high bit (7) set in number of tanks, recognizers instead of 
 
 data 4f7e,11,4
 
-commentline 4faa Tank warp locations (X, picture, Y) 16x3
 data 4faa,16,3
-;data 4faa-4fd9
 
 data 4fda-4fff
 
@@ -1484,9 +1489,13 @@ comment 5a08 If lowest bit in HL was set (C = true), process upper nybble
 comment 5a0a Process lower nybble
 comment 5a12 Process upper nybble
 
-commentline 5b62 Vectors used at 57ba
-data 5b62,48,2
-data 5bc2-5c1a
+commentline 5b62 48x Vectors used at 57ba?
+;data 5b62,48,2
+data 5b62-5b91
+data 5b92-5bc1
+data 5bc2-5c01
+data 5c02-5c0a
+data 5c0b-5c1a
 
 commentline 5c1b 19x6: enemy LCs, ?, ?, ?, ?, ?
 data 5c1b,19,6
@@ -1585,7 +1594,10 @@ data 6772-6776
 comment 68c1 Invincibility I/O Tower Game = C9 (RET)
 
 data 68c6-68e1
-data 68e2-6b38
+data 68e2-68f1
+data 68f2-68fa
+data 68fb,10,2
+data 690f-6b38
 
 commentline 6b39 Table of 16x4 bytes used by joystick direction input @5FB3. There are 8 valid
 commentline 6b39 inputs (D,U,R,L,DR,DL,UR,UL).  All others (no input or invalid input) are set
@@ -1618,6 +1630,8 @@ commentline 6f35 Another entry point to: Set color RAMs in some way?
 commentline 6f3e Color RAM: if bit 8 of word set, write to odd byte. Else, write to even byte
 
 commentline 6f52 HL passed in
+
+commentline 6f9d Bonus life acquired (to 6fb2)?
 
 commentline 6fc7 Clear background screen (set graphic to 51 and attributes to 5E)
 commentline 6fff Add a message to the output queue (max of 6) DE is source and BC is destination
@@ -1680,9 +1694,7 @@ data 9880-9883
 
 data 9884-98ff
 
-; comment Just to get the code at 9900 to disassemble correctly
-; data 98ff-98ff
-
+data 9a06-9a10
 data 9a11-9a2d
 data 9a2e-9a5f
 
@@ -1730,7 +1742,8 @@ ascii 9deb-9dfa
 ascii 9dfb-9e09
 ascii 9e0a-9e1b
 
-data 9e1c-9e97
+data 9e1c-9e4f
+data 9e50-9e97
 data 9ee0-9f27
 
 ascii 9f28-9f3f
@@ -1744,6 +1757,8 @@ ascii 9f94-9f9a
 ascii 9f9b-9fa6
 ascii 9fa7-9fb3
 ascii 9fb4-9fb8
+
+comment a053 Reset carry
 
 data a071-a078
 
@@ -1763,7 +1778,11 @@ ascii a1d1-a1db
 ascii a1dc-a1f3
 
 data a1f4-a207
-data a259-a28a
+comment a215 Output 10 lines in the Score Report
+;data a259-a28a
+data a259,12,4
+comment a289 Mark end of strings for Score Report screen
+data a289-a28a
 
 ascii a28b-a297
 ascii a298-a2a5
@@ -1777,7 +1796,7 @@ ascii a317-a32a
 ascii a32b-a33f
 ascii a340-a34f
 
-data a350-a363
+data a350,10,2
 data a3ad-a3e2
 
 ascii a3e3-a3ef
@@ -1879,6 +1898,8 @@ data ab1d-ab26
 ascii ab27-ab30
 ascii ab31-ab34
 ascii ab35-ab38
+
+commentline ab7d Loop 0x1000 (4096) times resetting watchdog
 
 data aba9-abb0
 
