@@ -619,6 +619,7 @@ label c108 TANKS_ENEMY_BULLETS_IN_RAM_AT_C111?
 ; offset 7: initialized to 0
 ; offset 3: vector to sprite(s) for what?
 label c14a TANKS_NUMBER_OF_ENEMIES
+label c14d TANKS_JOYSTICK_INPUT
 label c159 TANKS_NUMBER_OF_ENEMY_BULLETS?
 label c15b TANKS_SHOT_SPEED
 label c15f TANK_IF_HARDNESS>0X0B_SEE_COMMENT_AT_3A79
@@ -1282,7 +1283,9 @@ commentline 3b76 Sprite is explosion and X=0 and Y=4?
 commentline 3ba3 Set up Tron tank (the playa'!)
 ascii 3d35-3d40
 ascii 3d41-3d4c
-data 3d4d-3db4
+data 3d4d,11,8
+data 3da5,1,4
+data 3da9-3db4
 
 commentline 3dbb Attract mode input processing ...
 commentline 3dda User input processing ...
@@ -1359,7 +1362,8 @@ data 4c2c-4cfa
 data 4cfb-4cfe
 
 commentline 4cff This data structure used at 40BA and 4D77 but points to 4CFB and then adds 4!
-data 4cff-4d76
+data 4cff,30,4
+;data 4cff-4d76
 
 commentline 4d9e This data is copied to C051!
 commentline 4d9e number of tanks x 10 bytes
@@ -1480,8 +1484,9 @@ comment 5a08 If lowest bit in HL was set (C = true), process upper nybble
 comment 5a0a Process lower nybble
 comment 5a12 Process upper nybble
 
-commentline 5b62 used at 57ba
-data 5b62-5c1a
+commentline 5b62 Vectors used at 57ba
+data 5b62,48,2
+data 5bc2-5c1a
 
 commentline 5c1b 19x6: enemy LCs, ?, ?, ?, ?, ?
 data 5c1b,19,6
@@ -1579,7 +1584,8 @@ data 6772-6776
 
 comment 68c1 Invincibility I/O Tower Game = C9 (RET)
 
-data 68c6-6b38
+data 68c6-68e1
+data 68e2-6b38
 
 commentline 6b39 Table of 16x4 bytes used by joystick direction input @5FB3. There are 8 valid
 commentline 6b39 inputs (D,U,R,L,DR,DL,UR,UL).  All others (no input or invalid input) are set
