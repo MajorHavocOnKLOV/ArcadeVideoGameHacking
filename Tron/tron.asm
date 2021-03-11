@@ -370,6 +370,8 @@ BUY_IN_S EQU $9f94
 TIME_REPORT_S EQU $9f9b
 SCORE_REPORT_S EQU $9fa7
 EXIT_S EQU $9fb4
+CONVERT_HL_TO_6_DIGIT_BCD_AT_IX EQU $a069
+DISPLAY_6_DIGIT_BCD_FROM_HL_TO_IX_LEADING_ZEROES_GOTO_SPACES EQU $a077
 TIME_REPORT2_S EQU $a152
 0_TO_30_SEC_S EQU $a15e
 30_TO_60_SEC_S EQU $a16a
@@ -382,6 +384,8 @@ TIME_REPORT2_S EQU $a152
 5_TO_6_MIN_S EQU $a1c6
 OVER_6_MIN_S EQU $a1d1
 HIT_FIRE_BUTTON_TO_EXIT_S EQU $a1dc
+VECTOR_OF_TIME_REPORT_OUTPUT_POSITIONS EQU $a1f4
+DRAW_SCORE_REPORT EQU $a208
 SCORE_REPORT_STRINGS EQU $a259
 SCORE_REPORT2_S EQU $a28b
 0_TO_5000_PTS_S EQU $a298
@@ -651,6 +655,7 @@ CREDITS EQU $c501
 HIGH_SCORES_INITIALS_AND_LEVEL EQU $c504
 HIGH_SCORES_DIGITS?_GETS_CHECKED_AT_046C EQU $c522
 HIGH_SCORES_DIGITS_3BYTES_BCD EQU $c52c
+SCORE_REPORT_DATA_0_TO_100K_WORDSX10 EQU $c658
 FLIP_SCREEN_IF_VALUE_IS_01 EQU $c687
 NVRAM EQU $c000
 SPRITE_RAM EQU $f000
@@ -3200,7 +3205,7 @@ DATA_FOR_???_TO_133E:
 132d: 00 30 01 00 01 30 02 00 02 30 03 00 04 00 05 00 
 133d: 06 00 
 
-133f: 21 58 C6       LD    HL,$C658
+133f: 21 58 C6       LD    HL,SCORE_REPORT_DATA_0_TO_100K_WORDSX10
 1342: DD 21 F7 13    LD    IX,DATA_FOR_???_TO_14FF
 1346: 06 09          LD    B,#$09
 1348: 3A 16 C4       LD    A,($C416)
@@ -13537,7 +13542,7 @@ EXIT_S:
 9fc0: 80             ADD   A,B
 9fc1: C6 DD          ADD   A,#$DD
 9fc3: 21 1D C0       LD    HL,$C01D
-9fc6: CD 69 A0       CALL  $A069
+9fc6: CD 69 A0       CALL  CONVERT_HL_TO_6_DIGIT_BCD_AT_IX
 9fc9: 06 05          LD    B,#$05
 9fcb: 0E 00          LD    C,#$00
 9fcd: 1E 01          LD    E,#$01
@@ -13546,7 +13551,7 @@ EXIT_S:
 9fd6: CD 79 A0       CALL  $A079
 9fd9: 2A 82 C6       LD    HL,($C682)
 9fdc: DD 21 1D C0    LD    IX,$C01D
-9fe0: CD 69 A0       CALL  $A069
+9fe0: CD 69 A0       CALL  CONVERT_HL_TO_6_DIGIT_BCD_AT_IX
 9fe3: 06 05          LD    B,#$05
 9fe5: 0E 00          LD    C,#$00
 9fe7: 1E 01          LD    E,#$01
@@ -13563,15 +13568,15 @@ a007: 06 06          LD    B,#$06
 a009: 0E 00          LD    C,#$00
 a00b: DD 21 56 FA    LD    IX,$FA56
 a00f: 21 22 C5       LD    HL,HIGH_SCORES_DIGITS?_GETS_CHECKED_AT_046C
-a012: CD 77 A0       CALL  $A077
+a012: CD 77 A0       CALL  DISPLAY_6_DIGIT_BCD_FROM_HL_TO_IX_LEADING_ZEROES_GOTO_SPACES
 a015: 06 06          LD    B,#$06
 a017: 0E 00          LD    C,#$00
 a019: DD 21 5A FA    LD    IX,$FA5A
 a01d: 21 25 C5       LD    HL,$C525
-a020: CD 77 A0       CALL  $A077
+a020: CD 77 A0       CALL  DISPLAY_6_DIGIT_BCD_FROM_HL_TO_IX_LEADING_ZEROES_GOTO_SPACES
 a023: 2A 84 C6       LD    HL,($C684)
 a026: DD 21 1D C0    LD    IX,$C01D
-a02a: CD 69 A0       CALL  $A069
+a02a: CD 69 A0       CALL  CONVERT_HL_TO_6_DIGIT_BCD_AT_IX
 a02d: 06 05          LD    B,#$05
 a02f: 0E 00          LD    C,#$00
 a031: 1E 01          LD    E,#$01
@@ -13604,12 +13609,15 @@ a066: 10 E1          DJNZ  $A049
 
 a068: C9             RET   
 
+CONVERT_HL_TO_6_DIGIT_BCD_AT_IX:
 a069: FD 21 71 A0    LD    IY,$A071
 a06d: CD 3D A0       CALL  $A03D
 a070: C9             RET   
 
-a071: 10 27 64 00 01 00 1E 00 
+a071: 10 27 64 00 01 00 
 
+DISPLAY_6_DIGIT_BCD_FROM_HL_TO_IX_LEADING_ZEROES_GOTO_SPACES:
+a077: 1E 00          LD    E,#$00
 a079: 7B             LD    A,E
 a07a: B7             OR    A,A
 a07b: 7E             LD    A,(HL)
@@ -13628,6 +13636,8 @@ a089: E6 0F          AND   A,#$0F
 a08b: 05             DEC   B
 a08c: 20 02          JR    NZ,$A090
 
+
+*** Replace leading zeroes with spaces unless it's the last zero!
 a08e: 0E 01          LD    C,#$01
 a090: 04             INC   B
 a091: C6 30          ADD   A,#$30
@@ -13638,28 +13648,28 @@ a097: 0C             INC   C
 a098: 0D             DEC   C
 a099: 20 0B          JR    NZ,$A0A6
 
-a09b: DD 36 00 5E    LD    (IX+$00),#$5E
+a09b: DD 36 00 5E    LD    (IX+$00),#$5E  ;Output space
 a09f: DD 36 01 51    LD    (IX+$01),#$51
 a0a3: 18 08          JR    $A0AD
 
 a0a5: 4F             LD    C,A
-a0a6: DD 77 00       LD    (IX+$00),A
+a0a6: DD 77 00       LD    (IX+$00),A     ;Output digit
 a0a9: DD 36 01 50    LD    (IX+$01),#$50
 a0ad: D5             PUSH  DE
 a0ae: 11 C0 FF       LD    DE,$FFC0
-a0b1: DD 19          ADD   IX,DE
+a0b1: DD 19          ADD   IX,DE          ;Move a character to the right
 a0b3: D1             POP   DE
 a0b4: 10 C3          DJNZ  $A079
 
 a0b6: C9             RET   
 
 a0b7: 01 02 02       LD    BC,$0202
-a0ba: CD 77 A0       CALL  $A077
+a0ba: CD 77 A0       CALL  DISPLAY_6_DIGIT_BCD_FROM_HL_TO_IX_LEADING_ZEROES_GOTO_SPACES
 a0bd: DD 36 00 5E    LD    (IX+$00),#$5E
 a0c1: 01 C0 FF       LD    BC,$FFC0
 a0c4: DD 09          ADD   IX,BC
 a0c6: 01 02 02       LD    BC,$0202
-a0c9: CD 77 A0       CALL  $A077
+a0c9: CD 77 A0       CALL  DISPLAY_6_DIGIT_BCD_FROM_HL_TO_IX_LEADING_ZEROES_GOTO_SPACES
 a0cc: C9             RET   
 
 a0cd: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
@@ -13668,7 +13678,7 @@ a0d3: DD 21 20 A1    LD    IX,$A120
 a0d7: CD B1 99       CALL  PUT_STRINGS_IN_MESSAGE_Q_FROM_IX_UNTIL_00
 a0da: 06 0A          LD    B,#$0A
 a0dc: 21 6C C6       LD    HL,$C66C
-a0df: FD 21 F4 A1    LD    IY,$A1F4
+a0df: FD 21 F4 A1    LD    IY,VECTOR_OF_TIME_REPORT_OUTPUT_POSITIONS
 a0e3: 5E             LD    E,(HL)
 a0e4: 23             INC   HL
 a0e5: 56             LD    D,(HL)
@@ -13678,7 +13688,7 @@ a0e8: C5             PUSH  BC
 a0e9: FD E5          PUSH  IY
 a0eb: EB             EX    DE,HL
 a0ec: DD 21 1D C0    LD    IX,$C01D
-a0f0: CD 69 A0       CALL  $A069
+a0f0: CD 69 A0       CALL  CONVERT_HL_TO_6_DIGIT_BCD_AT_IX
 a0f3: 06 05          LD    B,#$05
 a0f5: 0E 00          LD    C,#$00
 a0f7: 1E 01          LD    E,#$01
@@ -13745,15 +13755,24 @@ a1d1: OVER 6 MIN
 
 HIT_FIRE_BUTTON_TO_EXIT_S:
 a1dc: HIT FIRE BUTTON TO EXIT
-
-a1f4: C6 F9 CA F9 CE F9 D2 F9 D6 F9 DA F9 DE F9 E2 F9 
-a204: E6 F9 EA F9 
+VECTOR_OF_TIME_REPORT_OUTPUT_POSITIONS:
+a1f4: C6 F9 
+a1f6: CA F9 
+a1f8: CE F9 
+a1fa: D2 F9 
+a1fc: D6 F9 
+a1fe: DA F9 
+a200: DE F9 
+a202: E2 F9 
+a204: E6 F9 
+a206: EA F9 
+DRAW_SCORE_REPORT:
 a208: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 a20b: CD 49 70       CALL  INITIALIZE_SPRITES
 a20e: DD 21 59 A2    LD    IX,SCORE_REPORT_STRINGS
 a212: CD B1 99       CALL  PUT_STRINGS_IN_MESSAGE_Q_FROM_IX_UNTIL_00
 a215: 06 0A          LD    B,#$0A         ;Output 10 lines in the Score Report
-a217: 21 58 C6       LD    HL,$C658
+a217: 21 58 C6       LD    HL,SCORE_REPORT_DATA_0_TO_100K_WORDSX10
 a21a: FD 21 50 A3    LD    IY,VECTOR_OF_SCORE_REPORT_OUTPUT_POSITIONS
 a21e: 5E             LD    E,(HL)
 a21f: 23             INC   HL
@@ -13764,7 +13783,7 @@ a223: C5             PUSH  BC
 a224: FD E5          PUSH  IY
 a226: EB             EX    DE,HL
 a227: DD 21 1D C0    LD    IX,$C01D
-a22b: CD 69 A0       CALL  $A069
+a22b: CD 69 A0       CALL  CONVERT_HL_TO_6_DIGIT_BCD_AT_IX
 a22e: 06 06          LD    B,#$06
 a230: 0E 00          LD    C,#$00
 a232: 21 1D C0       LD    HL,$C01D
@@ -13775,7 +13794,7 @@ a23d: D5             PUSH  DE
 a23e: DD E1          POP   IX
 a240: FD 23          INC   IY
 a242: FD 23          INC   IY
-a244: CD 77 A0       CALL  $A077
+a244: CD 77 A0       CALL  DISPLAY_6_DIGIT_BCD_FROM_HL_TO_IX_LEADING_ZEROES_GOTO_SPACES
 a247: C1             POP   BC
 a248: E1             POP   HL
 a249: 10 D3          DJNZ  $A21E
@@ -13790,6 +13809,8 @@ a256: C0             RET   NZ
 
 a257: 18 F2          JR    $A24B
 
+
+*** Vectors: Destination, Source
 SCORE_REPORT_STRINGS:
 a259: C0 FC 8B A2 
 a25d: 86 FE 98 A2 
@@ -14010,7 +14031,7 @@ a51f: 26 00          LD    H,#$00
 a521: FD E5          PUSH  IY
 a523: DD E5          PUSH  IX
 a525: DD 21 1D C0    LD    IX,$C01D
-a529: CD 69 A0       CALL  $A069
+a529: CD 69 A0       CALL  CONVERT_HL_TO_6_DIGIT_BCD_AT_IX
 a52c: 01 00 03       LD    BC,$0300
 a52f: DD E1          POP   IX
 a531: FD E1          POP   IY

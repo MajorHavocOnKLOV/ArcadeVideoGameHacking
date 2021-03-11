@@ -428,6 +428,8 @@ label 9f94 BUY_IN_S
 label 9f9b TIME_REPORT_S
 label 9fa7 SCORE_REPORT_S
 label 9fb4 EXIT_S
+label a069 CONVERT_HL_TO_6_DIGIT_BCD_AT_IX
+label a077 DISPLAY_6_DIGIT_BCD_FROM_HL_TO_IX_LEADING_ZEROES_GOTO_SPACES
 label a152 TIME_REPORT2_S
 label a15e 0_TO_30_SEC_S
 label a16a 30_TO_60_SEC_S
@@ -440,6 +442,8 @@ label a1bb 4_TO_5_MIN_S
 label a1c6 5_TO_6_MIN_S
 label a1d1 OVER_6_MIN_S
 label a1dc HIT_FIRE_BUTTON_TO_EXIT_S
+label a1f4 VECTOR_OF_TIME_REPORT_OUTPUT_POSITIONS
+label a208 DRAW_SCORE_REPORT
 label a259 SCORE_REPORT_STRINGS
 label a28b SCORE_REPORT2_S
 label a298 0_TO_5000_PTS_S
@@ -732,6 +736,7 @@ label c501 CREDITS
 label c504 HIGH_SCORES_INITIALS_AND_LEVEL
 label c522 HIGH_SCORES_DIGITS?_GETS_CHECKED_AT_046C
 label c52c HIGH_SCORES_DIGITS_3BYTES_BCD
+label c658 SCORE_REPORT_DATA_0_TO_100K_WORDSX10
 label c687 FLIP_SCREEN_IF_VALUE_IS_01
 
 ; map(0xc000, 0xc7ff).mirror(0x1800)
@@ -1760,7 +1765,12 @@ ascii 9fb4-9fb8
 
 comment a053 Reset carry
 
-data a071-a078
+data a071-a076
+
+commentline a08e Replace leading zeroes with spaces unless it's the last zero!
+comment a09b Output space
+comment a0a6 Output digit
+comment a0b1 Move a character to the right
 
 data a120-a151
 
@@ -1777,8 +1787,10 @@ ascii a1c6-a1d0
 ascii a1d1-a1db
 ascii a1dc-a1f3
 
-data a1f4-a207
+;data a1f4-a207
+data a1f4,10,2
 comment a215 Output 10 lines in the Score Report
+commentline a259 Vectors: Destination, Source
 ;data a259-a28a
 data a259,12,4
 comment a289 Mark end of strings for Score Report screen
