@@ -12,7 +12,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
      14 COPY_20_FROM_HL_TO_FF80
      14 ADJUST_SPRITE_X_IF_FLIPPED_SCREEN
      14 ADD_A_MESSAGE_TO_Q
-     13 ADD_MESSAGE_TO_Q
+     13 ADD_MESSAGE_TO_TELETYPE_Q
      12 ZERO_RAM_C000-C418
      10 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE
      10 PRINT_A_NULL_TERMINATED_ASCII_STRING_FROM_BC_TO_HL
@@ -54,9 +54,9 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       3 TANK_POSITION_THE_ONE_AT_IX
       3 PUT_STRINGS_IN_MSG_Q_DEST=IX+0_SRC=IX+2_END_WHEN_SRC=0000
       3 PUT_GAME_SELECT_COUNTDOWN_DIGIT_MESSAGE_IN_Q2
-      3 PROCESS_HIT_ON_TANK_SPIDER_MCP_BLOCK_OR_LC
       3 PROCESS_GAME_SELECT_COUNTDOWN_TIMER
       3 PRINT_ERROR_MESSAGES
+      3 ADD_SCORE_OF_HL_TO_CURRENT_PLAYER_AND_CHECK_FOR_AND_PROCESS_BONUS_LIFE
       3 $99EA
       3 $9958
       3 $5535
@@ -74,7 +74,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       2 LC_DRAW_A_TRAIL?
       2 LC_DEPENDING_ON_USER_SPRITE_COPY_AND_INC/DEC_BETWEEN_C1F5_AND_C1FD
       2 INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
-      2 INITIALIZE_LEVEL?
+      2 INITIALIZE_LEVEL
       2 DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN
       2 DISK_TERMINATE_SPRITE_AND_DATA_AND_INC_REMAINING_DISKS
       2 COPY_10_FROM_HL_TO_FFC0
@@ -107,7 +107,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       2 $051B
       1 ZERO_RAM_C000-C450
       1 Z,SHOULD_I_UPDATE_CONE_COLOR?
-      1 Z,INITIALIZE_LEVEL?
+      1 Z,INITIALIZE_LEVEL
       1 Z,$62AD
       1 Z,$33FA
       1 Z,$31A1
@@ -117,7 +117,10 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 TANK_UPDATE_POSITION
       1 TANK_TURRET_DRAW
       1 TANK_SET_BULLET_X_AND_?_OFFSCREEN_CALL_UPDATE_POSITION?
+      1 TANK_PROCESS_HIT?
       1 TANK_PROCESS_CONTROLS_INPUT
+      1 SCREEN_CALL_UPDATE_POSITION?:
+      1 SCREEN_CALL_UPDATE_POSITION? EQU $4bfd
       1 ROTATE_MCP_BLOCK_COLORS
       1 READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS
       1 READ_AND_PROCESS_INPUT_PORTS
@@ -134,7 +137,10 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 LC_SET_UP_BOUNDARIES_IN_RAM_DATA_STRUCTURE_FROM_C000_TO_C1DF
       1 LC_INC_C20F_IF_08_SET_TO_00
       1 LC_INC_C20E_IF_08_SET_TO_00
+      1 IO_TOWER_SET_UP_SOLAR_SAILER_AND_GRID_BUG_SPRITES_AND_DATA
       1 IO_TOWER_GET_TRIGGER_STATE_AND_SET_C02E_BASED_ON_ARM_ROTATION
+      1 HINE_INITIALIZATION:
+      1 HINE_INITIALIZATION EQU $af15
       1 HANDLE_JOYSTICK_INPUT?_TO_601F
       1 GET_SPINNER_INPUT
       1 GET_CREDIT_FROM_RIGHT_COIN
@@ -146,9 +152,11 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 DISPLAY_MCP_CONE_WITH_COPYRIGHTS_AND_NEXT_INSTRUCTIONS
       1 CLEAR_BACKGROUND
       1 CHECK_DATA_C4F0_TO_C657?
+      1 CALLED_AT_START_AND_ONE_OTHER_PLACE_WHY_OTHER?:
+      1 CALLED_AT_START_AND_ONE_OTHER_PLACE_WHY_OTHER? EQU $aae6
+      1 C,GET_INITIALS_FOR_A_HIGH_SCORE
       1 C,$420D
-      1 C,$0F7F
-      1 ADD_MESSAGE_TO_Q2
+      1 ADD_MESSAGE_TO_Q
       1 $AB39
       1 $A4B0
       1 $A03D
@@ -156,7 +164,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $9B76
       1 $6881
       1 $6827
-      1 $6777
       1 $6760
       1 $674C
       1 $66D2
@@ -182,7 +189,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $4C09
       1 $4A54
       1 $47FF
-      1 $4752
       1 $46CB
       1 $45FF
       1 $456D
