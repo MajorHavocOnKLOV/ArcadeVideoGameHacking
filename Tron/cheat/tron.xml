@@ -198,5 +198,17 @@
     </script>
   </cheat>
 
+  <cheat desc="Always get a Bit">
+    <script state="on">
+      <action>temp0 =maincpu.mb@5D44</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mb@5D44=91</action>
+    </script>
+    <script state="off">
+      <action>maincpu.mb@5D44=temp0 </action>
+    </script>
+  </cheat>
+
 </mamecheat>
 <!-- Cheat file downloaded from http://www.mamecheat.co.uk, see cheat.txt for list of contributors. -->
