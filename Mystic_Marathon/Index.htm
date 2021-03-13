@@ -1,0 +1,37 @@
+<html>
+<head>
+   <title>Mystic Marathon</title>
+</head>
+<body>
+
+<h1>
+Mystic Marathon
+</h1>
+
+<hr WIDTH="100%">
+<br>
+The battery holder on my MM is broken, I am missing the (Auto Up/Manual Down, Advance, High Score Reset) button set, and I do not care to keep high scores so I finally got tired of going behind the machine with a wire and figuring out how to hit advance and add credits everytime I power it up (rarely).  So instead of doing the simple thing (soldering a modern battery to the board), I decided to monkey with the code to solve my problems!
+<br><br>
+The results are the text file describing my process and the 3 EPROM files.  Maybe this will be helpful to *THE* other MM owner out there.  ;-D
+<br><br>
+Burn one of the EPROM files into a 2764 and then replace EPROM 17 (IC 25) with the new and improved EPROM and have fun!
+
+<table border>
+<caption><h1>2005, July</h1></caption>
+
+<tr><td><a href="MysticMarathonDefaultToFreePlay.txt">Blah blah blah (long lines, open in your favorite text editor?)</a></td></tr>
+</table>
+
+<br>
+
+<table border>
+<caption><b>EPROM files</b></caption>
+<tr><td><a href="mm17_1 free play skips press of advance.a25">Defaults to free play, skips the infinite wait for Advance press after FACTORY SETTING RESTORED displayed</a></td></tr>
+<tr><td><a href="mm17_1 free play skips press of advance 20 char hi score.a25">Defaults to free play, skips the infinite wait for Advance press after FACTORY SETTING RESTORED displayed, high score allows 20 characters of input</a></td></tr>
+<tr><td><a href="mm17_1 free play any input advances after factory settings restored.a25">Defaults to free play, any input will get you past the infinite wait after FACTORY SETTING RESTORED displayed</a></td></tr>
+
+</table>
+
+</body>
+</html>
+

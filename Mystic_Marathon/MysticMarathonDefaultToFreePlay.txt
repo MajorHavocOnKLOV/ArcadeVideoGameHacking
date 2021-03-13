@@ -1,0 +1,95 @@
+Mystic Marathon:
+================
+Burn one of my EPROM files (hopefully the names are self explanatory) into a 2764 and then replace EPROM 17 (IC 25) with this new and improved EPROM and have fun!
+
+Problems to solve
+1) Default to Free Play
+2) Avoid having to press Advance button to get past the "Factory Settings Restored" screen
+
+1) (How to figure out) Default to Free Play
+A) Get a default CMOS RAM
+B) Get a CMOS RAM set to Free Play
+C) Figure out differences
+D) Find default CMOS RAM table in EPROMs
+E) Modify bytes in EPROM so default is Free Play
+F) Make sure checksum of new EPROM passes self test
+G) Burn a new EPROM
+H) Test in real MM
+
+A) Delete nvram/mysticm.nv.  Run MAME.  Start MM.  Exit.  Rename nvram/mysticm.nv to mysticm_original.nv
+B) Run MAME.  Start MM.  Press Advance until you get to pricing screen (last one).  Set to free play.  Exit MAME.
+C) Use a binary diff tool to compare files (HOLY CRAP!  xP Pro has a commandline program called comp!  See output below)
+
+C:\mame32source\nvram>comp mysticm_original.nv mysticm.nv
+Comparing mysticm_original.nv and mysticm.nv...
+Compare error at OFFSET 7
+file1 = 3
+file2 = 9
+Compare error at OFFSET 9
+file1 = 1
+file2 = 0
+Compare error at OFFSET B
+file1 = 4
+file2 = 0
+Compare error at OFFSET D
+file1 = 1
+file2 = 0
+Compare error at OFFSET F
+file1 = 1
+file2 = 0
+Compare error at OFFSET 8D
+file1 = 4F
+file2 = 4D
+6 mismatches - ending compare
+
+D) Use AF9 (http://www.fauland.com/af9.htm) to find 03 01 04 01 01 (it took me a long time to re-remember that I should only be looking at the lower nybble of every byte and combining them into a byte for searching the initialization table.  One can also cheat by looking only at the even values in mysticm.nv).  The difference at 8D is because a checksum of CMOS RAM lower nybbles CC00-CC8B is stored in CC8C & CC8D.
+E) Change 03 01 04 01 01 to 09 00 00 00 00 using frhed (http://www.kibria.de/frhed.html).  This is in EPROM file mm17_1.a25 at position 0x01fd.
+F) Run debug version of MAME.  Start MM.  Set a breakpoint at F33E.  Go (F12 or G and then <ENTER>).  When the debugger breaks, move back in the code to F336 to see what is happening.  Compare the B register with the data at X+1.  Subtract the smaller value from the larger (difference).  Find an unused byte in mm17_1.a25 (usually FF) and change it to FF - difference.  The EPROM should now pass the arcade checksum but NOT the MAME checksum.
+G) Burn a new EPROM
+H) Test in real MM
+
+
+2) (How to figure out) Avoid having to press Advance button to get past the "Factory Settings Restored" screen
+A) Easy!  Delete nvram/mysticm.nv.  Run debug version of MAME.  Start MM.  Go (F12 or G and then <ENTER>).  When the game has displayed "Factory Settings Restored", press ~ (tilde) key.  The code is in a loop from 0x035C to 0x0367 which clears the watchdog, gets from the miscellaneous input port, filters out any other key presses, and loops if Advance has not been pressed.
+B) Hmmmmm.  I should have put more steps here!  I tried just changing the input port from C980 to C984 (to look for player button/joystick presses) to get past this screen but this did not work and also affected *ALL* waits for the Advance button.  It turns out it did not work because the input ports on the PIA for C984 were turned off!  So I added a jump before this loop to an unused section of the EPROM and handcrafted code to set the PIA and look for ANY input to get past that screen.  It worked!  And then I realized my goal was NO key press and just removed all the extra code to skip the check for button presses.  Done!
+
+
+So here are the changed bytes in mm17_1.a25 and their purpose:
+==============================================================
+1) 0x1fd=509 to 0x201=513 (5 bytes)
+Change default CMOS table from 03 01 04 01 01 to 09 00 00 00 00
+2) 0x359=857 to 0x35b=859 (3 bytes)
+Jump from "Factory Settings Restored" to new code below
+3) 0x1f7e=8062 to 0x1f8a=8074 (13 bytes)
+Jump to subroutine to print "Factory Settings Restored" (this code was replace by 3) above)
+Clear watchdog
+Jump to game start at [EFFE] (indirect jump to whatever address is stored at EFFE which is E000)
+Byte modified so EPROM would pass checksum.  See 1F for more information.
+
+PS  If you want to increase the default input letters for high score from 3 to 20, modify the byte at 0x0205 from 03 to 0x14=20.  The timer is too fast so I left this mod out of my changes.  Maybe I will change this someday ... or NOT!  :-p
+
+
+Notes:
+======
+MAME debugger, -dr WxH is useful to see more in a screen full
+
+Address map:
+============
+0100-012C Jump table (3 bytes each because JMP/7E command precedes each address)
+01B8-01C6 Copy X to Y for B bytes.  Since this is being stored to CMOS RAM, the ending storage address is Y+(B*2)+1
+01FA-020B Default values for CMOS RAM CC00-CC23
+02FE-0312 Checksum CMOS RAM (lower nybbles only!) from X to Y-1 and then add x37
+06C7-     Clear screen
+06E6-06F4 Combine lower nybbles at X and X+1 into a byte.  X into upper nybble and X+1 into lower nybble
+06FF-0709 Store A into nybbles at X & X+1
+2057-     Print (X affects screen position?)
+20C5-     Print "Factory Settings Restored"
+208D-     Print 1 or 2 (cocktail only for this game?)
+3E03-     Get PIA/button/joystick inputs
+3E35-     Translate PIA inputs to buttons and display key pressed?  Input test area
+3E90-3E9D PIA processing table, 3 times 4 bytes and then ending 0 0.  Each record contains where to read from and where to write the processed information out.
+C984      Read from here, AND with x10 for P1 Start
+E000      Once self test is completed, start executing here.  Could jump here if we wanted to skip self test
+F2FE-F33C Checksum ROMs
+F388-F3DF Table for summing ROMs, 4 bytes each.  Start address, checksum value, unknown, end address
+F33E     If a bad ROM checksum is encountered, jump here
