@@ -130,16 +130,16 @@ label 120c YOUR_SCORE_S
 label 1217 RANKING_IS_S
 label 1222 NOT_IN_THE_TOP_S
 label 1231 100_SCORES_S
-label 132d DATA_TIMES_TO_COMPARE_FOR THE_TIME_REPORT
-label 13f7 DATA_FOR_???_TO_14FF
+label 132d DATA_TIMES_TO_COMPARE_FOR_THE_TIME_REPORT
+label 13f7 DATA_SCORES_TO_COMPARE_FOR_THE_SCORE_REPORT
 label 1500 PICK_WHICH_INSTRUCTIONS_TO_PRINT
 label 1527 VECTORS_TO_ATTRACT_MODE_INSTRUCTIONS
-label 1538 SUBROUTINE_THAT_DOES_WHAT?
+label 1535 WAIT_6_SECONDS_CHECKING_FOR_CREDITS_ADDED
 label 1558 DISPLAY_RANKINGS_SCREEN
 label 1653 RANKINGS_S
 label 165c DISPLAY_POINT_VALUES_SCREEN
 label 16ab POINT_VALUES_S
-label 16b8 DATA_FOR_???_TO_16D6
+label 16b8 DATA_TO_DISPLAY_POINT_VALUES_SCREEN
 label 16e7 TANKS______500_S
 label 16f6 GRID_BUGS___50_S
 label 1705 CYCLES_____500_S
@@ -285,14 +285,19 @@ label 40fc TANK_WARP
 label 4145 TANK_DATA_FOR_?
 ; 4414 Find X & Y of this tank in a data structure?  For movement?
 label 4414 TANK_PROCESS_ENEMY_TANKS_ON_STARTUP_SOMEHOW?_USES_IX
+label 4531 TANK_POSITION_HIT_ON_ENEMY_TANK?
+label 456d TANKS_PROCESS_DISKS_THROWN?
 label 45ed DATA_USED_FOR_???_TO_45FE
-label 46fb TANKS_DATA_FOR_x_STARTS_AT_46FF
-label 4752 TANK_PROCESS_HIT?
+label 45ff TANK_PROCESS_DISKS_THROWN
+label 46f5 TANKS_PROCESS_ENEMY_BULLETS
+;label 46fb TANKS_DATA_FOR_x_STARTS_AT_46FF
+label 4752 TANKS_TERMINATE_DISK_THROWN_AT_IY
 label 47b8 SCORE_TANK_HIT_3
 label 47bd SCORE_TANK_HIT_2
 label 47c2 SCORE_TANK_HIT_1
 label 47e2 TANK_POSITION_THE_ONE_AT_IX
 label 47a7 COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?
+label 47c7 TANKS_UPDATE_DISK_THROWN_SPRITE_FROM_RAM_AT_IY
 label 4884 DATA_TO_49C7_USED_AT_49C8
 label 49c8 TANK_TURRET_DRAW
 label 4b70 TANK_BULLET?_DRAW_USES_IY
@@ -350,9 +355,12 @@ label 6357 SOLAR_SAILER_HIDE_SPRITE_AND_CHANGE_FLAG_TO_DISABLE_PROCESSING
 label 636d PROCESS_DISK_THROW?
 label 6433 DISK_INITIALIZE_DATA_AND_SPRITE
 label 64db DISK_TERMINATE_SPRITE_AND_DATA_AND_INC_REMAINING_DISKS
-label 66ae DATA_USED_FOR_???_TO_66D1
+label 6619 GRID_BUGS_ADD_MORE
+label 66ae DATA_GRID_BUGS_BYTES_4_TO_7_OF_0XB_BYTES_RAM_DATA
 label 6772 SCORE_IO_TOWER_GRID_BUG
 label 6777 IO_TOWER_SET_UP_SOLAR_SAILER_AND_GRID_BUG_SPRITES_AND_DATA
+label 6827 IO_TOWER_PROCESS_DISKS_THROWN?
+label 6881 IO_TOWER_PROCESS_GRID_BUGS?
 label 68c6 DATA_TO_?_USED_AT_5D19
 label 68fb IO_TOWER_VECTORS_TO_SETUP_GRID_BUGS_BY_HARDNESS
 label 6b39 JOYSTICK_INPUT_TABLE
@@ -621,8 +629,9 @@ label c001 TANK_SPRITE_OR_MCP_ROWS_OF_BLOCKS_OR_BIT_Y
 label c002 TANK_Y_OR_GS_DISK_Y_OR_SOLAR_SAILER_X_Y
 label c003 SOLAR_SAILER_Y
 label c004 TANK_ENEMY_DESTROYED_OR_SOLAR_SAILER_STATUS_FLAG
+label c006 GRID_BUGS_NUMBER_OF_UNUSED_SLOTS
 label c007 MCP_TRON_X_TANKS_DATA_VECTOR_x_1
-label c009 MCP_TRON_Y_TANKS_DATA_VECTOR_x_2
+label c009 MCP_TRON_Y_OR_TANKS_DATA_VECTOR_x_2_OR_GRID_BUGS_FRAMES_TO_DELAY_WHEN_BREEDING
 label c00d IO_TOWER_TIMER_VALUE_REVERSED_TO_C010
 label c00e INFINITE_TIME_CHEAT
 label c010 TANKS_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020
@@ -633,7 +642,7 @@ label c01f TRON_SPRITE_LEGS_APART_COUNTER_0_TO_7
 label c022 IO_TOWER_INCREMENTS_19_TO_1E_FOR_EACH_DISK_THROWN
 label c023 IO_TOWER_TRIGGER_DEBOUNCE?
 label c024 IO_TOWER_ALWAYS_80?
-label c026 IO_TRON_X/MCP_DISK_3_DATA
+label c026 IO_TRON_X_OR_MCP_DISK_3_DATA
 label c028 IO_TRON_Y
 label c029 JOYSTICK_INPUT_ARRAY_TO_C02C
 label c030 IO_TOWER_GRID_BUGS_OR_MCP_DISK_4_DATA
@@ -789,7 +798,7 @@ label F004 SPRITE_TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DIS
 label F008 SPRITE_TANK_TURRET_OR_LC_ENEMIES
 label F00C SPRITE_TANK_DISKS_F00C_TO_F01B(SPRITES_3_TO_6)
 label f018 SPRITE_TRON_DISKS_1_TO_4
-label 401c SPRITE_TANK_4_OF_?
+label f01c SPRITE_TANK_3_HITS_AND_ENEMY_TANK
 label f028 SPRITE_MCP_BLOCKS_TOP_LEFT_MOVING_DOWN_AND_WRAP_TO_TOP_RIGHT_TO_F09F_OR_BIT
 label f029 
 label f02c SPRITE_TANK_ENEMIES_OR_SOLAR_SAILER
@@ -1021,10 +1030,12 @@ data 132d,9,2
 
 ascii 134e-1350
 
-data 13f7-1432
-commentline 1433 Is this a string or an oops?  Remove and merge data?
-ascii 1433-1435
-data 1436-14ff
+data 13f7,9,3
+;data 13f7-1432
+;data 1412-1432
+;commentline 1433 Is this a string or an oops?  Remove and merge data?
+;ascii 1433-1435
+data 1412-14ff
 
 comment 1521 Loop attract mode instructions
 data 1527,7,2
@@ -1039,14 +1050,21 @@ ascii 1605-1607
 commentline 161c print out user level (programming language)
 
 ascii 1653-165b
+commentline 165c Display title
+commentline 1674 Set up sprite(s)
+commentline 1693 Send string to Q
+
 ascii 16ab-16b7
 
-data 16b8-16d6
-
-ascii 16d7-16d9
-
-commentline 16da Data used where for what?
-data 16da-16e6
+commentline 16b8 Tank, Grid Bug, Light Cycle, MCP block, Bit
+commentline 16b8 Y, X, sprite, [additional sprites], 0 (end marker), destination vector, source vector
+data 16b8,3,8
+data 16d0,1,14
+data 16de,1,8
+data 16e6-16e6 Mark end of data starting at 16b8
+;data 16da-16e6
+;ascii 16d7-16d9
+;commentline 16da Data used where for what?
 
 ascii 16e7-16f5
 ascii 16f6-1704
@@ -1192,7 +1210,7 @@ ascii 1e06-1e10
 commentline 1e11 Data for what used where?
 data 1e11-1eff
 
-commentline 1fc0 if level > 0, skip game instructions
+commentline 1fbc if user level > 0, skip game instructions
 commentline 1fc2 pick GS instructions to print
 
 commentline 205c Finished level so set up for the next level (to 2097)
@@ -1310,7 +1328,6 @@ commentline 2d82 Set MCP tower at 40x and 56y
 commentline 2d8c Fill $05x$1E of RAM $C063-C0DB with $80 or $00.  Why?
 commentline 2d8c Column (6) x Row (5) x 4: 4= X, Y, ?, ? (starts as 80.  Lowest bit set when hit)
 commentline 2d8c If a row is empty, the 4 bytes for it are all 00
-commentline 2db2 ???
 
 comment 2e07 Copy HL to DE for count of BC
 
@@ -1370,7 +1387,8 @@ data 3946-3965
 commentline 3966 Data for setting up MCP cone game.
 commentline 3966 10x4: 4= direction, blocks per row, Y move delay, rotation delay
 commentline 3966 plugged into C0E9, C0E6, C0E7, C0E5
-data 3966-398d
+data 3966,10,4
+;data 3966-398d
 
 commentline 398e Data used where for what?
 data 398e-39ff
@@ -1438,6 +1456,17 @@ data 41b2-420c
 
 comment 4546 Mirror Y of explosion sprite on tank to make it look like fire
 
+commentline 456d Tanks: C011 is the start of RAM data for disks thrown, size 0x10
+commentline 456d The code starts at C001 and pre-adds a size (DE) before processing starts
+commentline 456d X word, Y word, X delta word, Y delta word, (8 bytes)
+commentline 456d ?, ?, ?, pointer to sprite for this disk, ?, ?, ?
+commentline 45a1 Add deltas to X & Y (word based with carry)
+
+commentline 46f5 Tanks: C051 is the start of RAM data for enemy tanks, size 0x20
+commentline 46f5 The code starts at C031 and pre-adds a size (DE) before processing starts
+commentline 46f5 X, sprite, Y, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+commentline 46f5 Add deltas to X & Y (word based with carry)
+
 data 45ed-45fe
 
 comment 473b Invincibility TANK Game = 18 (JR *) (bullet collision?)
@@ -1456,6 +1485,9 @@ commentline 49d4 Attract mode input processing ...
 commentline 49db User and attract mode processing continues here ...
 commentline 49f0 Update turret position and rotation
 data 4b8d-4b8f
+
+commentline 4b90 Tanks: C111 is beginning of ?, size 0x9
+commentline 4b90 Starts at C108 and adds size (DE) before processing
 
 data 4c2c-4cfa
 ; do not merge above and below!  Otherwise label for 4CFB will not print!
@@ -1707,10 +1739,24 @@ comment 648e Set disk flags
 comment 648e Set disk life (24 frames)
 comment 649e Set disk X, Y, sprite (07)
 
-data 66ae-66d1
+comment 6619 Load sprite X & Y into DE
+comment 661f Push sprite pointer (IX), data pointer (IY), and sprite X&Y onto stack
+data 66ae,9,4
+;data 66ae-66d1
+
+comment 66e3 Get grid bug sprite
+comment 66e6 grid bug squat
+comment 66e8 Jump if grid bug sprite is squat
+commentline 66eb Grid bug not squat, so increment grid bug sprite
 
 data 6772-6776
 
+commentline 6777 Only check for Solar Sailer if hardness is > 9
+commentline 677e Mask off Solar Sailer possible bit from frames before breeding setting (C009) and skip Solar Sailer
+commentline 6785 If Solar Sailer possible bit is not set (bit 7 in first byte of Grid Bugs setup data), skip Solar Sailer
+commentline 678a If bit 3 of pseudo random value is not set, skip Solar Sailer
+commentline 6791 Set flag to process Solar Sailer
+commentline 6796 Randomly pick which side and direction the Solar Sailer will go and place data in C000-C003
 comment 67df Data set X of grid bug
 comment 67e3 Sprite set X of grid bug
 comment 67e7 Data set Y of grid bug
@@ -1726,14 +1772,31 @@ commentline 68e2 Solar Sailer will drop bit when Y position = Bit Y
 data 68e2,4,4
 data 68f2-68fa
 data 68fb,9,2
-commentline 690d ?, ?, number of grid bugs, ?
-commentline 690d C006 is set to 2nd number - 3rd number.  Why?
+
+commentline 690d Grid Bugs setup information
+commentline 690d First line: setup data
+commentline 690d bit 7 permits Solar Sailer + frames to wait before breeding?,
+commentline 690d max number of grid bugs, starting number of grid bugs, ?
+commentline 690d C006 is set to max - starting grid bugs (2nd - 3rd) = unused grid bug slots
 commentline 690d If bit 7 is set on first number (hardness 4, 7, and 8),
 commentline 690d get a random number and send solar sailer if bit 3 is set?
+commentline 690d Subsequent lines: Set up information for each Grid Bug initially displayed
 commentline 690d X, Y, ?, sprite
 commentline 690d repeat [number of grid bugs] times ...
 commentline 690d Grid bug data array starts at C030 and each entry is 11 (B) bytes long
-commentline 690d ?, X, ?, Y, ?, ?, ?, ?, 3rd number per grid bug, ?, 0x80
+commentline 690d ?, X, ?, Y, [4 bytes copied from table @66AE], 3rd number per grid bug, ?, 0x80
+commentline 690d ?
+commentline 690d X
+commentline 690d ?
+commentline 690d Y
+commentline 690d [ 1st of 4 bytes copied from table @66AE]
+commentline 690d [2nd]
+commentline 690d [3rd]
+commentline 690d [4th]
+commentline 690d Frames to pause before "breeding" (3rd number per grid bug)
+commentline 690d ?
+commentline 690d 0x80
+
 commentline 690d IO tower 0 hardness setup data
 data 690d-6910
 data 6911,3,4
@@ -2233,11 +2296,11 @@ data b183-bfff
 ; 	0B = explosion small (looks identical to 00)
 ; 	0C = BIT!
 ; 	0D = side of MCP cone?
-; 	0E = spider egg
-; 	0F = spider full kick
-; 	10 = spider half kick
-; 	11 = spider squat
-; 	12 = spider lift
+; 	0E = grid bug egg
+; 	0F = grid bug full kick
+; 	10 = grid bug half kick
+; 	11 = grid bug squat
+; 	12 = grid bug lift
 ; 	13-1C = cannon from tank, left (90 degrees) to up (0 degrees) (10 positions,
 ;      18 & 19 are 45 degrees and just ever so slightly different)
 ; 	1D - tron torso and head, legs together

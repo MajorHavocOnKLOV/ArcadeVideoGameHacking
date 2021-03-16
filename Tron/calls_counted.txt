@@ -52,6 +52,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       4 $0D10
       3 TANK_PROCESS_ENEMY_TANKS_ON_STARTUP_SOMEHOW?_USES_IX
       3 TANK_POSITION_THE_ONE_AT_IX
+      3 TANKS_UPDATE_DISK_THROWN_SPRITE_FROM_RAM_AT_IY
       3 PUT_STRINGS_IN_MSG_Q_DEST=IX+0_SRC=IX+2_END_WHEN_SRC=0000
       3 PUT_GAME_SELECT_COUNTDOWN_DIGIT_MESSAGE_IN_Q2
       3 PROCESS_GAME_SELECT_COUNTDOWN_TIMER
@@ -62,12 +63,12 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       3 $5535
       3 $5234
       3 $521A
-      3 $47C7
       2 ZERO_RAM_C000-C479
       2 TRON_SPRITE_SET_INITIAL_POSITION_AND_ROTATION
       2 TEST_SOUND_BOARD
       2 TEST_ROM
       2 TEST_AND_INITIALIZE_SYSTEM_CALLED_AT_START_AND_ONE_OTHER_PLACE_WHY_OTHER?
+      2 TANKS_PROCESS_ENEMY_BULLETS
       2 NC,$4AFF
       2 MCP_DISK_END_FLIGHT
       2 LC_MATH_SPRITE_X_AND_Y_TO_BACKGROUND_RAM_LOCATION?
@@ -97,7 +98,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       2 $5475
       2 $4762
       2 $472B
-      2 $46F5
       2 $44BD
       2 $447E
       2 $4443
@@ -117,8 +117,11 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 TANK_UPDATE_POSITION
       1 TANK_TURRET_DRAW
       1 TANK_SET_BULLET_X_AND_?_OFFSCREEN_CALL_UPDATE_POSITION?
-      1 TANK_PROCESS_HIT?
+      1 TANK_PROCESS_DISKS_THROWN
       1 TANK_PROCESS_CONTROLS_INPUT
+      1 TANK_POSITION_HIT_ON_ENEMY_TANK?
+      1 TANKS_TERMINATE_DISK_THROWN_AT_IY
+      1 TANKS_PROCESS_DISKS_THROWN?
       1 SCREEN_CALL_UPDATE_POSITION?:
       1 SCREEN_CALL_UPDATE_POSITION? EQU $4bfd
       1 ROTATE_MCP_BLOCK_COLORS
@@ -138,6 +141,8 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 LC_INC_C20F_IF_08_SET_TO_00
       1 LC_INC_C20E_IF_08_SET_TO_00
       1 IO_TOWER_SET_UP_SOLAR_SAILER_AND_GRID_BUG_SPRITES_AND_DATA
+      1 IO_TOWER_PROCESS_GRID_BUGS?
+      1 IO_TOWER_PROCESS_DISKS_THROWN?
       1 IO_TOWER_GET_TRIGGER_STATE_AND_SET_C02E_BASED_ON_ARM_ROTATION
       1 HINE_INITIALIZATION:
       1 HINE_INITIALIZATION EQU $af15
@@ -162,8 +167,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $A03D
       1 $9FBF
       1 $9B76
-      1 $6881
-      1 $6827
       1 $6760
       1 $674C
       1 $66D2
@@ -190,9 +193,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $4A54
       1 $47FF
       1 $46CB
-      1 $45FF
-      1 $456D
-      1 $4531
       1 $4508
       1 $42B3
       1 $3F21
