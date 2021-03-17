@@ -404,10 +404,10 @@ label 9900 SERVICE_SWITCH_ON_ROUTINE?
 label 998c GET_TRIGGER_INPUT_FOR_SERVICE_MENU
 label 9984 PUT_STRINGS_IN_MESSAGE_Q_FROM_VECTOR_AT_C000_UNTIL_00
 label 99b1 PUT_STRINGS_IN_MESSAGE_Q_FROM_IX_UNTIL_00
-label 9bd8 ?_DATA_USED_FOR_?1
-label 9c14 SOUND_TEST_STRINGS_VECTORSET_DESTINATION_AND_SOURCE_30X
-label 9a11 ?_DATA_USED_FOR_?0
-label 9a2e TEST_STRINGS_VECTORSET_DESTINATION_AND_SOURCE_12X
+label 99ea RUN_SERVICE_MENU_ITEM
+label 9c14 SOUND_MENU_STRINGS_VECTORSET_DESTINATION_AND_SOURCE
+label 9a2e SERVICE_MENU_STRINGS_VECTORSET_DESTINATION_AND_SOURCE
+label 9a06 DATA_TO_SET_UP_SERVICE_MENU_SELECT_DESIRED_TEST
 label 9a60 SELECT_DESIRED_TEST_S
 label 9a74 1_SELF_DIAGNOSTICS_S
 label 9a87 2_SOUNDS_S
@@ -447,6 +447,8 @@ label 9dde 23__RELOCATE_S
 label 9deb 24__TTY_CLATTER_S
 label 9dfb 25__TOWER_BEAM_S
 label 9e0a 26__TIMER_WARNING_S
+label 9e98 BOOKKEEPING_MENU
+label 9ee0 DATA_TO_SET_UP_BOOKKEEPING_MENU
 label 9f28 SELECT_A_REPORT_OR_EXIT_S
 label 9f40 CHUTE__1_COINS_S
 label 9f4f CHUTE__2_COINS_S
@@ -522,6 +524,8 @@ label a712 PL2_RIGHT_S
 label a71e PL2_LEFT_S
 label a729 PL2_UP_S
 label a732 PL2_DOWN_S
+label a73b SERVICE_MENU_MACHINE_SETUP
+label a873 VECTOR_DESTINATIONS_AND_STRINGS_FOR_SETUP_OPTIONS_MENU
 label a8bd SETUP_OPTIONS_S
 label a8cb COIN_CHUTE_12_S
 label a8d8 COINS_FOR_S
@@ -624,10 +628,10 @@ label b17e USER_S
 ;
 ; c000 LC_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY
 ; c000 MCP 00-03 legs open, 04-04 legs closed
-label c000 CPU_RAM_OR_GS_DISK_X_TANK_X_OR_MCP_TRON_LEGS-LC_TRAILS_TO_C1DF
+label c000 CPU_RAM_GS_DISK_X_TANK_X_MCP_TRON_LEGS_LC_TRAILS_TO_C1DF
 label c001 TANK_SPRITE_OR_MCP_ROWS_OF_BLOCKS_OR_BIT_Y
 label c002 TANK_Y_OR_GS_DISK_Y_OR_SOLAR_SAILER_X_Y
-label c003 SOLAR_SAILER_Y
+label c003 SOLAR_SAILER_Y_SERVICE_MENU_ROW
 label c004 TANK_ENEMY_DESTROYED_OR_SOLAR_SAILER_STATUS_FLAG
 label c006 GRID_BUGS_NUMBER_OF_UNUSED_SLOTS
 label c007 MCP_TRON_X_TANKS_DATA_VECTOR_x_1
@@ -766,8 +770,13 @@ label c4ba SOURCE?
 label c4be SCREEN_MESSAGE_QUEUE_2_TO_C4D5
 label c4d6 SCREEN_MESSAGE_QUEUE_TO_CD60?
 label C4d8 SCREEN_MESSAGE_QUEUE
-label c4f0 ?_AND_HIGH_SCORE_INITIALS_AND_?_TO_C686
-label c4f4 LIVES_PER_PLAYER
+label c4f0 COIN_CHUTE_1L_COINS
+label c4f1 COIN_CHUTE_1L_CREDITS
+label c4f2 COIN_CHUTE_2R_COINS
+label c4f3 COIN_CHUTE_2R_CREDITS
+label c4f4 LIVES_PER_PLAYER_OR_BASES
+label c4f5 CREDITS_TO_START_A_GAME
+label c4f6 DIFFICULTY_LEVEL
 label c4fd BONUS_PLAYER_AT_XX000_DIGITS
 label c4f6 DIFFICULTY_LEVEL
 label c4f7 HIGH_SCORES_DIGITS
@@ -1921,9 +1930,23 @@ data 9880-9883
 
 data 9884-98ff
 
-data 9a06-9a10
-data 9a11-9a2d
-data 9a2e-9a5f
+comment 9a06 Pointer to vector of destinations and strings on Service Menu
+data 9a06,1,2
+comment 9a08 Pointer to sprite positions for service menu
+data 9a08,1,2
+comment 9a0a Pointer to array of vectors of code to run when a service item is selected
+data 9a0a,1,2
+comment 9a0c How many items in service menu
+data 9a0c-9a0c
+comment 9a0d Sprite to indicate selected service item
+data 9a0d-9a0d
+comment 9a0e Sprite positions service menu
+data 9a0e,8,2
+comment 9a1e Code vectors to run when item selected
+data 9a1e,8,2
+data 9a2e,12,4
+comment 9a5e Mark end of vector
+data 9a5e-9a5f
 
 ascii 9a60-9a73
 ascii 9a74-9a86
@@ -1938,8 +1961,21 @@ ascii 9ae4-9afc
 ascii 9afd-9b11
 ascii 9b12-9b2a
 
-data 9bd8-9c13
-data 9c14-9c8d
+comment 9bd8 Pointer to vector of destinations and strings on Sound Menu
+data 9bd8,1,2
+comment 9bda Pointer to sprite positions for sound menu
+data 9bda,1,2
+comment 9bdc Pointer to array of vectors of code to run when a sound menu is selected
+data 9bdc,1,2
+comment 9bde How many items in sound menu
+data 9bde-9bde
+comment 9bdf Sprite to indicate sound selected
+data 9bdf-9bdf
+comment 9be0 Sprite positions sound menu
+data 9be0,26,2
+data 9c14,30,4
+comment 9c8c Mark end of vector
+data 9c8c-9c8d
 
 ascii 9c8e-9c9c
 ascii 9c9d-9caa
@@ -1969,9 +2005,26 @@ ascii 9deb-9dfa
 ascii 9dfb-9e09
 ascii 9e0a-9e1b
 
-data 9e1c-9e4f
+commentline 9e1c Array of vectors to code to execute when a sound is selected
+data 9e1c,26,2
+
 data 9e50-9e97
-data 9ee0-9f27
+
+comment 9ee0 Pointer to vector of destinations and strings on Bookkeeping Menu
+data 9ee0,1,2
+comment 9ee2 Pointer to sprite positions for bookkeeping menu
+data 9ee2,1,2
+comment 9ee4 Pointer to array of vectors of code to run when a bookkeeping menu is selected
+data 9ee4,1,2
+comment 9ee6 How many items in bookkeeping menu
+data 9ee6-9ee6
+comment 9ee7 Sprite to indicate bookkeeping item selected
+data 9ee7-9ee7
+comment 9ee8 Sprite positions bookkeeping menu
+data 9ee8,3,2
+data 9eee,14,4
+comment 9f26 Mark end of vector
+data 9f26-9f27
 
 ascii 9f28-9f3f
 ascii 9f40-9f4e
@@ -2099,7 +2152,8 @@ ascii a729-a72f
 data a730-a731
 ascii a732-a73a
 
-data a873-a8bc
+data a873,18,4
+data a8bb-a8bc
 
 ascii a8bd-a8ca
 ascii a8cb-a8d7
@@ -2118,8 +2172,12 @@ ascii a96a-a97a
 ascii a97b-a982
 ascii a983-a993
 
-commentline a994 Data for ?
-data a994-a9ff
+commentline a994 Data for Setup Options service menu
+commentline a994 sprite Y, count of bytes to process, RAM position from which to get value(s), where to draw
+data a994,8,6
+commentline a9c4 Data for ???
+data a9c4,10,6
+;data a994-a9ff
 
 ascii aab2-aac1
 ascii aac2-aacd
