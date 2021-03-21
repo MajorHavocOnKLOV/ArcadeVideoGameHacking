@@ -74,6 +74,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       2 LC_MATH_SPRITE_X_AND_Y_TO_BACKGROUND_RAM_LOCATION?
       2 LC_DRAW_A_TRAIL?
       2 LC_DEPENDING_ON_USER_SPRITE_COPY_AND_INC/DEC_BETWEEN_C1F5_AND_C1FD
+      2 IO_TOWER_CHECK_FOR_ENTRY
       2 INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
       2 INITIALIZE_LEVEL
       2 DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN
@@ -86,7 +87,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       2 $6F3B
       2 $66F5
       2 $64E8
-      2 $6020
       2 $5B4B
       2 $59F4
       2 $5901
@@ -122,6 +122,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 TANK_POSITION_HIT_ON_ENEMY_TANK?
       1 TANKS_TERMINATE_DISK_THROWN_AT_IY
       1 TANKS_PROCESS_DISKS_THROWN?
+      1 SERVICE_MENU_PLAYER_INPUTS
       1 SCREEN_CALL_UPDATE_POSITION?:
       1 SCREEN_CALL_UPDATE_POSITION? EQU $4bfd
       1 ROTATE_MCP_BLOCK_COLORS
@@ -144,6 +145,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 IO_TOWER_PROCESS_GRID_BUGS?
       1 IO_TOWER_PROCESS_DISKS_THROWN?
       1 IO_TOWER_GET_TRIGGER_STATE_AND_SET_C02E_BASED_ON_ARM_ROTATION
+      1 IO_TOWER_DEREZ_TRON
       1 HINE_INITIALIZATION:
       1 HINE_INITIALIZATION EQU $af15
       1 HANDLE_JOYSTICK_INPUT?_TO_601F
@@ -163,7 +165,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 C,$420D
       1 ADD_MESSAGE_TO_Q
       1 $AB39
-      1 $A4B0
       1 $A03D
       1 $9FBF
       1 $9B76
@@ -174,7 +175,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $6504
       1 $64A6
       1 $6236
-      1 $619F
       1 $6177
       1 $5F47
       1 $5AF1

@@ -47,10 +47,37 @@
 ;  Tank: Fire (as fast as possible), rotating turret counter-clockwise, moving (until can't go any further)
 ;    up, right, down, left and repeat until someone dies
 
+; Difficulty 1, order of hardness for all games
+; Hardness: there are 21 levels (0-20=0x14) but none of the games have that many levels
+; Cycles: 0-18, then repeats last 5 (14-18)
+; IO Tower: 0-8, then repeats last 6 (3-8)
+; MCP: 0-9, then repeats last 6 (4-9)
+; Tanks: 0-10, then repeats last 5 (6-10)
+
+; XXX ??? XXX How does the mapping not move past the end of the map when the user level is > than map length?
+; Difficulty 5 (default setting), order of hardness for all games
+; Cycles: 0,2,7,10,14,18, then 14-18
+; IO Tower: 0-8, then repeats last 6 (3-8)
+; MCP: 0-9, then repeats last 6 (4-9)
+; Tanks: 0-10, then repeats last 5 (6-10)
+
 ; Possible bugs:
 ; 1) Upon completion of the IO Tower game, the max disks is one greater than it should be for just the next game!
 ; 2) The player tank is 1 pixel too far right when moving up/down
 ; 3) The horizontal enemy tank bullet has a stray pixel in the bottom row close to the side
+
+; Input
+; =====
+; Bit	7	                6	5	4	3	2	1	        0
+; Port	Service Switch		Tilt		2P	1P	COIN 2/R	COIN 1/L
+; 0000				                1B				
+; 0001	x	                1 Spinner						
+; 0002	2D	                2U	2R	2L	1D	1U	1R	        1L
+; 0003	2B							
+; 0004	x	                2 Spinner						
+; 0005								
+; 								
+; Note: all bits are 1 (on) and flip to 0 (off or zero) when the control is activated (grounded)!								
 
 IO_LABEL 00 IO_0
 IO_LABEL 01 IO_1
@@ -251,6 +278,7 @@ label 2cee MCP_INSTRUCTIONS_STRING_VECTOR_WITH_DESTINATIION_AND_SOURCE
 label 2cf8 TRY_TO_ENTER_S
 label 2d05 THE_MCP_CONE_S
 label 2d12 PLAY_MCP
+label 2f5f MCP_DEREZ_TRON
 label 31b0 MCP_ROTATE_RIGHT
 label 31c8 MCP_ROTATE_LEFT
 label 3025 MCP_PROCESS_DISK_POSITION(S)?
@@ -276,7 +304,7 @@ label 3cdf TANKS_INSTRUCTIONS
 label 3d35 DESTROY_ALL_S
 label 3d41 ENEMY_TANKS_S
 label 3d4d TANK_JOYSTICK_INPUT_TABLE?
-label 3da5 TANKS_ATTRACT_MODE_INPUT?
+label 3da5 TANKS_ATTRACT_MODE_INPUT
 label 3db5 TANK_PROCESS_CONTROLS_INPUT
 label 4063 TANKS_DATA_FOR_x_STARTS_AT_4066
 label 40d0 TANK_UPDATE_POSITION_AND_SPRITE_OF_TANK_FROM_C000_TO_C002
@@ -343,8 +371,10 @@ label 5ea9 TIMER_EXPIRES_S
 label 5eb7 IO_TOWER_COLOR_PALETTE
 label 5f23 CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?
 label 5f73 HANDLE_JOYSTICK_INPUT?_TO_601F
+label 6020 IO_TOWER_CHECK_FOR_ENTRY
 label 6065 INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
 label 6127 IO_TOWER_GET_TRIGGER_STATE_AND_SET_C02E_BASED_ON_ARM_ROTATION
+label 619f IO_TOWER_DEREZ_TRON
 label 621d TRON_SPRITE_SET_INITIAL_POSITION_AND_ROTATION
 label 62ed SCORE_IO_TOWER_BIT
 label 62f2 IO_TOWER_PROCESS_SOLAR_SAILER
@@ -462,6 +492,7 @@ label 9fa7 SCORE_REPORT_S
 label 9fb4 EXIT_S
 label a069 CONVERT_HL_TO_6_DIGIT_BCD_AT_IX
 label a077 DISPLAY_6_DIGIT_BCD_FROM_HL_TO_IX_LEADING_ZEROES_GOTO_SPACES
+label a120 DATA_VECTOR_OF_TIME_REPORT_STRING_DESTINATIONS_AND_SOURCES
 label a152 TIME_REPORT2_S
 label a15e 0_TO_30_SEC_S
 label a16a 30_TO_60_SEC_S
@@ -500,6 +531,8 @@ label a462 PLAYER_INPUTS_S
 label a470 ACTIVATE_ALL_PLAYER_INPUT_S
 label a48a SWITCHES_AND_DEVICES_S
 label a49f HIT_TILT_TO_EXIT_S
+label a4b0 SERVICE_MENU_PLAYER_INPUTS
+label a556 DATA_PLAYER_INPUTS
 label a5f9 COIN_CHUTE_1_S
 label a608 COIN_CHUTE_2_S
 label a617 SERVICE_BUTTON_S
@@ -633,6 +666,7 @@ label c001 TANK_SPRITE_OR_MCP_ROWS_OF_BLOCKS_OR_BIT_Y
 label c002 TANK_Y_OR_GS_DISK_Y_OR_SOLAR_SAILER_X_Y
 label c003 SOLAR_SAILER_Y_SERVICE_MENU_ROW
 label c004 TANK_ENEMY_DESTROYED_OR_SOLAR_SAILER_STATUS_FLAG
+label c005 MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
 label c006 GRID_BUGS_NUMBER_OF_UNUSED_SLOTS
 label c007 MCP_TRON_X_TANKS_DATA_VECTOR_x_1
 label c009 MCP_TRON_Y_OR_TANKS_DATA_VECTOR_x_2_OR_GRID_BUGS_FRAMES_TO_DELAY_WHEN_BREEDING
@@ -645,7 +679,7 @@ label c01d IO_TOWER_NUMBER_OF_GRID_BUGS
 label c01f TRON_SPRITE_LEGS_APART_COUNTER_0_TO_7
 label c022 IO_TOWER_INCREMENTS_19_TO_1E_FOR_EACH_DISK_THROWN
 label c023 IO_TOWER_TRIGGER_DEBOUNCE?
-label c024 IO_TOWER_ALWAYS_80?
+label c024 IO_TOWER_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
 label c026 IO_TRON_X_OR_MCP_DISK_3_DATA
 label c028 IO_TRON_Y
 label c029 JOYSTICK_INPUT_ARRAY_TO_C02C
@@ -674,7 +708,11 @@ label c108 TANKS_ENEMY_BULLETS_IN_RAM_AT_C111?
 ; offset 7: initialized to 0
 ; offset 3: vector to sprite(s) for what?
 label c14a TANKS_NUMBER_OF_ENEMIES
+label c14b TANKS_2ND_BYTE_FROM_TABLE_AT_4CFF_0_OR_1
 label c14d TANKS_JOYSTICK_INPUT
+label c14e TANKS_BYTE_COMPARED_TO_FIRST_BYTE_OF_ENTRIES_AT_3DA5
+label C155 TANKS_COUNTER_FROM_0_TO_90
+label c156 TANKS_VECTOR_TO_ATTRACT_MODE_INPUT?
 label c159 TANKS_NUMBER_OF_ENEMY_BULLETS?
 label c15b TANKS_SHOT_SPEED
 label c15f TANK_IF_HARDNESS>0X0B_SEE_COMMENT_AT_3A79
@@ -777,9 +815,8 @@ label c4f3 COIN_CHUTE_2R_CREDITS
 label c4f4 LIVES_PER_PLAYER_OR_BASES
 label c4f5 CREDITS_TO_START_A_GAME
 label c4f6 DIFFICULTY_LEVEL
-label c4fd BONUS_PLAYER_AT_XX000_DIGITS
-label c4f6 DIFFICULTY_LEVEL
 label c4f7 HIGH_SCORES_DIGITS
+label c4fd BONUS_PLAYER_AT_XX000_DIGITS
 label c501 CREDITS
 label c504 HIGH_SCORES_INITIALS_AND_LEVEL
 label c522 HIGH_SCORES_DIGITS?_GETS_CHECKED_AT_046C
@@ -1224,6 +1261,9 @@ commentline 1fc2 pick GS instructions to print
 
 commentline 205c Finished level so set up for the next level (to 2097)
 commentline 2070 Increment user level (C422)
+commentline 2078 Map the operator selected difficulty level to the internal
+commentline 2078 tron hardness level, using the user level as the array index
+
 commentline 20a3 This increment gives the next game an extra disk! Is it a feature or a bug?
 
 commentline 20a7 Vector of map of Difficulty level settings (picked by operator in settings) to how hard
@@ -1343,6 +1383,10 @@ comment 2e07 Copy HL to DE for count of BC
 commentline 2e19 MCP: Tron has gone too far left. Set him to 21 x
 commentline 2e21 MCP: Tron has gone too far right. Set him to E7 x
 
+commentline 2f5f Derez Tron: Set torso and legs to derez sprite. Set C00F, C00E, and C02D
+commentline 2f5f Move arms and another sprite offscreen put #$30 on audio stack
+commentline 2faa Flip X on Tron derez sprites
+
 commentline 2fd9 Set initial position and arm rotation of Tron sprites
 
 comment 346a Invincibility MCP Game = 18 (JR *)
@@ -1383,8 +1427,8 @@ commentline 367a 8&9:   disk arm throwing X & Y offset,
 commentline 367a a:     pointing arm sprite,
 commentline 367a b&c:   pointing arm X & Y offset,
 commentline 367a d&e:   disk X & Y offset,
-commentline 367a f&10:  delta X (word)
-commentline 367a 11&12: delta Y (word)
+commentline 367a f&10:  throwing delta X (word)
+commentline 367a 11&12: throwing delta Y (word)
 commentline 367a - 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F 10 11 12
 data 367a,36,19
 
@@ -1393,7 +1437,7 @@ data 3926-3945
 commentline 3946 Data used where for what?
 data 3946-3965
 
-commentline 3966 Data for setting up MCP cone game.
+commentline 3966 Data for setting up MCP cone game by hardness.
 commentline 3966 10x4: 4= direction, blocks per row, Y move delay, rotation delay
 commentline 3966 plugged into C0E9, C0E6, C0E7, C0E5
 data 3966,10,4
@@ -1498,13 +1542,32 @@ data 4b8d-4b8f
 commentline 4b90 Tanks: C111 is beginning of ?, size 0x9
 commentline 4b90 Starts at C108 and adds size (DE) before processing
 
-data 4c2c-4cfa
-; do not merge above and below!  Otherwise label for 4CFB will not print!
-data 4cfb-4cfe
-
+commentline 4c2c List of X coordinates to compare once Y has been selected (table at 4cff)
+data 4c2c-4c2c
+data 4c2d-4c31
+data 4c32-4c40
+data 4c41-4c47
+data 4c48-4c4c
+data 4c4d-4c70
+;data 4c5e-4c70
+data 4c71-4c77
+data 4c78-4c8d
+;data 4c89-4c8d
+data 4c8e-4ca0
+data 4ca1-4cad
+data 4cae-4cc0
+data 4cc1-4cc5
+data 4cc6-4cd4
+data 4cd5-4cd9
+data 4cda-4cef
+;data 4ceb-4cef
+data 4cf0-4cfa
+data 4cfb-4cfd
+data 4cfe-4cfe
+commentline 4cff Y to compare against tank position?, ? (put in C14B),
+commentline 4cff vector to null-terminated data used at ???
 commentline 4cff This data structure used at 40BA and 4D77 but points to 4CFB and then adds 4!
 data 4cff,30,4
-;data 4cff-4d76
 
 commentline 4d9e This data is copied to C051!
 commentline 4d9e number of tanks x 10 bytes
@@ -1631,7 +1694,8 @@ data 5bc2-5c01
 data 5c02-5c0a
 data 5c0b-5c1a
 
-commentline 5c1b 19x6: enemy LCs, ?, ?, ?, ?, ?
+commentline 5c1b cycles hardness data
+commentline 5c1b 19x6: enemy LCs (bits 0-2), ?, ?, ?, ?, ?
 data 5c1b,19,6
 
 commentline 5c8d Data used where for what?
@@ -1659,6 +1723,16 @@ commentline 5f73 IO:0002 - xxxxDURL
 comment 5fb3 look at 6b39 for more info!
 
 comment 5fbf Copy HL to DE for count of BC
+
+commentline 6020 To enter IO Tower, Tron 1) Y must be between 2B & 96
+commentline 6020 2) X between 4C & B6
+commentline 6020 3) Y between 58 & 69 Y
+commentline 6020 
+comment 6025 Above IO Tower
+comment 6029 Below IO Tower
+
+comment 6048 Set IO Tower flag to successfully finish level
+comment 6048 (keep everything running except clock, collision, and joystick input)
 
 commentline 604b Add time left in IO Tower to score
 
@@ -1695,6 +1769,10 @@ commentline 6121 No remaining disks so hide disk in hand sprite (set Y to 0)
 
 commentline 6186 If arm rotation not zero, reverse rotation for data lookup
 commentline 618a Multiply A times 19 (HL squared to itself 2x + DE added 3x)
+
+commentline 619f Derez Tron: Set torso and legs to derez sprite. Set C008 and C02D
+commentline 619f Move arms and another sprite offscreen put #$30 on audio stack
+commentline 61ee Flip X on Tron derez sprites
 
 comment 6279 Copy HL to DE for count of BC
 
@@ -1850,8 +1928,8 @@ commentline 6b79 8&9:   disk arm throwing X & Y offset,
 commentline 6b79 a:     pointing arm sprite,
 commentline 6b79 b&c:   pointing arm X & Y offset,
 commentline 6b79 d&e:   disk X & Y offset,
-commentline 6b79 f&10:  delta X (word)
-commentline 6b79 11&12: delta Y (word)
+commentline 6b79 f&10:  throwing delta X (word)
+commentline 6b79 11&12: throwing delta Y (word)
 commentline 6b79 - 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F 10 11 12
 data 6b79,36,19
 data 6e25-6eff
@@ -2047,7 +2125,8 @@ comment a09b Output space
 comment a0a6 Output digit
 comment a0b1 Move a character to the right
 
-data a120-a151
+data a120,12,4
+data a150-a151
 
 ascii a152-a15d
 ascii a15e-a169
@@ -2084,7 +2163,23 @@ ascii a32b-a33f
 ascii a340-a34f
 
 data a350,10,2
-data a3ad-a3e2
+
+comment a3ad Pointer to vector of destinations and strings on Channel Menu
+data a3ad,1,2
+comment a3af Pointer to sprite positions for channel menu
+data a3af,1,2
+comment a3b1 Pointer to array of vectors of code to run when a channel menu is selected
+data a3b1,1,2
+comment a3b3 How many items in channel menu
+data a3b3-a3b3
+comment a3b4 Sprite to indicate channel selected
+data a3b4-a3b4
+comment a3b5 Sprite positions channel menu
+data a3b5,6,2
+data a3c1,7,4
+comment a3e1 Mark end of vector
+data a3e1-a3e2
+;data a3ad-a3e2
 
 ascii a3e3-a3ef
 ascii a3f0-a3f9
@@ -2101,9 +2196,13 @@ ascii a470-a489
 ascii a48a-a49e
 ascii a49f-a4af
 
-data a556-a5f6
-
+commentline a556 Process spinner if non-zero, IN port, bit(s) to mask,
+commentline a556 vector to location to draw on screen, vector to string to add to q
+data a556,20,8
+data a5f6-a5f6
 data a5f7-a5f8
+;data a5f7-a5f8
+
 ascii a5f9-a605
 data a606-a607
 ascii a608-a614

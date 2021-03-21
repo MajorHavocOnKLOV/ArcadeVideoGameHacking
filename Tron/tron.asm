@@ -1,5 +1,4 @@
-duplicate label: DIFFICULTY_LEVEL
-org 0, numlab 709, numio 12, numdata 1441, numcomm 215, numcommline 385
+org 0, numlab 720, numio 12, numdata 1507, numcomm 226, numcommline 403
 
 IO_0 EQU $00
 IO_1 EQU $01
@@ -198,6 +197,7 @@ MCP_INSTRUCTIONS_STRING_VECTOR_WITH_DESTINATIION_AND_SOURCE EQU $2cee
 TRY_TO_ENTER_S EQU $2cf8
 THE_MCP_CONE_S EQU $2d05
 PLAY_MCP EQU $2d12
+MCP_DEREZ_TRON EQU $2f5f
 MCP_ROTATE_RIGHT EQU $31b0
 MCP_ROTATE_LEFT EQU $31c8
 MCP_PROCESS_DISK_POSITION(S)? EQU $3025
@@ -223,7 +223,7 @@ TANKS_INSTRUCTIONS EQU $3cdf
 DESTROY_ALL_S EQU $3d35
 ENEMY_TANKS_S EQU $3d41
 TANK_JOYSTICK_INPUT_TABLE? EQU $3d4d
-TANKS_ATTRACT_MODE_INPUT? EQU $3da5
+TANKS_ATTRACT_MODE_INPUT EQU $3da5
 TANK_PROCESS_CONTROLS_INPUT EQU $3db5
 TANKS_DATA_FOR_x_STARTS_AT_4066 EQU $4063
 TANK_UPDATE_POSITION_AND_SPRITE_OF_TANK_FROM_C000_TO_C002 EQU $40d0
@@ -287,8 +287,10 @@ TIMER_EXPIRES_S EQU $5ea9
 IO_TOWER_COLOR_PALETTE EQU $5eb7
 CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_? EQU $5f23
 HANDLE_JOYSTICK_INPUT?_TO_601F EQU $5f73
+IO_TOWER_CHECK_FOR_ENTRY EQU $6020
 INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER EQU $6065
 IO_TOWER_GET_TRIGGER_STATE_AND_SET_C02E_BASED_ON_ARM_ROTATION EQU $6127
+IO_TOWER_DEREZ_TRON EQU $619f
 TRON_SPRITE_SET_INITIAL_POSITION_AND_ROTATION EQU $621d
 SCORE_IO_TOWER_BIT EQU $62ed
 IO_TOWER_PROCESS_SOLAR_SAILER EQU $62f2
@@ -406,6 +408,7 @@ SCORE_REPORT_S EQU $9fa7
 EXIT_S EQU $9fb4
 CONVERT_HL_TO_6_DIGIT_BCD_AT_IX EQU $a069
 DISPLAY_6_DIGIT_BCD_FROM_HL_TO_IX_LEADING_ZEROES_GOTO_SPACES EQU $a077
+DATA_VECTOR_OF_TIME_REPORT_STRING_DESTINATIONS_AND_SOURCES EQU $a120
 TIME_REPORT2_S EQU $a152
 0_TO_30_SEC_S EQU $a15e
 30_TO_60_SEC_S EQU $a16a
@@ -444,6 +447,8 @@ PLAYER_INPUTS_S EQU $a462
 ACTIVATE_ALL_PLAYER_INPUT_S EQU $a470
 SWITCHES_AND_DEVICES_S EQU $a48a
 HIT_TILT_TO_EXIT_S EQU $a49f
+SERVICE_MENU_PLAYER_INPUTS EQU $a4b0
+DATA_PLAYER_INPUTS EQU $a556
 COIN_CHUTE_1_S EQU $a5f9
 COIN_CHUTE_2_S EQU $a608
 SERVICE_BUTTON_S EQU $a617
@@ -568,6 +573,7 @@ TANK_SPRITE_OR_MCP_ROWS_OF_BLOCKS_OR_BIT_Y EQU $c001
 TANK_Y_OR_GS_DISK_Y_OR_SOLAR_SAILER_X_Y EQU $c002
 SOLAR_SAILER_Y_SERVICE_MENU_ROW EQU $c003
 TANK_ENEMY_DESTROYED_OR_SOLAR_SAILER_STATUS_FLAG EQU $c004
+MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED EQU $c005
 GRID_BUGS_NUMBER_OF_UNUSED_SLOTS EQU $c006
 MCP_TRON_X_TANKS_DATA_VECTOR_x_1 EQU $c007
 MCP_TRON_Y_OR_TANKS_DATA_VECTOR_x_2_OR_GRID_BUGS_FRAMES_TO_DELAY_WHEN_BREEDING EQU $c009
@@ -580,7 +586,7 @@ IO_TOWER_NUMBER_OF_GRID_BUGS EQU $c01d
 TRON_SPRITE_LEGS_APART_COUNTER_0_TO_7 EQU $c01f
 IO_TOWER_INCREMENTS_19_TO_1E_FOR_EACH_DISK_THROWN EQU $c022
 IO_TOWER_TRIGGER_DEBOUNCE? EQU $c023
-IO_TOWER_ALWAYS_80? EQU $c024
+IO_TOWER_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED EQU $c024
 IO_TRON_X_OR_MCP_DISK_3_DATA EQU $c026
 IO_TRON_Y EQU $c028
 JOYSTICK_INPUT_ARRAY_TO_C02C EQU $c029
@@ -597,7 +603,11 @@ MCP_Y_SPEED_LOWER_IS_SLOWER EQU $c0e7
 MCP_DIRECTION_0_IS_RIGHT EQU $c0e9
 TANKS_ENEMY_BULLETS_IN_RAM_AT_C111? EQU $c108
 TANKS_NUMBER_OF_ENEMIES EQU $c14a
+TANKS_2ND_BYTE_FROM_TABLE_AT_4CFF_0_OR_1 EQU $c14b
 TANKS_JOYSTICK_INPUT EQU $c14d
+TANKS_BYTE_COMPARED_TO_FIRST_BYTE_OF_ENTRIES_AT_3DA5 EQU $c14e
+TANKS_COUNTER_FROM_0_TO_90 EQU $c155
+TANKS_VECTOR_TO_ATTRACT_MODE_INPUT? EQU $c156
 TANKS_NUMBER_OF_ENEMY_BULLETS? EQU $c159
 TANKS_SHOT_SPEED EQU $c15b
 TANK_IF_HARDNESS>0X0B_SEE_COMMENT_AT_3A79 EQU $c15f
@@ -698,8 +708,8 @@ COIN_CHUTE_2R_CREDITS EQU $c4f3
 LIVES_PER_PLAYER_OR_BASES EQU $c4f4
 CREDITS_TO_START_A_GAME EQU $c4f5
 DIFFICULTY_LEVEL EQU $c4f6
-BONUS_PLAYER_AT_XX000_DIGITS EQU $c4fd
 HIGH_SCORES_DIGITS EQU $c4f7
+BONUS_PLAYER_AT_XX000_DIGITS EQU $c4fd
 CREDITS EQU $c501
 HIGH_SCORES_INITIALS_AND_LEVEL EQU $c504
 HIGH_SCORES_DIGITS?_GETS_CHECKED_AT_046C EQU $c522
@@ -3070,7 +3080,7 @@ END2_S:
 11d5: DD 23          INC   IX
 11d7: 10 F7          DJNZ  $11D0
 
-11d9: 21 05 C0       LD    HL,$C005
+11d9: 21 05 C0       LD    HL,MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
 11dc: 3A 00 C0       LD    A,(CPU_RAM_GS_DISK_X_TANK_X_MCP_TRON_LEGS_LC_TRAILS_TO_C1DF)
 11df: FE 64          CP    A,#$64
 11e1: 38 05          JR    C,$11E8
@@ -3093,7 +3103,7 @@ END2_S:
 11f9: 77             LD    (HL),A
 11fa: 23             INC   HL
 11fb: 36 00          LD    (HL),#$00
-11fd: 11 05 C0       LD    DE,$C005
+11fd: 11 05 C0       LD    DE,MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
 1200: 2A 0D C4       LD    HL,($C40D)
 1203: 01 80 FF       LD    BC,COLOR_RAM_TO_FFFF
 1206: 09             ADD   HL,BC
@@ -4299,6 +4309,9 @@ DRAW_GAME_SELECT_SCREEN?:
 2074: FE 14          CP    A,#$14
 2076: 30 18          JR    NC,$2090
 
+
+*** Map the operator selected difficulty level to the internal
+*** tron hardness level, using the user level as the array index
 2078: 3A F6 C4       LD    A,(DIFFICULTY_LEVEL)
 207b: 87             ADD   A,A
 207c: 6F             LD    L,A
@@ -4863,7 +4876,7 @@ GS_COLOR_PALETTE:
 2c00: CD BB 2D       CALL  $2DBB
 2c03: CD 25 30       CALL  MCP_PROCESS_DISK_POSITION(S)?
 2c06: CD 8B 31       CALL  $318B
-2c09: 3A 05 C0       LD    A,($C005)
+2c09: 3A 05 C0       LD    A,(MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
 2c0c: E6 02          AND   A,#$02
 2c0e: C0             RET   NZ
 
@@ -4871,13 +4884,13 @@ GS_COLOR_PALETTE:
 2c12: B7             OR    A,A
 2c13: C0             RET   NZ
 
-2c14: 3A 05 C0       LD    A,($C005)
+2c14: 3A 05 C0       LD    A,(MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
 2c17: E6 84          AND   A,#$84
 2c19: FE 80          CP    A,#$80
 2c1b: C0             RET   NZ
 
 2c1c: 3E 82          LD    A,#$82
-2c1e: 32 05 C0       LD    ($C005),A
+2c1e: 32 05 C0       LD    (MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED),A
 2c21: 0E 41          LD    C,#$41
 2c23: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 2c26: 3E 26          LD    A,#$26
@@ -5067,7 +5080,7 @@ PLAY_MCP:
 2db5: 32 DE C0       LD    ($C0DE),A
 2db8: C3 D9 2F       JP    $2FD9
 
-2dbb: 3A 05 C0       LD    A,($C005)
+2dbb: 3A 05 C0       LD    A,(MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
 2dbe: E6 84          AND   A,#$84
 2dc0: C8             RET   Z
 
@@ -5075,7 +5088,7 @@ PLAY_MCP:
 2dc3: C2 8C 2F       JP    NZ,$2F8C
 
 2dc6: CD 43 2E       CALL  $2E43
-2dc9: 3A 05 C0       LD    A,($C005)
+2dc9: 3A 05 C0       LD    A,(MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
 2dcc: E6 02          AND   A,#$02
 2dce: 20 09          JR    NZ,$2DD9
 
@@ -5214,7 +5227,7 @@ PLAY_MCP:
 2e9e: C8             RET   Z
 
 2e9f: 35             DEC   (HL)
-2ea0: 21 05 C0       LD    HL,$C005
+2ea0: 21 05 C0       LD    HL,MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
 2ea3: CB C6          SET   0,(HL)
 2ea5: 0E 08          LD    C,#$08
 2ea7: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
@@ -5260,7 +5273,7 @@ PLAY_MCP:
 2eff: 32 16 F0       LD    ($F016),A
 2f02: DD 7E 0A       LD    A,(IX+$0A)
 2f05: 32 15 F0       LD    ($F015),A
-2f08: 21 05 C0       LD    HL,$C005
+2f08: 21 05 C0       LD    HL,MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
 2f0b: CB 46          BIT   0,(HL)
 2f0d: 28 1C          JR    Z,$2F2B
 
@@ -5303,6 +5316,10 @@ PLAY_MCP:
 2f5b: 32 10 F0       LD    ($F010),A
 2f5e: C9             RET   
 
+
+*** Derez Tron: Set torso and legs to derez sprite. Set C00F, C00E, and C02D
+*** Move arms and another sprite offscreen put #$30 on audio stack
+MCP_DEREZ_TRON:
 2f5f: 3E 3A          LD    A,#$3A
 2f61: 32 05 F0       LD    ($F005),A
 2f64: 3E 3B          LD    A,#$3B
@@ -5312,7 +5329,7 @@ PLAY_MCP:
 2f6e: 3E 40          LD    A,#$40
 2f70: 32 0E C0       LD    (INFINITE_TIME_CHEAT),A
 2f73: 3E 84          LD    A,#$84
-2f75: 32 05 C0       LD    ($C005),A
+2f75: 32 05 C0       LD    (MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED),A
 2f78: AF             XOR   A,A
 2f79: 32 08 C4       LD    ($C408),A
 2f7c: 3E 00          LD    A,#$00
@@ -5343,6 +5360,8 @@ PLAY_MCP:
 2fa7: 35             DEC   (HL)
 2fa8: 20 12          JR    NZ,$2FBC
 
+
+*** Flip X on Tron derez sprites
 2faa: 36 04          LD    (HL),#$04
 2fac: 3A 05 F0       LD    A,($F005)
 2faf: EE 80          XOR   A,#$80
@@ -5372,7 +5391,7 @@ PLAY_MCP:
 2fde: 3E C0          LD    A,#$C0
 2fe0: 32 09 C0       LD    (MCP_TRON_Y_OR_TANKS_DATA_VECTOR_x_2_OR_GRID_BUGS_FRAMES_TO_DELAY_WHEN_BREEDING),A
 2fe3: 3E 80          LD    A,#$80
-2fe5: 32 05 C0       LD    ($C005),A
+2fe5: 32 05 C0       LD    (MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED),A
 2fe8: AF             XOR   A,A
 2fe9: 32 05 C4       LD    (TRON_ARM_OR_TANK_TURRET_ROTATION),A
 2fec: C9             RET   
@@ -5587,11 +5606,11 @@ MCP_DISK_END_FLIGHT:
 3189: 34             INC   (HL)
 318a: C9             RET   
 
-318b: 3A 05 C0       LD    A,($C005)
+318b: 3A 05 C0       LD    A,(MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
 318e: E6 02          AND   A,#$02
 3190: CC A1 31       CALL  Z,$31A1
 3193: CD D6 32       CALL  $32D6
-3196: 3A 05 C0       LD    A,($C005)
+3196: 3A 05 C0       LD    A,(MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
 3199: E6 86          AND   A,#$86
 319b: FE 80          CP    A,#$80
 319d: CC FA 33       CALL  Z,$33FA
@@ -5780,7 +5799,7 @@ MCP_ROTATE_LEFT:
 32ed: 86             ADD   A,(HL)
 32ee: 77             LD    (HL),A
 32ef: 2A DB C0       LD    HL,($C0DB)
-32f2: 3A 05 C0       LD    A,($C005)
+32f2: 3A 05 C0       LD    A,(MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
 32f5: E6 02          AND   A,#$02
 32f7: 20 0D          JR    NZ,$3306
 
@@ -5916,7 +5935,7 @@ MCP_HIDE_SPRITE_GOING_OFF_BOTTOM_OF_SCREEN:
 3404: 30 1E          JR    NC,$3424
 
 3406: 3E 82          LD    A,#$82
-3408: 32 05 C0       LD    ($C005),A
+3408: 32 05 C0       LD    (MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED),A
 340b: 3E 60          LD    A,#$60
 340d: 32 0E C0       LD    (INFINITE_TIME_CHEAT),A
 3410: 0E 25          LD    C,#$25
@@ -5970,10 +5989,10 @@ MCP_HIDE_SPRITE_GOING_OFF_BOTTOM_OF_SCREEN:
 3468: FE 17          CP    A,#$17
 346a: 30 08          JR    NC,$3474       ;Invincibility MCP Game = 18 (JR *)
 
-346c: C3 5F 2F       JP    $2F5F
+346c: C3 5F 2F       JP    MCP_DEREZ_TRON
 
 346f: FE 0E          CP    A,#$0E
-3471: DA 5F 2F       JP    C,$2F5F        ;Invincibility MCP Game = 11 (LD DE, **)
+3471: DA 5F 2F       JP    C,MCP_DEREZ_TRON;Invincibility MCP Game = 11 (LD DE, **)
 
 3474: 11 04 00       LD    DE,$0004
 3477: DD 19          ADD   IX,DE
@@ -6184,8 +6203,8 @@ JOYSTICK_INPUT_FOR?:
 *** a:     pointing arm sprite,
 *** b&c:   pointing arm X & Y offset,
 *** d&e:   disk X & Y offset,
-*** f&10:  delta X (word)
-*** 11&12: delta Y (word)
+*** f&10:  throwing delta X (word)
+*** 11&12: throwing delta Y (word)
 *** - 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F 10 11 12
 DATA_FOR_DISPLAYING_TRON_SPRITES_IDENTICAL_TO_6B79:
 367a: 9D 9E 9F A0 AB 00 01 AC 00 02 AA 07 F9 FA 03 00 04 00 00 
@@ -6234,7 +6253,7 @@ MCP_COLOR_PALETTE_ALL_ZEROS:
 3946: 00 00 01 C0 01 80 00 38 01 D4 00 07 01 C2 01 C5 
 3956: 00 00 00 7E 00 04 01 C7 00 00 01 F8 00 38 00 3F 
 
-*** Data for setting up MCP cone game.
+*** Data for setting up MCP cone game by hardness.
 *** 10x4: 4= direction, blocks per row, Y move delay, rotation delay
 *** plugged into C0E9, C0E6, C0E7, C0E5
 DATA_FOR_MCP_SETUP_TO_398D:
@@ -6266,7 +6285,7 @@ PLAY_TANKS:
 3a06: 3E 02          LD    A,#$02
 3a08: 32 5B C4       LD    (GS_DIRECTION:1=DOWN,2=?,3=?,5=?,OTHER=?),A
 3a0b: 3E 10          LD    A,#$10
-3a0d: 32 4E C1       LD    ($C14E),A
+3a0d: 32 4E C1       LD    (TANKS_BYTE_COMPARED_TO_FIRST_BYTE_OF_ENTRIES_AT_3DA5),A
 3a10: 21 00 72       LD    HL,BACKGROUND_TANK_GAME
 3a13: CD 35 70       CALL  BACKGROUND_RAM_FILL_FROM_HL_0780_BYTES_TO_F800
 3a16: 21 80 79       LD    HL,TANK_COLOR_PALETTE
@@ -6704,7 +6723,7 @@ TANK_JOYSTICK_INPUT_TABLE?:
 3d8d: 00 01 4B 02 FE 35 00 00 
 3d95: 02 00 40 20 10 00 00 00 
 3d9d: 02 00 40 20 08 00 00 00 
-TANKS_ATTRACT_MODE_INPUT?:
+TANKS_ATTRACT_MODE_INPUT:
 3da5: 08 20 40 10 
 3da9: 10 20 40 08 
 3dad: 20 10 08 40 
@@ -6717,15 +6736,15 @@ TANK_PROCESS_CONTROLS_INPUT:
 
 
 *** Attract mode input processing ...
-3dbb: 21 55 C1       LD    HL,$C155
+3dbb: 21 55 C1       LD    HL,TANKS_COUNTER_FROM_0_TO_90
 3dbe: 34             INC   (HL)
 3dbf: 7E             LD    A,(HL)
 3dc0: FE 90          CP    A,#$90
 3dc2: 38 02          JR    C,$3DC6
 
 3dc4: 36 00          LD    (HL),#$00
-3dc6: 3A 4E C1       LD    A,($C14E)
-3dc9: 21 A5 3D       LD    HL,TANKS_ATTRACT_MODE_INPUT?
+3dc6: 3A 4E C1       LD    A,(TANKS_BYTE_COMPARED_TO_FIRST_BYTE_OF_ENTRIES_AT_3DA5)
+3dc9: 21 A5 3D       LD    HL,TANKS_ATTRACT_MODE_INPUT
 3dcc: 11 04 00       LD    DE,$0004
 3dcf: BE             CP    A,(HL)
 3dd0: 28 03          JR    Z,$3DD5
@@ -6733,7 +6752,7 @@ TANK_PROCESS_CONTROLS_INPUT:
 3dd2: 19             ADD   HL,DE
 3dd3: 18 FA          JR    $3DCF
 
-3dd5: 22 56 C1       LD    ($C156),HL
+3dd5: 22 56 C1       LD    (TANKS_VECTOR_TO_ATTRACT_MODE_INPUT?),HL
 3dd8: 18 1E          JR    $3DF8
 
 
@@ -6797,7 +6816,7 @@ TANK_PROCESS_CONTROLS_INPUT:
 3e2e: 47             LD    B,A
 3e2f: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y_OR_SOLAR_SAILER_X_Y)
 3e32: 4F             LD    C,A
-3e33: 3A 05 C0       LD    A,($C005)
+3e33: 3A 05 C0       LD    A,(MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
 3e36: 81             ADD   A,C
 3e37: 82             ADD   A,D
 3e38: 4F             LD    C,A
@@ -6870,7 +6889,7 @@ TANK_PROCESS_CONTROLS_INPUT:
 3eac: 57             LD    D,A
 3ead: 79             LD    A,C
 3eae: 92             SUB   A,D
-3eaf: 21 05 C0       LD    HL,$C005
+3eaf: 21 05 C0       LD    HL,MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
 3eb2: 96             SUB   A,(HL)
 3eb3: 32 02 C0       LD    (TANK_Y_OR_GS_DISK_Y_OR_SOLAR_SAILER_X_Y),A
 3eb6: C6 08          ADD   A,#$08
@@ -6890,35 +6909,35 @@ TANK_PROCESS_CONTROLS_INPUT:
 3edb: 3A 0E C0       LD    A,(INFINITE_TIME_CHEAT)
 3ede: 32 0C C0       LD    ($C00C),A
 3ee1: 3A 4D C1       LD    A,(TANKS_JOYSTICK_INPUT)
-3ee4: 32 4E C1       LD    ($C14E),A
+3ee4: 32 4E C1       LD    (TANKS_BYTE_COMPARED_TO_FIRST_BYTE_OF_ENTRIES_AT_3DA5),A
 3ee7: C9             RET   
 
 3ee8: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 3eeb: B7             OR    A,A
 3eec: 28 0B          JR    Z,$3EF9
 
-3eee: 2A 56 C1       LD    HL,($C156)
+3eee: 2A 56 C1       LD    HL,(TANKS_VECTOR_TO_ATTRACT_MODE_INPUT?)
 3ef1: 23             INC   HL
-3ef2: 22 56 C1       LD    ($C156),HL
+3ef2: 22 56 C1       LD    (TANKS_VECTOR_TO_ATTRACT_MODE_INPUT?),HL
 3ef5: 7E             LD    A,(HL)
 3ef6: C3 F8 3D       JP    $3DF8
 
 3ef9: 3A 4D C1       LD    A,(TANKS_JOYSTICK_INPUT)
 3efc: 47             LD    B,A
-3efd: 3A 4E C1       LD    A,($C14E)
+3efd: 3A 4E C1       LD    A,(TANKS_BYTE_COMPARED_TO_FIRST_BYTE_OF_ENTRIES_AT_3DA5)
 3f00: B8             CP    A,B
 3f01: C2 F8 3D       JP    NZ,$3DF8
 
 3f04: C9             RET   
 
-3f05: 3A 4E C1       LD    A,($C14E)
+3f05: 3A 4E C1       LD    A,(TANKS_BYTE_COMPARED_TO_FIRST_BYTE_OF_ENTRIES_AT_3DA5)
 3f08: 47             LD    B,A
 3f09: 3A 4D C1       LD    A,(TANKS_JOYSTICK_INPUT)
 3f0c: A8             XOR   A,B
 3f0d: FE 48          CP    A,#$48
 3f0f: DA F8 3D       JP    C,$3DF8
 
-3f12: 3A 4E C1       LD    A,($C14E)
+3f12: 3A 4E C1       LD    A,(TANKS_BYTE_COMPARED_TO_FIRST_BYTE_OF_ENTRIES_AT_3DA5)
 3f15: 23             INC   HL
 3f16: BE             CP    A,(HL)
 3f17: 23             INC   HL
@@ -6974,7 +6993,7 @@ TANK_PROCESS_CONTROLS_INPUT:
 3f72: DD 7E 06       LD    A,(IX+$06)
 3f75: 32 10 C0       LD    (TANKS_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020),A
 3f78: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y_OR_SOLAR_SAILER_X_Y)
-3f7b: 21 05 C0       LD    HL,$C005
+3f7b: 21 05 C0       LD    HL,MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
 3f7e: 86             ADD   A,(HL)
 3f7f: 47             LD    B,A
 3f80: DD 7E 04       LD    A,(IX+$04)
@@ -7794,7 +7813,7 @@ TANK_PROCESS_DISKS_THROWN:
 4659: B9             CP    A,C
 465a: 20 4E          JR    NZ,$46AA
 
-465c: 3A 4B C1       LD    A,($C14B)
+465c: 3A 4B C1       LD    A,(TANKS_2ND_BYTE_FROM_TABLE_AT_4CFF_0_OR_1)
 465f: B7             OR    A,A
 4660: 28 48          JR    Z,$46AA
 
@@ -7939,7 +7958,7 @@ TANKS_PROCESS_ENEMY_BULLETS:
 473b: 38 11          JR    C,$474E        ;Invincibility TANK Game = 18 (JR *) (bullet collision?)
 
 473d: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y_OR_SOLAR_SAILER_X_Y)
-4740: 21 05 C0       LD    HL,$C005
+4740: 21 05 C0       LD    HL,MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
 4743: 86             ADD   A,(HL)
 4744: B9             CP    A,C
 4745: 30 07          JR    NC,$474E
@@ -8155,7 +8174,7 @@ TANK_TURRET_DRAW:
 
 
 *** Attract mode input processing ...
-49d4: 3A 55 C1       LD    A,($C155)
+49d4: 3A 55 C1       LD    A,(TANKS_COUNTER_FROM_0_TO_90)
 49d7: CB 3F          SRL   A
 49d9: CB 3F          SRL   A
 
@@ -8488,23 +8507,53 @@ TANK_SET_BULLET_X_AND_?_OFFSCREEN_CALL_UPDATE_POSITION?:
 
 4c2b: C9             RET   
 
-4c2c: 00 18 E0 E8 F8 00 18 28 30 40 60 70 78 88 90 A0 
-4c3c: D0 E0 E8 F8 00 18 28 30 58 60 F8 00 18 58 60 F8 
-4c4c: 00 18 40 48 58 60 70 78 88 A0 B0 B8 C8 D0 E0 E8 
-4c5c: F8 00 18 28 30 40 48 58 60 70 78 88 A0 B0 B8 C8 
-4c6c: D0 E0 E8 F8 00 18 28 30 C8 D0 F8 00 18 28 30 40 
-4c7c: 48 58 60 70 78 88 A0 B0 D0 E0 E8 F8 00 18 E0 E8 
-4c8c: F8 00 18 28 30 40 48 58 60 70 80 90 A0 B0 B8 C8 
-4c9c: D0 E0 E8 F8 00 18 28 30 58 60 70 78 98 A0 B0 B8 
-4cac: F8 00 18 28 30 40 48 58 60 70 80 90 A0 B0 B8 C8 
-4cbc: D0 E0 E8 F8 00 18 C8 D0 F8 00 18 28 48 58 60 70 
-4ccc: 78 88 A0 B0 D0 E0 E8 F8 00 18 28 30 F8 00 18 28 
-4cdc: 30 40 48 58 78 88 A0 B0 B8 C8 D0 E0 E8 F8 00 18 
-4cec: E0 E8 F8 00 30 40 58 68 78 88 A0 B0 E8 F8 00 
+
+*** List of X coordinates to compare once Y has been selected (table at 4cff)
+4c2c: 00 
+
+4c2d: 18 E0 E8 F8 00 
+
+4c32: 18 28 30 40 60 70 78 88 90 A0 D0 E0 E8 F8 00 
+
+4c41: 18 28 30 58 60 F8 00 
+
+4c48: 18 58 60 F8 00 
+
+4c4d: 18 40 48 58 60 70 78 88 A0 B0 B8 C8 D0 E0 E8 F8 
+4c5d: 00 18 28 30 40 48 58 60 70 78 88 A0 B0 B8 C8 D0 
+4c6d: E0 E8 F8 00 
+
+4c71: 18 28 30 C8 D0 F8 00 
+
+4c78: 18 28 30 40 48 58 60 70 78 88 A0 B0 D0 E0 E8 F8 
+4c88: 00 18 E0 E8 F8 00 
+
+4c8e: 18 28 30 40 48 58 60 70 80 90 A0 B0 B8 C8 D0 E0 
+4c9e: E8 F8 00 
+
+4ca1: 18 28 30 58 60 70 78 98 A0 B0 B8 F8 00 
+
+4cae: 18 28 30 40 48 58 60 70 80 90 A0 B0 B8 C8 D0 E0 
+4cbe: E8 F8 00 
+
+4cc1: 18 C8 D0 F8 00 
+
+4cc6: 18 28 48 58 60 70 78 88 A0 B0 D0 E0 E8 F8 00 
+
+4cd5: 18 28 30 F8 00 
+
+4cda: 18 28 30 40 48 58 78 88 A0 B0 B8 C8 D0 E0 E8 F8 
+4cea: 00 18 E0 E8 F8 00 
+
+4cf0: 30 40 58 68 78 88 A0 B0 E8 F8 00 
 
 TANK_DATA_FOR?_STARTS_AT_4CFF:
-4cfb: 18 F8 00 00 
+4cfb: 18 F8 00 
 
+4cfe: 00 
+
+*** Y to compare against tank position?, ? (put in C14B),
+*** vector to null-terminated data used at ???
 *** This data structure used at 40BA and 4D77 but points to 4CFB and then adds 4!
 4cff: 28 01 2C 4C 
 4d03: 37 00 2D 4C 
@@ -8545,7 +8594,7 @@ TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE:
 4d84: 38 F8          JR    C,$4D7E
 
 4d86: DD 7E 01       LD    A,(IX+$01)
-4d89: 32 4B C1       LD    ($C14B),A
+4d89: 32 4B C1       LD    (TANKS_2ND_BYTE_FROM_TABLE_AT_4CFF_0_OR_1),A
 4d8c: DD 6E 02       LD    L,(IX+$02)
 4d8f: DD 66 03       LD    H,(IX+$03)
 4d92: 7E             LD    A,(HL)
@@ -10401,7 +10450,8 @@ LC_MULTIPLE_CYCLES_DO_SOMETHING?:
 
 5c0b: 01 63 02 03 63 01 05 04 04 03 00 63 05 02 63 00 
 
-*** 19x6: enemy LCs, ?, ?, ?, ?, ?
+*** cycles hardness data
+*** 19x6: enemy LCs (bits 0-2), ?, ?, ?, ?, ?
 LC_DATA_STRUCTURE_TO_SETUP_LIGHT_CYCLES:
 5c1b: 01 00 00 00 00 00 
 5c21: 06 60 00 00 01 00 
@@ -10509,7 +10559,7 @@ IO_TOWER_DECREMENT_CLOCK?:
 5d90: B7             OR    A,A
 5d91: C2 F7 5E       JP    NZ,$5EF7
 
-5d94: 3A 24 C0       LD    A,(IO_TOWER_ALWAYS_80?)
+5d94: 3A 24 C0       LD    A,(IO_TOWER_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
 5d97: FE 80          CP    A,#$80
 5d99: 20 51          JR    NZ,$5DEC
 
@@ -10579,7 +10629,7 @@ IO_TOWER_DECREMENT_CLOCK?:
 5e0f: B7             OR    A,A
 5e10: 28 10          JR    Z,$5E22
 
-5e12: 21 05 C0       LD    HL,$C005
+5e12: 21 05 C0       LD    HL,MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
 5e15: 35             DEC   (HL)
 5e16: F2 22 5E       JP    P,$5E22
 
@@ -10593,7 +10643,7 @@ IO_TOWER_DECREMENT_CLOCK?:
 5e28: BE             CP    A,(HL)
 5e29: C0             RET   NZ
 
-5e2a: 21 24 C0       LD    HL,IO_TOWER_ALWAYS_80?
+5e2a: 21 24 C0       LD    HL,IO_TOWER_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
 5e2d: 7E             LD    A,(HL)
 5e2e: E6 8E          AND   A,#$8E
 5e30: FE 80          CP    A,#$80
@@ -10704,7 +10754,7 @@ CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?:
 5f43: 32 51 C4       LD    ($C451),A
 5f46: C9             RET   
 
-5f47: 3A 24 C0       LD    A,(IO_TOWER_ALWAYS_80?)
+5f47: 3A 24 C0       LD    A,(IO_TOWER_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
 5f4a: E6 84          AND   A,#$84
 5f4c: C8             RET   Z
 
@@ -10712,7 +10762,7 @@ CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?:
 5f4f: C2 CC 61       JP    NZ,$61CC
 
 5f52: CD 77 61       CALL  $6177
-5f55: 3A 24 C0       LD    A,(IO_TOWER_ALWAYS_80?)
+5f55: 3A 24 C0       LD    A,(IO_TOWER_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
 5f58: E6 08          AND   A,#$08
 5f5a: 20 11          JR    NZ,$5F6D
 
@@ -10794,7 +10844,7 @@ HANDLE_JOYSTICK_INPUT?_TO_601F:
 5fd9: 3E DF          LD    A,#$DF
 5fdb: 18 11          JR    $5FEE
 
-5fdd: CD 20 60       CALL  $6020
+5fdd: CD 20 60       CALL  IO_TOWER_CHECK_FOR_ENTRY
 5fe0: 28 0F          JR    Z,$5FF1
 
 5fe2: F8             RET   M
@@ -10823,7 +10873,7 @@ HANDLE_JOYSTICK_INPUT?_TO_601F:
 6009: 3E 25          LD    A,#$25
 600b: 18 0F          JR    $601C
 
-600d: CD 20 60       CALL  $6020
+600d: CD 20 60       CALL  IO_TOWER_CHECK_FOR_ENTRY
 6010: C8             RET   Z
 
 6011: 3A 28 C0       LD    A,(IO_TRON_Y)
@@ -10835,12 +10885,18 @@ HANDLE_JOYSTICK_INPUT?_TO_601F:
 601c: 32 28 C0       LD    (IO_TRON_Y),A
 601f: C9             RET   
 
+
+*** To enter IO Tower, Tron 1) Y must be between 2B & 96
+*** 2) X between 4C & B6
+*** 3) Y between 58 & 69 Y
+*** 
+IO_TOWER_CHECK_FOR_ENTRY:
 6020: 3A 28 C0       LD    A,(IO_TRON_Y)
 6023: FE 2B          CP    A,#$2B
-6025: 38 3C          JR    C,$6063
+6025: 38 3C          JR    C,$6063        ;Above IO Tower
 
 6027: FE 96          CP    A,#$96
-6029: 30 38          JR    NC,$6063
+6029: 30 38          JR    NC,$6063       ;Below IO Tower
 
 602b: 3A 26 C0       LD    A,(IO_TRON_X_OR_MCP_DISK_3_DATA)
 602e: FE 4C          CP    A,#$4C
@@ -10859,7 +10915,8 @@ HANDLE_JOYSTICK_INPUT?_TO_601F:
 6041: 3E 80          LD    A,#$80
 6043: 32 2D C0       LD    ($C02D),A
 6046: 3E 88          LD    A,#$88
-6048: 32 24 C0       LD    (IO_TOWER_ALWAYS_80?),A
+6048: 32 24 C0       LD    (IO_TOWER_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED),A;Set IO Tower flag to successfully finish level
+                                          ;(keep everything running except clock, collision, and joystick input)
 
 *** Add time left in IO Tower to score
 604b: 21 0D C0       LD    HL,IO_TOWER_TIMER_VALUE_REVERSED_TO_C010
@@ -10930,7 +10987,7 @@ INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
 60c4: 32 15 F0       LD    ($F015),A      ;Set sprite
 
 *** Check for ?
-60c7: 21 24 C0       LD    HL,IO_TOWER_ALWAYS_80?
+60c7: 21 24 C0       LD    HL,IO_TOWER_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
 60ca: CB 46          BIT   0,(HL)
 60cc: 28 1F          JR    Z,$60ED
 
@@ -11037,7 +11094,7 @@ IO_TOWER_GET_TRIGGER_STATE_AND_SET_C02E_BASED_ON_ARM_ROTATION:
 6169: 35             DEC   (HL)
 616a: 0E 08          LD    C,#$08
 616c: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
-616f: 21 24 C0       LD    HL,IO_TOWER_ALWAYS_80?
+616f: 21 24 C0       LD    HL,IO_TOWER_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
 6172: CB C6          SET   0,(HL)
 6174: C3 33 64       JP    DISK_INITIALIZE_DATA_AND_SPRITE
 
@@ -11072,6 +11129,10 @@ IO_TOWER_GET_TRIGGER_STATE_AND_SET_C02E_BASED_ON_ARM_ROTATION:
 619b: 22 2E C0       LD    ($C02E),HL
 619e: C9             RET   
 
+
+*** Derez Tron: Set torso and legs to derez sprite. Set C008 and C02D
+*** Move arms and another sprite offscreen put #$30 on audio stack
+IO_TOWER_DEREZ_TRON:
 619f: 3E 3A          LD    A,#$3A
 61a1: 32 05 F0       LD    ($F005),A
 61a4: 3E 3B          LD    A,#$3B
@@ -11081,7 +11142,7 @@ IO_TOWER_GET_TRIGGER_STATE_AND_SET_C02E_BASED_ON_ARM_ROTATION:
 61ae: 3E 40          LD    A,#$40
 61b0: 32 2D C0       LD    ($C02D),A
 61b3: 3E 84          LD    A,#$84
-61b5: 32 24 C0       LD    (IO_TOWER_ALWAYS_80?),A
+61b5: 32 24 C0       LD    (IO_TOWER_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED),A
 61b8: AF             XOR   A,A
 61b9: 32 08 C4       LD    ($C408),A
 61bc: 3E 00          LD    A,#$00
@@ -11114,6 +11175,8 @@ IO_TOWER_GET_TRIGGER_STATE_AND_SET_C02E_BASED_ON_ARM_ROTATION:
 61eb: 35             DEC   (HL)
 61ec: 20 12          JR    NZ,$6200
 
+
+*** Flip X on Tron derez sprites
 61ee: 36 04          LD    (HL),#$04
 61f0: 3A 05 F0       LD    A,($F005)
 61f3: EE 80          XOR   A,#$80
@@ -11142,14 +11205,14 @@ TRON_SPRITE_SET_INITIAL_POSITION_AND_ROTATION:
 6222: 3E D4          LD    A,#$D4
 6224: 32 28 C0       LD    (IO_TRON_Y),A
 6227: 3E 80          LD    A,#$80
-6229: 32 24 C0       LD    (IO_TOWER_ALWAYS_80?),A
+6229: 32 24 C0       LD    (IO_TOWER_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED),A
 622c: AF             XOR   A,A
 622d: 32 05 C4       LD    (TRON_ARM_OR_TANK_TURRET_ROTATION),A
 6230: 3E 19          LD    A,#$19
 6232: 32 22 C0       LD    (IO_TOWER_INCREMENTS_19_TO_1E_FOR_EACH_DISK_THROWN),A
 6235: C9             RET   
 
-6236: 21 24 C0       LD    HL,IO_TOWER_ALWAYS_80?
+6236: 21 24 C0       LD    HL,IO_TOWER_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
 6239: CB 4E          BIT   1,(HL)
 623b: 20 4B          JR    NZ,$6288
 
@@ -12049,7 +12112,7 @@ IO_TOWER_PROCESS_DISKS_THROWN?:
 6880: C9             RET   
 
 IO_TOWER_PROCESS_GRID_BUGS?:
-6881: 3A 24 C0       LD    A,(IO_TOWER_ALWAYS_80?)
+6881: 3A 24 C0       LD    A,(IO_TOWER_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
 6884: E6 8E          AND   A,#$8E
 6886: FE 80          CP    A,#$80
 6888: C0             RET   NZ
@@ -12092,7 +12155,7 @@ IO_TOWER_PROCESS_GRID_BUGS?:
 68c0: B9             CP    A,C
 68c1: D0             RET   NC             ;Invincibility I/O Tower Game = C9 (RET)
 
-68c2: CD 9F 61       CALL  $619F
+68c2: CD 9F 61       CALL  IO_TOWER_DEREZ_TRON
 68c5: C9             RET   
 
 DATA_TO_?_USED_AT_5D19:
@@ -12341,8 +12404,8 @@ JOYSTICK_INPUT_TABLE:
 *** a:     pointing arm sprite,
 *** b&c:   pointing arm X & Y offset,
 *** d&e:   disk X & Y offset,
-*** f&10:  delta X (word)
-*** 11&12: delta Y (word)
+*** f&10:  throwing delta X (word)
+*** 11&12: throwing delta Y (word)
 *** - 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F 10 11 12
 DATA_FOR_DISPLAYING_TRON_SPRITES_IDENTICAL_TO_367A:
 6b79: 9D 9E 9F A0 AB 00 01 AC 00 02 AA 07 F9 FA 03 00 04 00 00 
@@ -13709,7 +13772,7 @@ HIT_FIRE_BUTTON_FOR_TEST_S:
 9b37: 3E 18          LD    A,#$18
 9b39: AF             XOR   A,A
 9b3a: 32 03 C0       LD    (SOLAR_SAILER_Y_SERVICE_MENU_ROW),A
-9b3d: 32 05 C0       LD    ($C005),A
+9b3d: 32 05 C0       LD    (MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED),A
 9b40: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 9b43: CD 49 70       CALL  INITIALIZE_SPRITES
 9b46: 0E 02          LD    C,#$02
@@ -13718,7 +13781,7 @@ HIT_FIRE_BUTTON_FOR_TEST_S:
 9b4e: DD 2A 00 C0    LD    IX,(CPU_RAM_GS_DISK_X_TANK_X_MCP_TRON_LEGS_LC_TRAILS_TO_C1DF)
 9b52: DD 7E 07       LD    A,(IX+$07)
 9b55: 32 05 F0       LD    ($F005),A
-9b58: 3A 05 C0       LD    A,($C005)
+9b58: 3A 05 C0       LD    A,(MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
 9b5b: B7             OR    A,A
 9b5c: C0             RET   NZ
 
@@ -13790,7 +13853,7 @@ HIT_FIRE_BUTTON_FOR_TEST_S:
 9bd1: C9             RET   
 
 9bd2: 3E 01          LD    A,#$01
-9bd4: 32 05 C0       LD    ($C005),A
+9bd4: 32 05 C0       LD    (MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED),A
 9bd7: C9             RET   
 
 9bd8: 14 9C                                           ;Pointer to vector of destinations and strings on Sound Menu
@@ -13987,7 +14050,7 @@ BOOKKEEPING_MENU:
 9e9e: 3E 18          LD    A,#$18
 9ea0: AF             XOR   A,A
 9ea1: 32 03 C0       LD    (SOLAR_SAILER_Y_SERVICE_MENU_ROW),A
-9ea4: 32 05 C0       LD    ($C005),A
+9ea4: 32 05 C0       LD    (MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED),A
 9ea7: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 9eaa: CD 49 70       CALL  INITIALIZE_SPRITES
 9ead: 0E 02          LD    C,#$02
@@ -13997,7 +14060,7 @@ BOOKKEEPING_MENU:
 9eb9: DD 7E 07       LD    A,(IX+$07)
 9ebc: 32 05 F0       LD    ($F005),A
 9ebf: CD BF 9F       CALL  $9FBF
-9ec2: 3A 05 C0       LD    A,($C005)
+9ec2: 3A 05 C0       LD    A,(MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
 9ec5: B7             OR    A,A
 9ec6: C0             RET   NZ
 
@@ -14163,7 +14226,6 @@ a06d: CD 3D A0       CALL  $A03D
 a070: C9             RET   
 
 a071: 10 27 64 00 01 00 
-
 DISPLAY_6_DIGIT_BCD_FROM_HL_TO_IX_LEADING_ZEROES_GOTO_SPACES:
 a077: 1E 00          LD    E,#$00
 a079: 7B             LD    A,E
@@ -14222,7 +14284,7 @@ a0cc: C9             RET
 
 a0cd: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 a0d0: CD 49 70       CALL  INITIALIZE_SPRITES
-a0d3: DD 21 20 A1    LD    IX,$A120
+a0d3: DD 21 20 A1    LD    IX,DATA_VECTOR_OF_TIME_REPORT_STRING_DESTINATIONS_AND_SOURCES
 a0d7: CD B1 99       CALL  PUT_STRINGS_IN_MESSAGE_Q_FROM_IX_UNTIL_00
 a0da: 06 0A          LD    B,#$0A
 a0dc: 21 6C C6       LD    HL,TIME_REPORT_DATA_?
@@ -14263,9 +14325,20 @@ a11d: C0             RET   NZ
 
 a11e: 18 F2          JR    $A112
 
-a120: C2 FC 52 A1 C6 FD 5E A1 CA FD 6A A1 CE FD 77 A1 
-a130: D2 FD 84 A1 D6 FD 92 A1 DA FD A1 A1 DE FD B0 A1 
-a140: E2 FD BB A1 E6 FD C6 A1 EA FD D1 A1 F2 FE DC A1 
+DATA_VECTOR_OF_TIME_REPORT_STRING_DESTINATIONS_AND_SOURCES:
+a120: C2 FC 52 A1 
+a124: C6 FD 5E A1 
+a128: CA FD 6A A1 
+a12c: CE FD 77 A1 
+a130: D2 FD 84 A1 
+a134: D6 FD 92 A1 
+a138: DA FD A1 A1 
+a13c: DE FD B0 A1 
+a140: E2 FD BB A1 
+a144: E6 FD C6 A1 
+a148: EA FD D1 A1 
+a14c: F2 FE DC A1 
+
 a150: 00 00 
 
 TIME_REPORT2_S:
@@ -14419,7 +14492,6 @@ a35c: DE F9
 a35e: E2 F9 
 a360: E6 F9 
 a362: EA F9 
-
 a364: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 a367: CD 49 70       CALL  INITIALIZE_SPRITES
 a36a: 0E 02          LD    C,#$02
@@ -14456,10 +14528,38 @@ a3a7: 21 03 C0       LD    HL,SOLAR_SAILER_Y_SERVICE_MENU_ROW
 a3aa: 34             INC   (HL)
 a3ab: 18 DE          JR    $A38B
 
-a3ad: C1 A3 B5 A3 00 00 06 06 44 18 44 28 44 38 44 48 
-a3bd: 44 58 44 68 42 FD E3 A3 46 FD F0 A3 4A FD FA A3 
-a3cd: 4E FD 04 A4 52 FD 0E A4 56 FD 18 A4 5A FD 22 A4 
-a3dd: 62 FE DC A1 00 00 
+a3ad: C1 A3                                           ;Pointer to vector of destinations and strings on Channel Menu
+
+a3af: B5 A3                                           ;Pointer to sprite positions for channel menu
+
+a3b1: 00 00 
+                                          ;Pointer to array of vectors of code to run when a channel menu is selected
+
+a3b3: 06 
+                                          ;How many items in channel menu
+
+a3b4: 06                                           ;Sprite to indicate channel selected
+
+a3b5: 44 18                                           ;Sprite positions channel menu
+
+a3b7: 44 28 
+a3b9: 44 38 
+a3bb: 44 48 
+a3bd: 44 58 
+a3bf: 44 68 
+a3c1: 42 FD E3 A3 
+a3c5: 46 FD F0 A3 
+a3c9: 4A FD FA A3 
+a3cd: 4E FD 04 A4 
+a3d1: 52 FD 0E A4 
+a3d5: 56 FD 18 A4 
+a3d9: 5A FD 22 A4 
+
+a3dd: 62             LD    H,D
+a3de: FE DC          CP    A,#$DC
+a3e0: A1             AND   A,C
+a3e1: 00 00 
+                                          ;Mark end of vector
 
 CHANNEL_TEST_S:
 a3e3: CHANNEL TEST
@@ -14496,7 +14596,7 @@ a445: E6 80          AND   A,#$80
 a447: C8             RET   Z
 
 a448: CD 17 6F       CALL  RESET_WATCHDOG_UNTIL_C400_IS_ONE
-a44b: CD B0 A4       CALL  $A4B0
+a44b: CD B0 A4       CALL  SERVICE_MENU_PLAYER_INPUTS
 a44e: 18 F2          JR    $A442
 
 a450: 00 FD 62 A4 F0 FE 70 A4 F2 FE 8A A4 F6 FE 9F A4 
@@ -14513,8 +14613,8 @@ a48a: SWITCHES AND DEVICES
 
 HIT_TILT_TO_EXIT_S:
 a49f: HIT TILT TO EXIT
-
-a4b0: DD 21 56 A5    LD    IX,$A556
+SERVICE_MENU_PLAYER_INPUTS:
+a4b0: DD 21 56 A5    LD    IX,DATA_PLAYER_INPUTS
 a4b4: FD 21 09 C0    LD    IY,MCP_TRON_Y_OR_TANKS_DATA_VECTOR_x_2_OR_GRID_BUGS_FRAMES_TO_DELAY_WHEN_BREEDING
 a4b8: DD 7E 00       LD    A,(IX+$00)
 a4bb: B7             OR    A,A
@@ -14600,16 +14700,32 @@ a54f: C3 B8 A4       JP    $A4B8
 a552: 32 08 C0       LD    ($C008),A
 a555: C9             RET   
 
-a556: 00 00 01 23 F7 A5 BA A6 00 00 02 37 06 A6 BA A6 
-a566: 00 00 40 08 15 A6 BA A6 00 00 04 0F 26 A6 BA A6 
-a576: 00 00 08 0E 31 A6 BA A6 00 00 10 2D 3C A6 BA A6 
-a586: 00 02 01 11 53 A6 BA A6 00 02 02 39 47 A6 BA A6 
-a596: 00 02 04 16 5E A6 BA A6 00 02 08 31 67 A6 BA A6 
-a5a6: 01 01 7F 01 92 A6 1C F9 01 04 7F 01 A6 A6 1E F9 
-a5b6: 00 03 04 01 72 A6 83 A6 00 03 01 01 E7 A6 F7 A6 
-a5c6: 00 03 02 01 CB A6 DA A6 00 03 80 2D 05 A7 BA A6 
-a5d6: 00 02 10 11 1C A7 BA A6 00 02 20 39 10 A7 BA A6 
-a5e6: 00 02 40 16 27 A7 BA A6 00 02 80 31 30 A7 BA A6 
+
+*** Process spinner if non-zero, IN port, bit(s) to mask,
+*** vector to location to draw on screen, vector to string to add to q
+DATA_PLAYER_INPUTS:
+a556: 00 00 01 23 F7 A5 BA A6 
+a55e: 00 00 02 37 06 A6 BA A6 
+a566: 00 00 40 08 15 A6 BA A6 
+a56e: 00 00 04 0F 26 A6 BA A6 
+a576: 00 00 08 0E 31 A6 BA A6 
+a57e: 00 00 10 2D 3C A6 BA A6 
+a586: 00 02 01 11 53 A6 BA A6 
+a58e: 00 02 02 39 47 A6 BA A6 
+a596: 00 02 04 16 5E A6 BA A6 
+a59e: 00 02 08 31 67 A6 BA A6 
+a5a6: 01 01 7F 01 92 A6 1C F9 
+a5ae: 01 04 7F 01 A6 A6 1E F9 
+a5b6: 00 03 04 01 72 A6 83 A6 
+a5be: 00 03 01 01 E7 A6 F7 A6 
+a5c6: 00 03 02 01 CB A6 DA A6 
+a5ce: 00 03 80 2D 05 A7 BA A6 
+a5d6: 00 02 10 11 1C A7 BA A6 
+a5de: 00 02 20 39 10 A7 BA A6 
+a5e6: 00 02 40 16 27 A7 BA A6 
+a5ee: 00 02 80 31 30 A7 BA A6 
+
+a5f6: FF 
 
 a5f7: C6 FD 
 
