@@ -198,7 +198,7 @@
     </script>
   </cheat>
 
-  <cheat desc="Always get a Bit">
+  <cheat desc="Always get a Bit 1st try (breed value C009 not set correctly)">
     <script state="on">
       <action>temp0 =maincpu.mb@5D44</action>
     </script>
@@ -207,6 +207,18 @@
     </script>
     <script state="off">
       <action>maincpu.mb@5D44=temp0 </action>
+    </script>
+  </cheat>
+
+  <cheat desc="Always get a Bit 2nd try (c009 overwritten later.  Boo!)">
+    <script state="on">
+      <action>temp0 =maincpu.mq@6777</action>
+    </script>
+    <script state="run">
+      <action>maincpu.mq@6777=1218c009327fe67e</action>
+    </script>
+    <script state="off">
+      <action>maincpu.mq@6777=temp0 </action>
     </script>
   </cheat>
 
