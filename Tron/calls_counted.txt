@@ -27,6 +27,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       5 STRING_IN_DE_TO_HL
       5 DISPLAY_6_DIGIT_BCD_FROM_HL_TO_IX_LEADING_ZEROES_GOTO_SPACES
       4 TANK_UPDATE_POSITION_AND_SPRITE_OF_TANK_FROM_C000_TO_C002
+      4 TANK_DATA_ACCESS_HL_EQUALS_IX_PLUS_18_PLUS_4_TIMES_IX_PLUS_11
       4 TANK_BULLET?_DRAW_USES_IY
       4 SET_C40D_TO_FDD0_AND_ADD_A_MESSAGE_TO_Q
       4 PUT_STRINGS_IN_MESSAGE_Q_FROM_IX_UNTIL_00
@@ -35,6 +36,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       4 LC_(HL-F800)/2_RETURN_HOW_MANY_0x20s_IN_A
       4 DEC_HL_IF_NEGATIVE_SET_TO_02
       4 CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?
+      4 COMPARE_HL_ASCENDING_UNTIL_B_IS_GREATER
       4 $A079
       4 $99A4
       4 $5B16
@@ -46,8 +48,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       4 $52F6
       4 $52E8
       4 $522A
-      4 $4AF9
-      4 $455A
       4 $40A5
       4 $0D10
       3 TANK_PROCESS_ENEMY_TANKS_ON_STARTUP_SOMEHOW?_USES_IX

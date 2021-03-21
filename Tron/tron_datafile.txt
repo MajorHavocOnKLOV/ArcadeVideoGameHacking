@@ -310,10 +310,13 @@ label 4063 TANKS_DATA_FOR_x_STARTS_AT_4066
 label 40d0 TANK_UPDATE_POSITION_AND_SPRITE_OF_TANK_FROM_C000_TO_C002
 label 40ea TANK_UPDATE_POSITION
 label 40fc TANK_WARP
-label 4145 TANK_DATA_FOR_?
+;label 4145 TANK_DATA_FOR_?
+;label 4124 TANK_DATA_AT_4124
+;label 4127 TANK_DATA_AT_4127
 ; 4414 Find X & Y of this tank in a data structure?  For movement?
 label 4414 TANK_PROCESS_ENEMY_TANKS_ON_STARTUP_SOMEHOW?_USES_IX
 label 4531 TANK_POSITION_HIT_ON_ENEMY_TANK?
+label 455a TANK_DATA_ACCESS_HL_EQUALS_IX_PLUS_18_PLUS_4_TIMES_IX_PLUS_11
 label 456d TANKS_PROCESS_DISKS_THROWN?
 label 45ed DATA_USED_FOR_???_TO_45FE
 label 45ff TANK_PROCESS_DISKS_THROWN
@@ -328,6 +331,7 @@ label 47a7 COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?
 label 47c7 TANKS_UPDATE_DISK_THROWN_SPRITE_FROM_RAM_AT_IY
 label 4884 DATA_TO_49C7_USED_AT_49C8
 label 49c8 TANK_TURRET_DRAW
+label 4af9 COMPARE_HL_ASCENDING_UNTIL_B_IS_GREATER
 label 4b70 TANK_BULLET?_DRAW_USES_IY
 label 4b8d TANK_DATA_FOR?_USED_AT_4BBB
 label 4bfd TANK_SET_BULLET_X_AND_?_OFFSCREEN_CALL_UPDATE_POSITION?
@@ -1468,7 +1472,7 @@ commentline 3dda User input processing ...
 
 comment 3f91 Invincibility TANK Game = 18 (JR *) (tank collision?)
 
-commentline 3f9a 33 data blocks used by tanks, variable size so zero terminated
+commentline 3f9a 21 data blocks used by tanks, variable size so zero terminated
 data 3f9a-3f9a
 data 3f9b-3f9f
 data 3fa0-3fac
@@ -1492,22 +1496,47 @@ data 4062-4064
 data 4065-4065
 
 commentline 4066 This data structure is used at 40C9
-commentline 4066 33x3 bytes: ?, vector to other data
-data 4066,33,3
+commentline 4066 21x3 bytes: ?, vector to other data
+data 4066,21,3
 
 comment 40ed If tank's X position is not 81, skip warp
 comment 40f4 If tank's Y position is 7E (top warp), jump to warp
 comment 40f8 If tank's Y position is not 91 (bottom warp), skip warp
 
-data 4127-4144
-data 4145-4151
-commentline 4152 Data used by tanks around 4414?  The 3 below are educated guesses at this point
-commentline 4152 11?x3: 3= Type, vector to next data structure
-data 4152-4165
-data 4166-41b1
-data 41b2-420c
+;data 4127-4144
+data 4127,21,3
+;data 4145-4151
+;commentline 4152 Data used by tanks around 4414?  The 3 below are educated guesses at this point
+;commentline 4152 11?x3: 3= Type, vector to next data structure
+;data 4152-4165
+;data 4166-41b1
+;data 41b2-420c
+;data 4166-4206
+data 4166-416b
+data 416c-4177
+data 4178-417f
+data 4180-4182
+data 4183-4189
+data 418a-4193
+data 4194-4196
+data 4197-419e
+data 419f-41a8
+data 41a9-41b1
+data 41b2-41b9
+data 41ba-41c0
+data 41c1-41cb
+data 41cc-41ce
+data 41cf-41d8
+data 41d9-41e1
+data 41e2-41e8
+data 41e9-41f3
+data 41f4-41fc
+data 41fd-4205
+data 4206-420c
 
 comment 4546 Mirror Y of explosion sprite on tank to make it look like fire
+
+commentline 455a Get pointer into data structure
 
 commentline 456d Tanks: C011 is the start of RAM data for disks thrown, size 0x10
 commentline 456d The code starts at C001 and pre-adds a size (DE) before processing starts
