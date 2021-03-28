@@ -54,7 +54,7 @@
 ; MCP: 0-9, then repeats last 6 (4-9)
 ; Tanks: 0-10, then repeats last 5 (6-10)
 
-; XXX ??? XXX How does the mapping not move past the end of the map when the user level is > than map length?
+; How does the mapping not move past the end of the map when the user level is > than map length?
 ; Difficulty 5 (default setting), order of hardness for all games
 ; Cycles: 0,2,7,10,14,18, then 14-18
 ; IO Tower: 0-8, then repeats last 6 (3-8)
@@ -294,7 +294,7 @@ label 354f MCP_BLOCK_HIT_AUDIO
 label 3554 SCORE_MCP_BLOCK
 label 3559 MCP_BLOCKS_DATA_TO_35B2
 label 35b3 MCP_CONE_RELATIVEX_RELATIVEY_SPRITE_NUMBER_TO_35D9
-label 35da _???_
+label 35da MCP_BLOCK_COLORS_LEFT_TO_RIGHT
 label 363a JOYSTICK_INPUT_FOR?
 label 367a DATA_FOR_DISPLAYING_TRON_SPRITES_IDENTICAL_TO_6B79
 label 3926 MCP_COLOR_PALETTE_ALL_ZEROS
@@ -330,6 +330,7 @@ label 45ed DATA_USED_FOR_???_TO_45FE
 label 45ff TANK_PROCESS_DISKS_THROWN
 label 46f5 TANKS_CHECK_FOR_HIT_ON_ENEMY
 ;label 46fb TANKS_DATA_FOR_x_STARTS_AT_46FF
+label 472b TANKS_CHECK_FOR_HIT_ON_USER
 label 4752 TANKS_TERMINATE_DISK_THROWN_AT_IY
 label 4762 TANK_PROCESS_HIT_ON_ENEMY_TANK_AT_IX
 label 47b8 SCORE_TANK_HIT_3
@@ -1432,11 +1433,10 @@ data 3559,30,3
 data 35b3,13,3
 ;data 35b3-35d9
 
-commentline 35da MCP colors?
-data 35da-3639
-;data 35e6-3639
+commentline 35da MCP colors: red, blue, green, magenta, yellow, cyan
+;data 35da-3639
+data 35da,8,12
 data 363a,16,4
-;data 363a-3675
 
 commentline 367a Identical to 0x2AC (684) byte data structure at 6b79!
 commentline 367a Data structure for displaying Tron sprites.  19 (0x13) bytes each!

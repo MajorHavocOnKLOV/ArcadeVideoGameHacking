@@ -72,6 +72,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       2 TANK_PROCESS_HIT_ON_ENEMY_TANK_AT_IX
       2 TANK_PROCESS_ALL_ENEMY_TANKS?
       2 TANK_CHECK_FOR_COLLISION_BETWEEN_ENEMY_TANKS_AND_USER
+      2 TANKS_CHECK_FOR_HIT_ON_USER
       2 TANKS_CHECK_FOR_HIT_ON_ENEMY
       2 NC,TANK_INITIALIZE_BULLET
       2 MCP_DISK_END_FLIGHT
@@ -100,7 +101,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       2 $5489
       2 $547A
       2 $5475
-      2 $472B
       2 $44BD
       2 $447E
       2 $0AA0
