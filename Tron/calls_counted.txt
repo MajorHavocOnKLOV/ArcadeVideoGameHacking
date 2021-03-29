@@ -133,6 +133,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 PROCESS_DISK_THROW?
       1 PROCESS_COLOR_CYCLING
       1 PRINT_OUT_MESSAGES_IN_QUEUES
+      1 PRINT_OUT_LIVES_REMAINING_FOR_CURRENT_PLAYER
       1 PICK_WHICH_INSTRUCTIONS_TO_PRINT
       1 OUTPUT_IO_TOWER_TIMER?/TELETYPE_PRINTING_TO_THE_SCREEN_UNTIL_NULL_BYTE?
       1 NZ,$66DF
@@ -231,6 +232,5 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $09E4
       1 $08A0
       1 $07B0
-      1 $06BB
       1 $05F8
       1 $03D9

@@ -119,6 +119,7 @@ label 0513 CREDITS_S
 label 0557 OUTPUT_TO_SOUND_LATCHES
 label 05c3 ROTATE_MCP_BLOCK_COLORS
 label 05EC MCP_BLOCKS_COLOR_POSITIONS_LEFT_TO_RIGHT
+label 06bb PRINT_OUT_LIVES_REMAINING_FOR_CURRENT_PLAYER
 label 06ca PRINT_OUT_MESSAGES_IN_QUEUES
 label 06f5 PRINT_OUT_MESSAGES_IN_QUEUE_2
 label 0720 PRINT_SCORE
@@ -567,7 +568,7 @@ label a674 BUY_IN_ALLOWED_S
 label a683 NO_BUY_IN_S
 label a694 ROTATE_VALUE_PL_1_S
 label a6a8 ROTATE_VALUE_PL_2_S
-label a6ba EMPTY_S
+label a6ba EMPTY_16_SPACES_S
 label a6cd MINI_UPRIGHT_S
 label a6da COCKTAIL_S
 label a6e9 2_COIN_METERS_S
@@ -639,7 +640,7 @@ label b004 2ND_S
 label b008 PLAYER_1_UP_S
 label b014 PLAYER_2_UP_S
 label b020 PLAYER_1_S
-label b029 EMPTY2_S
+label b029 EMPTY_3_SPACES_S
 label b02d HISCORE_S
 label b035 TO_START_GAME_S
 label b043 TO_CONTINUE_GAME_S
@@ -652,7 +653,7 @@ label b095 CREDITS_PER_PLAYER_S
 label b0a9 OR_PUSH_S
 label b0b1 2_PLAYERS_S
 label b0bb GAME_OVER_S
-label b0c5 EMPTY3_S
+label b0c5 EMPTY_9_SPACES_S
 label b0cf BONUS_BASES_AWARDED_S
 label b0e3 AT_10000_POINTS_S
 label b0f3 PRESS_FIRE_BUTTON_S
@@ -814,6 +815,7 @@ label c45c POINTER_INTO_COLORS_FOR_CYCLING_COLORS
 label c45d COLOR_CYCLING_LIMITER
 label c45e DO_COLOR_CYCLING_IF_NON_ZERO
 label c45f PLAYER_NUMBER
+label c460 NUMBER_OF_PLAYERS
 label c461 WHICH_ATTRACT_MODE_INSTRUCTIONS_TO_DISPLAY_VECTOR_LIST_AT_1527
 label c465 USED_AT_05F8_TO_SKIP_OR_ALTER_PROCESSING_0_1_OR_2
 label c466 NUMBER_OF_SCREEN_MESSAGES_FROM_C4D6
@@ -1004,6 +1006,12 @@ commentline 05f8 00 =
 commentline 05f8 01 = DISPLAY_MCP_CONE_WITH_COPYRIGHTS_AND_NEXT_INSTRUCTIONS, DRAW_CREDITS_SCREEN, 
 commentline 05f8 02 = 
 
+commentline 0606 Print HISCORE string
+commentline 060f Print the high score
+commentline 0618 Print 1ST string
+commentline 0621 Print 1ST score
+commentline 0646 Print 2ND string
+commentline 064f Print 2ND score
 
 ; Print messages from two different message queue?
 commentline 06ca Count @C466 and data starting @C4D8. @C4D6 is next entry for Q
@@ -2326,7 +2334,7 @@ ascii a694-a6a5
 data a6a6-a6a7
 ascii a6a8-a6b9
 ; data a6ba-a6bb
-ascii a6ba-a6ca
+data a6ba-a6ca
 data a6cb-a6cc
 ascii a6cd-a6d9
 ; data a6d8-a6d9
@@ -2493,7 +2501,7 @@ ascii b004-b007
 ascii b008-b013
 ascii b014-b01f
 ascii b020-b028
-ascii b029-b02c
+data b029-b02c
 ascii b02d-b034
 ascii b035-b042
 ascii b043-b053
@@ -2506,7 +2514,7 @@ ascii b095-b0a8
 ascii b0a9-b0b0
 ascii b0b1-b0ba
 ascii b0bb-b0c4
-ascii b0c5-b0ce
+data b0c5-b0ce
 ascii b0cf-b0e2
 ascii b0e3-b0f2
 ascii b0f3-b104
