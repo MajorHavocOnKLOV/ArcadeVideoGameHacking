@@ -1006,10 +1006,13 @@ commentline 05f8 00 =
 commentline 05f8 01 = DISPLAY_MCP_CONE_WITH_COPYRIGHTS_AND_NEXT_INSTRUCTIONS, DRAW_CREDITS_SCREEN, 
 commentline 05f8 02 = 
 
+commentline 0606 HISCORE info at the top middle of the screen
 commentline 0606 Print HISCORE string
 commentline 060f Print the high score
+commentline 0618 Player 1 info at top left of screen
 commentline 0618 Print 1ST string
 commentline 0621 Print 1ST score
+commentline 0646 Player 2 info at top right of screen, if there is a 2nd player
 commentline 0646 Print 2ND string
 commentline 064f Print 2ND score
 

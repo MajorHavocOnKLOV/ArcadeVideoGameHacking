@@ -1,4 +1,4 @@
-org 0, numlab 741, numio 12, numdata 1539, numcomm 235, numcommline 438
+org 0, numlab 741, numio 12, numdata 1539, numcomm 235, numcommline 441
 
 IO_0 EQU $00
 IO_1 EQU $01
@@ -1611,6 +1611,7 @@ MCP_BLOCKS_COLOR_POSITIONS_LEFT_TO_RIGHT:
 0601: 3E 02          LD    A,#$02
 0603: 32 65 C4       LD    (USED_AT_05F8_TO_SKIP_OR_ALTER_PROCESSING_0_1_OR_2),A
 
+*** HISCORE info at the top middle of the screen
 *** Print HISCORE string
 0606: 21 44 FC       LD    HL,$FC44
 0609: 11 2D B0       LD    DE,HISCORE_S
@@ -1621,6 +1622,7 @@ MCP_BLOCKS_COLOR_POSITIONS_LEFT_TO_RIGHT:
 0612: 11 F7 C4       LD    DE,HIGH_SCORES_DIGITS
 0615: CD 20 07       CALL  PRINT_SCORE
 
+*** Player 1 info at top left of screen
 *** Print 1ST string
 0618: 21 84 FE       LD    HL,$FE84
 061b: 11 00 B0       LD    DE,1ST_S
@@ -1646,6 +1648,7 @@ MCP_BLOCKS_COLOR_POSITIONS_LEFT_TO_RIGHT:
 0645: C8             RET   Z
 
 
+*** Player 2 info at top right of screen, if there is a 2nd player
 *** Print 2ND string
 0646: 21 44 FA       LD    HL,$FA44
 0649: 11 04 B0       LD    DE,2ND_S
