@@ -61,21 +61,24 @@
 ; MCP: 0-9, then repeats last 6 (4-9)
 ; Tanks: 0-10, then repeats last 5 (6-10)
 
+; Tools
+; - fill background with visible zeros: fill f800,77f,30
+
 ; Possible bugs:
 ; 1) Upon completion of the IO Tower game, the max disks is one greater than it should be for just the next game!
 ; 2) The player tank is 1 pixel too far right when moving up/down
 ; 3) The horizontal enemy tank bullet has a stray pixel in the bottom row close to the side
+; 4) MCP color rotation has bugs
 
 ; Input
 ; =====
-; Bit	7	                6	5	4	3	2	1	        0
-; Port	Service Switch		Tilt		2P	1P	COIN 2/R	COIN 1/L
-; 0000				                1B				
-; 0001	x	                1 Spinner						
-; 0002	2D	                2U	2R	2L	1D	1U	1R	        1L
-; 0003	2B							
-; 0004	x	                2 Spinner						
-; 0005								
+; Port/Bit 7	            6   5     4   3   2   1         0
+; 0000     Service Switch   x   Tilt  1B  2P  1P  COIN 2/R  COIN 1/L
+; 0001     x	            1 Spinner
+; 0002     2D	            2U  2R    2L  1D  1U  1R        1L
+; 0003     2B               x   x     x   x   x   x         x
+; 0004     x                2 Spinner
+; 0005
 ; 								
 ; Note: all bits are 1 (on) and flip to 0 (off or zero) when the control is activated (grounded)!								
 
@@ -119,7 +122,8 @@ label 0513 CREDITS_S
 label 0557 OUTPUT_TO_SOUND_LATCHES
 label 05c3 ROTATE_MCP_BLOCK_COLORS
 label 05EC MCP_BLOCKS_COLOR_POSITIONS_LEFT_TO_RIGHT
-label 06bb PRINT_OUT_LIVES_REMAINING_FOR_CURRENT_PLAYER
+label 05f8 DISPLAY_SCORES_LIVES_REMAINING_AND_FLASH_ACTIVE_PLAYER
+label 06bb PRINT_OUT_STICKMEN_OF_LIVES_REMAINING
 label 06ca PRINT_OUT_MESSAGES_IN_QUEUES
 label 06f5 PRINT_OUT_MESSAGES_IN_QUEUE_2
 label 0720 PRINT_SCORE
@@ -139,6 +143,8 @@ label 0b87 COPYRIGHT_MCMLXXXII_S
 label 0b9b BALLY_MIDWAY_MFG_CO_S
 label 0d52 READ_AND_PROCESS_INPUT_PORTS
 label 0baf ALL_RIGHTS_RESERVED_S
+label 0d10 BUILD_ASCII_STRING_FOR_CREDITS_TO_START_A_GAME_AND_OUTPUT_WITH_CREDITS_PER_PLAYER
+label 0d28 LOSE_A_LIFE_AND_RESTORE_MAX_DISKS_FROM_CURRENT_ROUND
 label 0d38 READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS
 label 0dc3 MCP_BLOCKS_RELATIVE_DATA
 label 0e0b MCP_CONE_RELATIVE_DATA
@@ -152,8 +158,8 @@ label 1028 YOUR_S
 label 102d INITIALS_S
 label 1036 ERASE_S
 label 103c END_S
-label 10ed ERASE2_S
-label 10f5 END2_S
+label 10ee ERASE2_S
+label 10f6 END2_S
 label 120c YOUR_SCORE_S
 label 1217 RANKING_IS_S
 label 1222 NOT_IN_THE_TOP_S
@@ -329,6 +335,10 @@ label 455a TANK_SET_HL_TO_THE_CORRECT_HIT_SPRITE
 label 456d TANKS_PROCESS_DISKS_THROWN?
 label 45ed DATA_USED_FOR_???_TO_45FE
 label 45ff TANK_PROCESS_DISKS_THROWN
+label 467c TANK_DISK_NEGATE_DELTA_Y
+label 46aa TANK_DISK_NEGATE_DELTA_X
+label 4653 TANK_PROCESS_DISK_HIT_WALL
+label 46cb TANK_SPRITE_UPDATE_POSITION_OF_DISK_HITTING_WALL
 label 46f5 TANKS_CHECK_FOR_HIT_ON_ENEMY
 ;label 46fb TANKS_DATA_FOR_x_STARTS_AT_46FF
 label 472b TANKS_CHECK_FOR_HIT_ON_USER
@@ -361,6 +371,7 @@ label 5182 AND_WALLS_S
 label 518c USE_TRIGGER_FOR_S
 label 519c SPEED_CONTROL_S
 label 523b LC_SET_UP_USER_AND_ENEMIES_C1E0_TO_C230?
+label 54c6 LC_TRON_USER_DIED
 label 5535 FLAG_LC_IN_DE_AS_DESTROYED_PLAY_EXPLOSION_SOUND_AND_JP_TO_ADD_SCORE?
 label 554c SCORE_LC
 label 5551 LC_ERASE_TRAIL_OF_DESTROYED_LC
@@ -422,8 +433,8 @@ label 6f35 COPY_20_FROM_HL_TO_FF80
 label 6f52 ADD_SCORE_OF_HL_TO_CURRENT_PLAYER_AND_CHECK_FOR_AND_PROCESS_BONUS_LIFE
 label 6fb8 PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 label 6fc7 RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
-label 6fee SET_C40D_TO_FDD0_AND_ADD_A_MESSAGE_TO_Q
-label 6ff4 INCREASE_C40D_BY_4_AND_ADD_A_MESSAGE_TO_Q
+label 6fee SET_DISPLAY_POSITION_DOWN_6_RIGHT_6_AND_ADD_A_MESSAGE_TO_Q
+label 6ff4 MOVE_DOWN_2_LINES_AND_ADD_A_MESSAGE_TO_Q
 label 6fff ADD_A_MESSAGE_TO_Q
 label 7020 ZERO_RAM_C000-C418
 label 7026 ZERO_RAM_C000-C450
@@ -786,8 +797,15 @@ label c405 TRON_ARM_OR_TANK_TURRET_ROTATION
 label c40f ATTRACT_MCP_ROTATE_COLORS_IF_NON_ZERO
 label c410 MCP_BLOCKS_COLORS_STARTPOINT_VECTOR_INTO_0E55
 label c406 MCP_DISK_NUMBER_BEING_PROCESSED
+label c408 DO_NOT_FLASH_1ST_OR_2ND_PLAYER_IF_ZERO
 label c409 MCP_SPRITE_BLOCK_HIT_BY_DISK
 label c40b MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK
+label c40d Q_VECTOR_WHERE_TO_PLACE_NEXT_MESSAGE
+label c412 COUNTDOWN_TIMER_TO_FLASH_ACTIVE_PLAYER_NUMBER
+label c416 CREDITS_TO_START_A_GAME_ASCII_STRING_VERSION_NULL_TERMINATED
+label c417 NULL_TERMINATOR_FOR_CREDITS_TO_START_A_GAME_ASCII_STRING_VERSION
+; c419-c42f current player data
+; c430-c445 other player data
 label c419 HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?)
 label c41a PLAYING_HOW_LONG_NOW_TO_C41C
 label c41b CURRENT_PLAYER_DATA_BYTE_02
@@ -805,12 +823,14 @@ label c424 DIRECTION_CHOSEN_8D4U2R1L
 label c425 ATTEMPTED_GAMES_XXXXDURL
 label c426 VECTOR_OF_GAMES_TO_C42D
 label c42e NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_DISKS_MAY_GO_TO_1???
-label c42f OTHER_PLAYER_DATA
+;label c42f OTHER_PLAYER_DATA
+label c430 OTHER_PLAYER_DATA
+label c435 P2_LIVES_REMAINING 
 label c445 PLAYER_1_SCORE
 label c44a PLAYER_1_SCORE_LAST_DIGIT
 label c44b PLAYER_2_SCORE
 label c450 PLAYER_2_SCORE_LAST_DIGIT
-label c45b GS_DIRECTION:1=DOWN,2=?,3=?,5=?,OTHER=?
+label c45b GS_DIRECTION_DIFFERENT_PER_PLAYER_AND_GAME_ORDER_IN_GAMES_VECTOR?
 label c45c POINTER_INTO_COLORS_FOR_CYCLING_COLORS
 label c45d COLOR_CYCLING_LIMITER
 label c45e DO_COLOR_CYCLING_IF_NON_ZERO
@@ -822,11 +842,14 @@ label c466 NUMBER_OF_SCREEN_MESSAGES_FROM_C4D6
 label c467 NUMBER_OF_SCREEN_MESSAGES_2_FROM_C4BE
 label c469 ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED1!
 label c46b ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED2!
+label c46c AUDIO_STACK_COUNT_OF_BYTES_ON_STACK
 label c473 LEFT_COIN
 label c474 RIGHT_COIN
 label c47a PSEUDO_RANDOM_VALUE_LAST_GENERATED
 label c47b IN_ATTRACT_MODE?
 label c47c NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2
+label c480 AUDIO_STACK_SP_GROWS_UP
+label c482 AUDIO_STACK_BEGINNING_OF_STACK
 label c48e ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED3!
 label c4b8 SCREEN_DESTINATION?
 label c4ba SOURCE?
@@ -849,6 +872,7 @@ label c52c HIGH_SCORES_DIGITS_3BYTES_BCD
 label c658 SCORE_REPORT_DATA_0_TO_100K_WORDSX10
 label c66c TIME_REPORT_DATA_?
 label c687 FLIP_SCREEN_IF_VALUE_IS_01
+label c686 LIVES_PER_PLAYER_OR_BASES_FOR_THIS_GAME
 
 ; map(0xc000, 0xc7ff).mirror(0x1800)
 label C000 NVRAM
@@ -869,7 +893,7 @@ label F004 SPRITE_TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DIS
 label F008 SPRITE_TANK_TURRET_OR_LC_ENEMIES
 label F00C SPRITE_TANK_DISKS_F00C_TO_F01B(SPRITES_3_TO_6)
 label f018 SPRITE_TRON_DISKS_1_TO_4
-label f01c SPRITE_TANK_3_HITS_AND_ENEMY_TANK
+label f01c SPRITE_TANK_WALL_HITS_1_FOR_EACH_DISK
 label f028 SPRITE_MCP_BLOCKS_TOP_LEFT_MOVING_DOWN_AND_WRAP_TO_TOP_RIGHT_TO_F09F_OR_BIT
 label f029 
 label f02c SPRITE_TANK_ENEMIES_OR_SOLAR_SAILER
@@ -959,7 +983,9 @@ comment 0292 Player 2 spinner input
 
 commentline 02d9 Turret/arm rotation overflow (0x24) so set to 0
 commentline 0401 Copy null-terminated string in DE to HL
-commentline 040b Handle a space character (0x20 or 32)
+commentline 040b Output a space character (0x20 or 32)
+comment 040b Wasted instruction since next stores #$5E instead of A
+commentline 0414 Output a non-space character
 
 comment 045a If space character, go to next character
 comment 045e If less than A character, initialize saved data
@@ -1002,19 +1028,25 @@ commentline 05e4 inc to next address to write to odd address in order to make A1
 
 data 05ec-05f7
 
-commentline 05f8 00 = 
-commentline 05f8 01 = DISPLAY_MCP_CONE_WITH_COPYRIGHTS_AND_NEXT_INSTRUCTIONS, DRAW_CREDITS_SCREEN, 
-commentline 05f8 02 = 
-
 commentline 0606 HISCORE info at the top middle of the screen
 commentline 0606 Print HISCORE string
 commentline 060f Print the high score
 commentline 0618 Player 1 info at top left of screen
 commentline 0618 Print 1ST string
 commentline 0621 Print 1ST score
+commentline 0633 Print 1ST lives remaining
 commentline 0646 Player 2 info at top right of screen, if there is a 2nd player
 commentline 0646 Print 2ND string
 commentline 064f Print 2ND score
+commentline 0674 Print active player's score
+comment 0674 Set 1ST score destination and source
+comment 067e If 1ST player, skip 2ND setup
+comment 0680 Set 2ND score destination and source
+comment 0689 Set 1ST string destination and source
+comment 0693 If 1ST player, skip 2ND setup
+comment 0695 Set 2ND string destination and source
+commentline 06a2 Reset counter and jump to display active player number
+commentline 06a9 If countdown timer is 4 and we should flash, replace active player number with spaces
 
 ; Print messages from two different message queue?
 commentline 06ca Count @C466 and data starting @C4D8. @C4D6 is next entry for Q
@@ -1024,6 +1056,11 @@ commentline 06f5 Count @C467 and data starting @C4BE. @C4BC is next entry for Q
 commentline 06f5 Each entry is 2 bytes destination & 2 bytes source
 
 comment 072e Skip leading zeroes in the score
+
+commentline 0730 Output a digit character
+commentline 0739 Output a space character (0x20 or 32)
+commentline 0740 Finish output of digit
+commentline 0743 Advance pointers, and check/set flag to make sure last digit is output!
 
 commentline 074f Color cycling is enabled for all games, but not during game selection
 commentline 074f It is only used by Grid bugs (arrows and circle) and
@@ -1058,7 +1095,22 @@ ascii 0b87-0b9a
 ascii 0b9b-0bae
 ascii 0baf-0bc2
 
+commentline 0bd9 Enough credits to play a game, so throw text to that effect on the screen
+comment 0c1c Double space next line of text into the Q
+comment 0c30 Double space next line of text into the Q
+commentline 0c5e Add "OR DEPOSIT MORE COINS FOR 2 PLAYERS" to the message Q
+comment 0c5e Double space next line of text into the Q
+commentline 0c78 Add "OR PUSH 2 PLAYERS" to the message Q
+commentline 0c8e 1 player start pressed
+commentline 0ca2 2 player start pressed
+comment 0cf8 Move up 2 lines and right 3 characters
+
+comment 0d22 Set output down 6 rows and 7 columns to the right
+
+comment 0d2e Enable flashing of 1ST or 2ND
+
 commentline 0d52 I/O byte 00, bit 4? (isn't it 7?) is trigger. 0 when trigger is pulled, 1 otherwise
+commentline 0d57 Service switch is on!
 
 commentline 0d7c Draw MCP cone tip to sprites 25-37 (0x19-0x25)
 commentline 0d9f Draw MCP blocks to sprites 1-24 (0x01-0x18)
@@ -1077,7 +1129,7 @@ commentline 0e55 to set the A0 line high which sets bit 8 in the color WORD RAM.
 commentline 0e55 See Bally/Midway's MCR II System manual top-right corner of page MCR-6
 commentline 0e55 for more information.  Color table is doubled so wraparound does not
 commentline 0e55 need to be calculated or handled.
-commentline 0e55 Red, Blue, Green, Yellow, Magenta, Cyan (and repeat)
+commentline 0e55 Red, Blue, Green, Yellow (RG), Magenta (RB), Cyan (GB) (and repeat)
 data 0e55,12,2
 ;data 0e55-0e6c
 
@@ -1097,8 +1149,15 @@ ascii 1028-102c
 ascii 102d-1035
 ascii 1036-103b
 ascii 103c-103f
-ascii 10ed-10f4
-ascii 10f5-10fa
+
+commentline 1091 Output a space character (0x20 or 32)
+commentline 10e7 Output a space character (0x20 or 32)
+
+data 10ed
+;data 10ed-10ed
+ascii 10ee-10f4
+data 10f5
+ascii 10f6-10fa
 ascii 120c-1216
 ascii 1217-1221
 ascii 1222-1230
@@ -1120,6 +1179,9 @@ data 1412-14ff
 comment 1521 Loop attract mode instructions
 data 1527,7,2
 ;data 1527-1534
+
+commentline 15a3 Output a space character (0x20 or 32)
+commentline 15aa Output a non-space character
 
 commentline 15c3 print out high scores
 
@@ -1292,6 +1354,7 @@ data 1e11-1eff
 
 commentline 1fbc if user level > 0, skip game instructions
 commentline 1fc2 pick GS instructions to print
+comment 1ff2 Enable flashing of 1ST or 2ND
 
 commentline 205c Finished level so set up for the next level (to 2097)
 commentline 2070 Increment user level (C422)
@@ -1326,7 +1389,13 @@ data 210a-210f
 comment 2110 Difficulty 9
 data 2110-2114
 
+comment 2115 Copy game vectors into RAM
 comment 211e Copy HL to DE for count of BC
+comment 2120 Randomize the game positions and put them into the resultant 4x vector @ C426
+comment 2126 Randomly pick which vector from C004 will go next into the vectors staring @ C426
+commentline 2135 Move a vector from C004+A to IX (C426ish)
+comment 2149 Move IX to next vector
+comment 214d Fill the hole by moving down the remaining vectors, if necessary (if last was picked, no work needed)
 
 commentline 2162 show games on game selection screen
 
@@ -1392,6 +1461,8 @@ data 2c48-2c4c
 ascii 2c4d-2c66
 ascii 2c67-2c7d
 
+comment 2c89 Enable flashing of 1ST or 2ND
+
 data 2cee,2,4
 comment 2cf6 Mark end of vector
 data 2cf6-2cf7
@@ -1401,6 +1472,7 @@ data 2cf6-2cf7
 ascii 2cf8-2d04
 ascii 2d05-2d11
 
+comment 2d22 Enable flashing of 1ST or 2ND
 commentline 2d33 MCP info: C001 gets number of rows (3,4,or 5 based on hardness 0,1-10,11+)
 commentline 2d33 Each row has C0E6 number of blocks
 commentline 2d33 Register c contains 1C, 1E, or 1F (why? visibility of blocks?)
@@ -1419,6 +1491,7 @@ commentline 2e21 MCP: Tron has gone too far right. Set him to E7 x
 
 commentline 2f5f Derez Tron: Set torso and legs to derez sprite. Set C00F, C00E, and C02D
 commentline 2f5f Move arms and another sprite offscreen put #$30 on audio stack
+comment 2f79 Disable flashing of 1ST or 2ND
 commentline 2faa Flip X on Tron derez sprites
 
 commentline 2fd9 Set initial position and arm rotation of Tron sprites
@@ -1479,7 +1552,10 @@ data 3966,10,4
 commentline 398e Data used where for what?
 data 398e-39ff
 
+comment 3a28 Enable flashing of 1ST or 2ND
 commentline 3a2b Set up disks (up to 4) in sprites 3-6 (F00C-F01B)
+
+commentline 3a5f Set up wall hit sprites for the disks (up to 4) in sprites 7-A (F01C-F02B)?
 
 commentline 3a79 If hardness above 0x0B (11), subtract 5 from hardness until hardness for
 commentline 3a79 this game is =< 0x0B. Increment C for each subtraction. Cap C at 4.
@@ -1491,6 +1567,9 @@ commentline 3b76 Setup of enemy tank bullets
 commentline 3b76 Sprite is explosion and X=0 and Y=4?
 
 commentline 3ba3 Set up Tron tank (the playa'!)
+
+comment 3cf4 Enable flashing of 1ST or 2ND
+
 ascii 3d35-3d40
 ascii 3d41-3d4c
 data 3d4d,11,8
@@ -1582,8 +1661,11 @@ commentline 455a vector at IX+$18 and add 4 times the remaining hit count (IX+$1
 commentline 456d Tanks: C011 is the start of RAM data for disks thrown, size 0x10
 commentline 456d The code starts at C001 and pre-adds a size (DE) before processing starts
 commentline 456d 0-7: X word, Y word, X delta word, Y delta word, (8 bytes)
-commentline 456d 8-F: ?, ?, ?, pointer to sprite for this disk, ?, ?, ?
+commentline 456d 8-F: Disk life (frames counter)?, ?, ?, pointer to sprite for this disk, ?,
+commentline 456d Wall hit (frames counter), wall hit sprite number
 
+comment 4580 Decrement wall hit frames counter
+commentline 4585 Terminate wall hit.  Hide sprite and update disk.
 commentline 45a1 Add deltas to X & Y (word based with carry)
 
 data 45ed-45fe
@@ -1644,6 +1726,8 @@ commentline 4b90 offset 3: vector to the sprite used for this bullet
 commentline 4b90 offset 5: X delta, Y delta
 commentline 4b90 offset 7: ? initialized to 0
 commentline 4b90 offset 8: ? initialized to 0
+
+comment 4c1e Disable flashing of 1ST or 2ND
 
 commentline 4c2c List of X coordinates to compare once Y has been selected (table at 4cff)
 data 4c2c-4c2c
@@ -1715,12 +1799,15 @@ commentline 5000 Down  EF    ED
 commentline 5000 Left  F0    EE
 commentline 5000 Right 30    2E
 
+comment 5019 Enable flashing of 1ST or 2ND
 comment 502c LC enemy down (EF)
 
 comment 50bd LC user down (ED)
 comment 50c7 LC user up (2D)
 comment 50d3 LC user right (2E)
 comment 50db LC user left (EE)
+
+comment 5119 Enable flashing of 1ST or 2ND
 comment 5128 LC user up (2D)
 
 commentline 5151 5x4: 4 = destination vector and source vector
@@ -1743,6 +1830,8 @@ comment 53bc LC user up (2D)
 comment 5451 LC user up (2D)
 comment 5458 LC user down (ED)
 comment 545f LC user left (EE)
+
+comment 54c7 Disable flashing of 1ST or 2ND
 
 data 554c-5550
 
@@ -1804,8 +1893,11 @@ data 5c1b,19,6
 commentline 5c8d Data used where for what?
 data 5c8d-5cff
 
+comment 5d0a Enable flashing of 1ST or 2ND
+
 commentline 5d84 Pause for almost one second (2D frames)?
 
+comment 5e3b Enable flashing of 1ST or 2ND
 comment 5e6d If zero, no more strings to add to Q
 data 5e7e,3,4
 comment 5e8a Mark end of IO Tower instructions strings
@@ -1875,6 +1967,7 @@ commentline 618a Multiply A times 19 (HL squared to itself 2x + DE added 3x)
 
 commentline 619f Derez Tron: Set torso and legs to derez sprite. Set C008 and C02D
 commentline 619f Move arms and another sprite offscreen put #$30 on audio stack
+comment 61b9 Disable flashing of 1ST or 2ND
 commentline 61ee Flip X on Tron derez sprites
 
 comment 6279 Copy HL to DE for count of BC
@@ -2051,6 +2144,8 @@ commentline 6f85 Check for bonus life
 commentline 6f9d Process bonus life
 
 commentline 6fc7 Clear background screen (set graphic to 51 and attributes to 5E)
+commentline 6fe2 Output a space character (0x20 or 32)
+commentline 6fee FDD0 is down 8 lines and 6 characters to the right
 commentline 6fff Add a message to the output queue (max of 6) DE is source and BC is destination
 commentline 6fff if Q is full, call RESET_WATCHDOG_UNTIL_C400_IS_ONE
 
@@ -2223,8 +2318,8 @@ comment a053 Reset carry
 
 data a071-a076
 
-commentline a076 B = number of digits to display?
-commentline a076 If E == 0, 6 digits.  Otherwise 3 digits?
+commentline a077 B = number of digits to display?
+commentline a077 If E == 0, 6 digits.  Otherwise 3 digits?
 
 commentline a08e Replace leading zeroes with spaces unless it's the last zero!
 comment a09b Output space
@@ -2400,7 +2495,9 @@ commentline ab7d Loop 0x1000 (4096) times resetting watchdog
 
 data aba9-abb0
 
-commentline abb1 Clear background (identical to code at 6fdc!)
+commentline abb1 Clear background (identical to code at 6fdc!
+commentline abb1 It appears to not be used.  No calls or jumps to it)
+commentline abb7 Output a space character (0x20 or 32)
 
 commentline abc3 Test RAM at C000, C200, C400, C600 (0x0200 each),F800,FC00 (0x0400 each)
 commentline abc3 RAM C000-C3FF will be clobbered
@@ -2450,7 +2547,7 @@ data ad3b-ad3b
 
 comment ad3c Vectors to display ROM_ERROR_S: Source, Destination
 data ad3c-ad3f
-comment ad40 Vectors to display ROM(s) with an error: Destination, Source(s)
+comment ad40 Vectors to display ROM(s) with an error - Destination, Source(s)
 data ad40-ad4d
 
 ascii ad4e-ad57
@@ -2462,8 +2559,8 @@ ascii ad68-ad6b
 ascii ad6c-ad6f
 
 comment ad73 Check for a space character
-comment ad77 Handle a space character
-comment ad7e Handle a non-space character
+comment ad77 Output a space character
+comment ad7e Output a non-space character
 comment ad85 Move right one character
 
 comment add3 Output 00 then FF then 55 then AA to audio latches at 1F 1E 1D 1C
