@@ -1,0 +1,57 @@
+# In *nix (or WSL with *nix), type:
+cd /mnt/c/Users/PCAdmin.SIERRA/Desktop/Franklin/ArcadeVideoGameHacking.git/Tron
+cat tron.asm | grep '\$C[4-7][0-9,A-F][0-9,A-F]*' | cut -c28- | grep -v '^SP' | sed 's/.*\(C[4-7][[:alnum:]][[:alnum:]]\).*/\1/' | sort | uniq -c | sort -nr > c400-c7ff.txt
+
+     12 C476
+     10 C407
+      8 C46E
+      8 C415
+      8 C414
+      6 C418
+      5 C4BC
+      5 C45A
+      5 C458
+      4 C7FF
+      4 C490
+      4 C46F
+      4 C463
+      4 C456
+      4 C451
+      4 C400
+      3 C684
+      3 C682
+      3 C52A
+      3 C528
+      3 C525
+      3 C47F
+      3 C47D
+      3 C472
+      3 C471
+      3 C470
+      3 C462
+      3 C454
+      3 C452
+      2 C680
+      2 C503
+      2 C502
+      2 C47E
+      2 C479
+      2 C478
+      2 C477
+      2 C46D
+      2 C46A
+      2 C464
+      2 C42F
+      2 C413
+      1 C655
+      1 C52B
+      1 C529
+      1 C527
+      1 C526
+      1 C524
+      1 C523
+      1 C51F
+      1 C506
+      1 C4FE
+      1 C475
+      1 C468
