@@ -157,13 +157,17 @@ label 1022 ENTER_S
 label 1028 YOUR_S
 label 102d INITIALS_S
 label 1036 ERASE_S
+label 1040 PROCESS_JOYSTICK_INPUT_FOR_ENTER_INITIALS_FOR_A_HIGH_SCORE
 label 103c END_S
-label 10ee ERASE2_S
-label 10f6 END2_S
+label 10ed ERASE_WITH_LEADING_SPACE_S
+label 10ee ERASE_WITHOUT_LEADING_SPACE_S
+label 10f5 END_WITH_LEADING_SPACE_S
+label 10f6 END_WITHOUT_LEADING_SPACE_S
 label 120c YOUR_SCORE_S
 label 1217 RANKING_IS_S
 label 1222 NOT_IN_THE_TOP_S
 label 1231 100_SCORES_S
+label 123c PROCESS_BUTTON_PRESSES_FIRE_1P_2P_FOR_ENTER_INITIALS
 label 132d DATA_TIMES_TO_COMPARE_FOR_THE_TIME_REPORT
 label 13f7 DATA_SCORES_TO_COMPARE_FOR_THE_SCORE_REPORT
 label 1500 PICK_WHICH_INSTRUCTIONS_TO_PRINT
@@ -693,7 +697,7 @@ label b17e USER_S
 ;
 ; c000 LC_TO_C1DF_IS_TRAILS_4_FOR_TRON_1-3_FOR_ENEMY
 ; c000 MCP 00-03 legs open, 04-04 legs closed
-label c000 CPU_RAM_GS_DISK_X_TANK_X_MCP_TRON_LEGS_LC_TRAILS_TO_C1DF
+label c000 CPU_RAM_GS_DISK_X_TANK_X_MCP_TRON_LEGS_LC_TRAILS_TO_C1DF_OR_SCORE_RANKING
 label c001 TANK_SPRITE_OR_MCP_ROWS_OF_BLOCKS_OR_BIT_Y
 label c002 TANK_Y_OR_GS_DISK_Y_OR_SOLAR_SAILER_X_Y
 label c003 SOLAR_SAILER_Y_SERVICE_MENU_ROW
@@ -799,7 +803,7 @@ label c410 MCP_BLOCKS_COLORS_STARTPOINT_VECTOR_INTO_0E55
 label c406 MCP_DISK_NUMBER_BEING_PROCESSED
 label c408 DO_NOT_FLASH_1ST_OR_2ND_PLAYER_IF_ZERO
 label c409 MCP_SPRITE_BLOCK_HIT_BY_DISK
-label c40b MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK
+label c40b MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK_OR_NEW_HIGH_SCORE_LOCATION
 label c40d Q_VECTOR_WHERE_TO_PLACE_NEXT_MESSAGE
 label c412 COUNTDOWN_TIMER_TO_FLASH_ACTIVE_PLAYER_NUMBER
 label c416 CREDITS_TO_START_A_GAME_ASCII_STRING_VERSION_NULL_TERMINATED
@@ -1138,6 +1142,9 @@ comment 0eac Copy HL to DE for count of BC
 commentline 0ebe Data used where for what?
 data 0ebe-0eff
 
+comment 0f1a Compare player's score against high score
+commentline 0f2b Copy player's score into high score location
+
 data 1001,6,4
 comment 1019 Mark end of vector
 data 1019-101a
@@ -1150,18 +1157,26 @@ ascii 102d-1035
 ascii 1036-103b
 ascii 103c-103f
 
+comment 104a Player 2 so shift joystick input bits
+comment 1053 Discard left/right input
+comment 105d Joystick up
+comment 105f At top of choices already so ignore input
+comment 1064 Joystick down
+comment 1067 At bottom of choices already so ignore input
+comment 10
+ 
 commentline 1091 Output a space character (0x20 or 32)
 commentline 10e7 Output a space character (0x20 or 32)
 
-data 10ed
-;data 10ed-10ed
-ascii 10ee-10f4
-data 10f5
-ascii 10f6-10fa
+ascii 10ed-10f4
+ascii 10f5-10fa
 ascii 120c-1216
 ascii 1217-1221
 ascii 1222-1230
 ascii 1231-123b
+
+commentline 1265 Erase last high score character
+commentline 127c End high score input
 
 ;data 132d-133e
 commentline 132d Times for Time Report.  These are words that are minutes and seconds
@@ -1701,7 +1716,8 @@ data 47c2-47c6
 ; commentline 47e2 Position the tank pointed to by IX
 
 ; commentline DATA_TO_49C7_USED_AT_49C8
-data 4884-49c7
+;data 4884-49c7
+data 4884,36,9
 
 commentline 49d4 Attract mode input processing ...
 commentline 49db User and attract mode processing continues here ...

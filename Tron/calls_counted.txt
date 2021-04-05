@@ -132,8 +132,10 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS
       1 READ_AND_PROCESS_INPUT_PORTS
       1 PSEUDO_RANDOM_VALUE_IN_A_AND_C47A;Randomly pick which vector from C004 will go next into the vectors staring @ C426
+      1 PROCESS_JOYSTICK_INPUT_FOR_ENTER_INITIALS_FOR_A_HIGH_SCORE
       1 PROCESS_DISK_THROW?
       1 PROCESS_COLOR_CYCLING
+      1 PROCESS_BUTTON_PRESSES_FIRE_1P_2P_FOR_ENTER_INITIALS
       1 PRINT_OUT_STICKMEN_OF_LIVES_REMAINING
       1 PRINT_OUT_MESSAGES_IN_QUEUES
       1 PICK_WHICH_INSTRUCTIONS_TO_PRINT
@@ -221,11 +223,9 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $204F
       1 $1545
       1 $133F
-      1 $123C
       1 $1165
       1 $10FB
       1 $106C
-      1 $1040
       1 $0F00
       1 $0E6D
       1 $0C84
