@@ -74,6 +74,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       2 TANK_CHECK_FOR_COLLISION_BETWEEN_ENEMY_TANKS_AND_USER
       2 TANKS_CHECK_FOR_HIT_ON_USER
       2 TANKS_CHECK_FOR_HIT_ON_ENEMY
+      2 SWITCH_BETWEEN_PLAYER_1_AND_2
       2 NC,TANK_INITIALIZE_BULLET
       2 MCP_DISK_END_FLIGHT
       2 LC_MATH_SPRITE_X_AND_Y_TO_BACKGROUND_RAM_LOCATION?
@@ -103,7 +104,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       2 $5475
       2 $44BD
       2 $447E
-      2 $0AA0
       2 $051B
       1 _OFF_SCREEN_AND_CALL_UPDATE_SPRITE:
       1 _OFF_SCREEN_AND_CALL_UPDATE_SPRITE EQU $4bfd
@@ -160,6 +160,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 GET_SPINNER_INPUT
       1 GET_CREDIT_FROM_RIGHT_COIN
       1 GET_CREDIT_FROM_LEFT_COIN
+      1 GAME_OVER_PROCESS_BUY_IN
       1 DRAW_SPRITES_FOR_GAME_SELECTION_SCREEN
       1 DRAW_GAME_SELECT_SCREEN?
       1 DRAW_ATTRACT_MCP_CONE
@@ -231,7 +232,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr > calls_counted
       1 $0C84
       1 $0C00
       1 $0BC3
-      1 $09E4
       1 $08A0
       1 $07B0
       1 $03D9

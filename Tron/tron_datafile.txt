@@ -82,6 +82,51 @@
 ; 								
 ; Note: all bits are 1 (on) and flip to 0 (off or zero) when the control is activated (grounded)!								
 
+; -------------------------------------------------------------------------------
+; OPTION SWITCH SETTINGS
+; -------------------------------------------------------------------------------
+; -------------------------------------------------------------------------------
+; /////////// SWITCH NO. 1 - AT B3 - LOCATED ON SOUND I/O P.C. BOARD ////////////
+; -------------------------------------------------------------------------------
+;                            | SW#1 SW#2 SW#3 SW#4 SW#5 SW#6 SW#7 SW#8 SW#9 SW#10
+;                            |---------------------------------------------------
+;     2 COIN METERS          |  ON             NOT  NOT  NOT  NOT  NOT  NOT  
+;     1 COIN METER           | OFF            USED USED USED USED USED USED
+; ---------------------------|---------------------------------------------------
+;     MINI / UPRIGHT         |       ON
+;     COCKTAIL TABLE         |      OFF
+; ---------------------------|---------------------------------------------------
+;     BUY IN ALLOWED         |            ON
+;     NO BUY IN              |           OFF
+; ---------------------------|---------------------------------------------------
+;     FREEZE VIDEO           |                                               ON
+;     NORMAL OPERATION       |                                              OFF
+; -------------------------------------------------------------------------------
+; -------------------------------------------------------------------------------
+; /////////// SWITCH NO. 3 - AT D14 - LOCATED ON SOUND I/O P.C. BOARD ///////////
+; -------------------------------------------------------------------------------
+; -------------------------------------------------------------------------------
+;                              | SW#1 **SW#2 **SW#3 **SW#4
+;                              |---------------------------
+;        NORMAL OPERATION      | OFF
+;   SOUND I/O DIAGNOSTIC MODE  |  ON
+; -----------------------------|-------------------------------------------------
+;       NORMAL OPERATION       |        OFF
+;         RAM/ROM TEST         |         ON
+;  INDICATES TEST RESULTS VIA  |
+;  YELLOW  L E D  ON SOUND I/O |
+;  BOARD: FAST FLASH = BAD ROM |
+;         SLOW FLASH = BAD RAM |
+; -----------------------------|-------------------------------------------------
+;       NORMAL OPERATION       |               OFF
+;       OSCILLATOR TEST        |                ON
+; -----------------------------|-------------------------------------------------
+;       NORMAL OPERATION       |                      OFF
+;         FILTER TEST          |                       ON
+; -------------------------------------------------------------------------------
+; 
+; ** NO EFFECT IF SW#1 OR SWITCH NO. 3 IS IN THE "OFF" POSITION.
+
 IO_LABEL 00 IO_0
 IO_LABEL 01 IO_1
 IO_LABEL 02 IO_2
@@ -133,6 +178,8 @@ label 0792 OUTPUT_IO_TOWER_TIMER?/TELETYPE_PRINTING_TO_THE_SCREEN_UNTIL_NULL_BYT
 label 0825 UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE
 label 0900 ATTRACT_MODE_LOOP
 label 0946 DRAW_CREDITS_SCREEN
+label 09e4 GAME_OVER_PROCESS_BUY_IN
+label 0aa0 SWITCH_BETWEEN_PLAYER_1_AND_2
 label 0b54 COPYRIGHT_AND_SPACE_1_S
 label 0b83 COPYRIGHT_AND_SPACE_2_S
 label 0d7c DRAW_ATTRACT_MCP_CONE
@@ -806,11 +853,12 @@ label c409 MCP_SPRITE_BLOCK_HIT_BY_DISK
 label c40b MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK_OR_NEW_HIGH_SCORE_LOCATION
 label c40d Q_VECTOR_WHERE_TO_PLACE_NEXT_MESSAGE
 label c412 COUNTDOWN_TIMER_TO_FLASH_ACTIVE_PLAYER_NUMBER
-label c416 CREDITS_TO_START_A_GAME_ASCII_STRING_VERSION_NULL_TERMINATED
-label c417 NULL_TERMINATOR_FOR_CREDITS_TO_START_A_GAME_ASCII_STRING_VERSION
+label c416 CREDITS_TO_START_A_GAME_NULL_TERMINATED_ASCII_1_OF_3_S
+label c417 CREDITS_TO_START_A_GAME_NULL_TERMINATED_ASCII_2_OF_3_S
+label c418 CREDITS_TO_START_A_GAME_NULL_TERMINATED_ASCII_3_OF_3_S
 ; c419-c42f current player data
 ; c430-c445 other player data
-label c419 HARDNESS_(OR_USER_LEVEL/CURRENT_PLAYER_DATA?)
+label c419 HARDNESS_AND_USER_LEVEL_OR_CURRENT_PLAYER_DATA
 label c41a PLAYING_HOW_LONG_NOW_TO_C41C
 label c41b CURRENT_PLAYER_DATA_BYTE_02
 label c41c CURRENT_PLAYER_DATA_BYTE_03
@@ -827,8 +875,7 @@ label c424 DIRECTION_CHOSEN_8D4U2R1L
 label c425 ATTEMPTED_GAMES_XXXXDURL
 label c426 VECTOR_OF_GAMES_TO_C42D
 label c42e NUMBER_OF_ROUNDS_WHEN_WRAPS_AROUND_DISKS_MAY_GO_TO_1???
-;label c42f OTHER_PLAYER_DATA
-label c430 OTHER_PLAYER_DATA
+label c42f OTHER_PLAYER_DATA
 label c435 P2_LIVES_REMAINING 
 label c445 PLAYER_1_SCORE
 label c44a PLAYER_1_SCORE_LAST_DIGIT
@@ -847,11 +894,15 @@ label c467 NUMBER_OF_SCREEN_MESSAGES_2_FROM_C4BE
 label c469 ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED1!
 label c46b ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED2!
 label c46c AUDIO_STACK_COUNT_OF_BYTES_ON_STACK
+label c46f LEFT_1_COIN_INPUT?
+label c470 RIGHT_2_COIN_INPUT?
 label c473 LEFT_COIN
 label c474 RIGHT_COIN
 label c47a PSEUDO_RANDOM_VALUE_LAST_GENERATED
 label c47b IN_ATTRACT_MODE?
 label c47c NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2
+label c47e MCP_CONE_COLOR_COUNTER_FOR_6_COLORS
+label c47f MCP_CONE_COLOR_COUNTER_FOR_?
 label c480 AUDIO_STACK_SP_GROWS_UP
 label c482 AUDIO_STACK_BEGINNING_OF_STACK
 label c48e ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED3!
@@ -872,6 +923,9 @@ label c4fd BONUS_PLAYER_AT_XX000_DIGITS
 label c501 CREDITS
 label c504 HIGH_SCORES_INITIALS_AND_LEVEL
 label c522 HIGH_SCORES_DIGITS?_GETS_CHECKED_AT_046C
+label c525 CREDITS_TO_START_A_GAME_NULL_TERMINATED_ASCII_2nd_1_OF_3_S
+label c526 CREDITS_TO_START_A_GAME_NULL_TERMINATED_ASCII_2nd_2_OF_3_S
+label c527 CREDITS_TO_START_A_GAME_NULL_TERMINATED_ASCII_2nd_3_OF_3_S
 label c52c HIGH_SCORES_DIGITS_3BYTES_BCD
 label c658 SCORE_REPORT_DATA_0_TO_100K_WORDSX10
 label c66c TIME_REPORT_DATA_?
@@ -986,6 +1040,10 @@ comment 028d Player 1 spinner input
 comment 0292 Player 2 spinner input
 
 commentline 02d9 Turret/arm rotation overflow (0x24) so set to 0
+
+;comment 035d 
+comment 0383 1 coin meter (DIP switch #1)
+
 commentline 0401 Copy null-terminated string in DE to HL
 commentline 040b Output a space character (0x20 or 32)
 comment 040b Wasted instruction since next stores #$5E instead of A
@@ -1084,10 +1142,14 @@ commentline 07cc FF byte has some special processing, for (c) only
 commentline 07cc Put next character (91) instead of ASCII character and 51
 commentline 07e7 00 byte falls here
 
-comment 0acf Toggle the flip screen bit?  If so, this code section switches between players 1 & 2
 commentline 0834 Is this data? Are the bounds right? Where is this used?
 data 0834-08ff
 
+comment 09e8 Buy In not allowed (dip switch #3)
+comment 09ee If User Level is > 4, buy in is not allowed! (who knew!  I could not find it in the manual)
+comment 0acf Toggle the flip screen bit?  If so, this code section switches between players 1 & 2
+
+comment 0b37 Display Tron Copyright screen for FF iterations (if frames, 8.5 seconds?)
 data 0b54-0b57
 
 ascii 0b58-0b6a
@@ -1163,8 +1225,8 @@ comment 105d Joystick up
 comment 105f At top of choices already so ignore input
 comment 1064 Joystick down
 comment 1067 At bottom of choices already so ignore input
-comment 10
- 
+;comment 10
+
 commentline 1091 Output a space character (0x20 or 32)
 commentline 10e7 Output a space character (0x20 or 32)
 
