@@ -174,7 +174,7 @@ label 06f5 PRINT_OUT_MESSAGES_IN_QUEUE_2
 label 0720 PRINT_SCORE
 label 074f PROCESS_COLOR_CYCLING
 label 0786 COLORS_FOR_CYCLING_COLORS
-label 0792 OUTPUT_IO_TOWER_TIMER?/TELETYPE_PRINTING_TO_THE_SCREEN_UNTIL_NULL_BYTE?
+label 0792 STRING_OUTPUT_UNTIL_NULL_BYTE?
 label 0825 UPDATE_GAME_SELECT_COUNTDOWN_TIMER_FROM_DE
 label 0900 ATTRACT_MODE_LOOP
 label 0946 DRAW_CREDITS_SCREEN
@@ -512,7 +512,7 @@ label 9080 LC_COLOR_PALETTE
 label 90c0 COLOR_PALETTE_FOR_GAME_SELECT_AND_MORE
 label 9100 BACKGROUND_TRAINING_FOR_LC
 label 9884 DATA_TO_?_USED_AT_6954
-label 9900 SERVICE_SWITCH_ON_ROUTINE?
+label 9900 SERVICE_SWITCH_ROUTINE
 label 998c GET_TRIGGER_INPUT_FOR_SERVICE_MENU
 label 9984 PUT_STRINGS_IN_MESSAGE_Q_FROM_VECTOR_AT_C000_UNTIL_00
 label 99a4 GET_IX_FROM_DATA_AT_C000_AND_PUT_STRINGS_IN_MESSAGE_Q_FROM_IX_UNTIL_00
@@ -769,6 +769,7 @@ label c026 IO_TRON_X_OR_MCP_DISK_3_DATA
 label c028 IO_TRON_Y
 label c029 JOYSTICK_INPUT_ARRAY_TO_C02C
 label c030 IO_TOWER_GRID_BUGS_OR_MCP_DISK_4_DATA
+label c031 TANK_ENEMIES_DATA_IS_ACTUALLY_AT_C051
 label c03a MCP_DATA_TO_C0D9?
 ; c051: beginning of enemy tank(s) data.  Each takes up 0x20 bytes
 ; c051: offsets 0-9? copied from data structures starting at 
@@ -855,7 +856,9 @@ label c409 MCP_SPRITE_BLOCK_HIT_BY_DISK
 label c40b MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK_OR_NEW_HIGH_SCORE_LOCATION
 label c40d Q_VECTOR_WHERE_TO_PLACE_NEXT_MESSAGE
 label c412 COUNTDOWN_TIMER_TO_FLASH_ACTIVE_PLAYER_NUMBER
+label c413 ENTER_INITIALS_HIGH_SCORE_BUTTON_DEBOUNCE?
 label c414 ENTER_INITIALS_HIGH_SCORE_ROW_SELECTED
+label c415 CREDITS_SOMETHING_COPY_OF_C501_OR_ZERO?
 label c416 CREDITS_TO_START_A_GAME_NULL_TERMINATED_ASCII_1_OF_3_S
 label c417 CREDITS_TO_START_A_GAME_NULL_TERMINATED_ASCII_2_OF_3_S
 label c418 CREDITS_TO_START_A_GAME_NULL_TERMINATED_ASCII_3_OF_3_S
@@ -884,10 +887,9 @@ label c445 PLAYER_1_SCORE
 label c44a PLAYER_1_SCORE_LAST_DIGIT
 label c44b PLAYER_2_SCORE
 label c450 PLAYER_2_SCORE_LAST_DIGIT
-label c451 IO_TOWER_TIMER_TO_OUTPUT_DO_IT_BOOLEAN
-label c452 IO_TOWER_TIMER_TO_OUTPUT_DESTINATION
-label c454 IO_TOWER_TIMER_TO_OUTPUT_SOURCE
-
+label c451 STRING_OUTPUT_DO_IT_IF_NON_ZERO
+label c452 STRING_OUTPUT_DESTINATION
+label c454 STRING_OUTPUT_SOURCE
 label c458 GS_VECTOR_FOR_NEXT_INSTRUCTION_OR_GAME_WORD
 label c45b GS_DIRECTION_DIFFERENT_PER_PLAYER_AND_GAME_ORDER_IN_GAMES_VECTOR?
 label c45c POINTER_INTO_COLORS_FOR_CYCLING_COLORS
@@ -896,10 +898,12 @@ label c45e DO_COLOR_CYCLING_IF_NON_ZERO
 label c45f PLAYER_NUMBER
 label c460 NUMBER_OF_PLAYERS
 label c461 WHICH_ATTRACT_MODE_INSTRUCTIONS_TO_DISPLAY_VECTOR_LIST_AT_1527
+label c464 AUDIO_DISCARD_AUDIO_STACK_BOOLEAN?
 label c465 USED_AT_05F8_TO_SKIP_OR_ALTER_PROCESSING_0_1_OR_2
 label c466 NUMBER_OF_SCREEN_MESSAGES_FROM_C4D6
-label c467 NUMBER_OF_SCREEN_MESSAGES_2_FROM_C4BE
+label c467 SCREEN_MESSAGE_QUEUE_2_MESSAGE_COUNT_FROM_C4BE
 label c469 ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED1!
+label c46a STRING_OUTPUT_CHARACTERS_COUNT
 label c46b ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED2!
 label c46c AUDIO_STACK_COUNT_OF_BYTES_ON_STACK
 label c46d AUDIO_TOGGLES_BIT_7_USED_AT_05B2
@@ -908,16 +912,23 @@ label c46f LEFT_1_COIN_INPUT?
 label c470 RIGHT_2_COIN_INPUT?
 label c473 LEFT_COIN
 label c474 RIGHT_COIN
+label c476 FLIP_SCREEN_AND_COIN_METERS?_STATE
+label c477 LEFT_COIN_SOMETHING?
+label c478 RIGHT_COIN_SOMETHING?
+label c479 what_is_this?
 label c47a PSEUDO_RANDOM_VALUE_LAST_GENERATED
 label c47b IN_ATTRACT_MODE?
 label c47c NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2
+label c47d NUMBER_OF_PLAYERS_REMAINING_USED_TO_DECIDE_WHETHER_TO_SWITCH_PLAYERS
 label c47e MCP_CONE_COLOR_COUNTER_FOR_6_COLORS
 label c47f MCP_CONE_COLOR_COUNTER_FOR_?
 label c480 AUDIO_STACK_SP_GROWS_UP
 label c482 AUDIO_STACK_BEGINNING_OF_STACK
 label c48e ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED3!
+label c490 TELETYPE_Q_BASE_LOCATION?
 label c4b8 SCREEN_DESTINATION?
-label c4ba SOURCE?
+label c4bc SCREEN_MESSAGE_QUEUE_2_NEXT_ENTRY_VECTOR
+label c4ba SCREEN_SOURCE?
 label c4be SCREEN_MESSAGE_QUEUE_2_TO_C4D5
 label c4d6 SCREEN_MESSAGE_QUEUE_TO_CD60?
 label C4d8 SCREEN_MESSAGE_QUEUE
@@ -1162,9 +1173,20 @@ commentline 07e7 00 byte falls here
 commentline 0834 Is this data? Are the bounds right? Where is this used?
 data 0834-08ff
 
+comment 0900 Ensure screen is not flipped for P2
+comment 0910 Check service switch
+
 comment 09e8 Buy In not allowed (dip switch #3)
 comment 09ee If User Level is > 4, buy in is not allowed! (who knew!  I could not find it in the manual)
-comment 0acf Toggle the flip screen bit?  If so, this code section switches between players 1 & 2
+
+comment 0aa0 Switch P1 and P2 data ($16/22 bytes)
+comment 0ab7 Check if this is a cocktail
+comment 0abb This is an upright/mini so skip the screen flip routine
+commentline 0abd Flip the screen
+comment 0ad0 Setup P1 up string
+comment 0ad3 Get the player number and reverse setting
+comment 0ada If P1 is up, skip P2 string setup
+comment 0adc P2 is actually up, so replace P1 up string with P2 up string
 
 comment 0b37 Display Tron Copyright screen for FF iterations (if frames, 8.5 seconds?)
 data 0b54-0b57
@@ -1591,7 +1613,7 @@ commentline 2e19 MCP: Tron has gone too far left. Set him to 21 x
 commentline 2e21 MCP: Tron has gone too far right. Set him to E7 x
 
 commentline 2f5f Derez Tron: Set torso and legs to derez sprite. Set C00F, C00E, and C02D
-commentline 2f5f Move arms and another sprite offscreen put #$30 on audio stack
+commentline 2f5f Move arms and disk thrown 0 (1-3 continue flight?) sprite offscreen put #$30 on audio stack
 comment 2f79 Disable flashing of 1ST or 2ND
 commentline 2faa Flip X on Tron derez sprites
 
@@ -1742,6 +1764,9 @@ data 41e9-41f3
 data 41f4-41fc
 data 41fd-4205
 data 4206-420c
+
+commentline 4225 Process 2nd hit on enemy tank
+comment 4234 Mirror Y of explosion sprite on tank to make it look like fire
 
 commentline 4274 Terminate enemy tank!
 commentline 4274 Initialize hit sprites, decrement enemy tanks and return if not zero
@@ -2068,7 +2093,7 @@ commentline 6186 If arm rotation not zero, reverse rotation for data lookup
 commentline 618a Multiply A times 19 (HL squared to itself 2x + DE added 3x)
 
 commentline 619f Derez Tron: Set torso and legs to derez sprite. Set C008 and C02D
-commentline 619f Move arms and another sprite offscreen put #$30 on audio stack
+commentline 619f Move arms and disk thrown 0 (1-3 continue flight?) sprite offscreen put #$30 on audio stack
 comment 61b9 Disable flashing of 1ST or 2ND
 commentline 61ee Flip X on Tron derez sprites
 
