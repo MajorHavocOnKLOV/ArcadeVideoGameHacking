@@ -4,8 +4,6 @@ cat tron.asm | grep '\$C[4-7][0-9,A-F][0-9,A-F]*' | cut -c28- | grep -v '^SP' | 
 
       4 C456
       4 C400
-      3 C52A
-      1 C52B
       1 C524
       1 C523
       1 C51F
