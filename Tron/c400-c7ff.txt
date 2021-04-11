@@ -1,4 +1,0 @@
-# In *nix (or WSL with *nix), type:
-cd /mnt/c/Users/PCAdmin.SIERRA/Desktop/Franklin/ArcadeVideoGameHacking.git/Tron
-cat tron.asm | grep '\$C[4-7][0-9,A-F][0-9,A-F]*' | cut -c28- | grep -v '^SP' | sed 's/.*\(C[4-7][[:alnum:]][[:alnum:]]\).*/\1/' | sort | uniq -c | sort -nr > c400-c7ff.txt
-
