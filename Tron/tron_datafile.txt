@@ -213,12 +213,14 @@ label 10ee ERASE_WITHOUT_LEADING_SPACE_S
 label 10f5 END_WITH_LEADING_SPACE_S
 label 10f6 END_WITHOUT_LEADING_SPACE_S
 label 10fb COPY_AND_COMPRESS_CURRENT_PLAYER_6_DIGIT_INTO_BCD_AT_C416
+label 111d PUT_INITIALS_AND_USER_LEVEL_INTO_LIST_OF_TOP_10
 label 120c YOUR_SCORE_S
 label 1217 RANKING_IS_S
 label 1222 NOT_IN_THE_TOP_S
 label 1231 100_SCORES_S
 label 123c PROCESS_BUTTON_PRESSES_FIRE_1P_2P_FOR_ENTER_INITIALS
 label 129e ADD_PLAYER_TIME_TO_BOOKKEEPING_INFO
+label 12f1 CHECK_PLAYING_TIME_FOR_LONGEST_OR_SHORTEST_GAME_PLAYED_FOR_BOOKKEEPING
 label 132d DATA_TIMES_TO_COMPARE_FOR_THE_TIME_REPORT
 label 133f ADD_PLAYER_SCORE_TO_BOOKKEEPING_INFO_AND_UPDATE_DAILY_HIGH_SCORE_IF_NEEDED
 label 13f7 DATA_SCORES_TO_COMPARE_FOR_THE_SCORE_REPORT
@@ -537,6 +539,7 @@ label 9ad5 8_GRID_DISPLAY_S
 label 9ae4 POSITION_CURSOR_BY_USING_S
 label 9afd JOYSTICK_UP_AND_DOWN_S
 label 9b12 HIT_FIRE_BUTTON_FOR_TEST_S
+label 9bd2 SERVICE_MENU_EXIT_CURRENT_LEVEL
 label 9c8e SELECT_A_SOUND_S
 label 9c9d 1__ALL_SOUNDS_S
 label 9cab 2__EXIT_S
@@ -577,9 +580,12 @@ label 9f94 BUY_IN_S
 label 9f9b TIME_REPORT_S
 label 9fa7 SCORE_REPORT_S
 label 9fb4 EXIT_S
+label 9fbf DISPLAY_BOOKKEEPING_DATA
 label a069 CONVERT_HL_TO_6_DIGIT_BCD_AT_IX
-label a077 DISPLAY_6_DIGIT_BCD_FROM_HL_TO_IX_LEADING_ZEROES_GOTO_SPACES
-label a079 DISPLAY_3_DIGIT_BCD_FROM_HL_TO_IX_LEADING_ZEROES_GOTO_SPACES?
+label a077 DISPLAY_BCD_FROM_HL_TO_IX_BC_ARE_INPUTS_AND_E_SET_TO_ZERO
+label a079 DISPLAY_BCD_FROM_HL_TO_IX_BCE_ARE_INPUTS
+label a0b7 DISPLAY_MINUTES_AND_SECONDS_FROM_HL_TO_IX
+label a0cd DRAW_TIME_REPORT
 label a120 DATA_VECTOR_OF_TIME_REPORT_STRING_DESTINATIONS_AND_SOURCES
 label a152 TIME_REPORT2_S
 label a15e 0_TO_30_SEC_S
@@ -763,7 +769,7 @@ label c00e INFINITE_TIME_CHEAT
 label c010 TANKS_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020
 label c012 MCP_DISK_1_DATA/IO_TOWER_TIMER_DIGITS_TO_C019
 label c01c MCP_DISK_2_DATA
-label c01d IO_TOWER_NUMBER_OF_GRID_BUGS
+label c01d IO_TOWER_NUMBER_OF_GRID_BUGS_OR_BOOKKEEPING_TEMPORARY_LOCATION_FOR_6_DIGIT_BCD_VALUES
 label c01f TRON_SPRITE_LEGS_APART_COUNTER_0_TO_7
 label c022 IO_TOWER_INCREMENTS_19_TO_1E_FOR_EACH_DISK_THROWN
 label c023 IO_TOWER_TRIGGER_DEBOUNCE?
@@ -846,6 +852,7 @@ label c224 LC_SETUP3?
 label c225 LC_SETUP4?
 label c226 LC_SETUP5?
 label c227 LC_SETUP6?
+label c400 KEEP_CODE_SPINNING_UNTIL_INTERRUPT_0_IS_FIRED
 label c401 SPINNER_LAST_ADDITION?
 label c402 COUNTDOWN_TIMER_SECONDS
 label c403 COUNTDOWN_TIMER_FRAMES
@@ -894,6 +901,7 @@ label c450 PLAYER_2_SCORE_LAST_DIGIT
 label c451 STRING_OUTPUT_DO_IT_IF_NON_ZERO
 label c452 STRING_OUTPUT_DESTINATION
 label c454 STRING_OUTPUT_SOURCE
+label c456 COUNTDOWN_TIMER_BEFORE_STARTING_CODE_AT_C458_WORD
 label c458 GS_VECTOR_FOR_NEXT_INSTRUCTION_OR_GAME_WORD
 label c45a UNUSED_CODE_SETS_AND_GETS_THE VALUE_BUT_NEVER_CHECKS_RESULTS?
 label c45b GS_DIRECTION_DIFFERENT_PER_PLAYER_AND_GAME_ORDER_IN_GAMES_VECTOR?
@@ -909,6 +917,7 @@ label c464 AUDIO_DISCARD_AUDIO_STACK_BOOLEAN?
 label c465 USED_AT_05F8_TO_SKIP_OR_ALTER_PROCESSING_0_1_OR_2
 label c466 NUMBER_OF_SCREEN_MESSAGES_FROM_C4D6
 label c467 SCREEN_MESSAGE_QUEUE_2_MESSAGE_COUNT_FROM_C4BE
+label c468 LAST_STATE_OF_P1_AND_P2_BUTTONS
 label c469 ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED1!
 label c46a STRING_OUTPUT_CHARACTERS_COUNT
 label c46b ONLY_GET_UPDATED_WHEN_INTERRUPTS_ARE_DISABLED2!
@@ -921,10 +930,11 @@ label c471 ACTIVATE_LEFT_1_COIN_METER_FOR_10_SIRS_ON_COIN_DROP?
 label c472 ACTIVATE_RIGHT_2_COIN_METER_FOR_10_SIRS_ON_COIN_DROP?
 label c473 LEFT_COIN
 label c474 RIGHT_COIN
+label c475 SERVICE_CREDIT_SWITCH
 label c476 FLIP_SCREEN_AND_COIN_METERS?_STATE
 label c477 LEFT_COIN_SOMETHING?
 label c478 RIGHT_COIN_SOMETHING?
-label c479 what_is_this?
+label c479 SERVICE_CREDIT_SWITCH_SHADOW?
 label c47a PSEUDO_RANDOM_VALUE_LAST_GENERATED
 label c47b IN_ATTRACT_MODE?
 label c47c NEXT_SLOT_IN_SCREEN_MESSAGE_QUEUE_2
@@ -949,26 +959,31 @@ label c4f4 LIVES_PER_PLAYER_OR_BASES
 label c4f5 CREDITS_TO_START_A_GAME
 label c4f6 DIFFICULTY_LEVEL
 label c4f7 HIGH_SCORES_DIGITS
-label c4fd BONUS_PLAYER_AT_XX000_DIGITS
-label c501 CURRENT_CREDITS?
+label c4fd BONUS_PLAYER_AT_XX000_DIGITS_1_OF_2
+label c4fe BONUS_PLAYER_AT_XX000_DIGITS_2_OF_2
+label c501 CURRENT_CREDITS
 label c502 LEFT_1_CREDITS_TRANSIENT_OR_DEBOUNCE?
 label c503 RIGHT_2_CREDITS_TRANSIENT_OR_DEBOUNCE?
 label c504 HIGH_SCORES_INITIALS_AND_LEVEL
-label c522 HIGH_SCORES_DIGITS?_GETS_CHECKED_AT_046C
+label c506 HIGHEST_SCORES_USER_LEVEL
+label c51f HIGH_SCORES_INITIALS_AND_LEVEL_UNDISPLAYED_11TH_SLOT
+label c522 HIGH_SCORE_1_OF_3
+label c523 HIGH_SCORE_2_OF_3
+label c524 HIGH_SCORE_3_OF_3
 label c525 CREDITS_TO_START_A_GAME_NULL_TERMINATED_ASCII_2nd_1_OF_3_S
 label c526 CREDITS_TO_START_A_GAME_NULL_TERMINATED_ASCII_2nd_2_OF_3_S
 label c527 CREDITS_TO_START_A_GAME_NULL_TERMINATED_ASCII_2nd_3_OF_3_S
 label c528 LONGEST_GAME_MINUTES
 label c529 LONGEST_GAME_SECONDS
-label c52A LONGEST_GAME_MINUTES_2
-label c52B LONGEST_GAME_SECONDS_2
+label c52A SHORTEST_GAME_MINUTES
+label c52B SHORTEST_GAME_SECONDS
 label c52c HIGH_SCORES_DIGITS_3BYTES_BCD
 label c655 HIGH_SCORE_TABLE_LAST_ENTRY
 label c658 SCORE_REPORT_DATA_0_TO_100K_WORDSX10
-label c66c TIME_REPORT_DATA_?
+label c66c TIME_REPORT_DATA_10_WORDS
 label c680 LEFT_1_COIN_COUNT
 label c682 RIGHT_2_COIN_COUNT
-label c684 GAMES_PLAYED_COUNT
+label c684 BUY_IN_COUNT
 label c687 FLIP_SCREEN_IF_VALUE_IS_01
 label c686 LIVES_PER_PLAYER_OR_BASES_FOR_THIS_GAME
 label c7ff RAM_TEST_SPECIAL_CHECK_LOCATION_IF_ZERO_DO_NOT_TEST?
@@ -1292,6 +1307,10 @@ commentline 10e7 Output a space character (0x20 or 32)
 ascii 10ed-10f4
 ascii 10f5-10fa
 
+commentline 1129 Move initials and user level for positions current players rank-10 down one level
+commentline 1143 Get initials from the screen background RAM and place in current players rank position
+commentline 115e Get users current level and put into rank position
+
 commentline 1195 Current player score is higher so move this score down a one place
 
 ascii 120c-1216
@@ -1310,7 +1329,9 @@ comment 1288 Print the selected character?
 commentline 1296 Final initial picked so move the cursor to End
 
 commentline 129e Add player data to the bookkeeping times
-commentline 12f1 If this game is longest played, save time to display in bookkeeping
+
+commentline 1303 Store playing time into longest game played
+commentline 1320 Store playing time into shortest game played
 
 ;data 132d-133e
 commentline 132d Times for Time Report.  These are words that are minutes and seconds
@@ -2472,17 +2493,34 @@ ascii 9f9b-9fa6
 ascii 9fa7-9fb3
 ascii 9fb4-9fb8
 
+data 9fb9-9fbe
+
+commentline 9fbf Display left 1 coin count
+commentline 9fd9 Display right 2 coin count
+commentline 9ff3 Display longest game minutes and seconds
+commentline 9ffd Display shortest game minutes and seconds
+commentline A007 Display highest score
+commentline A015 Display lowest score
+commentline A023 Display buy in count
+
+comment a03d Number of output BCD bytes
+comment a040 Zero out results area
 comment a053 Reset carry
 
-data a071-a076
+commentline BCD bytes broken down into : number of 10Ks, number of 1Ks, and number of 1s
+data a071,3,2
 
-commentline a077 B = number of digits to display?
-commentline a077 If E == 0, 6 digits.  Otherwise 3 digits?
+commentline a077 B = number of digits to display
+commentline a077 C = 0, replace leading zeroes with spaces
+commentline a077 E != 0, skip first BCD digit?
 
 commentline a08e Replace leading zeroes with spaces unless it's the last zero!
 comment a09b Output space
 comment a0a6 Output digit
 comment a0b1 Move a character to the right
+
+comment a0e3 Get time count into DE
+comment a0eb Switch time count into HL
 
 data a120,12,4
 data a150-a151
@@ -2780,8 +2818,9 @@ ascii b105-b113
 ascii b114-b11c
 ascii b11d-b125
 
-; B126-B182: Table of User levels. 12 x 2bytes of string location, and then the null-terminated strings.
-data b126-b13d
+commentline B126-B182: Table of User levels. 12 x 2bytes of string location, and then the null-terminated strings.
+data b126,12,2
+;data b126-b13d
 ascii b13e-b141
 ascii b142-b147
 ascii b148-b14d

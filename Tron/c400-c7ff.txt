@@ -2,12 +2,3 @@
 cd /mnt/c/Users/PCAdmin.SIERRA/Desktop/Franklin/ArcadeVideoGameHacking.git/Tron
 cat tron.asm | grep '\$C[4-7][0-9,A-F][0-9,A-F]*' | cut -c28- | grep -v '^SP' | sed 's/.*\(C[4-7][[:alnum:]][[:alnum:]]\).*/\1/' | sort | uniq -c | sort -nr > c400-c7ff.txt
 
-      4 C456
-      4 C400
-      1 C524
-      1 C523
-      1 C51F
-      1 C506
-      1 C4FE
-      1 C475
-      1 C468
