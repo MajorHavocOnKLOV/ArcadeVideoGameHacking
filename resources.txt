@@ -17,6 +17,10 @@ MCR:
 https://github.com/mamedev/mame/blob/master/src/mame/drivers/mcr.cpp
 https://arcarc.xmission.com/PDF_Arcade_Bally_Midway/Bally_Midways_MCR_II_&_III_Systems_(July_1983).pdf
 
+Tron:
+https://www.arcade-museum.com/dipswitch-settings/10204.html
+https://www.arcade-museum.com/manuals-videogames/T/Tron.pdf
+
 Other:
 https://github.com/MajorHavocOnKLOV/
 
