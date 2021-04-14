@@ -228,6 +228,7 @@ label 1500 PICK_WHICH_INSTRUCTIONS_TO_PRINT
 label 1527 VECTORS_TO_ATTRACT_MODE_INSTRUCTIONS
 label 1535 WAIT_6_SECONDS_CHECKING_FOR_CREDITS_ADDED
 label 1558 DISPLAY_RANKINGS_SCREEN
+label 161c DISPLAY_USER_LEVEL
 label 1653 RANKINGS_S
 label 165c DISPLAY_POINT_VALUES_SCREEN
 label 16ab POINT_VALUES_S
@@ -365,15 +366,15 @@ label 367a DATA_FOR_DISPLAYING_TRON_SPRITES_IDENTICAL_TO_6B79
 label 3926 MCP_COLOR_PALETTE_ALL_ZEROS
 label 3966 DATA_FOR_MCP_SETUP_TO_398D
 label 3a00 PLAY_TANKS
-label 3cdf TANKS_INSTRUCTIONS
+label 3cdf TANK_INSTRUCTIONS
 label 3d35 DESTROY_ALL_S
 label 3d41 ENEMY_TANKS_S
 label 3d4d TANK_JOYSTICK_INPUT_TABLE?
-label 3da5 TANKS_ATTRACT_MODE_INPUT
+label 3da5 TANK_ATTRACT_MODE_INPUT
 label 3db5 TANK_PROCESS_CONTROLS_INPUT
 label 3f3e TANK_CHECK_FOR_COLLISION_BETWEEN_ENEMY_TANKS_AND_USER
-label 4063 TANKS_DATA_FOR_x_STARTS_AT_4066
-label 40a5 TANKS_PUT_POINTERS_INTO_DATA_STRUCTURES_IN_HL_AND_BC_BASED_ON_ENEMY_TANKS_XY
+label 4063 TANK_DATA_FOR_x_STARTS_AT_4066
+label 40a5 TANK_PUT_POINTERS_INTO_DATA_STRUCTURES_IN_HL_AND_BC_BASED_ON_ENEMY_TANK_XY
 label 40d0 TANK_UPDATE_POSITION_AND_SPRITE_OF_TANK_FROM_C000_TO_C002
 label 40ea TANK_UPDATE_POSITION
 label 40fc TANK_WARP
@@ -385,36 +386,39 @@ label 4269 TANK_PROCESS_ENEMY_TANK_WITH_3_HITS
 label 42ca TANK_CHANGE_DIRECTION_TO_UP_OR_DOWN?
 label 4379 TANK_CONSIDER_CHANGING_DIRECTION_LEFT_OR_RIGHT?
 ; 4414 Find X & Y of this tank in a data structure?  For movement?
-label 4414 TANK_PROCESS_ENEMY_TANKS_ON_STARTUP_SOMEHOW?_USES_IX
+label 4414 TANK_TURN_LEFT(_OR_RIGHT?)
 label 4443 TANK_SHOULD_ENEMY_TURN
 label 4508 TANK_UPDATE_HIT_POSITION_ON_ENEMY_TANK_OFFSET_X
 label 4531 TANK_UPDATE_HIT_POSITION_ON_ENEMY_TANK_OFFSET_Y
 label 455a TANK_SET_HL_TO_THE_CORRECT_HIT_SPRITE
-label 456d TANKS_PROCESS_DISKS_THROWN?
+label 456d TANK_PROCESS_DISKS_THROWN?
 label 45ed DATA_USED_FOR_???_TO_45FE
 label 45ff TANK_PROCESS_DISKS_THROWN
 label 467c TANK_DISK_NEGATE_DELTA_Y
 label 46aa TANK_DISK_NEGATE_DELTA_X
 label 4653 TANK_PROCESS_DISK_HIT_WALL
 label 46cb TANK_SPRITE_UPDATE_POSITION_OF_DISK_HITTING_WALL
-label 46f5 TANKS_CHECK_FOR_HIT_ON_ENEMY
-;label 46fb TANKS_DATA_FOR_x_STARTS_AT_46FF
-label 472b TANKS_CHECK_FOR_HIT_ON_USER
-label 4752 TANKS_TERMINATE_DISK_THROWN_AT_IY
+label 46f5 TANK_CHECK_FOR_BULLET_HIT_ON_ENEMY
+;label 46fb TANK_DATA_FOR_x_STARTS_AT_46FF
+label 472b TANK_CHECK_FOR_BULLET_HIT_ON_USER
+label 4752 TANK_TERMINATE_DISK_THROWN_AT_IY
 label 4762 TANK_PROCESS_HIT_ON_ENEMY_TANK_AT_IX
 label 47b8 SCORE_TANK_HIT_3
 label 47bd SCORE_TANK_HIT_2
 label 47c2 SCORE_TANK_HIT_1
-label 47e2 TANK_POSITION_THE_ONE_AT_IX
+label 47e2 TANK_UPDATE_POSITION_OF_SPRITE_AT_HL_FROM_DATA_AT_IX
 label 47a7 COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?
-label 47c7 TANKS_UPDATE_DISK_THROWN_SPRITE_FROM_RAM_AT_IY
+label 47c7 TANK_UPDATE_DISK_THROWN_SPRITE_FROM_RAM_AT_IY
+label 47ff TANK_PROCESS_INPUT_AND_INITIALIZE_THROWN_DISK
 label 4884 DATA_TO_49C7_USED_AT_49C8
 label 49c8 TANK_TURRET_DRAW
+label 4a54 TANK_FIRE_ON_USER_IF_POSSIBLE
 label 4af9 COMPARE_HL_ASCENDING_UNTIL_B_IS_GREATER
 label 4aff TANK_INITIALIZE_BULLET
 label 4b70 TANK_BULLET_UPDATE_SPRITE_FROM_IY_RAM
 label 4b8d TANK_DATA_FOR?_USED_AT_4BBB
-label 4bfd TANK_TERMINATE_BULLET_SET_X_OFF_SCREEN_AND_CALL_UPDATE_SPRITE
+label 4b90 TANK_PROCESS_ENEMY_BULLETS
+label 4bfd TANK_TERMINATE_ENEMY_BULLET
 label 4c09 TANK_PROCESS_HIT_ON_USER_UPDATE_SPRITES_SET_VALUES_AND_PUT_AUDIO_ON_STACK
 label 4cfb TANK_DATA_FOR?_STARTS_AT_4CFF
 label 4d77 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE
@@ -762,11 +766,11 @@ label c003 SOLAR_SAILER_Y_SERVICE_MENU_ROW
 label c004 TANK_ENEMY_DESTROYED_OR_SOLAR_SAILER_STATUS_FLAG_TANK_HITBOX_X_OR_HIGH_SCORE_INITIALS_REMAINING_COUNT
 label c005 MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
 label c006 GRID_BUGS_NUMBER_OF_UNUSED_SLOTS_TANK_HITBOX_Y
-label c007 MCP_TRON_X_TANKS_DATA_VECTOR_x_1
+label c007 MCP_TRON_X_OR_TANKS_DATA_VECTOR_x_1
 label c009 MCP_TRON_Y_OR_TANKS_DATA_VECTOR_x_2_OR_GRID_BUGS_FRAMES_TO_DELAY_WHEN_BREEDING
 label c00d IO_TOWER_TIMER_VALUE_REVERSED_TO_C010
 label c00e INFINITE_TIME_CHEAT
-label c010 TANKS_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020
+label c010 TANK_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020
 label c012 MCP_DISK_1_DATA/IO_TOWER_TIMER_DIGITS_TO_C019
 label c01c MCP_DISK_2_DATA
 label c01d IO_TOWER_NUMBER_OF_GRID_BUGS_OR_BOOKKEEPING_TEMPORARY_LOCATION_FOR_6_DIGIT_BCD_VALUES
@@ -798,21 +802,21 @@ label c0e6 MCP_BLOCKS_PER_ROW
 label c0e7 MCP_Y_SPEED_LOWER_IS_SLOWER
 ;label c0e8 MCP_DATA_4
 label c0e9 MCP_DIRECTION_0_IS_RIGHT
-label c108 TANKS_ENEMY_BULLETS_IN_RAM_AT_C111
+label c108 TANK_ENEMY_BULLETS_IN_RAM_AT_C111
 ; c111: Enemy bullet(s) data. Each takes up 0x9 bytes
 ; offset 0: X, sprite, Y
 ; offset 3: vector to the sprite used for this bullet
 ; offset 5: X delta, Y delta
 ; offset 7: initialized to 0
 ; offset 8: initialized to 0
-label c14a TANKS_NUMBER_OF_ENEMIES
-label c14b TANKS_2ND_BYTE_FROM_TABLE_AT_4CFF_0_OR_1
-label c14d TANKS_JOYSTICK_INPUT
-label c14e TANKS_BYTE_COMPARED_TO_FIRST_BYTE_OF_ENTRIES_AT_3DA5
-label C155 TANKS_COUNTER_FROM_0_TO_90
-label c156 TANKS_VECTOR_TO_ATTRACT_MODE_INPUT?
-label c159 TANKS_NUMBER_OF_ENEMY_BULLETS?
-label c15b TANKS_SHOT_SPEED
+label c14a TANK_REMAINING_TANKS
+label c14b TANK_2ND_BYTE_FROM_TABLE_AT_4CFF_0_OR_1
+label c14d TANK_JOYSTICK_INPUT
+label c14e TANK_BYTE_COMPARED_TO_FIRST_BYTE_OF_ENTRIES_AT_3DA5
+label C155 TANK_COUNTER_FROM_0_TO_90
+label c156 TANK_VECTOR_TO_ATTRACT_MODE_INPUT?
+label c159 TANK_INITIAL_NUMBER_OF_TANKS
+label c15b TANK_SHOT_SPEED
 label c15f TANK_IF_HARDNESS>0X0B_SEE_COMMENT_AT_3A79
 label c1e0 LC_USER_TRAIL_POSITION_VECTOR
 label c1e2 LC_ENEMY_1_TRAIL_POSITION_VECTOR
@@ -861,7 +865,7 @@ label c405 TRON_ARM_OR_TANK_TURRET_ROTATION
 label c40f ATTRACT_MCP_ROTATE_COLORS_IF_NON_ZERO
 label c410 MCP_BLOCKS_COLORS_STARTPOINT_VECTOR_INTO_0E55
 label c406 MCP_DISK_NUMBER_BEING_PROCESSED
-label c407 FLAG_ENTER_INITIALS_DONE_OR_LC_TRON_DIED_OR_TANKS_ENEMY_3RD_HIT_OR_VALUE_4_NEXT_SLOT_SCREEN_MESSAGE_Q2
+label c407 FLAG_ENTER_INITIALS_DONE_OR_LC_TRON_DIED_OR_TANK_ENEMY_3RD_HIT_OR_VALUE_4_NEXT_SLOT_SCREEN_MESSAGE_Q2
 label c408 DO_NOT_FLASH_1ST_OR_2ND_PLAYER_IF_ZERO
 label c409 MCP_SPRITE_BLOCK_HIT_BY_DISK
 label c40b MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK_OR_NEW_HIGH_SCORE_LOCATION
@@ -1355,16 +1359,26 @@ comment 1521 Loop attract mode instructions
 data 1527,7,2
 ;data 1527-1534
 
+comment 1571 Finished outputting the top 10 scores with initials
+comment 1577 Handle the extra digit of 10
+comment 1579 Output rank number (1-9)
+comment 1579 Output rank number 10
+comment 15c6 Move high nybble into low nybble
+comment 15d2 If not leading zero, jump to output
+comment 15da Replace leading zero with a space
+comment 15ec Mask off low nybble
+
 commentline 15a3 Output a space character (0x20 or 32)
 commentline 15aa Output a non-space character
 
 commentline 15c3 print out high scores
 
-ascii 15e0-15e2
+;ascii 15e0-15e2
 
-ascii 1605-1607
+;ascii 1605-1607
 
-commentline 161c print out user level (programming language)
+commentline 161c Display user level (programming language)
+comment 162f Limit User Level to the highest to display (User!)
 
 ascii 1653-165b
 commentline 165c Display title
@@ -1374,7 +1388,7 @@ commentline 1693 Send string to Q
 ascii 16ab-16b7
 
 commentline 16b8 Tank, Grid Bug, Light Cycle, MCP block, Bit
-commentline 16b8 Y, X, sprite, [additional sprites], 0 (end marker), destination vector, source vector
+commentline 16b8 Y, X, sprite, [additional Y, X, sprites], 0 (end marker), text destination vector, text source vector
 data 16b8,3,8
 data 16d0,1,14
 data 16de,1,8
@@ -1755,7 +1769,7 @@ commentline 3dda User input processing ...
 
 comment 3f91 Invincibility TANK Game = 18 (JR *) (tank collision?)
 
-commentline 3f9a 21 data blocks used by tanks, variable size so zero terminated
+commentline 3f9a 21 data blocks used by tanks (Y positions to compare?), variable size so zero terminated
 data 3f9a-3f9a
 data 3f9b-3f9f
 data 3fa0-3fac
@@ -1779,7 +1793,7 @@ data 4062-4064
 data 4065-4065
 
 commentline 4066 This data structure is used at 40C9
-commentline 4066 21x3 bytes: ?, vector to other data
+commentline 4066 21x3 bytes: X?, vector to other data (Y positions to compare?)
 data 4066,21,3
 
 comment 40ed If tank's X position is not 81, skip warp
@@ -1822,15 +1836,29 @@ comment 4234 Mirror Y of explosion sprite on tank to make it look like fire
 
 commentline 4274 Terminate enemy tank!
 commentline 4274 Initialize hit sprites, decrement enemy tanks and return if not zero
-commentline 4274 
+comment 428c All tanks destroyed!
+comment 42c9 Return if tank is not at a crossroad/turn point 
+commentline 42d1 Moving left processing ...
+commentline 42f9 Moving right processing ...
+comment 4301 If carry, I am right of user's tank
+commentline 4380 Moving down processing ...
+comment 4388 If carry, I am below user's tank
+commentline 43a8 Moving up processing ...
 
+comment 4481 Compare Y positions
+comment 4487 Compare X positions
 
 commentline 4508 Update hit sprite based on position of tank
 commentline 4508 Flip Y and offset sprite by adding 3 times IX+$08 to X
+comment 450d No hits
+comment 450f 3 hits
 comment 4522 Mirror Y of explosion sprite on tank to make it look like fire
 
 commentline 4531 Update hit sprite based on position of tank
 commentline 4531 Flip Y and offset sprite by adding 3 times IX+$08 to Y
+comment 4536 No hits
+comment 4538 3 hits
+
 comment 4546 Mirror Y of explosion sprite on tank to make it look like fire
 
 commentline 455a Result in HL: get pointer to the correct hit sprite by taking the hit sprites
@@ -1852,13 +1880,16 @@ commentline 46f5 Tanks: C051 is the start of RAM data for enemy tanks, size 0x20
 commentline 46f5 The code starts at C031 and pre-adds a size (DE) before processing starts
 commentline 46f5 0-9? copied from data structures starting at 
 commentline 46f5 0,1,2: X, picture, Y
-commentline 46f5 3,4,5,6: ? (NOT delta X), ? (NOT delta Y), hitbox size X, hitbox size Y
+commentline 46f5 3,4,5,6,7: ? (NOT delta X), ? (NOT delta Y), hitbox size X, hitbox size Y, ?
+commentline 46f5 8: delta X or Y, depending on whether tank is moving up/down or left/right
+commentline 46f5 9: direction 0 = left/right, 1 = up/down
 commentline 46f5 8 & 9: direction - 01 01 = down, FF 00 = left, 01 00 = right, FF 01 = up
-commentline 46f5 9: zero = down or left, non-zero = up or right?
 commentline 46f5 A: array position of corresponding bullet?  Copied to IY + $08 of bullet
 commentline 46f5 B: vector to tank data structure
-commentline 46f5 D: offset in B that matches offset 0
+commentline 46f5 D: offset into vector in B that matches offset 0
 commentline 46f5 11: countdown of hits on tank.  Starts at 3 and decrements
+commentline 46f5 12: vector to data in 3f9a-4065 (from 4066) (Y positions?)
+commentline 46f5 14: vector to data in 4c2c-4cfe (from 4cff) (X positions?)
 commentline 46f5 16: vector to sprite for tank
 commentline 46f5 18: vector to 3 sprites for hits on enemy tank
 commentline 46f5 1A: number of frames to display destroyed tank hits before terminating the enemy tank?
@@ -1877,6 +1908,12 @@ data 47bd-47c1
 data 47c2-47c6
 
 ; commentline 47e2 Position the tank pointed to by IX
+
+comment 4803 Not attract mode so skip attract mode input processing
+commentline 4805 Process attract mode input
+commentline 4811 Process user input
+commentline 4827 Post-input procesing starts here
+commentline 484b Initialize disk
 
 ; commentline DATA_TO_49C7_USED_AT_49C8
 ;data 4884-49c7
@@ -1903,8 +1940,12 @@ commentline 4b90 Starts at C108 and adds size (DE) before processing
 commentline 4b90 offset 0: X, sprite, Y
 commentline 4b90 offset 3: vector to the sprite used for this bullet
 commentline 4b90 offset 5: X delta, Y delta
-commentline 4b90 offset 7: ? initialized to 0
+commentline 4b90 offset 7: Bullet active if non-zero (initialized to 0)
 commentline 4b90 offset 8: ? initialized to 0
+comment 4ba8 Update bullet position using X delta and Y delta
+comment 4bd5 Ignore enemy bullet collisions with the firing tank
+
+commentline 4bfd Set bullet not active (offset 07), X off screen (offset 00), and call update sprite
 
 comment 4c1e Disable flashing of 1ST or 2ND
 
