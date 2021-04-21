@@ -1,7 +1,4 @@
-`commentline BCD bytes broken down into : number of 10Ks, number of 1Ks, and number of 1s'
-COMMENTLINE out of order
-
-org 0, numlab 833, numio 12, numdata 1585, numcomm 319, numcommline 503
+org 0, numlab 839, numio 12, numdata 1585, numcomm 362, numcommline 514
 
 IO_0 EQU $00
 IO_1 EQU $01
@@ -247,19 +244,24 @@ TANK_JOYSTICK_INPUT_TABLE? EQU $3d4d
 TANK_ATTRACT_MODE_INPUT EQU $3da5
 TANK_PROCESS_CONTROLS_INPUT EQU $3db5
 TANK_CHECK_FOR_COLLISION_BETWEEN_ENEMY_TANKS_AND_USER EQU $3f3e
-TANK_DATA_FOR_x_STARTS_AT_4066 EQU $4063
+TANK_DATA_AT_4066 EQU $4063
+TANK_DATA_LABEL_FOR_4063 EQU $4066
 TANK_PUT_POINTERS_INTO_DATA_STRUCTURES_IN_HL_AND_BC_BASED_ON_ENEMY_TANK_XY EQU $40a5
 TANK_UPDATE_POSITION_AND_SPRITE_OF_TANK_FROM_C000_TO_C002 EQU $40d0
 TANK_UPDATE_POSITION EQU $40ea
 TANK_WARP EQU $40fc
 TANK_DATA_AT_4127 EQU $4124
 TANK_DATA_LABEL_FOR_4124 EQU $4127
+TANK_DATA_AT_4148 EQU $4145
+TANK_DATA_LABEL_FOR_4145 EQU $4148
 TANK_PROCESS_ALL_ENEMY_TANKS? EQU $420d
 TANK_PROCESS_ENEMY_TANK_WITH_3_HITS EQU $4269
 TANK_CHANGE_DIRECTION_TO_UP_OR_DOWN? EQU $42ca
+TANK_GOING_UP_OR_DOWN_01 EQU $4369
 TANK_CONSIDER_CHANGING_DIRECTION_LEFT_OR_RIGHT? EQU $4379
 TANK_TURN_LEFT(_OR_RIGHT?) EQU $4414
-TANK_SHOULD_ENEMY_TURN EQU $4443
+TANK_TURN_ENEMY_UP_OR_DOWN EQU $4443
+TANK_RETURN_CARRY_IF_OTHER_TANK_AT_OUR_NEXT_DECISION_POINT_AND_GOING_DIFFERENT_DIRECTION? EQU $447e
 TANK_UPDATE_HIT_POSITION_ON_ENEMY_TANK_OFFSET_X EQU $4508
 TANK_UPDATE_HIT_POSITION_ON_ENEMY_TANK_OFFSET_Y EQU $4531
 TANK_SET_HL_TO_THE_CORRECT_HIT_SPRITE EQU $455a
@@ -291,7 +293,8 @@ TANK_DATA_FOR?_USED_AT_4BBB EQU $4b8d
 TANK_PROCESS_ENEMY_BULLETS EQU $4b90
 TANK_TERMINATE_ENEMY_BULLET EQU $4bfd
 TANK_PROCESS_HIT_ON_USER_UPDATE_SPRITES_SET_VALUES_AND_PUT_AUDIO_ON_STACK EQU $4c09
-TANK_DATA_FOR?_STARTS_AT_4CFF EQU $4cfb
+TANK_DATA_AT_4CFF EQU $4cfb
+TANK_DATA_LABEL_FOR_4CFB EQU $4cff
 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE EQU $4d77
 TANK_SET_UP_DATA EQU $4f7e
 TANK_WARP_LOCATION_DATA_X_SPRITE_Y EQU $4faa
@@ -655,13 +658,13 @@ MCP_BLOCKS_PER_ROW EQU $c0e6
 MCP_Y_SPEED_LOWER_IS_SLOWER EQU $c0e7
 MCP_DIRECTION_0_IS_RIGHT EQU $c0e9
 TANK_ENEMY_BULLETS_IN_RAM_AT_C111 EQU $c108
-TANK_NUMBER_OF_ENEMIES EQU $c14a
+TANK_REMAINING_TANKS EQU $c14a
 TANK_2ND_BYTE_FROM_TABLE_AT_4CFF_0_OR_1 EQU $c14b
 TANK_JOYSTICK_INPUT EQU $c14d
 TANK_BYTE_COMPARED_TO_FIRST_BYTE_OF_ENTRIES_AT_3DA5 EQU $c14e
 TANK_COUNTER_FROM_0_TO_90 EQU $c155
 TANK_VECTOR_TO_ATTRACT_MODE_INPUT? EQU $c156
-TANK_NUMBER_OF_ENEMY_BULLETS EQU $c159
+TANK_INITIAL_NUMBER_OF_TANKS EQU $c159
 TANK_SHOT_SPEED EQU $c15b
 TANK_IF_HARDNESS>0X0B_SEE_COMMENT_AT_3A79 EQU $c15f
 LC_USER_TRAIL_POSITION_VECTOR EQU $c1e0
@@ -3705,25 +3708,24 @@ DISPLAY_RANKINGS_SCREEN:
 1577: 28 08          JR    Z,$1581        ;Handle the extra digit of 10
 
 1579: C6 30          ADD   A,#$30         ;Output rank number (1-9)
-                                          ;Output rank number 10
 157b: 77             LD    (HL),A
 157c: 23             INC   HL
 157d: 36 50          LD    (HL),#$50
 157f: 18 12          JR    $1593
 
-1581: 36 30          LD    (HL),#$30
+1581: 36 30          LD    (HL),#$30      ;Output rank number 10 - output 0
 1583: 23             INC   HL
 1584: 36 50          LD    (HL),#$50
 1586: 11 3F 00       LD    DE,$003F
-1589: 19             ADD   HL,DE
-158a: 36 31          LD    (HL),#$31
+1589: 19             ADD   HL,DE          ;Move left (backup) one character
+158a: 36 31          LD    (HL),#$31      ;Output 1
 158c: 23             INC   HL
 158d: 36 50          LD    (HL),#$50
 158f: 11 C0 FF       LD    DE,$FFC0
 1592: 19             ADD   HL,DE
-1593: 11 3F FF       LD    DE,$FF3F
+1593: 11 3F FF       LD    DE,$FF3F       ;Output 2 initials - move right 3 characters
 1596: 19             ADD   HL,DE
-1597: 0E 02          LD    C,#$02
+1597: 0E 02          LD    C,#$02         ;Setup counters for number of initials and to move right one screen character
 1599: 11 BF FF       LD    DE,$FFBF
 159c: DD 7E 00       LD    A,(IX+$00)
 159f: FE 20          CP    A,#$20
@@ -3746,7 +3748,7 @@ DISPLAY_RANKINGS_SCREEN:
 15b1: 0D             DEC   C
 15b2: 20 E8          JR    NZ,$159C
 
-15b4: DD 23          INC   IX
+15b4: DD 23          INC   IX             ;Output score - Move to score, move right one screen character, and set up number of BCD bytes to process
 15b6: 11 C0 FF       LD    DE,$FFC0
 15b9: 19             ADD   HL,DE
 15ba: 0E 03          LD    C,#$03
@@ -3755,7 +3757,7 @@ DISPLAY_RANKINGS_SCREEN:
 15c0: 32 00 C0       LD    (CPU_RAM_GS_DISK_X_TANK_X_MCP_TRON_LEGS_LC_TRAILS_TO_C1DF_OR_SCORE_RANKING),A
 
 *** print out high scores
-15c3: FD 7E 00       LD    A,(IY+$00)
+15c3: FD 7E 00       LD    A,(IY+$00)     ;Process left nybble
 15c6: CB 3F          SRL   A              ;Move high nybble into low nybble
 15c8: CB 3F          SRL   A
 15ca: CB 3F          SRL   A
@@ -3777,8 +3779,8 @@ DISPLAY_RANKINGS_SCREEN:
 15e4: 77             LD    (HL),A
 15e5: 23             INC   HL
 15e6: 36 50          LD    (HL),#$50
-15e8: 19             ADD   HL,DE
-15e9: FD 7E 00       LD    A,(IY+$00)
+15e8: 19             ADD   HL,DE          ;Move right one screen character
+15e9: FD 7E 00       LD    A,(IY+$00)     ;Process right nybble
 15ec: E6 0F          AND   A,#$0F         ;Mask off low nybble
 15ee: C6 30          ADD   A,#$30
 15f0: FE 30          CP    A,#$30
@@ -3807,7 +3809,7 @@ DISPLAY_RANKINGS_SCREEN:
 1611: 20 B0          JR    NZ,$15C3
 
 1613: E1             POP   HL
-1614: 23             INC   HL
+1614: 23             INC   HL             ;Move down two screen characters (double space)
 1615: 23             INC   HL
 1616: 23             INC   HL
 1617: 23             INC   HL
@@ -3818,7 +3820,7 @@ DISPLAY_RANKINGS_SCREEN:
 *** Display user level (programming language)
 DISPLAY_USER_LEVEL:
 161c: DD 21 06 C5    LD    IX,HIGHEST_SCORES_USER_LEVEL
-1620: 01 8C FA       LD    BC,$FA8C
+1620: 01 8C FA       LD    BC,$FA8C       ;Position to user level of rank 1
 1623: 3E 0A          LD    A,#$0A
 1625: 32 00 C0       LD    (CPU_RAM_GS_DISK_X_TANK_X_MCP_TRON_LEGS_LC_TRAILS_TO_C1DF_OR_SCORE_RANKING),A
 1628: DD 7E 00       LD    A,(IX+$00)
@@ -3833,9 +3835,9 @@ DISPLAY_USER_LEVEL:
 1639: 23             INC   HL
 163a: 56             LD    D,(HL)
 163b: CD FF 6F       CALL  ADD_A_MESSAGE_TO_Q
-163e: 11 03 00       LD    DE,$0003
+163e: 11 03 00       LD    DE,$0003       ;Skip to next user level (skip initials, that have already been output)
 1641: DD 19          ADD   IX,DE
-1643: 03             INC   BC
+1643: 03             INC   BC             ;Double-space (move down 2 screen lines)
 1644: 03             INC   BC
 1645: 03             INC   BC
 1646: 03             INC   BC
@@ -3844,7 +3846,7 @@ DISPLAY_USER_LEVEL:
 164b: 20 DB          JR    NZ,$1628
 
 164d: 01 80 00       LD    BC,$0080
-1650: C3 38 15       JP    $1538
+1650: C3 38 15       JP    $1538          ;Wait 4 seconds checking for credits added (BC set to $0080 instead of $00C0, see 1535)
 
 RANKINGS_S:
 1653: RANKINGS
@@ -6577,8 +6579,8 @@ PLAY_TANKS:
 3a9e: 23             INC   HL
 3a9f: 7E             LD    A,(HL)
 3aa0: E6 7F          AND   A,#$7F
-3aa2: 32 4A C1       LD    (TANK_NUMBER_OF_ENEMIES),A
-3aa5: 32 59 C1       LD    (TANK_NUMBER_OF_ENEMY_BULLETS),A
+3aa2: 32 4A C1       LD    (TANK_REMAINING_TANKS),A
+3aa5: 32 59 C1       LD    (TANK_INITIAL_NUMBER_OF_TANKS),A
 3aa8: 4F             LD    C,A
 3aa9: 7E             LD    A,(HL)
 3aaa: E6 80          AND   A,#$80
@@ -6624,7 +6626,7 @@ PLAY_TANKS:
 3b02: CD 14 44       CALL  TANK_TURN_LEFT(_OR_RIGHT?)
 3b05: 18 03          JR    $3B0A
 
-3b07: CD 43 44       CALL  TANK_SHOULD_ENEMY_TURN
+3b07: CD 43 44       CALL  TANK_TURN_ENEMY_UP_OR_DOWN
 3b0a: FD E1          POP   IY
 3b0c: DD 7E 08       LD    A,(IX+$08)
 3b0f: FE 01          CP    A,#$01
@@ -6659,17 +6661,17 @@ PLAY_TANKS:
 
 3b3d: 24             INC   H
 3b3e: 6F             LD    L,A
-3b3f: DD 75 18       LD    (IX+$18),L
+3b3f: DD 75 18       LD    (IX+$18),L     ;Set vector to 3 sprites for hits on this tank ($18)
 3b42: DD 74 19       LD    (IX+$19),H
-3b45: 36 00          LD    (HL),#$00
+3b45: 36 00          LD    (HL),#$00      ;Ensure the 3 hits are offscreen (X position = 0)
 3b47: 11 04 00       LD    DE,$0004
 3b4a: 19             ADD   HL,DE
 3b4b: 36 00          LD    (HL),#$00
 3b4d: 19             ADD   HL,DE
 3b4e: 36 00          LD    (HL),#$00
-3b50: DD 36 11 03    LD    (IX+$11),#$03
+3b50: DD 36 11 03    LD    (IX+$11),#$03  ;Set hits remaining to 3 ($11)
 3b54: E1             POP   HL
-3b55: DD 75 16       LD    (IX+$16),L
+3b55: DD 75 16       LD    (IX+$16),L     ;Set vector to sprite for this tank ($16)
 3b58: DD 74 17       LD    (IX+$17),H
 3b5b: E5             PUSH  HL
 3b5c: CD E2 47       CALL  TANK_UPDATE_POSITION_OF_SPRITE_AT_HL_FROM_DATA_AT_IX
@@ -6691,7 +6693,7 @@ PLAY_TANKS:
 
 *** Setup of enemy tank bullets
 *** Sprite is explosion and X=0 and Y=4?
-3b76: 3A 59 C1       LD    A,(TANK_NUMBER_OF_ENEMY_BULLETS)
+3b76: 3A 59 C1       LD    A,(TANK_INITIAL_NUMBER_OF_TANKS)
 3b79: 4F             LD    C,A
 3b7a: 21 44 F0       LD    HL,SPRITE_TANK_ENEMY_BULLETS
 3b7d: FD 21 08 C1    LD    IY,TANK_ENEMY_BULLETS_IN_RAM_AT_C111
@@ -6826,7 +6828,7 @@ PLAY_TANKS:
 3c6f: 21 2C 01       LD    HL,$012C
 3c72: 22 48 C1       LD    ($C148),HL
 3c75: DD 21 51 C0    LD    IX,INFO_FOR_TANK_GAME_SEE_3ABF_TO_C05A_FOR_A_SINGLE_TANK
-3c79: 3A 59 C1       LD    A,(TANK_NUMBER_OF_ENEMY_BULLETS)
+3c79: 3A 59 C1       LD    A,(TANK_INITIAL_NUMBER_OF_TANKS)
 3c7c: 47             LD    B,A
 3c7d: 11 20 00       LD    DE,$0020
 3c80: DD 7E 07       LD    A,(IX+$07)
@@ -7181,7 +7183,7 @@ TANK_PROCESS_CONTROLS_INPUT:
 3f3b: C3 B8 6F       JP    PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 
 TANK_CHECK_FOR_COLLISION_BETWEEN_ENEMY_TANKS_AND_USER:
-3f3e: 3A 59 C1       LD    A,(TANK_NUMBER_OF_ENEMY_BULLETS)
+3f3e: 3A 59 C1       LD    A,(TANK_INITIAL_NUMBER_OF_TANKS)
 3f41: 11 20 00       LD    DE,$0020
 3f44: DD 21 31 C0    LD    IX,TANK_ENEMIES_DATA_IS_ACTUALLY_AT_C051
 3f48: 4F             LD    C,A
@@ -7278,6 +7280,7 @@ TANK_CHECK_FOR_COLLISION_BETWEEN_ENEMY_TANKS_AND_USER:
 
 *** This data structure is used at 40C9
 *** 21x3 bytes: X?, vector to other data (Y positions to compare?)
+TANK_DATA_LABEL_FOR_4063:
 4066: 18 9A 3F 
 4069: 27 9B 3F 
 406c: 30 A0 3F 
@@ -7300,23 +7303,23 @@ TANK_CHECK_FOR_COLLISION_BETWEEN_ENEMY_TANKS_AND_USER:
 409f: F7 62 40 
 40a2: FF 65 40 
 TANK_PUT_POINTERS_INTO_DATA_STRUCTURES_IN_HL_AND_BC_BASED_ON_ENEMY_TANK_XY:
-40a5: DD 21 63 40    LD    IX,TANK_DATA_FOR_x_STARTS_AT_4066
-40a9: 11 03 00       LD    DE,$0003
+40a5: DD 21 63 40    LD    IX,TANK_DATA_AT_4066;Enemy tank: B = X position, C = Y position
+40a9: 11 03 00       LD    DE,$0003       ;Find X position in table at 4066 >= X position in B
 40ac: DD 19          ADD   IX,DE
 40ae: DD 7E 00       LD    A,(IX+$00)
 40b1: B8             CP    A,B
 40b2: 38 F8          JR    C,$40AC
 
-40b4: DD 6E 01       LD    L,(IX+$01)
+40b4: DD 6E 01       LD    L,(IX+$01)     ;Set HL to vector of Y position data at 4066
 40b7: DD 66 02       LD    H,(IX+$02)
-40ba: DD 21 FB 4C    LD    IX,TANK_DATA_FOR?_STARTS_AT_4CFF
+40ba: DD 21 FB 4C    LD    IX,TANK_DATA_AT_4CFF;Find Y position in table at 4CFF >= Y position in C
 40be: 11 04 00       LD    DE,$0004
 40c1: DD 19          ADD   IX,DE
 40c3: DD 7E 00       LD    A,(IX+$00)
 40c6: B9             CP    A,C
 40c7: 38 F8          JR    C,$40C1
 
-40c9: DD 4E 02       LD    C,(IX+$02)
+40c9: DD 4E 02       LD    C,(IX+$02)     ;Set BC to vector of X position data at 4CFF
 40cc: DD 46 03       LD    B,(IX+$03)
 40cf: C9             RET   
 
@@ -7379,6 +7382,8 @@ TANK_DATA_AT_4127:
 4125: 3F             CCF   
 4126: C9             RET   
 
+
+*** Enemy tank: Y position and vector to X positions to compare for turn and ? decisions
 TANK_DATA_LABEL_FOR_4124:
 4127: 18 66 41 
 412a: 30 6C 41 
@@ -7390,7 +7395,11 @@ TANK_DATA_LABEL_FOR_4124:
 413c: A0 97 41 
 413f: B8 9F 41 
 4142: D0 A9 41 
+TANK_DATA_AT_4148:
 4145: E8 B2 41 
+
+*** Enemy tank: X position and vector to Y positions to compare for turn and ? decisions
+TANK_DATA_LABEL_FOR_4145:
 4148: 28 BA 41 
 414b: 40 C1 41 
 414e: 48 CC 41 
@@ -7402,6 +7411,9 @@ TANK_DATA_LABEL_FOR_4124:
 4160: D0 FD 41 
 4163: E8 06 42 
 
+
+*** A zero in the data structures below indicates an enemy tank can no longer move in that direction
+*** I think these can be searched bidirectionally so there are zeroes at both ends
 4166: 00 28 48 70 A0 D0 
 
 416c: 00 28 40 48 58 70 88 A0 00 B8 D0 E8 
@@ -7445,7 +7457,7 @@ TANK_DATA_LABEL_FOR_4124:
 4206: 00 30 58 78 A0 E8 00 
 
 TANK_PROCESS_ALL_ENEMY_TANKS?:
-420d: 3A 59 C1       LD    A,(TANK_NUMBER_OF_ENEMY_BULLETS)
+420d: 3A 59 C1       LD    A,(TANK_INITIAL_NUMBER_OF_TANKS)
 4210: 4F             LD    C,A
 4211: DD 21 31 C0    LD    IX,TANK_ENEMIES_DATA_IS_ACTUALLY_AT_C051
 4215: 11 20 00       LD    DE,$0020
@@ -7514,12 +7526,12 @@ TANK_PROCESS_ENEMY_TANK_WITH_3_HITS:
 4282: 23             INC   HL
 4283: 10 F4          DJNZ  $4279
 
-4285: 3A 4A C1       LD    A,(TANK_NUMBER_OF_ENEMIES)
+4285: 3A 4A C1       LD    A,(TANK_REMAINING_TANKS)
 4288: 3D             DEC   A
-4289: 32 4A C1       LD    (TANK_NUMBER_OF_ENEMIES),A
+4289: 32 4A C1       LD    (TANK_REMAINING_TANKS),A
 428c: 20 20          JR    NZ,$42AE
 
-428e: 21 07 C4       LD    HL,FLAG_ENTER_INITIALS_DONE_OR_LC_TRON_DIED_OR_TANK_ENEMY_3RD_HIT_OR_VALUE_4_NEXT_SLOT_SCREEN_MESSAGE_Q2
+428e: 21 07 C4       LD    HL,FLAG_ENTER_INITIALS_DONE_OR_LC_TRON_DIED_OR_TANK_ENEMY_3RD_HIT_OR_VALUE_4_NEXT_SLOT_SCREEN_MESSAGE_Q2;All tanks destroyed!
 4291: CB C6          SET   0,(HL)
 4293: 3A 47 C1       LD    A,($C147)
 4296: B7             OR    A,A
@@ -7542,19 +7554,19 @@ TANK_PROCESS_ENEMY_TANK_WITH_3_HITS:
 
 42b3: DD 7E 09       LD    A,(IX+$09)
 42b6: B7             OR    A,A
-42b7: C2 69 43       JP    NZ,$4369
+42b7: C2 69 43       JP    NZ,TANK_GOING_UP_OR_DOWN_01
 
 42ba: CD 08 45       CALL  TANK_UPDATE_HIT_POSITION_ON_ENEMY_TANK_OFFSET_X
-42bd: DD 7E 00       LD    A,(IX+$00)
+42bd: DD 7E 00       LD    A,(IX+$00)     ;Update tank's X position with delta
 42c0: DD 86 08       ADD   A,(IX+$08)
 42c3: DD 77 00       LD    (IX+$00),A
 42c6: DD BE 0E       CP    A,(IX+$0E)
-42c9: C0             RET   NZ             ;Return if tank is not at a crossroad/turn point 
+42c9: C0             RET   NZ             ;Return if tank is not at a crossroad/turn point
 
 TANK_CHANGE_DIRECTION_TO_UP_OR_DOWN?:
 42ca: DD 7E 08       LD    A,(IX+$08)
 42cd: FE 01          CP    A,#$01
-42cf: 20 28          JR    NZ,$42F9
+42cf: 20 28          JR    NZ,$42F9       ;Currently going left/up (delta X/Y is FF)?
 
 
 *** Moving left processing ...
@@ -7563,11 +7575,11 @@ TANK_CHANGE_DIRECTION_TO_UP_OR_DOWN?:
 42d6: DD BE 00       CP    A,(IX+$00)
 42d9: 38 28          JR    C,$4303
 
-42db: DD 7E 0D       LD    A,(IX+$0D)
+42db: DD 7E 0D       LD    A,(IX+$0D)     ;Set next intersection to check (it could be forward or backward in the table)
 42de: DD 86 08       ADD   A,(IX+$08)
 42e1: DD 77 0D       LD    (IX+$0D),A
 42e4: B7             OR    A,A
-42e5: 28 21          JR    Z,$4308
+42e5: 28 21          JR    Z,$4308        ;If next index is position 00, turn up or down
 
 42e7: DD 86 0B       ADD   A,(IX+$0B)
 42ea: DD 66 0C       LD    H,(IX+$0C)
@@ -7589,10 +7601,10 @@ TANK_CHANGE_DIRECTION_TO_UP_OR_DOWN?:
 42fe: DD BE 00       CP    A,(IX+$00)
 4301: 38 D8          JR    C,$42DB        ;If carry, I am right of user's tank
 
-4303: CD 7E 44       CALL  $447E
+4303: CD 7E 44       CALL  TANK_RETURN_CARRY_IF_OTHER_TANK_AT_OUR_NEXT_DECISION_POINT_AND_GOING_DIFFERENT_DIRECTION?
 4306: 38 D3          JR    C,$42DB
 
-4308: CD 43 44       CALL  TANK_SHOULD_ENEMY_TURN
+4308: CD 43 44       CALL  TANK_TURN_ENEMY_UP_OR_DOWN
 430b: 3A 00 C0       LD    A,(CPU_RAM_GS_DISK_X_TANK_X_MCP_TRON_LEGS_LC_TRAILS_TO_C1DF_OR_SCORE_RANKING)
 430e: DD 96 00       SUB   A,(IX+$00)
 4311: 30 01          JR    NC,$4314
@@ -7656,6 +7668,7 @@ TANK_CHANGE_DIRECTION_TO_UP_OR_DOWN?:
 4365: CD BD 44       CALL  $44BD
 4368: C9             RET   
 
+TANK_GOING_UP_OR_DOWN_01:
 4369: CD 31 45       CALL  TANK_UPDATE_HIT_POSITION_ON_ENEMY_TANK_OFFSET_Y
 436c: DD 7E 02       LD    A,(IX+$02)
 436f: DD 86 08       ADD   A,(IX+$08)
@@ -7701,7 +7714,7 @@ TANK_CONSIDER_CHANGING_DIRECTION_LEFT_OR_RIGHT?:
 43ad: DD BE 02       CP    A,(IX+$02)
 43b0: 38 D8          JR    C,$438A
 
-43b2: CD 7E 44       CALL  $447E
+43b2: CD 7E 44       CALL  TANK_RETURN_CARRY_IF_OTHER_TANK_AT_OUR_NEXT_DECISION_POINT_AND_GOING_DIFFERENT_DIRECTION?
 43b5: 38 D3          JR    C,$438A
 
 43b7: CD 14 44       CALL  TANK_TURN_LEFT(_OR_RIGHT?)
@@ -7766,15 +7779,15 @@ TANK_CONSIDER_CHANGING_DIRECTION_LEFT_OR_RIGHT?:
 4413: C9             RET   
 
 TANK_TURN_LEFT(_OR_RIGHT?):
-4414: DD 36 09 00    LD    (IX+$09),#$00
-4418: DD 7E 02       LD    A,(IX+$02)
-441b: FD 21 45 41    LD    IY,$4145
+4414: DD 36 09 00    LD    (IX+$09),#$00  ;Set tank direction to left/right
+4418: DD 7E 02       LD    A,(IX+$02)     ;Get Y position
+441b: FD 21 45 41    LD    IY,TANK_DATA_AT_4148
 441f: 11 03 00       LD    DE,$0003
-4422: FD 19          ADD   IY,DE
+4422: FD 19          ADD   IY,DE          ;Find Y position in table
 4424: FD BE 00       CP    A,(IY+$00)
 4427: 20 F9          JR    NZ,$4422
 
-4429: FD 6E 01       LD    L,(IY+$01)
+4429: FD 6E 01       LD    L,(IY+$01)     ;Put vector into HL and tank's vector at 0B for X positions to compare
 442c: DD 75 0B       LD    (IX+$0B),L
 442f: FD 66 02       LD    H,(IY+$02)
 4432: DD 74 0C       LD    (IX+$0C),H
@@ -7788,10 +7801,10 @@ TANK_TURN_LEFT(_OR_RIGHT?):
 443f: DD 72 0D       LD    (IX+$0D),D
 4442: C9             RET   
 
-TANK_SHOULD_ENEMY_TURN:
-4443: DD 36 09 01    LD    (IX+$09),#$01
+TANK_TURN_ENEMY_UP_OR_DOWN:
+4443: DD 36 09 01    LD    (IX+$09),#$01  ;Change direction from left/right to up/down
 4447: DD 7E 00       LD    A,(IX+$00)
-444a: FD 21 24 41    LD    IY,TANK_DATA_AT_4127
+444a: FD 21 24 41    LD    IY,TANK_DATA_AT_4127;Use X position to find table of Y positions to compare
 444e: 11 03 00       LD    DE,$0003
 4451: FD 19          ADD   IY,DE
 4453: FD BE 00       CP    A,(IY+$00)
@@ -7817,40 +7830,43 @@ TANK_SHOULD_ENEMY_TURN:
 447a: DD 77 08       LD    (IX+$08),A
 447d: C9             RET   
 
+TANK_RETURN_CARRY_IF_OTHER_TANK_AT_OUR_NEXT_DECISION_POINT_AND_GOING_DIFFERENT_DIRECTION?:
 447e: DD 7E 09       LD    A,(IX+$09)
 4481: 01 02 00       LD    BC,$0002       ;Compare Y positions
 4484: B7             OR    A,A
 4485: 20 03          JR    NZ,$448A
 
 4487: 01 00 00       LD    BC,$0000       ;Compare X positions
-448a: 3A 59 C1       LD    A,(TANK_NUMBER_OF_ENEMY_BULLETS)
+448a: 3A 59 C1       LD    A,(TANK_INITIAL_NUMBER_OF_TANKS);Loop through all the tanks we started with.  Must skip dead tanks somehow
 448d: 6F             LD    L,A
 448e: 11 20 00       LD    DE,$0020
 4491: FD 21 31 C0    LD    IY,TANK_ENEMIES_DATA_IS_ACTUALLY_AT_C051
 4495: FD 19          ADD   IY,DE
 4497: DD 7E 0A       LD    A,(IX+$0A)
 449a: FD BE 0A       CP    A,(IY+$0A)
-449d: 28 0E          JR    Z,$44AD
+449d: 28 0E          JR    Z,$44AD        ;Both tanks are pointing to the same bullet, so this is me! Don't check against myself!
 
 449f: DD 7E 0E       LD    A,(IX+$0E)
 44a2: FD E5          PUSH  IY
-44a4: FD 09          ADD   IY,BC
+44a4: FD 09          ADD   IY,BC          ;Add offset of X (0) or Y (2) into data structure
 44a6: FD BE 00       CP    A,(IY+$00)
 44a9: FD E1          POP   IY
-44ab: 28 06          JR    Z,$44B3
+44ab: 28 06          JR    Z,$44B3        ;I am at the intersection previously stored in $0E
 
 44ad: 2D             DEC   L
 44ae: 20 E5          JR    NZ,$4495
 
-44b0: 37             SCF   
+44b0: 37             SCF                  ;Tanks going similar direction
 44b1: 3F             CCF   
 44b2: C9             RET   
 
+
+*** At intersection, so return carry if we are going different directions
 44b3: DD 7E 09       LD    A,(IX+$09)
 44b6: FD AE 09       XOR   A,(IY+$09)
 44b9: 28 F2          JR    Z,$44AD
 
-44bb: 37             SCF   
+44bb: 37             SCF                  ;Tanks going dissimilar directions
 44bc: C9             RET   
 
 44bd: DD 7E 09       LD    A,(IX+$09)
@@ -7873,14 +7889,14 @@ TANK_SHOULD_ENEMY_TURN:
 44da: DD 36 01 49    LD    (IX+$01),#$49
 44de: 18 04          JR    $44E4
 
-44e0: DD 36 01 09    LD    (IX+$01),#$09
+44e0: DD 36 01 09    LD    (IX+$01),#$09  ;Turn tank up
 44e4: DD 77 08       LD    (IX+$08),A
 44e7: F5             PUSH  AF
 44e8: 3A 5C C1       LD    A,($C15C)
 44eb: DD 86 01       ADD   A,(IX+$01)
 44ee: DD 77 01       LD    (IX+$01),A
 44f1: F1             POP   AF
-44f2: DD 86 0D       ADD   A,(IX+$0D)
+44f2: DD 86 0D       ADD   A,(IX+$0D)     ;Change the offset into the table up or down a position (by adding A to it)
 44f5: DD 77 0D       LD    (IX+$0D),A
 44f8: DD 6E 0B       LD    L,(IX+$0B)
 44fb: DD 66 0C       LD    H,(IX+$0C)
@@ -7899,10 +7915,10 @@ TANK_SHOULD_ENEMY_TURN:
 TANK_UPDATE_HIT_POSITION_ON_ENEMY_TANK_OFFSET_X:
 4508: DD 7E 11       LD    A,(IX+$11)
 450b: FE 03          CP    A,#$03
-450d: C8             RET   Z
+450d: C8             RET   Z              ;No hits
 
 450e: B7             OR    A,A
-450f: C8             RET   Z
+450f: C8             RET   Z              ;3 hits
 
 4510: CD 5A 45       CALL  TANK_SET_HL_TO_THE_CORRECT_HIT_SPRITE
 4513: DD 7E 08       LD    A,(IX+$08)
@@ -8211,9 +8227,10 @@ TANK_SPRITE_UPDATE_POSITION_OF_DISK_HITTING_WALL:
 *** 8: delta X or Y, depending on whether tank is moving up/down or left/right
 *** 9: direction 0 = left/right, 1 = up/down
 *** 8 & 9: direction - 01 01 = down, FF 00 = left, 01 00 = right, FF 01 = up
-*** A: array position of corresponding bullet?  Copied to IY + $08 of bullet
-*** B: vector to tank data structure
-*** D: offset into vector in B that matches offset 0
+*** A: array position of fired bullet.  Copied to offset 08 of bullet
+*** B: vector of X or Y positions to compare this tank to (depends on moving left/right or up/down)
+*** D: offset into vector at 0B that matches X position (position 0 in this structure)
+*** E: next X or Y to check for intersection?
 *** 11: countdown of hits on tank.  Starts at 3 and decrements
 *** 12: vector to data in 3f9a-4065 (from 4066) (Y positions?)
 *** 14: vector to data in 4c2c-4cfe (from 4cff) (X positions?)
@@ -8222,7 +8239,7 @@ TANK_SPRITE_UPDATE_POSITION_OF_DISK_HITTING_WALL:
 *** 1A: number of frames to display destroyed tank hits before terminating the enemy tank?
 *** Add deltas to X & Y (word based with carry)
 TANK_CHECK_FOR_BULLET_HIT_ON_ENEMY:
-46f5: 3A 59 C1       LD    A,(TANK_NUMBER_OF_ENEMY_BULLETS)
+46f5: 3A 59 C1       LD    A,(TANK_INITIAL_NUMBER_OF_TANKS)
 46f8: E5             PUSH  HL
 46f9: 11 20 00       LD    DE,$0020
 46fc: DD 21 31 C0    LD    IX,TANK_ENEMIES_DATA_IS_ACTUALLY_AT_C051
@@ -8596,7 +8613,7 @@ TANK_TURRET_DRAW:
 4a53: C9             RET   
 
 TANK_FIRE_ON_USER_IF_POSSIBLE:
-4a54: 3A 59 C1       LD    A,(TANK_NUMBER_OF_ENEMY_BULLETS)
+4a54: 3A 59 C1       LD    A,(TANK_INITIAL_NUMBER_OF_TANKS)
 4a57: 4F             LD    C,A
 4a58: DD 21 31 C0    LD    IX,TANK_ENEMIES_DATA_IS_ACTUALLY_AT_C051
 4a5c: 11 20 00       LD    DE,$0020
@@ -8772,7 +8789,7 @@ TANK_DATA_FOR?_USED_AT_4BBB:
 *** offset 7: Bullet active if non-zero (initialized to 0)
 *** offset 8: ? initialized to 0
 TANK_PROCESS_ENEMY_BULLETS:
-4b90: 3A 59 C1       LD    A,(TANK_NUMBER_OF_ENEMY_BULLETS)
+4b90: 3A 59 C1       LD    A,(TANK_INITIAL_NUMBER_OF_TANKS)
 4b93: 4F             LD    C,A
 4b94: FD 21 08 C1    LD    IY,TANK_ENEMY_BULLETS_IN_RAM_AT_C111
 4b98: 11 09 00       LD    DE,$0009
@@ -8901,7 +8918,7 @@ TANK_PROCESS_HIT_ON_USER_UPDATE_SPRITES_SET_VALUES_AND_PUT_AUDIO_ON_STACK:
 
 4cf0: 30 40 58 68 78 88 A0 B0 E8 F8 00 
 
-TANK_DATA_FOR?_STARTS_AT_4CFF:
+TANK_DATA_AT_4CFF:
 4cfb: 18 F8 00 
 
 4cfe: 00 
@@ -8909,6 +8926,7 @@ TANK_DATA_FOR?_STARTS_AT_4CFF:
 *** Y to compare against tank position?, ? (put in C14B),
 *** vector to null-terminated data used at ???
 *** This data structure used at 40BA and 4D77 but points to 4CFB and then adds 4!
+TANK_DATA_LABEL_FOR_4CFB:
 4cff: 28 01 2C 4C 
 4d03: 37 00 2D 4C 
 4d07: 38 01 32 4C 
@@ -8940,7 +8958,7 @@ TANK_DATA_FOR?_STARTS_AT_4CFF:
 4d6f: F8 01 FE 4C 
 4d73: FF 00 FE 4C 
 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE:
-4d77: DD 21 FB 4C    LD    IX,TANK_DATA_FOR?_STARTS_AT_4CFF
+4d77: DD 21 FB 4C    LD    IX,TANK_DATA_AT_4CFF
 4d7b: 11 04 00       LD    DE,$0004
 4d7e: DD 19          ADD   IX,DE
 4d80: DD 7E 00       LD    A,(IX+$00)
@@ -8969,7 +8987,11 @@ TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE:
 
 *** This data is copied to C051!
 *** number of tanks x 10 bytes
-*** 10 bytes: X, picture, Y, ?, ?, ?, ?, ?, ?, ?
+*** 0-2: X, picture, Y,
+*** 3,4: unused (copied but then overwritten by byte from 4.  See 3ADB.  Error or change?), ?,
+*** 5-7: hitbox size X, hitbox size Y, ?
+*** 8: delta X or Y, depending on whether tank is moving up/down or left/right
+*** 9: direction 0 = left/right, 1 = up/down
 *** tank 0 hardness setup data
 4d9e: E8 88 E8 00 01 0E 0E 01 FF 00 
 
@@ -14599,6 +14621,8 @@ a069: FD 21 71 A0    LD    IY,$A071
 a06d: CD 3D A0       CALL  $A03D
 a070: C9             RET   
 
+
+*** BCD bytes to help break down into: number of 10Ks, number of 100s, and number of 1s
 a071: 10 27 
 a073: 64 00 
 a075: 01 00 

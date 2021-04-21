@@ -373,7 +373,9 @@ label 3d4d TANK_JOYSTICK_INPUT_TABLE?
 label 3da5 TANK_ATTRACT_MODE_INPUT
 label 3db5 TANK_PROCESS_CONTROLS_INPUT
 label 3f3e TANK_CHECK_FOR_COLLISION_BETWEEN_ENEMY_TANKS_AND_USER
-label 4063 TANK_DATA_FOR_x_STARTS_AT_4066
+;label 4063 TANK_DATA_FOR_x_STARTS_AT_4066
+label 4063 TANK_DATA_AT_4066
+label 4066 TANK_DATA_LABEL_FOR_4063
 label 40a5 TANK_PUT_POINTERS_INTO_DATA_STRUCTURES_IN_HL_AND_BC_BASED_ON_ENEMY_TANK_XY
 label 40d0 TANK_UPDATE_POSITION_AND_SPRITE_OF_TANK_FROM_C000_TO_C002
 label 40ea TANK_UPDATE_POSITION
@@ -381,13 +383,17 @@ label 40fc TANK_WARP
 ;label 4145 TANK_DATA_FOR_?
 label 4124 TANK_DATA_AT_4127
 label 4127 TANK_DATA_LABEL_FOR_4124
+label 4145 TANK_DATA_AT_4148
+label 4148 TANK_DATA_LABEL_FOR_4145
 label 420d TANK_PROCESS_ALL_ENEMY_TANKS?
 label 4269 TANK_PROCESS_ENEMY_TANK_WITH_3_HITS
 label 42ca TANK_CHANGE_DIRECTION_TO_UP_OR_DOWN?
+label 4369 TANK_GOING_UP_OR_DOWN_01
 label 4379 TANK_CONSIDER_CHANGING_DIRECTION_LEFT_OR_RIGHT?
 ; 4414 Find X & Y of this tank in a data structure?  For movement?
 label 4414 TANK_TURN_LEFT(_OR_RIGHT?)
-label 4443 TANK_SHOULD_ENEMY_TURN
+label 4443 TANK_TURN_ENEMY_UP_OR_DOWN
+label 447e TANK_RETURN_CARRY_IF_OTHER_TANK_AT_OUR_NEXT_DECISION_POINT_AND_GOING_DIFFERENT_DIRECTION?
 label 4508 TANK_UPDATE_HIT_POSITION_ON_ENEMY_TANK_OFFSET_X
 label 4531 TANK_UPDATE_HIT_POSITION_ON_ENEMY_TANK_OFFSET_Y
 label 455a TANK_SET_HL_TO_THE_CORRECT_HIT_SPRITE
@@ -420,7 +426,9 @@ label 4b8d TANK_DATA_FOR?_USED_AT_4BBB
 label 4b90 TANK_PROCESS_ENEMY_BULLETS
 label 4bfd TANK_TERMINATE_ENEMY_BULLET
 label 4c09 TANK_PROCESS_HIT_ON_USER_UPDATE_SPRITES_SET_VALUES_AND_PUT_AUDIO_ON_STACK
-label 4cfb TANK_DATA_FOR?_STARTS_AT_4CFF
+;label 4cfb TANK_DATA_FOR?_STARTS_AT_4CFF
+label 4cfb TANK_DATA_AT_4CFF
+label 4cff TANK_DATA_LABEL_FOR_4CFB
 label 4d77 TANK_PROCESS_?_USING_DATA_4CFF_AND_THE_DATA_VECTORS_IN_THERE
 label 4f7e TANK_SET_UP_DATA
 label 4faa TANK_WARP_LOCATION_DATA_X_SPRITE_Y
@@ -1362,10 +1370,18 @@ data 1527,7,2
 comment 1571 Finished outputting the top 10 scores with initials
 comment 1577 Handle the extra digit of 10
 comment 1579 Output rank number (1-9)
-comment 1579 Output rank number 10
+comment 1581 Output rank number 10 - output 0
+comment 1589 Move left (backup) one character
+comment 158a Output 1
+comment 1593 Output 2 initials - move right 3 characters
+comment 1597 Setup counters for number of initials and to move right one screen character
+comment 15b4 Output score - Move to score, move right one screen character, and set up number of BCD bytes to process
+comment 15c3 Process left nybble
 comment 15c6 Move high nybble into low nybble
 comment 15d2 If not leading zero, jump to output
 comment 15da Replace leading zero with a space
+comment 15e8 Move right one screen character
+comment 15e9 Process right nybble
 comment 15ec Mask off low nybble
 
 commentline 15a3 Output a space character (0x20 or 32)
@@ -1377,8 +1393,13 @@ commentline 15c3 print out high scores
 
 ;ascii 1605-1607
 
+comment 1614 Move down two screen characters (double space)
 commentline 161c Display user level (programming language)
+comment 1620 Position to user level of rank 1
 comment 162f Limit User Level to the highest to display (User!)
+comment 163e Skip to next user level (skip initials, that have already been output)
+comment 1643 Double-space (move down 2 screen lines)
+comment 1650 Wait 4 seconds checking for credits added (BC set to $0080 instead of $00C0, see 1535)
 
 ascii 1653-165b
 commentline 165c Display title
@@ -1752,6 +1773,11 @@ commentline 3a79 Multiply C times 32 and place into C15F
 
 commentline 3aae If bit 7 in number of tanks is set, C15C=0x35
 
+comment 3b3f Set vector to 3 sprites for hits on this tank ($18)
+comment 3b45 Ensure the 3 hits are offscreen (X position = 0)
+comment 3b50 Set hits remaining to 3 ($11)
+comment 3b55 Set vector to sprite for this tank ($16)
+
 commentline 3b76 Setup of enemy tank bullets
 commentline 3b76 Sprite is explosion and X=0 and Y=4?
 
@@ -1796,12 +1822,21 @@ commentline 4066 This data structure is used at 40C9
 commentline 4066 21x3 bytes: X?, vector to other data (Y positions to compare?)
 data 4066,21,3
 
+comment 40a5 Enemy tank: B = X position, C = Y position
+comment 40a9 Find X position in table at 4066 >= X position in B
+comment 40b4 Set HL to vector of Y position data at 4066
+comment 40ba Find Y position in table at 4CFF >= Y position in C
+comment 40c9 Set BC to vector of X position data at 4CFF
+
 comment 40ed If tank's X position is not 81, skip warp
 comment 40f4 If tank's Y position is 7E (top warp), jump to warp
 comment 40f8 If tank's Y position is not 91 (bottom warp), skip warp
 
 ;data 4127-4144
-data 4127,21,3
+commentline 4127 Enemy tank: Y position and vector to X positions to compare for turn and ? decisions
+data 4127,11,3
+commentline 4148 Enemy tank: X position and vector to Y positions to compare for turn and ? decisions
+data 4148,10,3
 ;data 4145-4151
 ;commentline 4152 Data used by tanks around 4414?  The 3 below are educated guesses at this point
 ;commentline 4152 11?x3: 3= Type, vector to next data structure
@@ -1809,6 +1844,10 @@ data 4127,21,3
 ;data 4166-41b1
 ;data 41b2-420c
 ;data 4166-4206
+
+commentline 4166 A zero in the data structures below indicates an enemy tank can no longer move in that direction
+commentline 4166 I think these can be searched bidirectionally so there are zeroes at both ends
+
 data 4166-416b
 data 416c-4177
 data 4178-417f
@@ -1836,17 +1875,41 @@ comment 4234 Mirror Y of explosion sprite on tank to make it look like fire
 
 commentline 4274 Terminate enemy tank!
 commentline 4274 Initialize hit sprites, decrement enemy tanks and return if not zero
-comment 428c All tanks destroyed!
-comment 42c9 Return if tank is not at a crossroad/turn point 
+comment 428e All tanks destroyed!
+comment 42bd Update tank's X position with delta
+comment 42c9 Return if tank is not at a crossroad/turn point
+comment 42cf Currently going left/up (delta X/Y is FF)?
 commentline 42d1 Moving left processing ...
+comment 42db Set next intersection to check (it could be forward or backward in the table)
+comment 42e5 If next index is position 00, turn up or down
 commentline 42f9 Moving right processing ...
 comment 4301 If carry, I am right of user's tank
 commentline 4380 Moving down processing ...
 comment 4388 If carry, I am below user's tank
 commentline 43a8 Moving up processing ...
 
+comment 4414 Set tank direction to left/right
+comment 4418 Get Y position
+comment 4422 Find Y position in table
+comment 4429 Put vector into HL and tank's vector at 0B for X positions to compare
+
+comment 4443 Change direction from left/right to up/down
+comment 444a Use X position to find table of Y positions to compare
+
 comment 4481 Compare Y positions
 comment 4487 Compare X positions
+comment 448a Loop through all the tanks we started with.  Must skip dead tanks somehow
+comment 449d Both tanks are pointing to the same bullet, so this is me! Don't check against myself!
+comment 44a4 Add offset of X (0) or Y (2) into data structure
+comment 44ab I am at the intersection previously stored in $0E
+comment 44b0 Tanks going similar direction
+
+commentline 44b3 At intersection, so return carry if we are going different directions
+
+comment 44bb Tanks going dissimilar directions
+
+comment 44e0 Turn tank up
+comment 44f2 Change the offset into the table up or down a position (by adding A to it)
 
 commentline 4508 Update hit sprite based on position of tank
 commentline 4508 Flip Y and offset sprite by adding 3 times IX+$08 to X
@@ -1884,9 +1947,10 @@ commentline 46f5 3,4,5,6,7: ? (NOT delta X), ? (NOT delta Y), hitbox size X, hit
 commentline 46f5 8: delta X or Y, depending on whether tank is moving up/down or left/right
 commentline 46f5 9: direction 0 = left/right, 1 = up/down
 commentline 46f5 8 & 9: direction - 01 01 = down, FF 00 = left, 01 00 = right, FF 01 = up
-commentline 46f5 A: array position of corresponding bullet?  Copied to IY + $08 of bullet
-commentline 46f5 B: vector to tank data structure
-commentline 46f5 D: offset into vector in B that matches offset 0
+commentline 46f5 A: array position of fired bullet.  Copied to offset 08 of bullet
+commentline 46f5 B: vector of X or Y positions to compare this tank to (depends on moving left/right or up/down)
+commentline 46f5 D: offset into vector at 0B that matches X position (position 0 in this structure)
+commentline 46f5 E: next X or Y to check for intersection?
 commentline 46f5 11: countdown of hits on tank.  Starts at 3 and decrements
 commentline 46f5 12: vector to data in 3f9a-4065 (from 4066) (Y positions?)
 commentline 46f5 14: vector to data in 4c2c-4cfe (from 4cff) (X positions?)
@@ -1978,7 +2042,11 @@ data 4cff,30,4
 
 commentline 4d9e This data is copied to C051!
 commentline 4d9e number of tanks x 10 bytes
-commentline 4d9e 10 bytes: X, picture, Y, ?, ?, ?, ?, ?, ?, ?
+commentline 4d9e 0-2: X, picture, Y,
+commentline 4d9e 3,4: unused (copied but then overwritten by byte from 4.  See 3ADB.  Error or change?), ?,
+commentline 4d9e 5-7: hitbox size X, hitbox size Y, ?
+commentline 4d9e 8: delta X or Y, depending on whether tank is moving up/down or left/right
+commentline 4d9e 9: direction 0 = left/right, 1 = up/down
 commentline 4d9e tank 0 hardness setup data
 data 4d9e,1,10
 commentline 4da8 tank 1 hardness setup data
@@ -2548,7 +2616,7 @@ comment a03d Number of output BCD bytes
 comment a040 Zero out results area
 comment a053 Reset carry
 
-commentline BCD bytes broken down into : number of 10Ks, number of 1Ks, and number of 1s
+commentline a071 BCD bytes to help break down into: number of 10Ks, number of 100s, and number of 1s
 data a071,3,2
 
 commentline a077 B = number of digits to display
