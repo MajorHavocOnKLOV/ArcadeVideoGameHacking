@@ -366,6 +366,8 @@ label 367a DATA_FOR_DISPLAYING_TRON_SPRITES_IDENTICAL_TO_6B79
 label 3926 MCP_COLOR_PALETTE_ALL_ZEROS
 label 3966 DATA_FOR_MCP_SETUP_TO_398D
 label 3a00 PLAY_TANKS
+label 3ca1 TANK_COPY_C407_TO_C47C_WHY?
+label 3ca8 TANK_TRANSITION_USER_DEATH_EXPLOSIONS_00_TO_03
 label 3cdf TANK_INSTRUCTIONS
 label 3d35 DESTROY_ALL_S
 label 3d41 ENEMY_TANKS_S
@@ -376,7 +378,7 @@ label 3f3e TANK_CHECK_FOR_COLLISION_BETWEEN_ENEMY_TANKS_AND_USER
 ;label 4063 TANK_DATA_FOR_x_STARTS_AT_4066
 label 4063 TANK_DATA_AT_4066
 label 4066 TANK_DATA_LABEL_FOR_4063
-label 40a5 TANK_PUT_POINTERS_INTO_DATA_STRUCTURES_IN_HL_AND_BC_BASED_ON_ENEMY_TANK_XY
+label 40a5 TANK_BASED_ON_ENEMY_TANK_XY_PUT_TABLE_VECTORS_INTO_HL_AND_BC
 label 40d0 TANK_UPDATE_POSITION_AND_SPRITE_OF_TANK_FROM_C000_TO_C002
 label 40ea TANK_UPDATE_POSITION
 label 40fc TANK_WARP
@@ -394,6 +396,7 @@ label 4379 TANK_CONSIDER_CHANGING_DIRECTION_LEFT_OR_RIGHT?
 label 4414 TANK_TURN_LEFT(_OR_RIGHT?)
 label 4443 TANK_TURN_ENEMY_UP_OR_DOWN
 label 447e TANK_RETURN_CARRY_IF_OTHER_TANK_AT_OUR_NEXT_DECISION_POINT_AND_GOING_DIFFERENT_DIRECTION?
+label 44bd TANK_TURNED_SO_SET_SPRITE_AND_NEXT_INTERSECTION
 label 4508 TANK_UPDATE_HIT_POSITION_ON_ENEMY_TANK_OFFSET_X
 label 4531 TANK_UPDATE_HIT_POSITION_ON_ENEMY_TANK_OFFSET_Y
 label 455a TANK_SET_HL_TO_THE_CORRECT_HIT_SPRITE
@@ -404,9 +407,9 @@ label 467c TANK_DISK_NEGATE_DELTA_Y
 label 46aa TANK_DISK_NEGATE_DELTA_X
 label 4653 TANK_PROCESS_DISK_HIT_WALL
 label 46cb TANK_SPRITE_UPDATE_POSITION_OF_DISK_HITTING_WALL
-label 46f5 TANK_CHECK_FOR_BULLET_HIT_ON_ENEMY
+label 46f5 TANK_CHECK_FOR_BULLET_AT_IY_HIT_ON_ALL_ENEMY_TANKS
 ;label 46fb TANK_DATA_FOR_x_STARTS_AT_46FF
-label 472b TANK_CHECK_FOR_BULLET_HIT_ON_USER
+label 472b TANK_CHECK_BULLET_POSITION_IN_BC_FOR_HIT_ON_USER
 label 4752 TANK_TERMINATE_DISK_THROWN_AT_IY
 label 4762 TANK_PROCESS_HIT_ON_ENEMY_TANK_AT_IX
 label 47b8 SCORE_TANK_HIT_3
@@ -420,9 +423,9 @@ label 4884 DATA_TO_49C7_USED_AT_49C8
 label 49c8 TANK_TURRET_DRAW
 label 4a54 TANK_FIRE_ON_USER_IF_POSSIBLE
 label 4af9 COMPARE_HL_ASCENDING_UNTIL_B_IS_GREATER
-label 4aff TANK_INITIALIZE_BULLET
-label 4b70 TANK_BULLET_UPDATE_SPRITE_FROM_IY_RAM
-label 4b8d TANK_DATA_FOR?_USED_AT_4BBB
+label 4aff TANK_FIRE_ENEMY_BULLET
+label 4b70 TANK_BULLET_UPDATE_SPRITE_FROM_RAM_AT_IY
+label 4b8d TANK_BULLET_OFFSET_X_AND_Y_FOR_COLLISION_DETECTION
 label 4b90 TANK_PROCESS_ENEMY_BULLETS
 label 4bfd TANK_TERMINATE_ENEMY_BULLET
 label 4c09 TANK_PROCESS_HIT_ON_USER_UPDATE_SPRITES_SET_VALUES_AND_PUT_AUDIO_ON_STACK
@@ -440,6 +443,7 @@ label 5175 LIGHT_TRACES2_S
 label 5182 AND_WALLS_S
 label 518c USE_TRIGGER_FOR_S
 label 519c SPEED_CONTROL_S
+label 5234 LC_COPY_A_INTO_HL_TO_HL_PLUS_2
 label 523b LC_SET_UP_USER_AND_ENEMIES_C1E0_TO_C230?
 label 54c6 LC_TRON_USER_DIED
 label 5535 FLAG_LC_IN_DE_AS_DESTROYED_PLAY_EXPLOSION_SOUND_AND_JP_TO_ADD_SCORE?
@@ -685,7 +689,7 @@ label aab2 HIT_FIRE_BUTTON_S
 label aac2 TO_CONTINUE_S
 label aace HIT_FIRE_BUTTON2_S
 label aade TO_EXIT_S
-label aae6 TEST_AND_INITIALIZE_SYSTEM_CALLED_AT_START_AND_ONE_OTHER_PLACE_WHY_OTHER?
+label aae6 TEST_AND_INITIALIZE_SYSTEM_AT_BOOT_AND_WHEN_EXITING_SERVICE_MENU
 label ab1d DATA_USED_TO_DISPLAY_RAM_ERROR(S)
 label ab27 RAM_ERROR_S
 label ab31 B2_S
@@ -719,7 +723,7 @@ label ae74 A10_S
 label ae79 A6_S
 label ae7c DRAW_WHITE_AND_BLACK_CROSSHATCH_PATTERN
 label ae95 DATA_TO_DRAW_WHITE_ON_BLACK_CROSSHATCH_PATTERN
-label af15 TEST_RAM_ONLY_CALLED_AT_MACHINE_INITIALIZATION
+label af15 TEST_RAM_AT_MACHINE_INITIALIZATION
 label b000 1ST_S
 label b004 2ND_S
 label b008 PLAYER_1_UP_S
@@ -817,14 +821,18 @@ label c108 TANK_ENEMY_BULLETS_IN_RAM_AT_C111
 ; offset 5: X delta, Y delta
 ; offset 7: initialized to 0
 ; offset 8: initialized to 0
+label c147 TANK_FLAG_GAME_AS_DONE_BIT_7_SET_IF_USER_WON_AND_BIT_0_SET_IF_NOT
 label c14a TANK_REMAINING_TANKS
 label c14b TANK_2ND_BYTE_FROM_TABLE_AT_4CFF_0_OR_1
+label c14c TANK_FRAMES_TO_WAIT_BETWEEN_EACH_USER_EXPLOSION_TRANSITION
 label c14d TANK_JOYSTICK_INPUT
 label c14e TANK_BYTE_COMPARED_TO_FIRST_BYTE_OF_ENTRIES_AT_3DA5
+label c153 TANK_ENEMY_BULLET_FIRED
 label C155 TANK_COUNTER_FROM_0_TO_90
 label c156 TANK_VECTOR_TO_ATTRACT_MODE_INPUT?
 label c159 TANK_INITIAL_NUMBER_OF_TANKS
 label c15b TANK_SHOT_SPEED
+label c15c TANK_RECOGNIZER_OFFSET_AND_FLAG
 label c15f TANK_IF_HARDNESS>0X0B_SEE_COMMENT_AT_3A79
 label c1e0 LC_USER_TRAIL_POSITION_VECTOR
 label c1e2 LC_ENEMY_1_TRAIL_POSITION_VECTOR
@@ -1783,6 +1791,8 @@ commentline 3b76 Sprite is explosion and X=0 and Y=4?
 
 commentline 3ba3 Set up Tron tank (the playa'!)
 
+commentline 3cbe Tank: user died, hide explosion sprite, play sound, and set values to keep screen static until sound completes
+
 comment 3cf4 Enable flashing of 1ST or 2ND
 
 ascii 3d35-3d40
@@ -1880,10 +1890,14 @@ comment 42bd Update tank's X position with delta
 comment 42c9 Return if tank is not at a crossroad/turn point
 comment 42cf Currently going left/up (delta X/Y is FF)?
 commentline 42d1 Moving left processing ...
-comment 42db Set next intersection to check (it could be forward or backward in the table)
+comment 42db Go straight and set next intersection to check (it could be forward or backward in the table)
 comment 42e5 If next index is position 00, turn up or down
 commentline 42f9 Moving right processing ...
 comment 4301 If carry, I am right of user's tank
+comment 432a Go down (add 1 to Y)
+comment 4334 Go up (add -1 to Y)
+comment 4350 Move to the next position (intersection) in the table
+comment 4356 Move to the previous position (intersection) in the table
 commentline 4380 Moving down processing ...
 comment 4388 If carry, I am below user's tank
 commentline 43a8 Moving up processing ...
@@ -1908,7 +1922,11 @@ commentline 44b3 At intersection, so return carry if we are going different dire
 
 comment 44bb Tanks going dissimilar directions
 
+comment 44ca Turn tank right
+comment 44d0 Turn tank left
+comment 44da Turn tank down
 comment 44e0 Turn tank up
+comment 44e8 Add Recognizer offset ($35 for Recognizers or $00 for regular tanks)
 comment 44f2 Change the offset into the table up or down a position (by adding A to it)
 
 commentline 4508 Update hit sprite based on position of tank
@@ -1951,6 +1969,7 @@ commentline 46f5 A: array position of fired bullet.  Copied to offset 08 of bull
 commentline 46f5 B: vector of X or Y positions to compare this tank to (depends on moving left/right or up/down)
 commentline 46f5 D: offset into vector at 0B that matches X position (position 0 in this structure)
 commentline 46f5 E: next X or Y to check for intersection?
+commentline 46f5 10: direction shadow?
 commentline 46f5 11: countdown of hits on tank.  Starts at 3 and decrements
 commentline 46f5 12: vector to data in 3f9a-4065 (from 4066) (Y positions?)
 commentline 46f5 14: vector to data in 4c2c-4cfe (from 4cff) (X positions?)
@@ -1987,15 +2006,26 @@ commentline 49d4 Attract mode input processing ...
 commentline 49db User and attract mode processing continues here ...
 commentline 49f0 Update turret position and rotation
 
+comment 4ac1 I can fire at the user!
+comment 4ac9 Above user tank
+comment 4adf Below user tank
+
+comment 4aff Set enemy bullet fired flag
 comment 4b0b Multiply A by 9 to offset to correct bullet
 comment 4b16 IY will now point to correct bullet
 comment 4b1c Bullet already initialized, so return
+comment 4b22 Copy bullet number from enemy tank to bullet (redundent to bullet position in memory, maybe?)
 comment 4b28 Copy X & Y from enemy tank to bullet
+commentline 4b3a Bullet Left/Right
+comment 4b3a Set delta Y to zero
+comment 4b3e Set delta X from delta X of tank
 comment 4b44 bullet right
 comment 4b4c bullet left
+commentline 4b52 Bullet Up/Down
+comment 4b52 Set delta X to zero
+comment 4b56 Set delta Y from delta Y of tank
 comment 4b5c bullet down
 comment 4b64 bullet up
-
 
 data 4b8d-4b8f
 
@@ -2007,6 +2037,7 @@ commentline 4b90 offset 5: X delta, Y delta
 commentline 4b90 offset 7: Bullet active if non-zero (initialized to 0)
 commentline 4b90 offset 8: ? initialized to 0
 comment 4ba8 Update bullet position using X delta and Y delta
+comment 4bba Load bullet at IY position into BC offsetting from 
 comment 4bd5 Ignore enemy bullet collisions with the firing tank
 
 commentline 4bfd Set bullet not active (offset 07), X off screen (offset 00), and call update sprite
