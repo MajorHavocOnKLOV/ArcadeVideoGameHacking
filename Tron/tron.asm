@@ -1,4 +1,4 @@
-org 0, numlab 847, numio 12, numdata 1585, numcomm 380, numcommline 518
+org 0, numlab 848, numio 12, numdata 1585, numcomm 396, numcommline 523
 
 IO_0 EQU $00
 IO_1 EQU $01
@@ -215,6 +215,7 @@ MCP_INSTRUCTIONS_STRING_VECTOR_WITH_DESTINATIION_AND_SOURCE EQU $2cee
 TRY_TO_ENTER_S EQU $2cf8
 THE_MCP_CONE_S EQU $2d05
 PLAY_MCP EQU $2d12
+SETUP_TRON_SPRITES_FOR_MCP EQU $2ead
 MCP_DEREZ_TRON EQU $2f5f
 MCP_ROTATE_RIGHT EQU $31b0
 MCP_ROTATE_LEFT EQU $31c8
@@ -340,7 +341,7 @@ IO_TOWER_COLOR_PALETTE EQU $5eb7
 CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_? EQU $5f23
 HANDLE_JOYSTICK_INPUT?_TO_601F EQU $5f73
 IO_TOWER_CHECK_FOR_ENTRY EQU $6020
-INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER EQU $6065
+SETUP_TRON_SPRITES_FOR_IO_TOWER EQU $6065
 IO_TOWER_GET_TRIGGER_STATE_AND_SET_C02E_BASED_ON_ARM_ROTATION EQU $6127
 IO_TOWER_DEREZ_TRON EQU $619f
 TRON_SPRITE_SET_INITIAL_POSITION_AND_ROTATION EQU $621d
@@ -847,7 +848,7 @@ RAM_TEST_SPECIAL_CHECK_LOCATION_IF_ZERO_DO_NOT_TEST? EQU $c7ff
 NVRAM EQU $c000
 SPRITE_RAM EQU $f000
 SPRITE_TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT EQU $f004
-SPRITE_TANK_TURRET_OR_LC_ENEMIES EQU $f008
+SPRITE_TANK_TURRET_OR_LC_ENEMIES_OR_MCP_TRON_LEGS EQU $f008
 SPRITE_TANK_DISKS_F00C_TO_F01B(SPRITES_3_TO_6) EQU $f00c
 SPRITE_TRON_DISKS_1_TO_4 EQU $f018
 SPRITE_TANK_WALL_HITS_1_FOR_EACH_DISK EQU $f01c
@@ -4779,7 +4780,7 @@ DRAW_SPRITES_FOR_GAME_SELECTION_SCREEN:
 220a: 47             LD    B,A
 220b: 3A 23 C4       LD    A,(COMPLETED_GAMES_XXXXDURL)
 220e: 4F             LD    C,A
-220f: FD 21 08 F0    LD    IY,SPRITE_TANK_TURRET_OR_LC_ENEMIES
+220f: FD 21 08 F0    LD    IY,SPRITE_TANK_TURRET_OR_LC_ENEMIES_OR_MCP_TRON_LEGS
 
 *** 4x(3 bytes: ? ? ?). I think it's used to draw the sprites on the game selection screen
 2213: DD 21 3E 23    LD    IX,$233E
@@ -5187,7 +5188,7 @@ MCP_INSTRUCTIONS:
 2ce2: CD D9 2F       CALL  $2FD9
 2ce5: 21 7A 36       LD    HL,DATA_FOR_DISPLAYING_TRON_SPRITES_IDENTICAL_TO_6B79
 2ce8: 22 10 C0       LD    (TANK_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020),HL
-2ceb: C3 AD 2E       JP    $2EAD
+2ceb: C3 AD 2E       JP    SETUP_TRON_SPRITES_FOR_MCP
 
 MCP_INSTRUCTIONS_STRING_VECTOR_WITH_DESTINATIION_AND_SOURCE:
 2cee: CC FC F8 2C 
@@ -5317,10 +5318,10 @@ PLAY_MCP:
 
 2dd0: CD DF 2D       CALL  $2DDF
 2dd3: CD 6A 2E       CALL  $2E6A
-2dd6: C3 AD 2E       JP    $2EAD
+2dd6: C3 AD 2E       JP    SETUP_TRON_SPRITES_FOR_MCP
 
 2dd9: CD ED 2F       CALL  $2FED
-2ddc: C3 AD 2E       JP    $2EAD
+2ddc: C3 AD 2E       JP    SETUP_TRON_SPRITES_FOR_MCP
 
 2ddf: 3A 7B C4       LD    A,(IN_ATTRACT_MODE?)
 2de2: B7             OR    A,A
@@ -5456,12 +5457,17 @@ PLAY_MCP:
 2ea7: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 2eaa: C3 D6 30       JP    $30D6
 
-2ead: DD 2A 10 C0    LD    IX,(TANK_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020)
-2eb1: 3A 07 C0       LD    A,(MCP_TRON_X_OR_TANKS_DATA_VECTOR_x_1)
+
+*** See 6065 for almost duplicate code!
+*** MCP and IO Tower structures and code could have been reused
+*** Tron sprites: 1=torso,2=legs,3=disk arm,5=pointing arm
+SETUP_TRON_SPRITES_FOR_MCP:
+2ead: DD 2A 10 C0    LD    IX,(TANK_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020);Load pointer into table of Tron sprite display starting at 367a
+2eb1: 3A 07 C0       LD    A,(MCP_TRON_X_OR_TANKS_DATA_VECTOR_x_1);Load and store X for Tron's torso and legs
 2eb4: 32 04 F0       LD    (SPRITE_TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT),A
-2eb7: 32 08 F0       LD    (SPRITE_TANK_TURRET_OR_LC_ENEMIES),A
+2eb7: 32 08 F0       LD    (SPRITE_TANK_TURRET_OR_LC_ENEMIES_OR_MCP_TRON_LEGS),A
 2eba: 47             LD    B,A
-2ebb: 3A 09 C0       LD    A,(MCP_TRON_Y_OR_TANKS_DATA_VECTOR_x_2_OR_GRID_BUGS_FRAMES_TO_DELAY_WHEN_BREEDING)
+2ebb: 3A 09 C0       LD    A,(MCP_TRON_Y_OR_TANKS_DATA_VECTOR_x_2_OR_GRID_BUGS_FRAMES_TO_DELAY_WHEN_BREEDING);Load and store Y for Tron's torso and legs
 2ebe: CD 59 71       CALL  ADJUST_SPRITE_Y_IF_FLIPPED_SCREEN
 2ec1: 4F             LD    C,A
 2ec2: 32 06 F0       LD    ($F006),A
@@ -5479,18 +5485,18 @@ PLAY_MCP:
 2eda: 36 08          LD    (HL),#$08
 2edc: 7E             LD    A,(HL)
 2edd: FE 04          CP    A,#$04
-2edf: DD 7E 00       LD    A,(IX+$00)
+2edf: DD 7E 00       LD    A,(IX+$00)     ;Load legs together torso & legs sprites
 2ee2: DD 66 01       LD    H,(IX+$01)
-2ee5: 30 06          JR    NC,$2EED
+2ee5: 30 06          JR    NC,$2EED       ;Skip loading legs apart sprites
 
-2ee7: DD 7E 02       LD    A,(IX+$02)
+2ee7: DD 7E 02       LD    A,(IX+$02)     ;Load legs apart torso & legs sprites
 2eea: DD 66 03       LD    H,(IX+$03)
-2eed: 32 05 F0       LD    ($F005),A
+2eed: 32 05 F0       LD    ($F005),A      ;Set sprites for torso and legs
 2ef0: 7C             LD    A,H
 2ef1: 32 09 F0       LD    ($F009),A
-2ef4: 78             LD    A,B
+2ef4: 78             LD    A,B            ;Set up pointing arm with correct sprite and offsets
 2ef5: DD 86 0B       ADD   A,(IX+$0B)
-2ef8: 32 14 F0       LD    ($F014),A
+2ef8: 32 14 F0       LD    ($F014),A      ;Check if Tron is throwing a disk
 2efb: 79             LD    A,C
 2efc: DD 86 0C       ADD   A,(IX+$0C)
 2eff: 32 16 F0       LD    ($F016),A
@@ -5500,7 +5506,7 @@ PLAY_MCP:
 2f0b: CB 46          BIT   0,(HL)
 2f0d: 28 1C          JR    Z,$2F2B
 
-2f0f: CB 86          RES   0,(HL)
+2f0f: CB 86          RES   0,(HL)         ;Set up throwing disk arm with correct sprite and offsets
 2f11: 78             LD    A,B
 2f12: DD 86 08       ADD   A,(IX+$08)
 2f15: 32 0C F0       LD    (SPRITE_TANK_DISKS_F00C_TO_F01B(SPRITES_3_TO_6)),A
@@ -5509,11 +5515,11 @@ PLAY_MCP:
 2f1c: 32 0E F0       LD    ($F00E),A
 2f1f: DD 7E 07       LD    A,(IX+$07)
 2f22: 32 0D F0       LD    ($F00D),A
-2f25: 3E 00          LD    A,#$00
+2f25: 3E 00          LD    A,#$00         ;Hide disk to be thrown
 2f27: 32 10 F0       LD    ($F010),A
 2f2a: C9             RET   
 
-2f2b: 78             LD    A,B
+2f2b: 78             LD    A,B            ;Set up non-throwing disk arm with correct sprite and offsets
 2f2c: DD 86 05       ADD   A,(IX+$05)
 2f2f: 32 0C F0       LD    (SPRITE_TANK_DISKS_F00C_TO_F01B(SPRITES_3_TO_6)),A
 2f32: 79             LD    A,C
@@ -5521,11 +5527,11 @@ PLAY_MCP:
 2f36: 32 0E F0       LD    ($F00E),A
 2f39: DD 7E 04       LD    A,(IX+$04)
 2f3c: 32 0D F0       LD    ($F00D),A
-2f3f: 3A 1D C4       LD    A,(REMAINING_DISKS_AT_A_TIME)
+2f3f: 3A 1D C4       LD    A,(REMAINING_DISKS_AT_A_TIME);Check if there are any remaining disks to throw
 2f42: B7             OR    A,A
-2f43: 28 14          JR    Z,$2F59
+2f43: 28 14          JR    Z,$2F59        ;Skip display of disk
 
-2f45: 78             LD    A,B
+2f45: 78             LD    A,B            ;Display disk that Tron can throw (offset X & Y from Tron)
 2f46: DD 86 0D       ADD   A,(IX+$0D)
 2f49: 32 10 F0       LD    ($F010),A
 2f4c: 79             LD    A,C
@@ -5535,7 +5541,7 @@ PLAY_MCP:
 2f55: 32 11 F0       LD    ($F011),A
 2f58: C9             RET   
 
-2f59: 3E 00          LD    A,#$00
+2f59: 3E 00          LD    A,#$00         ;Move disk to be thrown offscreen, since there are none remaining (C41D)
 2f5b: 32 10 F0       LD    ($F010),A
 2f5e: C9             RET   
 
@@ -5604,7 +5610,7 @@ MCP_DEREZ_TRON:
 2fcd: 32 02 C0       LD    (TANK_Y_OR_GS_DISK_Y_OR_SOLAR_SAILER_X_Y),A
 2fd0: 3E 00          LD    A,#$00
 2fd2: 32 04 F0       LD    (SPRITE_TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT),A
-2fd5: 32 08 F0       LD    (SPRITE_TANK_TURRET_OR_LC_ENEMIES),A
+2fd5: 32 08 F0       LD    (SPRITE_TANK_TURRET_OR_LC_ENEMIES_OR_MCP_TRON_LEGS),A
 2fd8: C9             RET   
 
 
@@ -8571,7 +8577,7 @@ TANK_TURRET_DRAW:
 49ef: 6F             LD    L,A
 
 *** Update turret position and rotation
-49f0: DD 21 08 F0    LD    IX,SPRITE_TANK_TURRET_OR_LC_ENEMIES
+49f0: DD 21 08 F0    LD    IX,SPRITE_TANK_TURRET_OR_LC_ENEMIES_OR_MCP_TRON_LEGS
 49f4: 3A 00 C0       LD    A,(CPU_RAM_GS_DISK_X_TANK_X_MCP_TRON_LEGS_LC_TRAILS_TO_C1DF_OR_SCORE_RANKING)
 49f7: 47             LD    B,A
 49f8: 3A 0B C0       LD    A,($C00B)
@@ -8886,7 +8892,7 @@ TANK_PROCESS_HIT_ON_USER_UPDATE_SPRITES_SET_VALUES_AND_PUT_AUDIO_ON_STACK:
 4c14: 21 47 C1       LD    HL,TANK_FLAG_GAME_AS_DONE_BIT_7_SET_IF_USER_WON_AND_BIT_0_SET_IF_NOT
 4c17: CB C6          SET   0,(HL)
 4c19: AF             XOR   A,A
-4c1a: 32 08 F0       LD    (SPRITE_TANK_TURRET_OR_LC_ENEMIES),A
+4c1a: 32 08 F0       LD    (SPRITE_TANK_TURRET_OR_LC_ENEMIES_OR_MCP_TRON_LEGS),A
 4c1d: AF             XOR   A,A
 4c1e: 32 08 C4       LD    (DO_NOT_FLASH_1ST_OR_2ND_PLAYER_IF_ZERO),A;Disable flashing of 1ST or 2ND
 4c21: 0E 03          LD    C,#$03
@@ -10932,7 +10938,7 @@ PLAY_IO_TOWER:
 5d6b: CD 23 5F       CALL  CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?
 5d6e: 21 79 6B       LD    HL,DATA_FOR_DISPLAYING_TRON_SPRITES_IDENTICAL_TO_367A
 5d71: 22 2E C0       LD    ($C02E),HL
-5d74: CD 65 60       CALL  INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
+5d74: CD 65 60       CALL  SETUP_TRON_SPRITES_FOR_IO_TOWER
 5d77: 0E 21          LD    C,#$21
 5d79: C3 B8 6F       JP    PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 
@@ -11062,7 +11068,7 @@ IO_TOWER_INSTRUCTIONS:
 5e50: CD 1D 62       CALL  TRON_SPRITE_SET_INITIAL_POSITION_AND_ROTATION
 5e53: 21 79 6B       LD    HL,DATA_FOR_DISPLAYING_TRON_SPRITES_IDENTICAL_TO_367A
 5e56: 22 2E C0       LD    ($C02E),HL
-5e59: CD 65 60       CALL  INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
+5e59: CD 65 60       CALL  SETUP_TRON_SPRITES_FOR_IO_TOWER
 5e5c: 3E 01          LD    A,#$01
 5e5e: 32 5E C4       LD    (DO_COLOR_CYCLING_IF_NON_ZERO),A
 5e61: DD 21 7E 5E    LD    IX,IO_TOWER_STRING_DESTINATION_AND_SOURCE_LOCATIONS_00
@@ -11168,10 +11174,10 @@ CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?:
 5f62: 3A 04 C0       LD    A,(TANK_ENEMY_DESTROYED_OR_SOLAR_SAILER_STATUS_FLAG_TANK_HITBOX_X_OR_HIGH_SCORE_INITIALS_REMAINING_COUNT)
 5f65: FE 01          CP    A,#$01
 5f67: CC AD 62       CALL  Z,$62AD
-5f6a: C3 65 60       JP    INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
+5f6a: C3 65 60       JP    SETUP_TRON_SPRITES_FOR_IO_TOWER
 
 5f6d: CD 36 62       CALL  $6236
-5f70: C3 65 60       JP    INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
+5f70: C3 65 60       JP    SETUP_TRON_SPRITES_FOR_IO_TOWER
 
 
 *** IO:0000 - xxxBxxxx
@@ -11335,12 +11341,14 @@ IO_TOWER_CHECK_FOR_ENTRY:
 6064: C9             RET   
 
 
+*** See 2EAD for almost duplicate code!
+*** MCP and IO Tower structures and code could have been reused
 *** Tron sprites: 1=torso,2=legs,3=disk arm,5=pointing arm
-INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER:
+SETUP_TRON_SPRITES_FOR_IO_TOWER:
 6065: DD 2A 2E C0    LD    IX,($C02E)
 6069: 3A 26 C0       LD    A,(IO_TRON_X_OR_MCP_DISK_3_DATA)
 606c: 32 04 F0       LD    (SPRITE_TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT),A
-606f: 32 08 F0       LD    (SPRITE_TANK_TURRET_OR_LC_ENEMIES),A
+606f: 32 08 F0       LD    (SPRITE_TANK_TURRET_OR_LC_ENEMIES_OR_MCP_TRON_LEGS),A
 6072: 47             LD    B,A            ;B now holds Tron X
 6073: 3A 28 C0       LD    A,(IO_TRON_Y)
 6076: 4F             LD    C,A            ;C now holds Tron Y
@@ -11593,7 +11601,7 @@ IO_TOWER_DEREZ_TRON:
 6211: 32 20 C0       LD    ($C020),A
 6214: 3E 00          LD    A,#$00
 6216: 32 04 F0       LD    (SPRITE_TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT),A
-6219: 32 08 F0       LD    (SPRITE_TANK_TURRET_OR_LC_ENEMIES),A
+6219: 32 08 F0       LD    (SPRITE_TANK_TURRET_OR_LC_ENEMIES_OR_MCP_TRON_LEGS),A
 621c: C9             RET   
 
 TRON_SPRITE_SET_INITIAL_POSITION_AND_ROTATION:

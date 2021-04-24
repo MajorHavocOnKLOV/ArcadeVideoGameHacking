@@ -344,6 +344,8 @@ label 2cee MCP_INSTRUCTIONS_STRING_VECTOR_WITH_DESTINATIION_AND_SOURCE
 label 2cf8 TRY_TO_ENTER_S
 label 2d05 THE_MCP_CONE_S
 label 2d12 PLAY_MCP
+label 2ead SETUP_TRON_SPRITES_FOR_MCP
+;MCP_DRAW_TRON_AT_INITIAL_POSITION_FOR_INSTRUCTIONS_MCP_AND_IO_TOWER
 label 2f5f MCP_DEREZ_TRON
 label 31b0 MCP_ROTATE_RIGHT
 label 31c8 MCP_ROTATE_LEFT
@@ -475,7 +477,7 @@ label 5eb7 IO_TOWER_COLOR_PALETTE
 label 5f23 CONVERT_IO_TOWER_TIMER_TO_PRINTABLE_AND_?
 label 5f73 HANDLE_JOYSTICK_INPUT?_TO_601F
 label 6020 IO_TOWER_CHECK_FOR_ENTRY
-label 6065 INITIALIZE_TRON_SPRITE_FOR_MCP_AND_IO_TOWER
+label 6065 SETUP_TRON_SPRITES_FOR_IO_TOWER
 label 6127 IO_TOWER_GET_TRIGGER_STATE_AND_SET_C02E_BASED_ON_ARM_ROTATION
 label 619f IO_TOWER_DEREZ_TRON
 label 621d TRON_SPRITE_SET_INITIAL_POSITION_AND_ROTATION
@@ -1024,7 +1026,7 @@ label C000 NVRAM
 
 label F000 SPRITE_RAM
 label F004 SPRITE_TANK_BODY_OR_LC_OR_IO_OR_MCP_TRON_AND_DISK_TORSO_LEGS_LEFT_DISK_RIGHT
-label F008 SPRITE_TANK_TURRET_OR_LC_ENEMIES
+label F008 SPRITE_TANK_TURRET_OR_LC_ENEMIES_OR_MCP_TRON_LEGS
 label F00C SPRITE_TANK_DISKS_F00C_TO_F01B(SPRITES_3_TO_6)
 label f018 SPRITE_TRON_DISKS_1_TO_4
 label f01c SPRITE_TANK_WALL_HITS_1_FOR_EACH_DISK
@@ -1707,6 +1709,27 @@ comment 2e07 Copy HL to DE for count of BC
 commentline 2e19 MCP: Tron has gone too far left. Set him to 21 x
 commentline 2e21 MCP: Tron has gone too far right. Set him to E7 x
 
+commentline 2ead See 6065 for almost duplicate code!
+commentline 2ead MCP and IO Tower structures and code could have been reused
+commentline 2ead Tron sprites: 1=torso,2=legs,3=disk arm,5=pointing arm
+comment 2ead Load pointer into table of Tron sprite display starting at 367a
+comment 2eb1 Load and store X for Tron's torso and legs
+comment 2ebb Load and store Y for Tron's torso and legs
+comment 2edf Load legs together torso & legs sprites
+comment 2ee5 Skip loading legs apart sprites
+comment 2ee7 Load legs apart torso & legs sprites
+comment 2eed Set sprites for torso and legs
+comment 2ef4 Set up pointing arm with correct sprite and offsets
+comment 2ef8 Check if Tron is throwing a disk
+comment 2f0f Set up throwing disk arm with correct sprite and offsets
+comment 2f25 Hide disk to be thrown
+comment 2f2b Set up non-throwing disk arm with correct sprite and offsets
+comment 2f3f Check if there are any remaining disks to throw
+comment 2f43 Skip display of disk
+comment 2f45 Display disk that Tron can throw (offset X & Y from Tron)
+comment 2f59 Move disk to be thrown offscreen, since there are none remaining (C41D)
+
+
 commentline 2f5f Derez Tron: Set torso and legs to derez sprite. Set C00F, C00E, and C02D
 commentline 2f5f Move arms and disk thrown 0 (1-3 continue flight?) sprite offscreen put #$30 on audio stack
 comment 2f79 Disable flashing of 1ST or 2ND
@@ -2250,6 +2273,8 @@ comment 6048 (keep everything running except clock, collision, and joystick inpu
 
 commentline 604b Add time left in IO Tower to score
 
+commentline 6065 See 2EAD for almost duplicate code!
+commentline 6065 MCP and IO Tower structures and code could have been reused
 commentline 6065 Tron sprites: 1=torso,2=legs,3=disk arm,5=pointing arm
 comment 6072 B now holds Tron X
 comment 6076 C now holds Tron Y
