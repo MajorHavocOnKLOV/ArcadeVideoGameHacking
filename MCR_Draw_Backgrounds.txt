@@ -1,0 +1,37 @@
+Ld de, 00
+**
+Ld hl, f800
+Ld bc, c004 (was 03c0)
+*
+Ld (hL),e
+Inc hl
+Ld (hL),d
+Inc hl
+Inc hl
+Inc hl
+Ld a,l
+Bit 5
+Jz $
+Push de
+Ld de,0020
+Add hl, de
+Pop de
+$
+Ld a,h
+Bit 1
+Jz &
+Clr 1
+Ror 
+SLR
+SLR
+Inc a
+Sll 
+Sll 
+Rol 
+&
+Inc de
+Djnz, *
+Dec c
+Jnz *
+Nop 
+Jr **
