@@ -1,0 +1,6 @@
+C700,01 variables. Set by player start routine
+
+Check if user level > 0, skip print
+If this player has pulled trigger during print, skip print
+
+Check during print for trigger pull. If so, set skip print for this player
