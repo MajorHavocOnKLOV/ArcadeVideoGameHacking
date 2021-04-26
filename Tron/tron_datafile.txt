@@ -402,16 +402,16 @@ label 44bd TANK_TURNED_SO_SET_SPRITE_AND_NEXT_INTERSECTION
 label 4508 TANK_UPDATE_HIT_POSITION_ON_ENEMY_TANK_OFFSET_X
 label 4531 TANK_UPDATE_HIT_POSITION_ON_ENEMY_TANK_OFFSET_Y
 label 455a TANK_SET_HL_TO_THE_CORRECT_HIT_SPRITE
-label 456d TANK_PROCESS_DISKS_THROWN?
+label 456d TANK_PROCESS_DISKS_THROWN
 label 45ed DATA_USED_FOR_???_TO_45FE
-label 45ff TANK_PROCESS_DISKS_THROWN
+label 45ff TANK_CHECK_FOR_COLLISION_OF_DISK_AT_IY_VS_ENEMY_TANKS_AND_SELF
 label 467c TANK_DISK_NEGATE_DELTA_Y
 label 46aa TANK_DISK_NEGATE_DELTA_X
 label 4653 TANK_PROCESS_DISK_HIT_WALL
 label 46cb TANK_SPRITE_UPDATE_POSITION_OF_DISK_HITTING_WALL
-label 46f5 TANK_CHECK_FOR_BULLET_AT_IY_HIT_ON_ALL_ENEMY_TANKS
+label 46f5 TANK_CHECK_POSITION_IN_BC_FOR_COLLISION_AGAINST_ENEMY_TANKS
 ;label 46fb TANK_DATA_FOR_x_STARTS_AT_46FF
-label 472b TANK_CHECK_BULLET_POSITION_IN_BC_FOR_HIT_ON_USER
+label 472b TANK_CHECK_POSITION_IN_BC_FOR_HIT_ON_USER
 label 4752 TANK_TERMINATE_DISK_THROWN_AT_IY
 label 4762 TANK_PROCESS_HIT_ON_ENEMY_TANK_AT_IX
 label 47b8 SCORE_TANK_HIT_3
@@ -421,7 +421,7 @@ label 47e2 TANK_UPDATE_POSITION_OF_SPRITE_AT_HL_FROM_DATA_AT_IX
 label 47a7 COPY_X_00_Y_FROM_SPRITE_RAM_AT_IY_TO_HL_PLUS_MORE?
 label 47c7 TANK_UPDATE_DISK_THROWN_SPRITE_FROM_RAM_AT_IY
 label 47ff TANK_PROCESS_INPUT_AND_INITIALIZE_THROWN_DISK
-label 4884 DATA_TO_49C7_USED_AT_49C8
+label 4884 TANK_TURRET_ROTATION_DATA
 label 49c8 TANK_TURRET_DRAW
 label 4a54 TANK_FIRE_ON_USER_IF_POSSIBLE
 label 4af9 COMPARE_HL_ASCENDING_UNTIL_B_IS_GREATER
@@ -824,6 +824,7 @@ label c108 TANK_ENEMY_BULLETS_IN_RAM_AT_C111
 ; offset 7: initialized to 0
 ; offset 8: initialized to 0
 label c147 TANK_FLAG_GAME_AS_DONE_BIT_7_SET_IF_USER_WON_AND_BIT_0_SET_IF_NOT
+label c148 TANK_COUNTDOWN_300_TO_MODIFY_TANK_PLUS_07_BY_XOR_3_AT_3C83
 label c14a TANK_REMAINING_TANKS
 label c14b TANK_2ND_BYTE_FROM_TABLE_AT_4CFF_0_OR_1
 label c14c TANK_FRAMES_TO_WAIT_BETWEEN_EACH_USER_EXPLOSION_TRANSITION
@@ -1813,6 +1814,10 @@ commentline 3b76 Setup of enemy tank bullets
 commentline 3b76 Sprite is explosion and X=0 and Y=4?
 
 commentline 3ba3 Set up Tron tank (the playa'!)
+comment 3be5 If user dead, skip all tank processing except for user explosion and disks thrown
+comment 3bf9 If all enemy tanks destroyed, skip all enemy tank processing except for bullets and disks thrown
+commentline 3c6f XOR bits 0 & 1 for all tanks +$07 every 300 counts (frames?)
+commentline 3c92 If all enemy tanks destroyed and user not dead, continue
 
 commentline 3cbe Tank: user died, hide explosion sprite, play sound, and set values to keep screen static until sound completes
 
@@ -2021,13 +2026,22 @@ commentline 4811 Process user input
 commentline 4827 Post-input procesing starts here
 commentline 484b Initialize disk
 
-; commentline DATA_TO_49C7_USED_AT_49C8
-;data 4884-49c7
+commentline 4884 Turret rotation data structure
+commentline 4884 X offset, Y offset, sprite
+commentline 4884 ?, ?, ?, ?, ?, ?
+commentline 4884 Copied to 0, 2, 4, 5, 6, 7 of disks thrown?
 data 4884,36,9
 
 commentline 49d4 Attract mode input processing ...
 commentline 49db User and attract mode processing continues here ...
+Comment 49db Multiply A by 9 and add to HL to get row into table
 commentline 49f0 Update turret position and rotation
+Comment 49f4 X
+Comment 4a04 Y
+Comment 4a16 Sprite
+Comment 4a1a Iterate through all disks allowed
+Commentline 4a2d Process thrown disks
+Commentline 4a2d Copy 3-9 from turret rotation data into 0, 2, 4-7 of disks thrown
 
 comment 4ac1 I can fire at the user!
 comment 4ac9 Above user tank
