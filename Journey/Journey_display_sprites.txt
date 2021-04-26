@@ -1,0 +1,31 @@
+0000   CD 7B CB               CALL   $cb7b   
+0003                             ; initialize variables
+0003   21 00 F0               LD   hl,$f000   
+0006   06 0E                  LD   b,14   
+0008   0E 03                  LD   c,03   
+000A   16 00                  LD   d,00   
+000C   1E 0F                  LD   e,15   
+000E                             ; fill sprite RAM
+000E   70                     LD   (hl),b   
+000F   23                     INC   hl   
+0010   71                     LD   (hl),c   
+0011   23                     INC   hl   
+0012   72                     LD   (hl),d   
+0013   23                     INC   hl   
+0014   73                     LD   (hl),e   
+0015   23                     INC   hl   
+0016                             ; set up next element in row
+0016   14                     INC   d   
+0017   47                     LD   b,a   
+0018   C6 14                  ADD   a,20   
+001A   78                     LD   a,b   
+001B   30 EC                  JR   nc,9   
+001D                             ; if at end of row, newline and return
+001D   06 0E                  LD   b,14   
+001F   7B                     LD   a,e   
+0020   C6 0A                  ADD   a,10   
+0022   7B                     LD   a,e   
+0023   FE F5                  CP   $f5   
+0025   20 E2                  JR   nz,9   
+0027                             ; at end of screen
+0027   18 F6                  JR   31   
