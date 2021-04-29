@@ -8,16 +8,6 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr >> calls_counte
 
 
 
-# RAM access C400-C7FF.txt
-echo "# In *nix (or WSL with *nix), type:
-cd /mnt/c/Users/PCAdmin.SIERRA/Desktop/Franklin/ArcadeVideoGameHacking.git/Tron
-cat tron.asm | grep '\$C[4-7][0-9A-F][0-9A-F]' | cut -c28- | sed 's/.*\(C[4-7][[:alnum:]][[:alnum:]]\).*/\1/' | sort | uniq -c | sort -nr >> c400-c7ff.txt
-
-" > c400-c7ff.txt
-cat tron.asm | grep '\$C[4-7][0-9A-F][0-9A-F]' | cut -c28- | grep -v '^SP' | sed 's/.*\(C[4-7][[:alnum:]][[:alnum:]]\).*/\1/' | sort | uniq -c | sort -nr >> c400-c7ff.txt
-
-
-
 # RAM access C000-C3FF.txt
 echo "# In *nix (or WSL with *nix), type:
 cd /mnt/c/Users/PCAdmin.SIERRA/Desktop/Franklin/ArcadeVideoGameHacking.git/Tron
