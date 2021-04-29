@@ -1,6 +1,6 @@
 # In *nix (or WSL with *nix), type:
 cd /mnt/c/Users/PCAdmin.SIERRA/Desktop/Franklin/ArcadeVideoGameHacking.git/Tron
-cat tron.asm | grep '\$C[0-3][0-9,A-F][0-9,A-F]*' | cut -c28- | grep -v '^SP' | sed 's/.*\(C[0-3][[:alnum:]][[:alnum:]]\).*/\1/' | sort | uniq -c | sort -nr > c000-C3FF.txt
+cat tron.asm | grep '$C[0-3][0-9A-F][0-9A-F]' | cut -c28- | grep -v '^SP' | sed 's/.*\(C[0-3][[:alnum:]][[:alnum:]]\).*/\1/' | sort | uniq -c | sort -nr >> C000-C3FF.txt
 
 
       9 C008
