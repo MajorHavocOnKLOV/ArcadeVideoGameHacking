@@ -334,6 +334,7 @@ label 2167 GS_GET_AND_PROCESS_JOYSTICK_INPUT?
 label 2207 DRAW_SPRITES_FOR_GAME_SELECTION_SCREEN
 label 22b8 GS_X_AND_Y_DELTA_TO_ADD_TO_DISK_SPRITE_X_AND_Y
 label 2308 GS_VECTOR_TO_GAME_VECTORS
+label 233e GS_SPRITE_DISPLAY_DATA
 label 234A BACKGROUND_PICK_A_GAME
 label 2aca GS_COLOR_PALETTE
 label 2c48 SCORE_MCP_HIT_ALL_BLOCKS_PLUS_ENTERING_CONE
@@ -830,6 +831,7 @@ label c14b TANK_2ND_BYTE_FROM_TABLE_AT_4CFF_0_OR_1
 label c14c TANK_FRAMES_TO_WAIT_BETWEEN_EACH_USER_EXPLOSION_TRANSITION
 label c14d TANK_JOYSTICK_INPUT
 label c14e TANK_BYTE_COMPARED_TO_FIRST_BYTE_OF_ENTRIES_AT_3DA5
+label c150 LC_COUNTER_IF_WE_ARE_NOT_ZERO_RETURN_FROM_FOUR_CALLS?
 label c153 TANK_ENEMY_BULLET_FIRED
 label C155 TANK_COUNTER_FROM_0_TO_90
 label c156 TANK_VECTOR_TO_ATTRACT_MODE_INPUT?
@@ -1032,7 +1034,7 @@ label F00C SPRITE_TANK_DISKS_F00C_TO_F01B(SPRITES_3_TO_6)
 label f018 SPRITE_TRON_DISKS_1_TO_4
 label f01c SPRITE_TANK_WALL_HITS_1_FOR_EACH_DISK
 label f028 SPRITE_MCP_BLOCKS_TOP_LEFT_MOVING_DOWN_AND_WRAP_TO_TOP_RIGHT_TO_F09F_OR_BIT
-label f029 
+;label f029 
 label f02c SPRITE_TANK_ENEMIES_OR_SOLAR_SAILER
 label f030 SPRITE_IO_GRID_BUGS
 label f044 SPRITE_TANK_ENEMY_BULLETS
@@ -1621,7 +1623,10 @@ comment 214d Fill the hole by moving down the remaining vectors, if necessary (i
 commentline 2162 show games on game selection screen
 
 commentline 2207 Modify game selection screen to disable completed and show type of game if already attempted
-commentline 2213 4x(3 bytes: ? ? ?). I think it's used to draw the sprites on the game selection screen
+;commentline 2213 4x(3 bytes: ? ? ?). I think it's used to draw the sprites on the game selection screen
+comment 2250 Skip hiding this game?
+commentline 2252 Hide games that have been completed?
+comment 2255 Set the color slot to make invisible
 
 commentline 226e Data used at 21a8 and 21b4
 data 226e-22ab
@@ -1641,7 +1646,7 @@ commentline 22d8 I have a hard time understanding why use 16 data structures
 commentline 22d8 to point to 4 data structures of directions.  Anyone know?
 data 22d8,16,3
 
-commentline 2308 Used at 2115.  Set what game is at what quadrant?  Then 4x vector table.  Then 
+commentline 2308 Used at 2115.  Set what game is at what quadrant?  Then 4x vector table. 
 data 2308,4,2
 
 commentline 2310 Vector of games to quadrants at C426 points to these blocks of data
@@ -1666,8 +1671,9 @@ commentline 233a Draw Tank for game selection screen
 data 233a-233d
 
 commentline 233e Locations to draw sprites on game selection screen (LRUD)
-commentline 233e 4x: ?, X, Y
-data 233e-2349
+commentline 233e 4x: Color RAM slot if this game needs to be hidden because it's completed, X, Y
+;data 233e-2349
+data 233e,4,3
 
 data 234A-2AC9
 
@@ -1794,6 +1800,7 @@ data 3966,10,4
 commentline 398e Data used where for what?
 data 398e-39ff
 
+comment 3a20 300
 comment 3a28 Enable flashing of 1ST or 2ND
 commentline 3a2b Set up disks (up to 4) in sprites 3-6 (F00C-F01B)
 
@@ -1817,6 +1824,7 @@ commentline 3ba3 Set up Tron tank (the playa'!)
 comment 3be5 If user dead, skip all tank processing except for user explosion and disks thrown
 comment 3bf9 If all enemy tanks destroyed, skip all enemy tank processing except for bullets and disks thrown
 commentline 3c6f XOR bits 0 & 1 for all tanks +$07 every 300 counts (frames?)
+comment 3c6f 300
 commentline 3c92 If all enemy tanks destroyed and user not dead, continue
 
 commentline 3cbe Tank: user died, hide explosion sprite, play sound, and set values to keep screen static until sound completes

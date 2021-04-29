@@ -92,6 +92,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr >> calls_counte
       2 COPY_10_FROM_HL_TO_FFC0
       2 C,TANK_PROCESS_ENEMY_BULLETS
       2 C,TANK_FIRE_ENEMY_BULLET
+      2 (LC_COUNTER_IF_WE_ARE_NOT_ZERO_RETURN_FROM_FOUR_CALLS?),A
       2 $A83E
       2 $6F3B
       2 $66F5
@@ -131,6 +132,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr >> calls_counte
       1 TANK_CHECK_FOR_COLLISION_OF_DISK_AT_IY_VS_ENEMY_TANKS_AND_SELF
       1 STRING_OUTPUT_UNTIL_NULL_BYTE?
       1 SERVICE_MENU_PLAYER_INPUTS
+      1 RO_RETURN_FROM_FOUR_CALLS? EQU $c150
       1 ROTATE_MCP_BLOCK_COLORS
       1 READ_C45B_AND_JP_TO_1_OF_5_LOCATIONS
       1 READ_AND_PROCESS_INPUT_PORTS
@@ -156,6 +158,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr >> calls_counte
       1 IO_TOWER_PROCESS_DISKS_THROWN?
       1 IO_TOWER_GET_TRIGGER_STATE_AND_SET_C02E_BASED_ON_ARM_ROTATION
       1 IO_TOWER_DEREZ_TRON
+      1 HL,LC_COUNTER_IF_WE_ARE_NOT_ZERO_RETURN_FROM_FOUR_CALLS?
       1 HANDLE_JOYSTICK_INPUT?_TO_601F
       1 GET_SPINNER_INPUT
       1 GET_CREDIT_FROM_RIGHT_COIN
@@ -175,6 +178,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr >> calls_counte
       1 C,GET_INITIALS_FOR_A_HIGH_SCORE_AND_SAVE_INTO_BATTERY_BACKED_UP_RAM;Score is in the top 10, so ...
       1 ADD_PLAYER_SCORE_TO_BOOKKEEPING_INFO_AND_UPDATE_DAILY_HIGH_SCORE_IF_NEEDED
       1 ADD_MESSAGE_TO_Q
+      1 A,(LC_COUNTER_IF_WE_ARE_NOT_ZERO_RETURN_FROM_FOUR_CALLS?)
       1 $AB39
       1 $A03D
       1 $9B76

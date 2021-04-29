@@ -16,8 +16,6 @@ cat tron.asm | grep '$C[0-3][0-9A-F][0-9A-F]' | cut -c28- | grep -v '^SP' | sed 
       5 C02D
       4 C208
       4 C1EE
-      4 C150
-      4 C148
       4 C027
       4 C020
       4 C00A
