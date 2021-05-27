@@ -207,11 +207,12 @@ label 102d INITIALS_S
 label 1036 ERASE_S
 label 1040 PROCESS_JOYSTICK_INPUT_FOR_ENTER_INITIALS_FOR_A_HIGH_SCORE
 label 103c END_S
+label 1091 MOVE_PREVIOUSLY_SELECTED_LETTER_RIGHT
 label 10da MOVE_SELECTED_LETTER_LEFT
 label 10ed ERASE_WITH_LEADING_SPACE_S
-label 10ee ERASE_WITHOUT_LEADING_SPACE_S
+label 10ee ERASE_WITH_A_TRALING_SPACE_S
 label 10f5 END_WITH_LEADING_SPACE_S
-label 10f6 END_WITHOUT_LEADING_SPACE_S
+label 10f6 END_WITH_A_TRAILING_SPACE_S
 label 10fb COPY_AND_COMPRESS_CURRENT_PLAYER_6_DIGIT_INTO_BCD_AT_C416
 label 111d PUT_INITIALS_AND_USER_LEVEL_INTO_LIST_OF_TOP_10
 label 120c YOUR_SCORE_S
@@ -465,6 +466,8 @@ label 59a9 LC_MATH_SPRITE_X_AND_Y_TO_BACKGROUND_RAM_LOCATION?
 label 59e5 LC_DRAW_A_TRAIL?
 label 5a1a LC_DRAW_D_INTO_LC_RAM_DATA_STRUCTURE
 label 5ac9 LC_MULTIPLE_CYCLES_DO_SOMETHING?
+label 5b62 LC_USER_TRAIL_GRAPHICS
+label 5b92 LC_ENEMY_TRAIL_GRAPHICS
 label 5c1b LC_DATA_STRUCTURE_TO_SETUP_LIGHT_CYCLES
 label 5d00 PLAY_IO_TOWER
 label 5d7c IO_TOWER_CHECK_WHETHER_TO_DEPLOY_SOLAR_SAILER
@@ -777,9 +780,11 @@ label b17e USER_S
 label c000 CPU_RAM_GS_DISK_X_TANK_X_MCP_TRON_LEGS_LC_TRAILS_TO_C1DF_OR_SCORE_RANKING
 label c001 TANK_SPRITE_OR_MCP_ROWS_OF_BLOCKS_OR_BIT_Y
 label c002 TANK_Y_OR_GS_DISK_Y_OR_SOLAR_SAILER_X_Y
-label c003 SOLAR_SAILER_Y_SERVICE_MENU_ROW
+label c003 SOLAR_SAILER_Y_SERVICE_MENU_ROW_HIGH_SCORE_OLD_ROW_SELECTED
 label c004 TANK_ENEMY_DESTROYED_OR_SOLAR_SAILER_STATUS_FLAG_TANK_HITBOX_X_OR_HIGH_SCORE_INITIALS_REMAINING_COUNT
-label c005 MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
+; MCP status: 80_PLAYING, 82 Enter or destroy all blocks, 84 DEREZ, 88 COMPLETED, 81 throwing a disk
+; 2c09-3408 is MCP.  11d9-11fd and 3e33-9ec2 are other uses for this RAM
+label c005 MCP_STATUS_WHAT_ELSE_?
 label c006 GRID_BUGS_NUMBER_OF_UNUSED_SLOTS_TANK_HITBOX_Y
 label c007 MCP_TRON_X_OR_TANKS_DATA_VECTOR_x_1
 label c009 MCP_TRON_Y_OR_TANKS_DATA_VECTOR_x_2_OR_GRID_BUGS_FRAMES_TO_DELAY_WHEN_BREEDING
@@ -893,7 +898,7 @@ label c40b MCP_RAM_DATA_OF_BLOCK_HIT_BY_DISK_OR_NEW_HIGH_SCORE_LOCATION
 label c40d Q_VECTOR_WHERE_TO_PLACE_NEXT_MESSAGE
 label c412 COUNTDOWN_TIMER_TO_FLASH_ACTIVE_PLAYER_NUMBER
 label c413 ENTER_INITIALS_HIGH_SCORE_BUTTON_DEBOUNCE?
-label c414 ENTER_INITIALS_HIGH_SCORE_ROW_SELECTED
+label c414 ENTER_INITIALS_HIGH_SCORE_NEW_ROW_SELECTED
 label c415 CREDITS_SOMETHING_COPY_OF_C501_OR_ZERO?
 label c416 CREDITS_TO_START_A_GAME_NULL_TERMINATED_ASCII_1_OF_3_S_OR_TEMP_BCD_SCORE
 label c417 CREDITS_TO_START_A_GAME_NULL_TERMINATED_ASCII_2_OF_3_S
@@ -1318,16 +1323,30 @@ ascii 102d-1035
 ascii 1036-103b
 ascii 103c-103f
 
-comment 104a Player 2 so shift joystick input bits
+comment 104a Player 2 so shift joystick input nybble to player 1 position for processing
 comment 1053 Discard left/right input
+comment 1055 No up/down input, so return
 comment 105d Joystick up
 comment 105f At top of choices already so ignore input
+comment 1060 Set new position down one letter
 comment 1064 Joystick down
 comment 1067 At bottom of choices already so ignore input
-;comment 10
-
-commentline 1091 Output a space character (0x20 or 32)
-commentline 10e7 Output a space character (0x20 or 32)
+comment 1068 Set new position up one letter
+comment 106c Set DE to position of A in the left column (selected state)
+comment 1076 Set HL to position of last selected letter in the left column (selected state)
+comment 1078 Copy write position (HL) to BC, in case ERASE or END need to be queued
+commentline 107d Process ERASE is now not selected
+commentline 1089 Process END is now not selected
+commentline 1091 Output a space character (0x20 or 32) and letter at previously selected row
+commentline 1091 (the user will see this character move right)
+comment 10b6 Update sprite Y position to be next to selected letter
+comment 10b9 Set DE to position of A in the left column (selected state)
+comment 10c3 Set HL to position of newly selected letter in the left column (selected state)
+comment 10c5 Copy write position (HL) to BC, in case ERASE or END need to be queued
+commentline 10ca Process ERASE is selected
+commentline 10d4 Process END is selected
+comment 10e6 Move right one character
+comment 10e7 Output a space character (0x20 or 32)
 
 ascii 10ed-10f4
 ascii 10f5-10fa
@@ -1682,6 +1701,8 @@ data 2aca-2ae9
 commentline 2aea Appears to be data to 2BFF?
 data 2aea-2bff
 
+commentline 2c1c Destroyed all MCP blocks
+
 comment 2c48 Not sure if all 5 bytes are data or how they're used starting at 6F68
 data 2c48-2c4c
 
@@ -1715,6 +1736,8 @@ comment 2e07 Copy HL to DE for count of BC
 
 commentline 2e19 MCP: Tron has gone too far left. Set him to 21 x
 commentline 2e21 MCP: Tron has gone too far right. Set him to E7 x
+comment 2e9e No remaining disks to throw so return
+commentline 2e9f Disk throw: decrement remaining, set disk throw flag, and put audio on the stack
 
 commentline 2ead See 6065 for almost duplicate code!
 commentline 2ead MCP and IO Tower structures and code could have been reused
@@ -1744,6 +1767,7 @@ commentline 2faa Flip X on Tron derez sprites
 
 commentline 2fd9 Set initial position and arm rotation of Tron sprites
 
+commentline 3406 Enter MCP cone
 comment 346a Invincibility MCP Game = 18 (JR *)
 comment 3471 Invincibility MCP Game = 11 (LD DE, **)
 
@@ -2242,11 +2266,12 @@ comment 5a08 If lowest bit in HL was set (C = true), process upper nybble
 comment 5a0a Process lower nybble
 comment 5a12 Process upper nybble
 
-commentline 5b62 48x Vectors used at 57ba?
-;data 5b62,48,2
-data 5b62-5b91
-data 5b92-5bc1
-data 5bc2-5c01
+commentline 5b62 24x background characters to display trails
+data 5b62,24,2
+;data 5b62-5b91
+data 5b92,24,2
+commentline 5bc2 32x LC values added at 5B5F?
+data 5bc2,32,2
 data 5c02-5c0a
 data 5c0b-5c1a
 
