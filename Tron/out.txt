@@ -1,9 +1,8 @@
-($00),A
-($1C),A
-($E0),A
-($E8),A
-($F0),A
-($F1),A
-($F3),A
-(C),A
-(C),D
+     12 IO_WATCHDOG_RESET
+      7 IO_0
+      4 IO_UNKNOWN_WRITTEN_AT_INITIALIZATION
+      4 IO_CTC0
+      4 C
+      2 IO_CTC3
+      2 IO_CTC1
+      1 IO_AUDIO_LATCHES
