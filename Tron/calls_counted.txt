@@ -1,5 +1,5 @@
 # In *nix (or WSL with *nix), type:
-cd /mnt/c/Users/PCAdmin.SIERRA/Desktop/Franklin/ArcadeVideoGameHacking.git/Tron
+cd /mnt/e/git-repos/ArcadeVideoGameHacking.git/Tron
 cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr >> calls_counted.txt
 
 

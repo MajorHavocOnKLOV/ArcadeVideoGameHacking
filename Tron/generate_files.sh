@@ -1,6 +1,6 @@
 # Count the number of times a subroutine is called
 echo "# In *nix (or WSL with *nix), type:
-cd /mnt/c/Users/PCAdmin.SIERRA/Desktop/Franklin/ArcadeVideoGameHacking.git/Tron
+cd /mnt/e/git-repos/ArcadeVideoGameHacking.git/Tron
 cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr >> calls_counted.txt
 
 " > calls_counted.txt
@@ -10,7 +10,7 @@ cat tron.asm | grep CALL | cut -c28- | sort | uniq -c | sort -nr >> calls_counte
 
 # RAM access C000-C3FF.txt
 echo "# In *nix (or WSL with *nix), type:
-cd /mnt/c/Users/PCAdmin.SIERRA/Desktop/Franklin/ArcadeVideoGameHacking.git/Tron
+cd /mnt/e/git-repos/ArcadeVideoGameHacking.git/Tron
 cat tron.asm | grep '\$C[0-3][0-9A-F][0-9A-F]' | cut -c28- | grep -v '^SP' | sed 's/.*\(C[0-3][[:alnum:]][[:alnum:]]\).*/\1/' | sort | uniq -c | sort -nr >> C000-C3FF.txt
 
 " > C000-C3FF.txt
@@ -20,7 +20,7 @@ cat tron.asm | grep '\$C[0-3][0-9A-F][0-9A-F]' | cut -c28- | grep -v '^SP' | sed
 
 # RAM access D000-FFFF.txt
 echo "# In *nix (or WSL with *nix), type:
-cd /mnt/c/Users/PCAdmin.SIERRA/Desktop/Franklin/ArcadeVideoGameHacking.git/Tron
+cd /mnt/e/git-repos/ArcadeVideoGameHacking.git/Tron
 cat tron.asm | grep '\$[DEF][0-9A-F][0-9A-F][0-9A-F]' | cut -c28- | sed 's/.*\([DEF][[:alnum:]][[:alnum:]][[:alnum:]]\).*/\1/' | sort | uniq -c | sort -nr >> D000-FFFF.txt
 
 " > D000-FFFF.txt
@@ -30,7 +30,7 @@ cat tron.asm | grep '\$[DEF][0-9A-F][0-9A-F][0-9A-F]' | cut -c28- | sed 's/.*\([
 
 # Labels for Ghidra
 echo "# In *nix (or WSL with *nix), type:
-cd /mnt/c/Users/PCAdmin.SIERRA/Desktop/Franklin/ArcadeVideoGameHacking.git/Tron
+cd /mnt/e/git-repos/ArcadeVideoGameHacking.git/Tron
 cat tron_datafile.txt | grep "^label" | awk '{print $2 " " $3 " l"}' >> labels_for_ghidra.txt
 
 " > labels_for_ghidra.txt

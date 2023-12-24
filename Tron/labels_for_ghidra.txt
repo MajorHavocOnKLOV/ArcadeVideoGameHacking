@@ -1,5 +1,5 @@
 # In *nix (or WSL with *nix), type:
-cd /mnt/c/Users/PCAdmin.SIERRA/Desktop/Franklin/ArcadeVideoGameHacking.git/Tron
+cd /mnt/e/git-repos/ArcadeVideoGameHacking.git/Tron
 cat tron_datafile.txt | grep ^label | awk '{print      l}' >> labels_for_ghidra.txt
 
 
