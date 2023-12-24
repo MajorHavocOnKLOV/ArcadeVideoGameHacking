@@ -1,4 +1,4 @@
-org 0, numlab 853, numio 12, numdata 1634, numcomm 419, numcommline 535
+org 0, numlab 853, numio 12, numdata 1665, numcomm 420, numcommline 539
 
 IO_0 EQU $00
 IO_1 EQU $01
@@ -637,7 +637,7 @@ TANK_SPRITE_OR_MCP_ROWS_OF_BLOCKS_OR_BIT_Y EQU $c001
 TANK_Y_OR_GS_DISK_Y_OR_SOLAR_SAILER_X_Y EQU $c002
 SOLAR_SAILER_Y_SERVICE_MENU_ROW_HIGH_SCORE_OLD_ROW_SELECTED EQU $c003
 TANK_ENEMY_DESTROYED_OR_SOLAR_SAILER_STATUS_FLAG_TANK_HITBOX_X_OR_HIGH_SCORE_INITIALS_REMAINING_COUNT EQU $c004
-MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED EQU $c005
+MCP_STATUS_WHAT_ELSE_? EQU $c005
 GRID_BUGS_NUMBER_OF_UNUSED_SLOTS_TANK_HITBOX_Y EQU $c006
 MCP_TRON_X_OR_TANKS_DATA_VECTOR_x_1 EQU $c007
 MCP_TRON_Y_OR_TANKS_DATA_VECTOR_x_2_OR_GRID_BUGS_FRAMES_TO_DELAY_WHEN_BREEDING EQU $c009
@@ -3295,7 +3295,7 @@ PUT_INITIALS_AND_USER_LEVEL_INTO_LIST_OF_TOP_10:
 11d5: DD 23          INC   IX
 11d7: 10 F7          DJNZ  $11D0
 
-11d9: 21 05 C0       LD    HL,MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
+11d9: 21 05 C0       LD    HL,MCP_STATUS_WHAT_ELSE_?
 11dc: 3A 00 C0       LD    A,(CPU_RAM_GS_DISK_X_TANK_X_MCP_TRON_LEGS_LC_TRAILS_TO_C1DF_OR_SCORE_RANKING)
 11df: FE 64          CP    A,#$64
 11e1: 38 05          JR    C,$11E8
@@ -3318,7 +3318,7 @@ PUT_INITIALS_AND_USER_LEVEL_INTO_LIST_OF_TOP_10:
 11f9: 77             LD    (HL),A
 11fa: 23             INC   HL
 11fb: 36 00          LD    (HL),#$00
-11fd: 11 05 C0       LD    DE,MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
+11fd: 11 05 C0       LD    DE,MCP_STATUS_WHAT_ELSE_?
 1200: 2A 0D C4       LD    HL,(Q_VECTOR_WHERE_TO_PLACE_NEXT_MESSAGE)
 1203: 01 80 FF       LD    BC,COLOR_RAM_TO_FFFF
 1206: 09             ADD   HL,BC
@@ -5116,7 +5116,7 @@ GS_COLOR_PALETTE:
 2c00: CD BB 2D       CALL  $2DBB
 2c03: CD 25 30       CALL  MCP_PROCESS_DISK_POSITION(S)?
 2c06: CD 8B 31       CALL  $318B
-2c09: 3A 05 C0       LD    A,(MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
+2c09: 3A 05 C0       LD    A,(MCP_STATUS_WHAT_ELSE_?)
 2c0c: E6 02          AND   A,#$02
 2c0e: C0             RET   NZ
 
@@ -5124,13 +5124,15 @@ GS_COLOR_PALETTE:
 2c12: B7             OR    A,A
 2c13: C0             RET   NZ
 
-2c14: 3A 05 C0       LD    A,(MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
+2c14: 3A 05 C0       LD    A,(MCP_STATUS_WHAT_ELSE_?)
 2c17: E6 84          AND   A,#$84
 2c19: FE 80          CP    A,#$80
 2c1b: C0             RET   NZ
 
+
+*** Destroyed all MCP blocks
 2c1c: 3E 82          LD    A,#$82
-2c1e: 32 05 C0       LD    (MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED),A
+2c1e: 32 05 C0       LD    (MCP_STATUS_WHAT_ELSE_?),A
 2c21: 0E 41          LD    C,#$41
 2c23: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
 2c26: 3E 26          LD    A,#$26
@@ -5320,7 +5322,7 @@ PLAY_MCP:
 2db5: 32 DE C0       LD    ($C0DE),A
 2db8: C3 D9 2F       JP    $2FD9
 
-2dbb: 3A 05 C0       LD    A,(MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
+2dbb: 3A 05 C0       LD    A,(MCP_STATUS_WHAT_ELSE_?)
 2dbe: E6 84          AND   A,#$84
 2dc0: C8             RET   Z
 
@@ -5328,7 +5330,7 @@ PLAY_MCP:
 2dc3: C2 8C 2F       JP    NZ,$2F8C
 
 2dc6: CD 43 2E       CALL  $2E43
-2dc9: 3A 05 C0       LD    A,(MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
+2dc9: 3A 05 C0       LD    A,(MCP_STATUS_WHAT_ELSE_?)
 2dcc: E6 02          AND   A,#$02
 2dce: 20 09          JR    NZ,$2DD9
 
@@ -5464,10 +5466,12 @@ PLAY_MCP:
 2e99: 21 1D C4       LD    HL,REMAINING_DISKS_AT_A_TIME
 2e9c: 7E             LD    A,(HL)
 2e9d: B7             OR    A,A
-2e9e: C8             RET   Z
+2e9e: C8             RET   Z              ;No remaining disks to throw so return
 
+
+*** Disk throw: decrement remaining, set disk throw flag, and put audio on the stack
 2e9f: 35             DEC   (HL)
-2ea0: 21 05 C0       LD    HL,MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
+2ea0: 21 05 C0       LD    HL,MCP_STATUS_WHAT_ELSE_?
 2ea3: CB C6          SET   0,(HL)
 2ea5: 0E 08          LD    C,#$08
 2ea7: CD B8 6F       CALL  PUT_C_ON_STACK_TO_SEND_TO_AUDIO
@@ -5518,7 +5522,7 @@ SETUP_TRON_SPRITES_FOR_MCP:
 2eff: 32 16 F0       LD    ($F016),A
 2f02: DD 7E 0A       LD    A,(IX+$0A)
 2f05: 32 15 F0       LD    ($F015),A
-2f08: 21 05 C0       LD    HL,MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
+2f08: 21 05 C0       LD    HL,MCP_STATUS_WHAT_ELSE_?
 2f0b: CB 46          BIT   0,(HL)
 2f0d: 28 1C          JR    Z,$2F2B
 
@@ -5574,7 +5578,7 @@ MCP_DEREZ_TRON:
 2f6e: 3E 40          LD    A,#$40
 2f70: 32 0E C0       LD    (INFINITE_TIME_CHEAT),A
 2f73: 3E 84          LD    A,#$84
-2f75: 32 05 C0       LD    (MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED),A
+2f75: 32 05 C0       LD    (MCP_STATUS_WHAT_ELSE_?),A
 2f78: AF             XOR   A,A
 2f79: 32 08 C4       LD    (DO_NOT_FLASH_1ST_OR_2ND_PLAYER_IF_ZERO),A;Disable flashing of 1ST or 2ND
 2f7c: 3E 00          LD    A,#$00
@@ -5636,7 +5640,7 @@ MCP_DEREZ_TRON:
 2fde: 3E C0          LD    A,#$C0
 2fe0: 32 09 C0       LD    (MCP_TRON_Y_OR_TANKS_DATA_VECTOR_x_2_OR_GRID_BUGS_FRAMES_TO_DELAY_WHEN_BREEDING),A
 2fe3: 3E 80          LD    A,#$80
-2fe5: 32 05 C0       LD    (MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED),A
+2fe5: 32 05 C0       LD    (MCP_STATUS_WHAT_ELSE_?),A
 2fe8: AF             XOR   A,A
 2fe9: 32 05 C4       LD    (TRON_ARM_OR_TANK_TURRET_ROTATION),A
 2fec: C9             RET   
@@ -5851,11 +5855,11 @@ MCP_DISK_END_FLIGHT:
 3189: 34             INC   (HL)
 318a: C9             RET   
 
-318b: 3A 05 C0       LD    A,(MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
+318b: 3A 05 C0       LD    A,(MCP_STATUS_WHAT_ELSE_?)
 318e: E6 02          AND   A,#$02
 3190: CC A1 31       CALL  Z,$31A1
 3193: CD D6 32       CALL  $32D6
-3196: 3A 05 C0       LD    A,(MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
+3196: 3A 05 C0       LD    A,(MCP_STATUS_WHAT_ELSE_?)
 3199: E6 86          AND   A,#$86
 319b: FE 80          CP    A,#$80
 319d: CC FA 33       CALL  Z,$33FA
@@ -6044,7 +6048,7 @@ MCP_ROTATE_LEFT:
 32ed: 86             ADD   A,(HL)
 32ee: 77             LD    (HL),A
 32ef: 2A DB C0       LD    HL,($C0DB)
-32f2: 3A 05 C0       LD    A,(MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
+32f2: 3A 05 C0       LD    A,(MCP_STATUS_WHAT_ELSE_?)
 32f5: E6 02          AND   A,#$02
 32f7: 20 0D          JR    NZ,$3306
 
@@ -6179,8 +6183,10 @@ MCP_HIDE_SPRITE_GOING_OFF_BOTTOM_OF_SCREEN:
 3403: B9             CP    A,C
 3404: 30 1E          JR    NC,$3424
 
+
+*** Enter MCP cone
 3406: 3E 82          LD    A,#$82
-3408: 32 05 C0       LD    (MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED),A
+3408: 32 05 C0       LD    (MCP_STATUS_WHAT_ELSE_?),A
 340b: 3E 60          LD    A,#$60
 340d: 32 0E C0       LD    (INFINITE_TIME_CHEAT),A
 3410: 0E 25          LD    C,#$25
@@ -7072,7 +7078,7 @@ TANK_PROCESS_CONTROLS_INPUT:
 3e2e: 47             LD    B,A
 3e2f: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y_OR_SOLAR_SAILER_X_Y)
 3e32: 4F             LD    C,A
-3e33: 3A 05 C0       LD    A,(MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
+3e33: 3A 05 C0       LD    A,(MCP_STATUS_WHAT_ELSE_?)
 3e36: 81             ADD   A,C
 3e37: 82             ADD   A,D
 3e38: 4F             LD    C,A
@@ -7145,7 +7151,7 @@ TANK_PROCESS_CONTROLS_INPUT:
 3eac: 57             LD    D,A
 3ead: 79             LD    A,C
 3eae: 92             SUB   A,D
-3eaf: 21 05 C0       LD    HL,MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
+3eaf: 21 05 C0       LD    HL,MCP_STATUS_WHAT_ELSE_?
 3eb2: 96             SUB   A,(HL)
 3eb3: 32 02 C0       LD    (TANK_Y_OR_GS_DISK_Y_OR_SOLAR_SAILER_X_Y),A
 3eb6: C6 08          ADD   A,#$08
@@ -7250,7 +7256,7 @@ TANK_CHECK_FOR_COLLISION_BETWEEN_ENEMY_TANKS_AND_USER:
 3f72: DD 7E 06       LD    A,(IX+$06)
 3f75: 32 10 C0       LD    (TANK_DISKS?/BULLETS?_IN_RAM_STARTS_AT_C020),A
 3f78: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y_OR_SOLAR_SAILER_X_Y)
-3f7b: 21 05 C0       LD    HL,MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
+3f7b: 21 05 C0       LD    HL,MCP_STATUS_WHAT_ELSE_?
 3f7e: 86             ADD   A,(HL)
 3f7f: 47             LD    B,A
 3f80: DD 7E 04       LD    A,(IX+$04)
@@ -8328,7 +8334,7 @@ TANK_CHECK_POSITION_IN_BC_FOR_HIT_ON_USER:
 473b: 38 11          JR    C,$474E        ;Invincibility TANK Game = 18 (JR *) (bullet collision?)
 
 473d: 3A 02 C0       LD    A,(TANK_Y_OR_GS_DISK_Y_OR_SOLAR_SAILER_X_Y)
-4740: 21 05 C0       LD    HL,MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
+4740: 21 05 C0       LD    HL,MCP_STATUS_WHAT_ELSE_?
 4743: 86             ADD   A,(HL)
 4744: B9             CP    A,C
 4745: 30 07          JR    NC,$474E
@@ -10914,10 +10920,39 @@ LC_ENEMY_TRAIL_GRAPHICS:
 5bbe: 54 41 
 5bc0: 54 45 
 
-5bc2: 00 00 01 00 04 00 09 00 10 00 19 00 24 00 31 00 
-5bd2: 40 00 51 00 64 00 79 00 90 00 A9 00 C4 00 E1 00 
-5be2: 00 01 21 01 44 01 69 01 90 01 B9 01 E4 01 11 02 
-5bf2: 40 02 71 02 A4 02 D9 02 10 03 49 03 84 03 C1 03 
+*** 32x LC values added at 5B5F?
+5bc2: 00 00 
+5bc4: 01 00 
+5bc6: 04 00 
+5bc8: 09 00 
+5bca: 10 00 
+5bcc: 19 00 
+5bce: 24 00 
+5bd0: 31 00 
+5bd2: 40 00 
+5bd4: 51 00 
+5bd6: 64 00 
+5bd8: 79 00 
+5bda: 90 00 
+5bdc: A9 00 
+5bde: C4 00 
+5be0: E1 00 
+5be2: 00 01 
+5be4: 21 01 
+5be6: 44 01 
+5be8: 69 01 
+5bea: 90 01 
+5bec: B9 01 
+5bee: E4 01 
+5bf0: 11 02 
+5bf2: 40 02 
+5bf4: 71 02 
+5bf6: A4 02 
+5bf8: D9 02 
+5bfa: 10 03 
+5bfc: 49 03 
+5bfe: 84 03 
+5c00: C1 03 
 
 5c02: 00 01 01 02 03 03 02 03 03 
 
@@ -11102,7 +11137,7 @@ IO_TOWER_DECREMENT_CLOCK?:
 5e0f: B7             OR    A,A
 5e10: 28 10          JR    Z,$5E22
 
-5e12: 21 05 C0       LD    HL,MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED
+5e12: 21 05 C0       LD    HL,MCP_STATUS_WHAT_ELSE_?
 5e15: 35             DEC   (HL)
 5e16: F2 22 5E       JP    P,$5E22
 
@@ -14253,7 +14288,7 @@ HIT_FIRE_BUTTON_FOR_TEST_S:
 9b37: 3E 18          LD    A,#$18
 9b39: AF             XOR   A,A
 9b3a: 32 03 C0       LD    (SOLAR_SAILER_Y_SERVICE_MENU_ROW_HIGH_SCORE_OLD_ROW_SELECTED),A
-9b3d: 32 05 C0       LD    (MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED),A
+9b3d: 32 05 C0       LD    (MCP_STATUS_WHAT_ELSE_?),A
 9b40: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 9b43: CD 49 70       CALL  INITIALIZE_SPRITES
 9b46: 0E 02          LD    C,#$02
@@ -14262,7 +14297,7 @@ HIT_FIRE_BUTTON_FOR_TEST_S:
 9b4e: DD 2A 00 C0    LD    IX,(CPU_RAM_GS_DISK_X_TANK_X_MCP_TRON_LEGS_LC_TRAILS_TO_C1DF_OR_SCORE_RANKING)
 9b52: DD 7E 07       LD    A,(IX+$07)
 9b55: 32 05 F0       LD    ($F005),A
-9b58: 3A 05 C0       LD    A,(MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
+9b58: 3A 05 C0       LD    A,(MCP_STATUS_WHAT_ELSE_?)
 9b5b: B7             OR    A,A
 9b5c: C0             RET   NZ
 
@@ -14335,7 +14370,7 @@ HIT_FIRE_BUTTON_FOR_TEST_S:
 
 SERVICE_MENU_EXIT_CURRENT_LEVEL:
 9bd2: 3E 01          LD    A,#$01
-9bd4: 32 05 C0       LD    (MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED),A
+9bd4: 32 05 C0       LD    (MCP_STATUS_WHAT_ELSE_?),A
 9bd7: C9             RET   
 
 9bd8: 14 9C                                           ;Pointer to vector of destinations and strings on Sound Menu
@@ -14532,7 +14567,7 @@ BOOKKEEPING_MENU:
 9e9e: 3E 18          LD    A,#$18
 9ea0: AF             XOR   A,A
 9ea1: 32 03 C0       LD    (SOLAR_SAILER_Y_SERVICE_MENU_ROW_HIGH_SCORE_OLD_ROW_SELECTED),A
-9ea4: 32 05 C0       LD    (MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED),A
+9ea4: 32 05 C0       LD    (MCP_STATUS_WHAT_ELSE_?),A
 9ea7: CD C7 6F       CALL  RESET_WD_X2_UPDATE_SETTINGS_XXX_AND_CLEAR_BACKGROUND
 9eaa: CD 49 70       CALL  INITIALIZE_SPRITES
 9ead: 0E 02          LD    C,#$02
@@ -14542,7 +14577,7 @@ BOOKKEEPING_MENU:
 9eb9: DD 7E 07       LD    A,(IX+$07)
 9ebc: 32 05 F0       LD    ($F005),A
 9ebf: CD BF 9F       CALL  DISPLAY_BOOKKEEPING_DATA
-9ec2: 3A 05 C0       LD    A,(MCP_STATUS_80_PLAYING_84_DEREZ_88_COMPLETED)
+9ec2: 3A 05 C0       LD    A,(MCP_STATUS_WHAT_ELSE_?)
 9ec5: B7             OR    A,A
 9ec6: C0             RET   NZ
 
