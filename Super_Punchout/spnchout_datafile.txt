@@ -1,0 +1,44 @@
+; Nintendo Super Punchout data file for z80dasm
+; Super Punch-Out!! (Rev B) ROMs used by MAME (labeled as spnchout)
+; please send additions/changes to Franklin <at> FranklinBowen <dot> net
+; look for newest files at http://www.FranklinBowen.net
+
+; date 2023-12-24
+
+; o Remarks - these are lines beginning with a semi-colon (;) they are completely ignored.
+; o 1 ORG line - gives the origin of the code; this is the startingaddress to be used for the disassembly.
+; o COMMENT lines - used to add comments to the end of lines of the disassembly.
+; o COMMENTLINE lines - provide full-line comments to be included before a given address in the disassembly.
+; o DATA lines - mark sections as data.  These sections will not be disassembled, but dumped as hex data instead.
+; o ASCII lines - mark sections as text.  These sections will not be disassembled, but printed as text instead.
+;
+; current limitations:
+; o number of LABEL, DATA/ASCII, COMMENT and COMMENTLINE lines determined at compile-time - see MAXLABEL, MAXDATA, MAXCOMMENT and MAXCOMMLINE
+; o all DATA/ASCII lines in data file must be sorted in ascending address order
+; o ditto for COMMENT and COMMENTLINE lines
+; o if a DATA/ASCII area is preceded by what Z80dasm thinks is code that continues into the DATA/ASCII area, the data will not be marked
+;   as such, and an error will be printed.  If this is the case, mark the line before the data as data also.
+
+; Input
+; =====
+; Port/Bit 8   7    6   5   4   3   2   1
+; 0000     x   Duck x   x   KO  R   x   L
+; tron below
+; 0000     Service Switch   x   Tilt  1B  2P  1P  COIN 2/R  COIN 1/L
+; 0001     x	            1 Spinner
+; 0002     2D	            2U  2R    2L  1D  1U  1R        1L
+; 0003     2B               x   x     x   x   x   x         x
+; 0004     x                2 Spinner
+
+IO_LABEL 00 IO_0_BUTTONS
+
+org 0000
+commentline 0000 Dissasembly of the Super Punch-Out!! (Rev B) ROMs used by MAME (labeled as spnchout)
+comment 0000 Z80 starts executing code at 0x0000
+comment 0b93 return from NMI
+commentline d7bf 01 = credit, 02 = start game, 03 = game over, 04 = game over 2?, 05 = game over 3?, 06 = rematch started, or countdown value to add coins for rematch
+
+label 0b3c NMI_starts_here?
+label d7bf game_status
+label f20e VRAM_top_monitor
+

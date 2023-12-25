@@ -1,0 +1,100 @@
+Super punchout in MAME
+
+history: how the draw rematch gets called, and it's CONVOLUTED!
+2D7D: rrca
+2D7E: rrca
+2D7F: rrca
+2D80: and  $0F
+2D82: ret
+1090: jr   nz,$1094
+1092: ld   a,$FF
+1094: ld   (de),a
+1095: inc  e
+1096: inc  e
+1097: ld   a,c
+1098: ld   (de),a
+1099: inc  e
+109A: inc  e
+109B: ret
+1656: ld   a,(iy-$09)
+1659: add  a,a
+165A: ld   e,a
+165B: ld   d,$00
+165D: ld   hl,$169C
+1660: add  hl,de
+1661: ld   a,(iy+$03)
+1664: jp   (hl)
+16A4: jr   $1689
+1689: in   a,($00)
+
+
+0018  ld   de,$0080                                       11 80 00
+001B  jp   $30CE                                          C3 CE 30
+
+108D a is bcd digits. put a into 10s digit and 1s digit on screen
+
+1679 process rematch (because credit and R punch pressed)
+
+1689 input from 00 into A
+mask off bit 3 (and $04)
+if NZ, jmp 1676
+168F call to print rematch?
+
+ 169A  jr   $164D                                          18 B1
+ 169C  jr   $1665                                          18 C7
+ 169E  jr   $167E                                          18 DE
+ 16A0  jr   $16C0                                          18 1E
+ 16A2  jr   $166F                                          18 CB
+ 16A4  jr   $1689                                          18 E3
+ 16A6  jr   $16AA                                          18 02
+ 16A8  jr   $16CE                                          18 24
+
+
+16A4  jr   $1689                                          18 E3
+
+2d75 a= bcd? input, a&c are output: a has tens digit in lower nybble and c has ones digit in lower nybbble
+
+3055 print from 46f0 & 46d4 (what?)
+
+3060 print remtach?
+
+4598
+
+46B3
+
+46F0
+
+46D4
+
+471A data for outputting rematch with arrow above right punch? button
+4720 HCTAMER
+
+472A
+
+4823
+
+D7CB credits
+
+top screen background RAM
+- from top left corner to bottom right corner
+D880-DF7F
+32x32
+00-09: digits
+0A-23: letters
+24-?: special chars
+char is first byte and color palette is the second byte. 44 is white char on black background for top monitor
+
+
+DFF4 vert scroll sprite (see punchout.cpp line #39)
+
+bottom screen background RAM
+- from top left corner to bottom right corner
+- values are approximate?
+F20E-FECF
+32x26
+
+fill f1ae,d22,0620 (fills bottom screen with green Ws)
+
+FCBC where the R in REMATCH is written in bottom screen vram
+
+Is there security software? 3AB1 was reading areas I didn't expect. Also, I found when I enabled cheats I sometimes had to knockdown an opponent far more than 3 times! Why?

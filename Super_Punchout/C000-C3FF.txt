@@ -1,0 +1,30 @@
+# In *nix (or WSL with *nix), type:
+cd /mnt/e/git-repos/ArcadeVideoGameHacking.git/Super_Punchout
+cat spnchout.asm | grep '$C[0-3][0-9A-F][0-9A-F]' | cut -c28- | grep -v '^SP' | sed 's/.*\(C[0-3][[:alnum:]][[:alnum:]]\).*/\1/' | sort | uniq -c | sort -nr >> C000-C3FF.txt
+
+
+      3 C224
+      3 C221
+      3 C000
+      2 C33A
+      2 C252
+      2 C24E
+      2 C222
+      2 C21E
+      2 C201
+      2 C156
+      2 C0B0
+      2 C001
+      1 C3FD
+      1 C3B0
+      1 C2E5
+      1 C253
+      1 C235
+      1 C226
+      1 C124
+      1 C0E4
+      1 C0A1
+      1 C018
+      1 C00D
+      1 C00C
+      1 C008
