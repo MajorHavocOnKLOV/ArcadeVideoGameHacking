@@ -1,10 +1,17 @@
-org 0, numlab 7, numio 1, numdata 0, numcomm 2, numcommline 20
+org 0, numlab 14, numio 1, numdata 0, numcomm 10, numcommline 23
 
 IO_0_BUTTONS EQU $00
 
 NMI_starts_here? EQU $0b3c
+print_rematch? EQU $168f
+ENERGY EQU $d022
+CPU_ENERGY EQU $d024
+KOS EQU $d02e
+CPU_KOS ; if 3, enemy will be knocked out with next knockdown EQU $d02f
+KO_LEVEL ; 1A = max/can KO EQU $d048
 game_status EQU $d7bf
 credits EQU $d7cb
+TIME EQU $d7f2
 VRAM_top_monitor EQU $d880
 vert_scroll_sprite_1? EQU $dff4
 VRAM_bottom_monitor EQU $f20e
@@ -2626,6 +2633,8 @@ NMI_starts_here?:
 
 108c: C9             RET   
 
+
+*** a is bcd digits. put a into 10s digit and 1s digit on screen
 108d: CD 75 2D       CALL  $2D75
 1090: 20 02          JR    NZ,$1094
 
@@ -3025,7 +3034,7 @@ NMI_starts_here?:
 1306: 20 0C          JR    NZ,$1314
 
 1308: 3E 01          LD    A,#$01
-130a: 32 2E D0       LD    ($D02E),A
+130a: 32 2E D0       LD    (KOS),A
 130d: 32 0A D0       LD    ($D00A),A
 1310: 3E 07          LD    A,#$07
 1312: 18 09          JR    $131D
@@ -3660,6 +3669,8 @@ NMI_starts_here?:
 1674: 18 03          JR    $1679
 
 1676: FD 34 F7       INC   (IY+$F7)
+
+*** process rematch (because credit and R punch pressed)
 1679: FD 34 F7       INC   (IY+$F7)
 167c: 18 CF          JR    $164D
 
@@ -3670,30 +3681,33 @@ NMI_starts_here?:
 1684: CD 55 30       CALL  $3055
 1687: 18 C4          JR    $164D
 
+
+*** input from 00 into A, check bit 3 (and $04) and if NZ, jmp 1676
 1689: DB 00          IN    A,(IO_0_BUTTONS)
 168b: E6 04          AND   A,#$04
 168d: 20 E7          JR    NZ,$1676
 
+print_rematch?:
 168f: CD 60 30       CALL  $3060
 1692: FD 7E 03       LD    A,(IY+$03)
 1695: FD BE 00       CP    A,(IY+$00)
 1698: 30 DF          JR    NC,$1679
 
-169a: 18 B1          JR    $164D
+169a: 18 B1          JR    $164D          ;?
 
-169c: 18 C7          JR    $1665
+169c: 18 C7          JR    $1665          ;?
 
-169e: 18 DE          JR    $167E
+169e: 18 DE          JR    $167E          ;?
 
-16a0: 18 1E          JR    $16C0
+16a0: 18 1E          JR    $16C0          ;?
 
-16a2: 18 CB          JR    $166F
+16a2: 18 CB          JR    $166F          ;?
 
-16a4: 18 E3          JR    $1689
+16a4: 18 E3          JR    $1689          ;?
 
-16a6: 18 02          JR    $16AA
+16a6: 18 02          JR    $16AA          ;?
 
-16a8: 18 24          JR    $16CE
+16a8: 18 24          JR    $16CE          ;?
 
 16aa: DB 00          IN    A,(IO_0_BUTTONS)
 16ac: E6 04          AND   A,#$04
@@ -4433,7 +4447,7 @@ NMI_starts_here?:
 1ad6: FE FD          CP    A,#$FD
 1ad8: 20 09          JR    NZ,$1AE3
 
-1ada: 3A 2F D0       LD    A,($D02F)
+1ada: 3A 2F D0       LD    A,(CPU_KOS ; if 3, enemy will be knocked out with next knockdown)
 1add: A7             AND   A,A
 1ade: 28 03          JR    Z,$1AE3
 
@@ -6291,14 +6305,14 @@ NMI_starts_here?:
 24b6: 22 43 D0       LD    ($D043),HL
 24b9: 22 45 D0       LD    ($D045),HL
 24bc: 22 64 D0       LD    ($D064),HL
-24bf: 21 22 D0       LD    HL,$D022
+24bf: 21 22 D0       LD    HL,ENERGY
 24c2: 0F             RRCA  
 24c3: 0F             RRCA  
 24c4: E6 CE          AND   A,#$CE
 24c6: 32 66 D0       LD    ($D066),A
 24c9: 18 03          JR    $24CE
 
-24cb: 21 24 D0       LD    HL,$D024
+24cb: 21 24 D0       LD    HL,CPU_ENERGY
 24ce: AF             XOR   A,A
 24cf: 77             LD    (HL),A
 24d0: 32 1C D0       LD    ($D01C),A
@@ -6714,7 +6728,7 @@ NMI_starts_here?:
 2776: 1A             LD    A,(DE)
 2777: 4F             LD    C,A
 2778: 1E 2F          LD    E,#$2F
-277a: 3A 22 D0       LD    A,($D022)
+277a: 3A 22 D0       LD    A,(ENERGY)
 277d: B9             CP    A,C
 277e: 30 1B          JR    NC,$279B
 
@@ -6760,13 +6774,13 @@ NMI_starts_here?:
 27c4: FE 01          CP    A,#$01
 27c6: 20 B9          JR    NZ,$2781
 
-27c8: 3A 2F D0       LD    A,($D02F)
+27c8: 3A 2F D0       LD    A,(CPU_KOS ; if 3, enemy will be knocked out with next knockdown)
 27cb: A7             AND   A,A
 27cc: 20 B2          JR    NZ,$2780
 
 27ce: 3A 28 D0       LD    A,($D028)
 27d1: 4F             LD    C,A
-27d2: 3A 24 D0       LD    A,($D024)
+27d2: 3A 24 D0       LD    A,(CPU_ENERGY)
 27d5: 18 A6          JR    $277D
 
 27d7: 01 FD 18       LD    BC,$18FD
@@ -7024,7 +7038,7 @@ NMI_starts_here?:
 2903: 5F             LD    E,A
 2904: C9             RET   
 
-2905: 3A 22 D0       LD    A,($D022)
+2905: 3A 22 D0       LD    A,(ENERGY)
 2908: 94             SUB   A,H
 2909: 38 36          JR    C,$2941
 
@@ -7055,13 +7069,13 @@ NMI_starts_here?:
 292a: 18 01          JR    $292D
 
 292c: F1             POP   AF
-292d: 32 22 D0       LD    ($D022),A
-2930: 3A 24 D0       LD    A,($D024)
+292d: 32 22 D0       LD    (ENERGY),A
+2930: 3A 24 D0       LD    A,(CPU_ENERGY)
 2933: FE 38          CP    A,#$38
 2935: D0             RET   NC
 
 2936: C6 04          ADD   A,#$04
-2938: 32 24 D0       LD    ($D024),A
+2938: 32 24 D0       LD    (CPU_ENERGY),A
 293b: C9             RET   
 
 293c: F1             POP   AF
@@ -7069,21 +7083,21 @@ NMI_starts_here?:
 293f: 18 D7          JR    $2918
 
 2941: AF             XOR   A,A
-2942: 32 22 D0       LD    ($D022),A
+2942: 32 22 D0       LD    (ENERGY),A
 2945: 32 ED D7       LD    ($D7ED),A
 2948: CD C1 29       CALL  $29C1
 294b: D1             POP   DE
 294c: 11 A1 28       LD    DE,$28A1
 294f: C3 A6 27       JP    $27A6
 
-2952: 3A 24 D0       LD    A,($D024)
+2952: 3A 24 D0       LD    A,(CPU_ENERGY)
 2955: 95             SUB   A,L
 2956: 38 2B          JR    C,$2983
 
 2958: 28 2A          JR    Z,$2984
 
-295a: 32 24 D0       LD    ($D024),A
-295d: 3A 22 D0       LD    A,($D022)
+295a: 32 24 D0       LD    (CPU_ENERGY),A
+295d: 3A 22 D0       LD    A,(ENERGY)
 2960: 94             SUB   A,H
 2961: 38 0C          JR    C,$296F
 
@@ -7094,11 +7108,11 @@ NMI_starts_here?:
 
 2969: 28 05          JR    Z,$2970
 
-296b: 32 22 D0       LD    ($D022),A
+296b: 32 22 D0       LD    (ENERGY),A
 296e: C9             RET   
 
 296f: AF             XOR   A,A
-2970: 32 22 D0       LD    ($D022),A
+2970: 32 22 D0       LD    (ENERGY),A
 2973: 32 ED D7       LD    ($D7ED),A
 2976: CD 65 2A       CALL  $2A65
 2979: CD C1 29       CALL  $29C1
@@ -7107,17 +7121,17 @@ NMI_starts_here?:
 2980: C3 A6 27       JP    $27A6
 
 2983: AF             XOR   A,A
-2984: 32 24 D0       LD    ($D024),A
+2984: 32 24 D0       LD    (CPU_ENERGY),A
 2987: 32 DA D7       LD    ($D7DA),A
 298a: 32 ED D7       LD    ($D7ED),A
-298d: 3A 22 D0       LD    A,($D022)
+298d: 3A 22 D0       LD    A,(ENERGY)
 2990: 94             SUB   A,H
 2991: 28 02          JR    Z,$2995
 
 2993: 30 02          JR    NC,$2997
 
 2995: 3E 01          LD    A,#$01
-2997: 32 22 D0       LD    ($D022),A
+2997: 32 22 D0       LD    (ENERGY),A
 299a: CD A7 29       CALL  $29A7
 299d: CD 93 2A       CALL  $2A93
 29a0: D1             POP   DE
@@ -7162,7 +7176,7 @@ NMI_starts_here?:
 29df: 1C             INC   E
 29e0: 1B             DEC   DE
 29e1: 1E 1D          LD    E,#$1D
-29e3: 3A 24 D0       LD    A,($D024)
+29e3: 3A 24 D0       LD    A,(CPU_ENERGY)
 29e6: 94             SUB   A,H
 29e7: 38 17          JR    C,$2A00
 
@@ -7173,17 +7187,17 @@ NMI_starts_here?:
 
 29ef: 28 10          JR    Z,$2A01
 
-29f1: 32 24 D0       LD    ($D024),A
-29f4: 3A 22 D0       LD    A,($D022)
+29f1: 32 24 D0       LD    (CPU_ENERGY),A
+29f4: 3A 22 D0       LD    A,(ENERGY)
 29f7: FE 20          CP    A,#$20
 29f9: D0             RET   NC
 
 29fa: C6 02          ADD   A,#$02
-29fc: 32 22 D0       LD    ($D022),A
+29fc: 32 22 D0       LD    (ENERGY),A
 29ff: C9             RET   
 
 2a00: AF             XOR   A,A
-2a01: 32 24 D0       LD    ($D024),A
+2a01: 32 24 D0       LD    (CPU_ENERGY),A
 2a04: 32 DA D7       LD    ($D7DA),A
 2a07: 32 ED D7       LD    ($D7ED),A
 2a0a: CD 93 2A       CALL  $2A93
@@ -7191,24 +7205,24 @@ NMI_starts_here?:
 2a0e: 11 B9 28       LD    DE,$28B9
 2a11: C3 2A 27       JP    $272A
 
-2a14: 3A 22 D0       LD    A,($D022)
+2a14: 3A 22 D0       LD    A,(ENERGY)
 2a17: 95             SUB   A,L
 2a18: 38 29          JR    C,$2A43
 
 2a1a: 28 28          JR    Z,$2A44
 
-2a1c: 32 22 D0       LD    ($D022),A
-2a1f: 3A 24 D0       LD    A,($D024)
+2a1c: 32 22 D0       LD    (ENERGY),A
+2a1f: 3A 24 D0       LD    A,(CPU_ENERGY)
 2a22: 94             SUB   A,H
 2a23: 38 06          JR    C,$2A2B
 
 2a25: 28 05          JR    Z,$2A2C
 
-2a27: 32 24 D0       LD    ($D024),A
+2a27: 32 24 D0       LD    (CPU_ENERGY),A
 2a2a: C9             RET   
 
 2a2b: AF             XOR   A,A
-2a2c: 32 24 D0       LD    ($D024),A
+2a2c: 32 24 D0       LD    (CPU_ENERGY),A
 2a2f: 32 DA D7       LD    ($D7DA),A
 2a32: 32 ED D7       LD    ($D7ED),A
 2a35: 65             LD    H,L
@@ -7219,16 +7233,16 @@ NMI_starts_here?:
 2a40: C3 2A 27       JP    $272A
 
 2a43: AF             XOR   A,A
-2a44: 32 22 D0       LD    ($D022),A
+2a44: 32 22 D0       LD    (ENERGY),A
 2a47: 32 ED D7       LD    ($D7ED),A
-2a4a: 3A 24 D0       LD    A,($D024)
+2a4a: 3A 24 D0       LD    A,(CPU_ENERGY)
 2a4d: 94             SUB   A,H
 2a4e: 28 02          JR    Z,$2A52
 
 2a50: 30 02          JR    NC,$2A54
 
 2a52: 3E 01          LD    A,#$01
-2a54: 32 24 D0       LD    ($D024),A
+2a54: 32 24 D0       LD    (CPU_ENERGY),A
 2a57: 6C             LD    L,H
 2a58: CD 65 2A       CALL  $2A65
 2a5b: CD C1 29       CALL  $29C1
@@ -7478,7 +7492,7 @@ NMI_starts_here?:
 2ba1: CB 73          BIT   6,E
 2ba3: 20 2B          JR    NZ,$2BD0
 
-2ba5: 3A 2F D0       LD    A,($D02F)
+2ba5: 3A 2F D0       LD    A,(CPU_KOS ; if 3, enemy will be knocked out with next knockdown)
 2ba8: A7             AND   A,A
 2ba9: CA AE 2C       JP    Z,$2CAE
 
@@ -7501,12 +7515,12 @@ NMI_starts_here?:
 2bc6: 3A 26 D0       LD    A,($D026)
 2bc9: 81             ADD   A,C
 2bca: 4F             LD    C,A
-2bcb: 11 24 D0       LD    DE,$D024
+2bcb: 11 24 D0       LD    DE,CPU_ENERGY
 2bce: 18 16          JR    $2BE6
 
-2bd0: 3A 2E D0       LD    A,($D02E)
+2bd0: 3A 2E D0       LD    A,(KOS)
 2bd3: 4F             LD    C,A
-2bd4: 11 22 D0       LD    DE,$D022
+2bd4: 11 22 D0       LD    DE,ENERGY
 2bd7: 21 5E BD       LD    HL,$BD5E
 2bda: 3A FA D7       LD    A,($D7FA)
 2bdd: FE 05          CP    A,#$05
@@ -7537,7 +7551,7 @@ NMI_starts_here?:
 2c04: E6 40          AND   A,#$40
 2c06: 20 32          JR    NZ,$2C3A
 
-2c08: 3A 2F D0       LD    A,($D02F)
+2c08: 3A 2F D0       LD    A,(CPU_KOS ; if 3, enemy will be knocked out with next knockdown)
 2c0b: FE 03          CP    A,#$03
 2c0d: 28 14          JR    Z,$2C23
 
@@ -7563,7 +7577,7 @@ NMI_starts_here?:
 2c36: 22 BD D0       LD    ($D0BD),HL
 2c39: C9             RET   
 
-2c3a: 3A 2E D0       LD    A,($D02E)
+2c3a: 3A 2E D0       LD    A,(KOS)
 2c3d: FE 03          CP    A,#$03
 2c3f: 28 1C          JR    Z,$2C5D
 
@@ -9022,12 +9036,12 @@ NMI_starts_here?:
 342f: 0F             RRCA  
 3430: 38 0B          JR    C,$343D
 
-3432: 21 24 D0       LD    HL,$D024
+3432: 21 24 D0       LD    HL,CPU_ENERGY
 3435: 11 9C DE       LD    DE,$DE9C
 3438: 01 02 84       LD    BC,$8402
 343b: 18 09          JR    $3446
 
-343d: 21 22 D0       LD    HL,$D022
+343d: 21 22 D0       LD    HL,ENERGY
 3440: 11 A6 DE       LD    DE,$DEA6
 3443: 01 FE 04       LD    BC,$04FE
 3446: 7E             LD    A,(HL)
