@@ -3,4 +3,10 @@ cd /mnt/e/git-repos/ArcadeVideoGameHacking.git/Super_Punchout
 cat spnchout_datafile.txt | grep ^label | awk '{print      l}' >> labels_for_ghidra.txt
 
 
-0b3c NMI_starts_here l
+0b3c NMI_starts_here? l
+d7bf game_status l
+d7cb credits l
+d880 VRAM_top_monitor l
+dff4 vert_scroll_sprite_1? l
+f20e VRAM_bottom_monitor l
+fcc8 REMATCH_AVAILABLE_DRAW_LOCATION l
