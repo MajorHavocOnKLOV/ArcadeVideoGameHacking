@@ -52,49 +52,5 @@ if NZ, jmp 1676
 
 16A4  jr   $1689                                          18 E3
 
-2d75 a= bcd? input, a&c are output: a has tens digit in lower nybble and c has ones digit in lower nybbble
 
-3055 print from 46f0 & 46d4 (what?)
-
-3060 print remtach?
-
-4598
-
-46B3
-
-46F0
-
-46D4
-
-471A data for outputting rematch with arrow above right punch? button
-4720 HCTAMER
-
-472A
-
-4823
-
-D7CB credits
-
-top screen background RAM
-- from top left corner to bottom right corner
-D880-DF7F
-32x32
-00-09: digits
-0A-23: letters
-24-?: special chars
-char is first byte and color palette is the second byte. 44 is white char on black background for top monitor
-
-
-DFF4 vert scroll sprite (see punchout.cpp line #39)
-
-bottom screen background RAM
-- from top left corner to bottom right corner
-- values are approximate?
-F20E-FECF
-32x26
-
-fill f1ae,d22,0620 (fills bottom screen with green Ws)
-
-FCBC where the R in REMATCH is written in bottom screen vram
-
-Is there security software? 3AB1 was reading areas I didn't expect. Also, I found when I enabled cheats I sometimes had to knockdown an opponent far more than 3 times! Why?
+(see punchout.cpp line #39)

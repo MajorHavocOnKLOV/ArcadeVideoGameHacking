@@ -33,12 +33,44 @@
 IO_LABEL 00 IO_0_BUTTONS
 
 org 0000
+
 commentline 0000 Dissasembly of the Super Punch-Out!! (Rev B) ROMs used by MAME (labeled as spnchout)
 comment 0000 Z80 starts executing code at 0x0000
+
+commentline 2d75 a= bcd? input, a&c are output: a has tens digit in lower nybble and c has ones digit in lower nybbble
+commentline 3055 print from 46f0 & 46d4 (what?)
+commentline 3060 print remtach?
+
+commentline 4598 ?
+commentline 46B3 ?
+commentline 46D4 ?
+commentline 46F0 ?
+commentline 471A data for outputting rematch with arrow above right punch button
+commentline 4720 HCTAMER
+commentline 472A ?
+commentline 4823 ?
+
 comment 0b93 return from NMI
-commentline d7bf 01 = credit, 02 = start game, 03 = game over, 04 = game over 2?, 05 = game over 3?, 06 = rematch started, or countdown value to add coins for rematch
+
+commentline d7bf 01 = credit, 02 = start game, 03 = game over, 04 = game over 2?, 05 = game over 3?, 06 = rematch started,
+commentline d7bf or countdown value to add coins for rematch
+commentline d880 top screen background RAM, from top left corner to bottom right corner
+commentline d880 ~D880-DF7F, 32x32, 00-09: digits, 0A-23: letters, 24-?: special chars
+commentline d880 char then color palette (44 is white char on black background)
+
+commentline f20E bottom screen background RAM, from top left corner to bottom right corner
+commentline f20E ~F20E-FECF, 32x26?, 
+commentline f20E char then color palette (44 is white char on black background)
 
 label 0b3c NMI_starts_here?
 label d7bf game_status
-label f20e VRAM_top_monitor
+label d7cb credits
+label d880 VRAM_top_monitor
+label dff4 vert_scroll_sprite_1?
 
+; fill f1ae,d22,0620 (fills bottom screen with green Ws)
+label f20e VRAM_bottom_monitor
+label fcc8 REMATCH_AVAILABLE_DRAW_LOCATION
+
+; Is there security software? 3AB1 was reading areas I didn't expect. Also, I found when I enabled cheats,
+; I sometimes had to knockdown an opponent far more than 3 times! Why?
