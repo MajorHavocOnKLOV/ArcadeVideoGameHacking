@@ -37,6 +37,21 @@ org 0000
 commentline 0000 Dissasembly of the Super Punch-Out!! (Rev B) ROMs used by MAME (labeled as spnchout)
 comment 0000 Z80 starts executing code at 0x0000
 
+comment 0b93 return from NMI
+
+commentline 108D a is bcd digits. put a into 10s digit and 1s digit on screen
+commentline 1679 process rematch (because credit and R punch pressed)
+commentline 1689 input from 00 into A, check bit 3 (and $04) and if NZ, jmp 1676
+
+comment 169A ?
+comment 169C ?
+comment 169E ?
+comment 16A0 ?
+comment 16A2 ?
+comment 16A4 ?
+comment 16A6 ?
+comment 16A8 ?
+
 commentline 2d75 a= bcd? input, a&c are output: a has tens digit in lower nybble and c has ones digit in lower nybbble
 commentline 3055 print from 46f0 & 46d4 (what?)
 commentline 3060 print remtach?
@@ -50,8 +65,6 @@ commentline 4720 HCTAMER
 commentline 472A ?
 commentline 4823 ?
 
-comment 0b93 return from NMI
-
 commentline d7bf 01 = credit, 02 = start game, 03 = game over, 04 = game over 2?, 05 = game over 3?, 06 = rematch started,
 commentline d7bf or countdown value to add coins for rematch
 commentline d880 top screen background RAM, from top left corner to bottom right corner
@@ -63,6 +76,7 @@ commentline f20E ~F20E-FECF, 32x26?,
 commentline f20E char then color palette (44 is white char on black background)
 
 label 0b3c NMI_starts_here?
+label 168f print_rematch?
 label d7bf game_status
 label d7cb credits
 label d880 VRAM_top_monitor

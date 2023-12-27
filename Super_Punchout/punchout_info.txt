@@ -31,26 +31,6 @@ history: how the draw rematch gets called, and it's CONVOLUTED!
 0018  ld   de,$0080                                       11 80 00
 001B  jp   $30CE                                          C3 CE 30
 
-108D a is bcd digits. put a into 10s digit and 1s digit on screen
-
-1679 process rematch (because credit and R punch pressed)
-
-1689 input from 00 into A
-mask off bit 3 (and $04)
-if NZ, jmp 1676
-168F call to print rematch?
-
- 169A  jr   $164D                                          18 B1
- 169C  jr   $1665                                          18 C7
- 169E  jr   $167E                                          18 DE
- 16A0  jr   $16C0                                          18 1E
- 16A2  jr   $166F                                          18 CB
- 16A4  jr   $1689                                          18 E3
- 16A6  jr   $16AA                                          18 02
- 16A8  jr   $16CE                                          18 24
-
-
-16A4  jr   $1689                                          18 E3
 
 
 (see punchout.cpp line #39)
