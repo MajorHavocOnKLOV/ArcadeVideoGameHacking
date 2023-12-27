@@ -77,8 +77,15 @@ commentline f20E char then color palette (44 is white char on black background)
 
 label 0b3c NMI_starts_here?
 label 168f print_rematch?
+
+label d022 ENERGY
+label d024 CPU_ENERGY
+label d02e KOS
+label d02f CPU_KOS ; if 3, enemy will be knocked out with next knockdown
+label d048 KO_LEVEL ; 1A = max/can KO
 label d7bf game_status
 label d7cb credits
+label d7f2 TIME
 label d880 VRAM_top_monitor
 label dff4 vert_scroll_sprite_1?
 
