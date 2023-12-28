@@ -1,9 +1,23 @@
-org 0, numlab 14, numio 1, numdata 0, numcomm 10, numcommline 23
+org 0, numlab 34, numio 13, numdata 1, numcomm 10, numcommline 24
 
 IO_0_BUTTONS EQU $00
+I0_1_JOYSTICK? EQU $01
+DSW1_TO_2A03 ; Coins EQU $02
+DSW2_TO_2A03_BIT4_VLM5030_BUSY ; Difficulty, Time, Attract sounds, Rematch at a discount EQU $03
+TO_VLM5030 EQU $04
+NMI_ENABLE_AND_WATCHDOG_RESET EQU $08
+WATCHDOG_RESET EQU $09
+LATCHED_INTO_Z80_BUS_REQ EQU $0a
+2A03_RESET EQU $0b
+VLM5030_RESET EQU $0c
+VLM5030_START EQU $0d
+VLM5030_VCU EQU $0e
+NVRAM_ENABLE? EQU $0f
 
 NMI_starts_here? EQU $0b3c
 print_rematch? EQU $168f
+NVRAM EQU $c000
+RAM EQU $d000
 ENERGY EQU $d022
 CPU_ENERGY EQU $d024
 KOS EQU $d02e
@@ -12,8 +26,26 @@ KO_LEVEL ; 1A = max/can KO EQU $d048
 game_status EQU $d7bf
 credits EQU $d7cb
 TIME EQU $d7f2
+VRAM_INFO EQU $d800
 VRAM_top_monitor EQU $d880
-vert_scroll_sprite_1? EQU $dff4
+BIG_SPRITE1_ZOOM_LOW ; big sprite #1 zoom low 8 bits EQU $dff0
+BIG_SPRITE1_ZOOM_HIGH ; big sprite #1 zoom high 4 bits EQU $dff1
+BIG_SPRITE1_XPOS_LOW ; big sprite #1 x pos low 8 bits EQU $dff2
+BIG_SPRITE1_XPOS_HIGH ; big sprite #1 x pos high 4 bits EQU $dff3
+BIG_SPRITE1_YPOS_LOW ; big sprite #1 y pos low 8 bits EQU $dff4
+BIG_SPRITE1_YPOS_HIGH ; big sprite #1 y pos high bit EQU $dff5
+BIG_SPRITE1_XFLIP ; big sprite #1 x flip (bit 0) EQU $dff6
+BIG_SPRITE1_SHOW_WHERE ; big sprite #1 bit 0: show on top monitor; bit 1: show on bottom monitor EQU $dff7
+BIG_SPRITE2_XPOS_LOW ; big sprite #2 x pos low 8 bits EQU $dff8
+BIG_SPRITE2_XPOS_HIGH ; big sprite #2 x pos high bit EQU $dff9
+BIG_SPRITE2_YPOS_LOW ; big sprite #2 y pos low 8 bits EQU $dffa
+BIG_SPRITE2_YPOS_HIGH ; big sprite #2 y pos high bit EQU $dffb
+BIG_SPRITE2_XPOS_XFLIP ; big sprite #2 x flip (bit 0) EQU $dffc
+PALETTE_BANK ; palette bank (bit 0 = bottom monitor bit 1 = top monitor) EQU $dffd
+VRAM_CPU EQU $e000
+VRAM_PLAYER EQU $e800
+SCROLL_BACKGROUND EQU $f000
+VRAM_BACKGROUND EQU $f040
 VRAM_bottom_monitor EQU $f20e
 REMATCH_AVAILABLE_DRAW_LOCATION EQU $fcc8
 
@@ -77,7 +109,7 @@ ORG $0000
 
 002f: FF             RST   $38
 
-0030: DB 03          IN    A,($03)
+0030: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY ; Difficulty, Time, Attract sounds, Rematch at a discount)
 0032: E6 80          AND   A,#$80
 0034: C9             RET   
 
@@ -125,8 +157,8 @@ ORG $0000
 0065: B2             OR    A,D
 0066: F5             PUSH  AF
 0067: AF             XOR   A,A
-0068: D3 08          OUT   ($08),A
-006a: D3 0A          OUT   ($0A),A
+0068: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
+006a: D3 0A          OUT   (LATCHED_INTO_Z80_BUS_REQ),A
 006c: 08             EX    AF,AF'
 006d: F5             PUSH  AF
 006e: E5             PUSH  HL
@@ -557,7 +589,7 @@ ORG $0000
 02a1: 31 00 00       LD    SP,$0000
 02a4: F7             RST   $30
 
-02a5: DB 02          IN    A,($02)
+02a5: DB 02          IN    A,(DSW1_TO_2A03 ; Coins)
 02a7: E6 80          AND   A,#$80
 02a9: C2 BF BD       JP    NZ,$BDBF
 
@@ -565,26 +597,26 @@ ORG $0000
 02ae: 32 67 FF       LD    ($FF67),A
 02b1: 3E 01          LD    A,#$01
 02b3: 32 C2 D7       LD    ($D7C2),A
-02b6: D3 08          OUT   ($08),A
-02b8: D3 0B          OUT   ($0B),A
+02b6: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
+02b8: D3 0B          OUT   (2A03_RESET),A
 02ba: CD 42 2D       CALL  $2D42
-02bd: DB 01          IN    A,($01)
+02bd: DB 01          IN    A,(I0_1_JOYSTICK?)
 02bf: E6 40          AND   A,#$40
 02c1: C2 2A 0C       JP    NZ,$0C2A
 
 02c4: D3 05          OUT   ($05),A
 02c6: 01 06 A8       LD    BC,$A806
-02c9: D3 08          OUT   ($08),A
+02c9: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
 02cb: E5             PUSH  HL
 02cc: E5             PUSH  HL
 02cd: ED 41          OUT   (C),B
-02cf: D3 08          OUT   ($08),A
+02cf: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
 02d1: E1             POP   HL
 02d2: E1             POP   HL
 02d3: 32 C2 D7       LD    ($D7C2),A
 02d6: 10 F1          DJNZ  $02C9
 
-02d8: D3 0B          OUT   ($0B),A
+02d8: D3 0B          OUT   (2A03_RESET),A
 02da: D3 E7          OUT   ($E7),A
 02dc: 0E D7          LD    C,#$D7
 02de: ED 79          OUT   (C),A
@@ -612,7 +644,7 @@ ORG $0000
 0302: 3E 09          LD    A,#$09
 0304: 0E D7          LD    C,#$D7
 0306: ED 79          OUT   (C),A
-0308: 11 00 D0       LD    DE,$D000
+0308: 11 00 D0       LD    DE,RAM
 030b: AF             XOR   A,A
 030c: 01 00 08       LD    BC,$0800
 030f: CD 58 2D       CALL  $2D58
@@ -621,7 +653,7 @@ ORG $0000
 0313: DB 97          IN    A,($97)
 0315: CB E7          SET   4,A
 0317: F5             PUSH  AF
-0318: 11 00 D8       LD    DE,$D800
+0318: 11 00 D8       LD    DE,VRAM_INFO
 031b: F5             PUSH  AF
 031c: 01 80 27       LD    BC,$2780
 031f: F5             PUSH  AF
@@ -632,7 +664,7 @@ ORG $0000
 0329: 3E C9          LD    A,#$C9
 032b: 32 67 FF       LD    ($FF67),A
 032e: 32 40 FF       LD    ($FF40),A
-0331: DB 02          IN    A,($02)
+0331: DB 02          IN    A,(DSW1_TO_2A03 ; Coins)
 0333: 4F             LD    C,A
 0334: 06 35          LD    B,#$35
 0336: AF             XOR   A,A
@@ -685,7 +717,7 @@ ORG $0000
 037a: 08             EX    AF,AF'
 037b: 21 C3 D7       LD    HL,$D7C3
 037e: ED 69          OUT   (C),L
-0380: DB 03          IN    A,($03)
+0380: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY ; Difficulty, Time, Attract sounds, Rematch at a discount)
 0382: CB F9          SET   7,C
 0384: E6 0F          AND   A,#$0F
 0386: FE 0F          CP    A,#$0F
@@ -696,7 +728,7 @@ ORG $0000
 
 038d: 87             ADD   A,A
 038e: 47             LD    B,A
-038f: DB 02          IN    A,($02)
+038f: DB 02          IN    A,(DSW1_TO_2A03 ; Coins)
 0391: E6 40          AND   A,#$40
 0393: 0F             RRCA  
 0394: 80             ADD   A,B
@@ -773,11 +805,11 @@ ORG $0000
 0411: F1             POP   AF
 0412: 32 A0 D7       LD    ($D7A0),A
 0415: 3E 00          LD    A,#$00
-0417: D3 09          OUT   ($09),A
+0417: D3 09          OUT   (WATCHDOG_RESET),A
 0419: F1             POP   AF
 041a: 32 DF D7       LD    ($D7DF),A
 041d: AF             XOR   A,A
-041e: D3 0A          OUT   ($0A),A
+041e: D3 0A          OUT   (LATCHED_INTO_Z80_BUS_REQ),A
 0420: C3 A5 04       JP    $04A5
 
 0423: 11 C0 D5       LD    DE,$D5C0
@@ -815,13 +847,13 @@ ORG $0000
 0452: 21 00 FF       LD    HL,$FF00
 0455: 22 CC D7       LD    ($D7CC),HL
 0458: 3E 01          LD    A,#$01
-045a: D3 08          OUT   ($08),A
+045a: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
 045c: CD E4 10       CALL  $10E4
 045f: AF             XOR   A,A
-0460: 11 00 D0       LD    DE,$D000
+0460: 11 00 D0       LD    DE,RAM
 0463: 4F             LD    C,A
 0464: CD 52 2D       CALL  $2D52
-0467: 32 FD DF       LD    ($DFFD),A
+0467: 32 FD DF       LD    (PALETTE_BANK ; palette bank (bit 0 = bottom monitor bit 1 = top monitor)),A
 046a: C3 45 04       JP    $0445
 
 046d: 31 00 00       LD    SP,$0000
@@ -854,7 +886,7 @@ ORG $0000
 04a8: 22 CC D7       LD    ($D7CC),HL
 04ab: 31 00 00       LD    SP,$0000
 04ae: 3E 01          LD    A,#$01
-04b0: D3 08          OUT   ($08),A
+04b0: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
 04b2: CD E4 10       CALL  $10E4
 04b5: AF             XOR   A,A
 04b6: 32 B6 D7       LD    ($D7B6),A
@@ -864,11 +896,11 @@ ORG $0000
 04c2: CD 3F 30       CALL  $303F
 04c5: CD AF 2D       CALL  $2DAF
 04c8: AF             XOR   A,A
-04c9: 11 00 D0       LD    DE,$D000
+04c9: 11 00 D0       LD    DE,RAM
 04cc: 4F             LD    C,A
 04cd: CD 52 2D       CALL  $2D52
 04d0: 3E 03          LD    A,#$03
-04d2: 32 F7 DF       LD    ($DFF7),A
+04d2: 32 F7 DF       LD    (BIG_SPRITE1_SHOW_WHERE ; big sprite #1 bit 0: show on top monitor; bit 1: show on bottom monitor),A
 04d5: 21 F7 D7       LD    HL,$D7F7
 04d8: 7E             LD    A,(HL)
 04d9: A7             AND   A,A
@@ -888,7 +920,7 @@ ORG $0000
 04f3: CD 2E 2D       CALL  $2D2E
 04f6: CD A8 2E       CALL  $2EA8
 04f9: 3E 01          LD    A,#$01
-04fb: 32 F7 DF       LD    ($DFF7),A
+04fb: 32 F7 DF       LD    (BIG_SPRITE1_SHOW_WHERE ; big sprite #1 bit 0: show on top monitor; bit 1: show on bottom monitor),A
 04fe: 3E FC          LD    A,#$FC
 0500: 32 61 D0       LD    ($D061),A
 0503: CD E0 2F       CALL  $2FE0
@@ -912,7 +944,7 @@ ORG $0000
 0533: AF             XOR   A,A
 0534: 32 B6 D7       LD    ($D7B6),A
 0537: 3E 02          LD    A,#$02
-0539: 32 F7 DF       LD    ($DFF7),A
+0539: 32 F7 DF       LD    (BIG_SPRITE1_SHOW_WHERE ; big sprite #1 bit 0: show on top monitor; bit 1: show on bottom monitor),A
 053c: CD 81 12       CALL  $1281
 053f: CD 46 04       CALL  $0446
 0542: CD E5 2E       CALL  $2EE5
@@ -1070,11 +1102,11 @@ ORG $0000
 064d: 20 92          JR    NZ,$05E1
 
 064f: 2C             INC   L
-0650: DB 01          IN    A,($01)
+0650: DB 01          IN    A,(I0_1_JOYSTICK?)
 0652: 5F             LD    E,A
 0653: 06 C0          LD    B,#$C0
 0655: CD 1F 16       CALL  $161F
-0658: DB 03          IN    A,($03)
+0658: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY ; Difficulty, Time, Attract sounds, Rematch at a discount)
 065a: E6 40          AND   A,#$40
 065c: C2 67 06       JP    NZ,$0667
 
@@ -1199,7 +1231,7 @@ ORG $0000
 070d: 22 CC D7       LD    ($D7CC),HL
 0710: 31 00 00       LD    SP,$0000
 0713: 3E 01          LD    A,#$01
-0715: D3 08          OUT   ($08),A
+0715: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
 0717: CD E4 10       CALL  $10E4
 071a: 21 00 00       LD    HL,$0000
 071d: 22 EA D7       LD    ($D7EA),HL
@@ -1214,7 +1246,7 @@ ORG $0000
 0734: 32 B6 D7       LD    ($D7B6),A
 0737: AF             XOR   A,A
 0738: 32 C1 D0       LD    ($D0C1),A
-073b: 32 FD DF       LD    ($DFFD),A
+073b: 32 FD DF       LD    (PALETTE_BANK ; palette bank (bit 0 = bottom monitor bit 1 = top monitor)),A
 073e: 11 6C D0       LD    DE,$D06C
 0741: 0E 14          LD    C,#$14
 0743: CD 52 2D       CALL  $2D52
@@ -1240,6 +1272,8 @@ ORG $0000
 0771: CD 7B 2F       CALL  $2F7B
 0774: 18 0B          JR    $0781
 
+
+*** call function to draw bandage on forehead of rematch fighter
 0776: CD B0 2F       CALL  $2FB0
 0779: 18 49          JR    $07C4
 
@@ -1486,7 +1520,7 @@ ORG $0000
 095d: CD 3E 2D       CALL  $2D3E
 0960: CD 78 0C       CALL  $0C78
 0963: 3E 03          LD    A,#$03
-0965: 32 FD DF       LD    ($DFFD),A
+0965: 32 FD DF       LD    (PALETTE_BANK ; palette bank (bit 0 = bottom monitor bit 1 = top monitor)),A
 0968: C3 DD 08       JP    $08DD
 
 096b: 3A ED D7       LD    A,($D7ED)
@@ -1560,7 +1594,7 @@ ORG $0000
 0a02: 3E FE          LD    A,#$FE
 0a04: 32 CD D7       LD    ($D7CD),A
 0a07: E1             POP   HL
-0a08: 22 FA DF       LD    ($DFFA),HL
+0a08: 22 FA DF       LD    (BIG_SPRITE2_YPOS_LOW ; big sprite #2 y pos low 8 bits),HL
 0a0b: CD 3E 2D       CALL  $2D3E
 0a0e: 3E 32          LD    A,#$32
 0a10: CD A6 10       CALL  $10A6
@@ -1606,7 +1640,7 @@ ORG $0000
 0a5a: CD A8 2E       CALL  $2EA8
 0a5d: AF             XOR   A,A
 0a5e: 32 C1 D0       LD    ($D0C1),A
-0a61: 32 FD DF       LD    ($DFFD),A
+0a61: 32 FD DF       LD    (PALETTE_BANK ; palette bank (bit 0 = bottom monitor bit 1 = top monitor)),A
 0a64: FD 21 C8 D7    LD    IY,$D7C8
 0a68: 3A BE D7       LD    A,($D7BE)
 0a6b: FE 38          CP    A,#$38
@@ -1790,7 +1824,7 @@ NMI_starts_here?:
 0b70: D2 AA 2D       JP    NC,$2DAA
 
 0b73: 3E 01          LD    A,#$01
-0b75: D3 0A          OUT   ($0A),A
+0b75: D3 0A          OUT   (LATCHED_INTO_Z80_BUS_REQ),A
 0b77: CD 7A 15       CALL  $157A
 0b7a: CD 53 15       CALL  $1553
 0b7d: 3E 0B          LD    A,#$0B
@@ -1807,12 +1841,12 @@ NMI_starts_here?:
 0b8c: F1             POP   AF
 0b8d: 08             EX    AF,AF'
 0b8e: 3E 01          LD    A,#$01
-0b90: D3 08          OUT   ($08),A
+0b90: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
 0b92: F1             POP   AF
 0b93: ED 45          RETN                 ;return from NMI
 
 0b95: 3E 01          LD    A,#$01
-0b97: D3 0A          OUT   ($0A),A
+0b97: D3 0A          OUT   (LATCHED_INTO_Z80_BUS_REQ),A
 0b99: 18 E2          JR    $0B7D
 
 0b9b: 3C             INC   A
@@ -1869,7 +1903,7 @@ NMI_starts_here?:
 0bf8: CD E2 1F       CALL  $1FE2
 0bfb: CD 4C 3A       CALL  $3A4C
 0bfe: 3E 01          LD    A,#$01
-0c00: D3 0A          OUT   ($0A),A
+0c00: D3 0A          OUT   (LATCHED_INTO_Z80_BUS_REQ),A
 0c02: C3 7A 0B       JP    $0B7A
 
 0c05: 1A             LD    A,(DE)
@@ -1910,7 +1944,7 @@ NMI_starts_here?:
 0c3a: CD 46 04       CALL  $0446
 0c3d: CD 3F 30       CALL  $303F
 0c40: 21 00 00       LD    HL,$0000
-0c43: 01 00 C0       LD    BC,$C000
+0c43: 01 00 C0       LD    BC,NVRAM
 0c46: CD 9D 2D       CALL  $2D9D
 0c49: 11 2C FE       LD    DE,$FE2C
 0c4c: CD 8D 10       CALL  $108D
@@ -1933,7 +1967,7 @@ NMI_starts_here?:
 0c6c: CD 3E 2D       CALL  $2D3E
 0c6f: AF             XOR   A,A
 0c70: 32 C2 D7       LD    ($D7C2),A
-0c73: D3 08          OUT   ($08),A
+0c73: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
 0c75: C3 BF BD       JP    $BDBF
 
 0c78: 21 01 F0       LD    HL,$F001
@@ -2081,10 +2115,10 @@ NMI_starts_here?:
 0d64: CB A9          RES   5,C
 0d66: ED 79          OUT   (C),A
 0d68: 3E 01          LD    A,#$01
-0d6a: D3 0F          OUT   ($0F),A
+0d6a: D3 0F          OUT   (NVRAM_ENABLE?),A
 0d6c: 4E             LD    C,(HL)
 0d6d: AF             XOR   A,A
-0d6e: D3 0F          OUT   ($0F),A
+0d6e: D3 0F          OUT   (NVRAM_ENABLE?),A
 0d70: 79             LD    A,C
 0d71: E6 0F          AND   A,#$0F
 0d73: FE 0A          CP    A,#$0A
@@ -2097,11 +2131,11 @@ NMI_starts_here?:
 0d7e: 06 28          LD    B,#$28
 0d80: 0E 06          LD    C,#$06
 0d82: 3E 01          LD    A,#$01
-0d84: D3 0F          OUT   ($0F),A
+0d84: D3 0F          OUT   (NVRAM_ENABLE?),A
 0d86: 5E             LD    E,(HL)
 0d87: 23             INC   HL
 0d88: AF             XOR   A,A
-0d89: D3 0F          OUT   ($0F),A
+0d89: D3 0F          OUT   (NVRAM_ENABLE?),A
 0d8b: 7B             LD    A,E
 0d8c: E6 0F          AND   A,#$0F
 0d8e: FE 0A          CP    A,#$0A
@@ -2141,13 +2175,13 @@ NMI_starts_here?:
 
 0dc7: D9             EXX   
 0dc8: 3E 01          LD    A,#$01
-0dca: D3 0F          OUT   ($0F),A
+0dca: D3 0F          OUT   (NVRAM_ENABLE?),A
 0dcc: 4E             LD    C,(HL)
 0dcd: 23             INC   HL
 0dce: 46             LD    B,(HL)
 0dcf: 23             INC   HL
 0dd0: AF             XOR   A,A
-0dd1: D3 0F          OUT   ($0F),A
+0dd1: D3 0F          OUT   (NVRAM_ENABLE?),A
 0dd3: 78             LD    A,B
 0dd4: 07             RLCA  
 0dd5: 07             RLCA  
@@ -2173,11 +2207,11 @@ NMI_starts_here?:
 0df2: CD F8 0D       CALL  $0DF8
 0df5: 21 01 C2       LD    HL,$C201
 0df8: 3E 01          LD    A,#$01
-0dfa: D3 0F          OUT   ($0F),A
+0dfa: D3 0F          OUT   (NVRAM_ENABLE?),A
 0dfc: 3E 0F          LD    A,#$0F
 0dfe: 77             LD    (HL),A
 0dff: AF             XOR   A,A
-0e00: D3 0F          OUT   ($0F),A
+0e00: D3 0F          OUT   (NVRAM_ENABLE?),A
 0e02: E5             PUSH  HL
 0e03: 23             INC   HL
 0e04: D9             EXX   
@@ -2194,10 +2228,10 @@ NMI_starts_here?:
 0e1f: CD 2C 0E       CALL  $0E2C
 0e22: E1             POP   HL
 0e23: 3E 01          LD    A,#$01
-0e25: D3 0F          OUT   ($0F),A
+0e25: D3 0F          OUT   (NVRAM_ENABLE?),A
 0e27: AF             XOR   A,A
 0e28: 77             LD    (HL),A
-0e29: D3 0F          OUT   ($0F),A
+0e29: D3 0F          OUT   (NVRAM_ENABLE?),A
 0e2b: C9             RET   
 
 0e2c: 23             INC   HL
@@ -2215,13 +2249,13 @@ NMI_starts_here?:
 0e3a: CD 75 2D       CALL  $2D75
 0e3d: 4F             LD    C,A
 0e3e: 3E 01          LD    A,#$01
-0e40: D3 0F          OUT   ($0F),A
+0e40: D3 0F          OUT   (NVRAM_ENABLE?),A
 0e42: 08             EX    AF,AF'
 0e43: 77             LD    (HL),A
 0e44: 23             INC   HL
 0e45: 71             LD    (HL),C
 0e46: AF             XOR   A,A
-0e47: D3 0F          OUT   ($0F),A
+0e47: D3 0F          OUT   (NVRAM_ENABLE?),A
 0e49: 23             INC   HL
 0e4a: D9             EXX   
 0e4b: 10 EA          DJNZ  $0E37
@@ -3021,7 +3055,7 @@ NMI_starts_here?:
 12ec: 22 27 D0       LD    ($D027),HL
 12ef: C9             RET   
 
-12f0: 11 00 D0       LD    DE,$D000
+12f0: 11 00 D0       LD    DE,RAM
 12f3: AF             XOR   A,A
 12f4: 01 00 02       LD    BC,$0200
 12f7: CD 58 2D       CALL  $2D58
@@ -3312,7 +3346,7 @@ NMI_starts_here?:
 148e: 28 48          JR    Z,$14D8
 
 1490: 2C             INC   L
-1491: DB 01          IN    A,($01)
+1491: DB 01          IN    A,(I0_1_JOYSTICK?)
 1493: E6 0F          AND   A,#$0F
 1495: 28 BE          JR    Z,$1455
 
@@ -3511,7 +3545,7 @@ NMI_starts_here?:
 1592: 3C             INC   A
 1593: 20 0F          JR    NZ,$15A4
 
-1595: DB 03          IN    A,($03)
+1595: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY ; Difficulty, Time, Attract sounds, Rematch at a discount)
 1597: E6 10          AND   A,#$10
 1599: 20 F3          JR    NZ,$158E
 
@@ -3522,13 +3556,13 @@ NMI_starts_here?:
 15a3: C9             RET   
 
 15a4: 3E 01          LD    A,#$01
-15a6: D3 0C          OUT   ($0C),A
+15a6: D3 0C          OUT   (VLM5030_RESET),A
 15a8: 3E 00          LD    A,#$00
-15aa: D3 04          OUT   ($04),A
+15aa: D3 04          OUT   (TO_VLM5030),A
 15ac: EB             EX    DE,HL
 15ad: 0E 05          LD    C,#$05
 15af: CD 52 2D       CALL  $2D52
-15b2: D3 0C          OUT   ($0C),A
+15b2: D3 0C          OUT   (VLM5030_RESET),A
 15b4: C9             RET   
 
 15b5: 3A CC D7       LD    A,($D7CC)
@@ -3544,7 +3578,7 @@ NMI_starts_here?:
 15c0: D6 02          SUB   A,#$02
 15c2: 32 B0 D7       LD    ($D7B0),A
 15c5: AF             XOR   A,A
-15c6: D3 0D          OUT   ($0D),A
+15c6: D3 0D          OUT   (VLM5030_START),A
 15c8: C9             RET   
 
 15c9: 7E             LD    A,(HL)
@@ -3554,20 +3588,20 @@ NMI_starts_here?:
 15cc: 36 00          LD    (HL),#$00
 15ce: 08             EX    AF,AF'
 15cf: 3E 01          LD    A,#$01
-15d1: D3 0C          OUT   ($0C),A
+15d1: D3 0C          OUT   (VLM5030_RESET),A
 15d3: AF             XOR   A,A
 15d4: 08             EX    AF,AF'
-15d5: D3 04          OUT   ($04),A
+15d5: D3 04          OUT   (TO_VLM5030),A
 15d7: 79             LD    A,C
 15d8: 32 B0 D7       LD    ($D7B0),A
 15db: 08             EX    AF,AF'
-15dc: D3 0C          OUT   ($0C),A
+15dc: D3 0C          OUT   (VLM5030_RESET),A
 15de: 2C             INC   L
-15df: D3 0E          OUT   ($0E),A
+15df: D3 0E          OUT   (VLM5030_VCU),A
 15e1: 7E             LD    A,(HL)
-15e2: D3 04          OUT   ($04),A
+15e2: D3 04          OUT   (TO_VLM5030),A
 15e4: 3E 01          LD    A,#$01
-15e6: D3 0D          OUT   ($0D),A
+15e6: D3 0D          OUT   (VLM5030_START),A
 15e8: 37             SCF   
 15e9: C9             RET   
 
@@ -5084,7 +5118,7 @@ print_rematch?:
 1e1f: 0E 02          LD    C,#$02
 1e21: 1E 33          LD    E,#$33
 1e23: ED B0          LDIR  
-1e25: 11 F8 DF       LD    DE,$DFF8
+1e25: 11 F8 DF       LD    DE,BIG_SPRITE2_XPOS_LOW ; big sprite #2 x pos low 8 bits
 1e28: ED A0          LDI   
 1e2a: 1C             INC   E
 1e2b: ED A0          LDI   
@@ -5182,10 +5216,10 @@ print_rematch?:
 1e9a: 77             LD    (HL),A
 1e9b: 13             INC   DE
 1e9c: 1A             LD    A,(DE)
-1e9d: 32 F8 DF       LD    ($DFF8),A
+1e9d: 32 F8 DF       LD    (BIG_SPRITE2_XPOS_LOW ; big sprite #2 x pos low 8 bits),A
 1ea0: 13             INC   DE
 1ea1: 1A             LD    A,(DE)
-1ea2: 32 FA DF       LD    ($DFFA),A
+1ea2: 32 FA DF       LD    (BIG_SPRITE2_YPOS_LOW ; big sprite #2 y pos low 8 bits),A
 1ea5: 2D             DEC   L
 1ea6: 18 B4          JR    $1E5C
 
@@ -5232,7 +5266,7 @@ print_rematch?:
 1ed7: 77             LD    (HL),A
 1ed8: 13             INC   DE
 1ed9: 1A             LD    A,(DE)
-1eda: 32 FA DF       LD    ($DFFA),A
+1eda: 32 FA DF       LD    (BIG_SPRITE2_YPOS_LOW ; big sprite #2 y pos low 8 bits),A
 1edd: 2D             DEC   L
 1ede: C3 5D 1E       JP    $1E5D
 
@@ -5470,7 +5504,7 @@ print_rematch?:
 2025: 0E 02          LD    C,#$02
 2027: ED B0          LDIR  
 2029: 0E 02          LD    C,#$02
-202b: 11 F2 DF       LD    DE,$DFF2
+202b: 11 F2 DF       LD    DE,BIG_SPRITE1_XPOS_LOW ; big sprite #1 x pos low 8 bits
 202e: ED B0          LDIR  
 2030: 12             LD    (DE),A
 2031: AF             XOR   A,A
@@ -5551,7 +5585,7 @@ print_rematch?:
 20a3: 23             INC   HL
 20a4: 23             INC   HL
 20a5: 23             INC   HL
-20a6: 11 F2 DF       LD    DE,$DFF2
+20a6: 11 F2 DF       LD    DE,BIG_SPRITE1_XPOS_LOW ; big sprite #1 x pos low 8 bits
 20a9: ED A0          LDI   
 20ab: ED A0          LDI   
 20ad: 12             LD    (DE),A
@@ -5867,10 +5901,10 @@ print_rematch?:
 224b: 77             LD    (HL),A
 224c: 13             INC   DE
 224d: 1A             LD    A,(DE)
-224e: 32 F2 DF       LD    ($DFF2),A
+224e: 32 F2 DF       LD    (BIG_SPRITE1_XPOS_LOW ; big sprite #1 x pos low 8 bits),A
 2251: 13             INC   DE
 2252: 1A             LD    A,(DE)
-2253: 32 F4 DF       LD    (vert_scroll_sprite_1?),A
+2253: 32 F4 DF       LD    (BIG_SPRITE1_YPOS_LOW ; big sprite #1 y pos low 8 bits),A
 2256: 2D             DEC   L
 2257: C3 09 21       JP    $2109
 
@@ -5880,7 +5914,7 @@ print_rematch?:
 225e: E6 0F          AND   A,#$0F
 2260: 77             LD    (HL),A
 2261: 13             INC   DE
-2262: 21 F0 DF       LD    HL,$DFF0
+2262: 21 F0 DF       LD    HL,BIG_SPRITE1_ZOOM_LOW ; big sprite #1 zoom low 8 bits
 2265: 1A             LD    A,(DE)
 2266: 77             LD    (HL),A
 2267: 23             INC   HL
@@ -5910,7 +5944,7 @@ print_rematch?:
 2289: DB 67          IN    A,($67)
 228b: E6 0F          AND   A,#$0F
 228d: 13             INC   DE
-228e: 21 F0 DF       LD    HL,$DFF0
+228e: 21 F0 DF       LD    HL,BIG_SPRITE1_ZOOM_LOW ; big sprite #1 zoom low 8 bits
 2291: EB             EX    DE,HL
 2292: ED A0          LDI   
 2294: 12             LD    (DE),A
@@ -5975,7 +6009,7 @@ print_rematch?:
 22e8: 34             INC   (HL)
 22e9: 13             INC   DE
 22ea: 1A             LD    A,(DE)
-22eb: 32 FA DF       LD    ($DFFA),A
+22eb: 32 FA DF       LD    (BIG_SPRITE2_YPOS_LOW ; big sprite #2 y pos low 8 bits),A
 22ee: C9             RET   
 
 22ef: D9             EXX   
@@ -6144,10 +6178,10 @@ print_rematch?:
 23d5: 77             LD    (HL),A
 23d6: C9             RET   
 
-23d7: DD 21 F2 DF    LD    IX,$DFF2
+23d7: DD 21 F2 DF    LD    IX,BIG_SPRITE1_XPOS_LOW ; big sprite #1 x pos low 8 bits
 23db: 18 04          JR    $23E1
 
-23dd: DD 21 F4 DF    LD    IX,vert_scroll_sprite_1?
+23dd: DD 21 F4 DF    LD    IX,BIG_SPRITE1_YPOS_LOW ; big sprite #1 y pos low 8 bits
 23e1: D9             EXX   
 23e2: 2C             INC   L
 23e3: E6 0F          AND   A,#$0F
@@ -7822,11 +7856,11 @@ print_rematch?:
 2dae: C9             RET   
 
 2daf: 3E 01          LD    A,#$01
-2db1: D3 0A          OUT   ($0A),A
+2db1: D3 0A          OUT   (LATCHED_INTO_Z80_BUS_REQ),A
 2db3: C3 46 2D       JP    $2D46
 
 2db6: CD 46 2D       CALL  $2D46
-2db9: D3 0A          OUT   ($0A),A
+2db9: D3 0A          OUT   (LATCHED_INTO_Z80_BUS_REQ),A
 2dbb: C9             RET   
 
 2dbc: DD 21 76 48    LD    IX,$4876
@@ -7834,7 +7868,7 @@ print_rematch?:
 
 2dc1: C3 65 FF       JP    $FF65
 
-2dc4: 11 00 E0       LD    DE,$E000
+2dc4: 11 00 E0       LD    DE,VRAM_CPU
 2dc7: 01 00 08       LD    BC,$0800
 2dca: AF             XOR   A,A
 2dcb: CD 58 2D       CALL  $2D58
@@ -7847,7 +7881,7 @@ print_rematch?:
 2dda: E6 0F          AND   A,#$0F
 2ddc: 57             LD    D,A
 2ddd: 19             ADD   HL,DE
-2dde: 11 F0 DF       LD    DE,$DFF0
+2dde: 11 F0 DF       LD    DE,BIG_SPRITE1_ZOOM_LOW ; big sprite #1 zoom low 8 bits
 2de1: 0E 08          LD    C,#$08
 2de3: ED B0          LDIR  
 2de5: C9             RET   
@@ -7865,10 +7899,10 @@ print_rematch?:
 2df1: 18 03          JR    $2DF6
 
 2df3: 01 00 08       LD    BC,$0800
-2df6: 11 00 E8       LD    DE,$E800
+2df6: 11 00 E8       LD    DE,VRAM_PLAYER
 2df9: AF             XOR   A,A
 2dfa: CD 58 2D       CALL  $2D58
-2dfd: 11 F8 DF       LD    DE,$DFF8
+2dfd: 11 F8 DF       LD    DE,BIG_SPRITE2_XPOS_LOW ; big sprite #2 x pos low 8 bits
 2e00: 21 08 2E       LD    HL,$2E08
 2e03: 0E 05          LD    C,#$05
 2e05: ED B0          LDIR  
@@ -8213,7 +8247,7 @@ print_rematch?:
 303c: C3 65 FF       JP    $FF65
 
 303f: DD 21 79 45    LD    IX,$4579
-3043: DB 03          IN    A,($03)
+3043: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY ; Difficulty, Time, Attract sounds, Rematch at a discount)
 3045: 07             RLCA  
 3046: DA 18 00       JP    C,$0018
 
@@ -8632,7 +8666,7 @@ print_rematch?:
 3214: 17             RLA   
 3215: 17             RLA   
 3216: 3F             CCF   
-3217: DB 01          IN    A,($01)
+3217: DB 01          IN    A,(I0_1_JOYSTICK?)
 3219: 17             RLA   
 321a: 0F             RRCA  
 321b: E6 8F          AND   A,#$8F
@@ -9167,28 +9201,28 @@ print_rematch?:
 34dd: 20 0B          JR    NZ,$34EA
 
 34df: DD 21 70 D0    LD    IX,$D070
-34e3: FD 21 F2 DF    LD    IY,$DFF2
+34e3: FD 21 F2 DF    LD    IY,BIG_SPRITE1_XPOS_LOW ; big sprite #1 x pos low 8 bits
 34e7: CD 7C 35       CALL  $357C
 34ea: 3A 6C D0       LD    A,($D06C)
 34ed: 3D             DEC   A
 34ee: 20 0B          JR    NZ,$34FB
 
 34f0: DD 21 6C D0    LD    IX,$D06C
-34f4: FD 21 F4 DF    LD    IY,vert_scroll_sprite_1?
+34f4: FD 21 F4 DF    LD    IY,BIG_SPRITE1_YPOS_LOW ; big sprite #1 y pos low 8 bits
 34f8: CD 7C 35       CALL  $357C
 34fb: 3A 74 D0       LD    A,($D074)
 34fe: 3D             DEC   A
 34ff: 20 0B          JR    NZ,$350C
 
 3501: DD 21 74 D0    LD    IX,$D074
-3505: FD 21 FA DF    LD    IY,$DFFA
+3505: FD 21 FA DF    LD    IY,BIG_SPRITE2_YPOS_LOW ; big sprite #2 y pos low 8 bits
 3509: CD 7C 35       CALL  $357C
 350c: 3A 78 D0       LD    A,($D078)
 350f: 3D             DEC   A
 3510: C0             RET   NZ
 
 3511: DD 21 78 D0    LD    IX,$D078
-3515: FD 21 F0 DF    LD    IY,$DFF0
+3515: FD 21 F0 DF    LD    IY,BIG_SPRITE1_ZOOM_LOW ; big sprite #1 zoom low 8 bits
 3519: C3 7C 35       JP    $357C
 
 351c: CD FB 34       CALL  $34FB
@@ -10136,7 +10170,7 @@ print_rematch?:
 3985: 13             INC   DE
 3986: 1A             LD    A,(DE)
 3987: 07             RLCA  
-3988: 32 FC DF       LD    ($DFFC),A
+3988: 32 FC DF       LD    (BIG_SPRITE2_XPOS_XFLIP ; big sprite #2 x flip (bit 0)),A
 398b: A7             AND   A,A
 398c: 1F             RRA   
 398d: D9             EXX   
@@ -10290,7 +10324,7 @@ print_rematch?:
 3a51: C8             RET   Z
 
 3a52: 3D             DEC   A
-3a53: 32 F6 DF       LD    ($DFF6),A
+3a53: 32 F6 DF       LD    (BIG_SPRITE1_XFLIP ; big sprite #1 x flip (bit 0)),A
 3a56: 06 00          LD    B,#$00
 3a58: 70             LD    (HL),B
 3a59: 2C             INC   L
@@ -11676,7 +11710,7 @@ print_rematch?:
 407d: ED 03          Illegal Opcode
 407f: DE 07          SBC   A,#$07
 4081: 91             SUB   A,C
-4082: DB 0F          IN    A,($0F)
+4082: DB 0F          IN    A,(NVRAM_ENABLE?)
 4084: 00             NOP   
 4085: 8F             ADC   A,A
 4086: 8A             ADC   A,D
@@ -12966,7 +13000,7 @@ print_rematch?:
 45f8: 1E 0D          LD    E,#$0D
 45fa: FF             RST   $38
 
-45fb: D3 0D          OUT   ($0D),A
+45fb: D3 0D          OUT   (VLM5030_START),A
 45fd: 17             RLA   
 45fe: 0A             LD    A,(BC)
 45ff: 00             NOP   
@@ -13091,7 +13125,7 @@ print_rematch?:
 4676: 1B             DEC   DE
 4677: 0A             LD    A,(BC)
 4678: 0E 15          LD    C,#$15
-467a: D3 0C          OUT   ($0C),A
+467a: D3 0C          OUT   (VLM5030_RESET),A
 467c: 2B             DEC   HL
 467d: 01 00 00       LD    BC,$0000
 4680: 20 2C          JR    NZ,$46AE
@@ -13206,9 +13240,11 @@ print_rematch?:
 
 46ed: EF             RST   $28
 
-46ee: E2 00 BA       JP    PO,$BA00
+46ee: E2 00 
 
-Error: missed a comment line at 46F0, line=46F2
+
+*** ?
+46f0: BA             CP    A,D
 46f1: FC 05 20       CALL  M,$2005
 46f4: 20 D9          JR    NZ,$46CF
 
@@ -13734,7 +13770,7 @@ Error: missed a comment line at 46F0, line=46F2
 490b: E5             PUSH  HL
 490c: 20 44          JR    NZ,$4952
 
-490e: E4 00 C0       CALL  PO,$C000
+490e: E4 00 C0       CALL  PO,NVRAM
 4911: D8             RET   C
 
 4912: 05             DEC   B
@@ -14356,7 +14392,7 @@ Error: missed a comment line at 46F0, line=46F2
 
 4bcd: 4B             LD    C,E
 4bce: 3C             INC   A
-4bcf: DB 02          IN    A,($02)
+4bcf: DB 02          IN    A,(DSW1_TO_2A03 ; Coins)
 4bd1: 02             LD    (BC),A
 4bd2: 54             LD    D,H
 4bd3: 2D             DEC   L
@@ -14880,7 +14916,7 @@ Error: missed a comment line at 46F0, line=46F2
 4e16: 29             ADD   HL,HL
 4e17: 00             NOP   
 4e18: 2C             INC   L
-4e19: DB 02          IN    A,($02)
+4e19: DB 02          IN    A,(DSW1_TO_2A03 ; Coins)
 4e1b: 20 1C          JR    NZ,$4E39
 
 4e1d: F4 30 D1       CALL  P,$D130
@@ -21787,7 +21823,7 @@ Error: missed a comment line at 46F0, line=46F2
 6bfe: 00             NOP   
 6bff: 84             ADD   A,H
 6c00: 04             INC   B
-6c01: DB 0E          IN    A,($0E)
+6c01: DB 0E          IN    A,(VLM5030_VCU)
 6c03: 82             ADD   A,D
 6c04: 00             NOP   
 6c05: 84             ADD   A,H
@@ -26322,7 +26358,7 @@ Error: missed a comment line at 46F0, line=46F2
 7fa3: 87             ADD   A,A
 7fa4: 85             ADD   A,L
 7fa5: 03             INC   BC
-7fa6: D3 03          OUT   ($03),A
+7fa6: D3 03          OUT   (DSW2_TO_2A03_BIT4_VLM5030_BUSY ; Difficulty, Time, Attract sounds, Rematch at a discount),A
 7fa8: 84             ADD   A,H
 7fa9: 00             NOP   
 7faa: CF             RST   $08
@@ -29789,7 +29825,7 @@ Error: missed a comment line at 46F0, line=46F2
 8f1b: 41             LD    B,C
 8f1c: 76             HALT  
 
-8f1d: C3 00 C0       JP    $C000
+8f1d: C3 00 C0       JP    NVRAM
 
 8f20: 03             INC   BC
 8f21: 02             LD    (BC),A
@@ -34904,7 +34940,7 @@ a59b: D4 FC BC       CALL  NC,$BCFC
 a59e: 21 00 04       LD    HL,$0400
 a5a1: 04             INC   B
 a5a2: 08             EX    AF,AF'
-a5a3: 01 00 D8       LD    BC,$D800
+a5a3: 01 00 D8       LD    BC,VRAM_INFO
 a5a6: DA D0 20       JP    C,$20D0
 
 a5a9: FF             RST   $38
@@ -41325,16 +41361,16 @@ bdba: E2 96 39       JP    PO,$3996
 
 bdbd: 80             ADD   A,B
 bdbe: 80             ADD   A,B
-bdbf: 21 00 D0       LD    HL,$D000
+bdbf: 21 00 D0       LD    HL,RAM
 bdc2: 0E 00          LD    C,#$00
 bdc4: DD 21 CB BD    LD    IX,$BDCB
 bdc8: C3 74 BE       JP    $BE74
 
-bdcb: 21 00 E0       LD    HL,$E000
+bdcb: 21 00 E0       LD    HL,VRAM_CPU
 bdce: DD 21 D5 BD    LD    IX,$BDD5
 bdd2: C3 70 BE       JP    $BE70
 
-bdd5: 11 00 D0       LD    DE,$D000
+bdd5: 11 00 D0       LD    DE,RAM
 bdd8: 06 30          LD    B,#$30
 bdda: AF             XOR   A,A
 bddb: 08             EX    AF,AF'
@@ -41342,7 +41378,7 @@ bddc: AF             XOR   A,A
 bddd: 21 E2 BD       LD    HL,$BDE2
 bde0: 18 4A          JR    $BE2C
 
-bde2: 11 00 F0       LD    DE,$F000
+bde2: 11 00 F0       LD    DE,SCROLL_BACKGROUND
 bde5: 3E 04          LD    A,#$04
 bde7: 08             EX    AF,AF'
 bde8: 3E FF          LD    A,#$FF
@@ -41364,7 +41400,7 @@ be0c: DD 21 13 BE    LD    IX,$BE13
 be10: C3 1E BE       JP    $BE1E
 
 be13: 3E 01          LD    A,#$01
-be15: D3 0A          OUT   ($0A),A
+be15: D3 0A          OUT   (LATCHED_INTO_Z80_BUS_REQ),A
 be17: 79             LD    A,C
 be18: A7             AND   A,A
 be19: 20 FE          JR    NZ,$BE19
@@ -41477,7 +41513,7 @@ beac: 31 00 00       LD    SP,$0000
 beaf: 3E FF          LD    A,#$FF
 beb1: 32 C2 D7       LD    ($D7C2),A
 beb4: 3E 01          LD    A,#$01
-beb6: D3 08          OUT   ($08),A
+beb6: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
 beb8: CD 36 2D       CALL  $2D36
 bebb: 21 EF BF       LD    HL,$BFEF
 bebe: DD 21 C5 BE    LD    IX,$BEC5
@@ -41518,7 +41554,7 @@ bf19: CD A8 2E       CALL  $2EA8
 bf1c: DD 21 60 BF    LD    IX,$BF60
 bf20: DF             RST   $18
 
-bf21: DB 02          IN    A,($02)
+bf21: DB 02          IN    A,(DSW1_TO_2A03 ; Coins)
 bf23: F5             PUSH  AF
 bf24: E6 03          AND   A,#$03
 bf26: 32 2E F7       LD    ($F72E),A
@@ -41541,7 +41577,7 @@ bf45: 0F             RRCA
 bf46: 21 2E FD       LD    HL,$FD2E
 bf49: 06 01          LD    B,#$01
 bf4b: CD 55 BE       CALL  $BE55
-bf4e: DB 03          IN    A,($03)
+bf4e: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY ; Difficulty, Time, Attract sounds, Rematch at a discount)
 bf50: E6 0F          AND   A,#$0F
 bf52: 21 AE F5       LD    HL,$F5AE
 bf55: 06 04          LD    B,#$04

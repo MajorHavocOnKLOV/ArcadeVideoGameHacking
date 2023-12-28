@@ -465,7 +465,6 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       1 PO,$963E
       1 PO,$A404
       1 PO,$A91D
-      1 PO,$C000
       1 PO,$DF04
       1 PO,$E200
       1 PO,$E203
@@ -476,6 +475,7 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       1 PO,$F147
       1 PO,$F304
       1 PO,$F630
+      1 PO,NVRAM
       1 Z,$0000
       1 Z,$0091
       1 Z,$0518

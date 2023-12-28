@@ -5,6 +5,8 @@ cat spnchout_datafile.txt | grep ^label | awk '{print      l}' >> labels_for_ghi
 
 0b3c NMI_starts_here? l
 168f print_rematch? l
+c000 NVRAM l
+d000 RAM l
 d022 ENERGY l
 d024 CPU_ENERGY l
 d02e KOS l
@@ -13,7 +15,25 @@ d048 KO_LEVEL l
 d7bf game_status l
 d7cb credits l
 d7f2 TIME l
+d800 VRAM_INFO l
 d880 VRAM_top_monitor l
-dff4 vert_scroll_sprite_1? l
+dff0 BIG_SPRITE1_ZOOM_LOW l
+dff1 BIG_SPRITE1_ZOOM_HIGH l
+dff2 BIG_SPRITE1_XPOS_LOW l
+dff3 BIG_SPRITE1_XPOS_HIGH l
+dff4 BIG_SPRITE1_YPOS_LOW l
+dff5 BIG_SPRITE1_YPOS_HIGH l
+dff6 BIG_SPRITE1_XFLIP l
+dff7 BIG_SPRITE1_SHOW_WHERE l
+dff8 BIG_SPRITE2_XPOS_LOW l
+dff9 BIG_SPRITE2_XPOS_HIGH l
+dffa BIG_SPRITE2_YPOS_LOW l
+dffb BIG_SPRITE2_YPOS_HIGH l
+dffc BIG_SPRITE2_XPOS_XFLIP l
+dffd PALETTE_BANK l
+e000 VRAM_CPU l
+e800 VRAM_PLAYER l
+f000 SCROLL_BACKGROUND l
+f040 VRAM_BACKGROUND l
 f20e VRAM_bottom_monitor l
 fcc8 REMATCH_AVAILABLE_DRAW_LOCATION l
