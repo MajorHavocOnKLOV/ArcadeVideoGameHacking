@@ -21,22 +21,30 @@
 
 ; Input
 ; =====
-; Port/Bit 8   7    6   5   4   3   2   1
-; 0000     x   Duck x   x   KO  R   x   L
-; tron below
-; 0000     Service Switch   x   Tilt  1B  2P  1P  COIN 2/R  COIN 1/L
-; 0001     x	            1 Spinner
-; 0002     2D	            2U  2R    2L  1D  1U  1R        1L
-; 0003     2B               x   x     x   x   x   x         x
-; 0004     x                2 Spinner
+; Port/Bit 8       7     6   5   4   3   2   1
+; 0000     x       Duck  x   x   KO  R   x   L  Buttons
+; 0001     Coin1   Srvc  x   x   D   U   L   R  Joystick
 
 IO_LABEL 00 IO_0_BUTTONS
+IO_LABEL 01 I0_1_JOYSTICK?
+IO_LABEL 02 DSW1_TO_2A03 ; Coins
+IO_LABEL 03 DSW2_TO_2A03_BIT4_VLM5030_BUSY ; Difficulty, Time, Attract sounds, Rematch at a discount
+IO_LABEL 04 TO_VLM5030
+IO_LABEL 08 NMI_ENABLE_AND_WATCHDOG_RESET
+IO_LABEL 09 WATCHDOG_RESET
+IO_LABEL 0A LATCHED_INTO_Z80_BUS_REQ
+IO_LABEL 0B 2A03_RESET
+IO_LABEL 0C VLM5030_RESET
+IO_LABEL 0D VLM5030_START
+IO_LABEL 0E VLM5030_VCU
+IO_LABEL 0F NVRAM_ENABLE?
 
 org 0000
 
 commentline 0000 Dissasembly of the Super Punch-Out!! (Rev B) ROMs used by MAME (labeled as spnchout)
 comment 0000 Z80 starts executing code at 0x0000
 
+commentline 0776 call function to draw bandage on forehead of rematch fighter
 comment 0b93 return from NMI
 
 commentline 108D a is bcd digits. put a into 10s digit and 1s digit on screen
@@ -67,6 +75,7 @@ commentline 4823 ?
 
 commentline d7bf 01 = credit, 02 = start game, 03 = game over, 04 = game over 2?, 05 = game over 3?, 06 = rematch started,
 commentline d7bf or countdown value to add coins for rematch
+
 commentline d880 top screen background RAM, from top left corner to bottom right corner
 commentline d880 ~D880-DF7F, 32x32, 00-09: digits, 0A-23: letters, 24-?: special chars
 commentline d880 char then color palette (44 is white char on black background)
@@ -78,6 +87,8 @@ commentline f20E char then color palette (44 is white char on black background)
 label 0b3c NMI_starts_here?
 label 168f print_rematch?
 
+label c000 NVRAM
+label d000 RAM
 label d022 ENERGY
 label d024 CPU_ENERGY
 label d02e KOS
@@ -86,12 +97,48 @@ label d048 KO_LEVEL ; 1A = max/can KO
 label d7bf game_status
 label d7cb credits
 label d7f2 TIME
+label d800 VRAM_INFO
 label d880 VRAM_top_monitor
-label dff4 vert_scroll_sprite_1?
+
+label dff0 BIG_SPRITE1_ZOOM_LOW ; big sprite #1 zoom low 8 bits
+label dff1 BIG_SPRITE1_ZOOM_HIGH ; big sprite #1 zoom high 4 bits
+label dff2 BIG_SPRITE1_XPOS_LOW ; big sprite #1 x pos low 8 bits
+label dff3 BIG_SPRITE1_XPOS_HIGH ; big sprite #1 x pos high 4 bits
+label dff4 BIG_SPRITE1_YPOS_LOW ; big sprite #1 y pos low 8 bits
+label dff5 BIG_SPRITE1_YPOS_HIGH ; big sprite #1 y pos high bit
+label dff6 BIG_SPRITE1_XFLIP ; big sprite #1 x flip (bit 0)
+label dff7 BIG_SPRITE1_SHOW_WHERE ; big sprite #1 bit 0: show on top monitor; bit 1: show on bottom monitor
+
+label dff8 BIG_SPRITE2_XPOS_LOW ; big sprite #2 x pos low 8 bits
+label dff9 BIG_SPRITE2_XPOS_HIGH ; big sprite #2 x pos high bit
+label dffa BIG_SPRITE2_YPOS_LOW ; big sprite #2 y pos low 8 bits
+label dffb BIG_SPRITE2_YPOS_HIGH ; big sprite #2 y pos high bit
+label dffc BIG_SPRITE2_XPOS_XFLIP ; big sprite #2 x flip (bit 0)
+label dffd PALETTE_BANK ; palette bank (bit 0 = bottom monitor bit 1 = top monitor)
+
+label e000 VRAM_CPU
+label e800 VRAM_PLAYER
+label f000 SCROLL_BACKGROUND
+label f040 VRAM_BACKGROUND
 
 ; fill f1ae,d22,0620 (fills bottom screen with green Ws)
 label f20e VRAM_bottom_monitor
 label fcc8 REMATCH_AVAILABLE_DRAW_LOCATION
 
+data 46ee-46ef ; just to make label at 46f0 work?
+
 ; Is there security software? 3AB1 was reading areas I didn't expect. Also, I found when I enabled cheats,
 ; I sometimes had to knockdown an opponent far more than 3 times! Why?
+
+; draw character set into top screen
+; DD00  ld   a,$00                                          3E 00
+; DD02  ld   b,a                                            47
+; DD03  ld   hl,$D880                                       21 80 D8
+; DD06  ld   c,$44                                          0E 44
+; DD08  ld   (hl),a                                         77
+; DD09  inc  hl                                             23
+; DD0A  ld   (hl),c                                         71
+; DD0B  inc  hl                                             23
+; DD0C  inc  a                                              3C
+; DD0D  djnz $DD08                                          10 F9
+; DD0F  nop                                                 00
