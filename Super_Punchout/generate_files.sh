@@ -8,13 +8,13 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
 
 
 
-# RAM access C000-C3FF.txt
+# RAM access C000-C3FF_NVRAM.txt
 echo "# In *nix (or WSL with *nix), type:
 cd /mnt/e/git-repos/ArcadeVideoGameHacking.git/Super_Punchout
-cat spnchout.asm | grep '\$C[0-3][0-9A-F][0-9A-F]' | cut -c28- | grep -v '^SP' | sed 's/.*\(C[0-3][[:alnum:]][[:alnum:]]\).*/\1/' | sort | uniq -c | sort -k1b,1nr -k2b,2 >> C000-C3FF.txt
+cat spnchout.asm | grep '\$C[0-3][0-9A-F][0-9A-F]' | cut -c28- | grep -v '^SP' | sed 's/.*\(C[0-3][[:alnum:]][[:alnum:]]\).*/\1/' | sort | uniq -c | sort -k1b,1nr -k2b,2 >> C000-C3FF_NVRAM.txt
 
-" > C000-C3FF.txt
-cat spnchout.asm | grep '\$C[0-3][0-9A-F][0-9A-F]' | cut -c28- | grep -v '^SP' | sed 's/.*\(C[0-3][[:alnum:]][[:alnum:]]\).*/\1/' | sort | uniq -c | sort -k1b,1nr -k2b,2 >> C000-C3FF.txt
+" > C000-C3FF_NVRAM.txt
+cat spnchout.asm | grep '\$C[0-3][0-9A-F][0-9A-F]' | cut -c28- | grep -v '^SP' | sed 's/.*\(C[0-3][[:alnum:]][[:alnum:]]\).*/\1/' | sort | uniq -c | sort -k1b,1nr -k2b,2 >> C000-C3FF_NVRAM.txt
 
 
 
