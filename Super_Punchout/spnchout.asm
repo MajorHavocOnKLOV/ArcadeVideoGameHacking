@@ -1,9 +1,9 @@
-org 0, numlab 34, numio 13, numdata 1, numcomm 10, numcommline 24
+org 0, numlab 39, numio 13, numdata 4, numcomm 15, numcommline 31
 
 IO_0_BUTTONS EQU $00
 I0_1_JOYSTICK? EQU $01
-DSW1_TO_2A03 ; Coins EQU $02
-DSW2_TO_2A03_BIT4_VLM5030_BUSY ; Difficulty, Time, Attract sounds, Rematch at a discount EQU $03
+DSW1_TO_2A03 EQU $02
+DSW2_TO_2A03_BIT4_VLM5030_BUSY EQU $03
 TO_VLM5030 EQU $04
 NMI_ENABLE_AND_WATCHDOG_RESET EQU $08
 WATCHDOG_RESET EQU $09
@@ -14,34 +14,39 @@ VLM5030_START EQU $0d
 VLM5030_VCU EQU $0e
 NVRAM_ENABLE? EQU $0f
 
-NMI_starts_here? EQU $0b3c
-print_rematch? EQU $168f
+NMI_STARTS_HERE? EQU $0b3c
+DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE EQU $108d
+PRINT_REMATCH? EQU $168f
+COPY_A_TO_DE+_FOR_C_COUNT EQU $2d52
+COPY_A_TO_DE+_FOR_BC_COUNT EQU $2d58
+SET_I_AND_SPLIT_A_NYBBLES_INTO_A_AND_A' EQU $2d67
+SPLIT_A_NYBBLES_INTO_A_AND_A'/C EQU $2d75
 NVRAM EQU $c000
 RAM EQU $d000
 ENERGY EQU $d022
 CPU_ENERGY EQU $d024
-KOS EQU $d02e
-CPU_KOS ; if 3, enemy will be knocked out with next knockdown EQU $d02f
-KO_LEVEL ; 1A = max/can KO EQU $d048
+KNOCKDOWNS EQU $d02e
+CPU_KNOCKDOWNS EQU $d02f
+KO_BUTTON_LEVEL EQU $d048
 game_status EQU $d7bf
 credits EQU $d7cb
 TIME EQU $d7f2
 VRAM_INFO EQU $d800
 VRAM_top_monitor EQU $d880
-BIG_SPRITE1_ZOOM_LOW ; big sprite #1 zoom low 8 bits EQU $dff0
-BIG_SPRITE1_ZOOM_HIGH ; big sprite #1 zoom high 4 bits EQU $dff1
-BIG_SPRITE1_XPOS_LOW ; big sprite #1 x pos low 8 bits EQU $dff2
-BIG_SPRITE1_XPOS_HIGH ; big sprite #1 x pos high 4 bits EQU $dff3
-BIG_SPRITE1_YPOS_LOW ; big sprite #1 y pos low 8 bits EQU $dff4
-BIG_SPRITE1_YPOS_HIGH ; big sprite #1 y pos high bit EQU $dff5
-BIG_SPRITE1_XFLIP ; big sprite #1 x flip (bit 0) EQU $dff6
-BIG_SPRITE1_SHOW_WHERE ; big sprite #1 bit 0: show on top monitor; bit 1: show on bottom monitor EQU $dff7
-BIG_SPRITE2_XPOS_LOW ; big sprite #2 x pos low 8 bits EQU $dff8
-BIG_SPRITE2_XPOS_HIGH ; big sprite #2 x pos high bit EQU $dff9
-BIG_SPRITE2_YPOS_LOW ; big sprite #2 y pos low 8 bits EQU $dffa
-BIG_SPRITE2_YPOS_HIGH ; big sprite #2 y pos high bit EQU $dffb
-BIG_SPRITE2_XPOS_XFLIP ; big sprite #2 x flip (bit 0) EQU $dffc
-PALETTE_BANK ; palette bank (bit 0 = bottom monitor bit 1 = top monitor) EQU $dffd
+BIG_SPRITE1_ZOOM_LOW EQU $dff0
+BIG_SPRITE1_ZOOM_HIGH EQU $dff1
+BIG_SPRITE1_XPOS_LOW EQU $dff2
+BIG_SPRITE1_XPOS_HIGH EQU $dff3
+BIG_SPRITE1_YPOS_LOW EQU $dff4
+BIG_SPRITE1_YPOS_HIGH EQU $dff5
+BIG_SPRITE1_XFLIP EQU $dff6
+BIG_SPRITE1_SHOW_WHERE EQU $dff7
+BIG_SPRITE2_XPOS_LOW EQU $dff8
+BIG_SPRITE2_XPOS_HIGH EQU $dff9
+BIG_SPRITE2_YPOS_LOW EQU $dffa
+BIG_SPRITE2_YPOS_HIGH EQU $dffb
+BIG_SPRITE2_XPOS_XFLIP EQU $dffc
+PALETTE_BANK EQU $dffd
 VRAM_CPU EQU $e000
 VRAM_PLAYER EQU $e800
 SCROLL_BACKGROUND EQU $f000
@@ -109,7 +114,9 @@ ORG $0000
 
 002f: FF             RST   $38
 
-0030: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY ; Difficulty, Time, Attract sounds, Rematch at a discount)
+
+*** Check if copyright dipswitch is on (DSW1, switch 8) which displays Nintendo of America (instead of Nintendo)
+0030: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY)
 0032: E6 80          AND   A,#$80
 0034: C9             RET   
 
@@ -121,18 +128,10 @@ ORG $0000
 
 0038: C7             RST   $00
 
-0039: 00             NOP   
-003a: 00             NOP   
-003b: 00             NOP   
-003c: 00             NOP   
-003d: 08             EX    AF,AF'
-003e: 01 00 00       LD    BC,$0000
-0041: 00             NOP   
-0042: 01 01 01       LD    BC,$0101
-0045: 01 00 00       LD    BC,$0000
-0048: 00             NOP   
-0049: 00             NOP   
-004a: 00             NOP   
+0039: 00 00 00 00 08 01 00 00 00 01 01 01 01 00 00 00 
+
+0049: 00 00 
+
 004b: FF             RST   $38
 
 004c: 02             LD    (BC),A
@@ -338,6 +337,8 @@ ORG $0000
 0153: 07             RLCA  
 0154: 77             LD    (HL),A
 0155: 70             LD    (HL),B
+
+*** JR table of 55? entries used at ?
 0156: C3 14 1A       JP    $1A14
 
 0159: C3 1C 1A       JP    $1A1C
@@ -549,22 +550,10 @@ ORG $0000
 
 026e: C3 BB 1D       JP    $1DBB
 
-0271: 4E             LD    C,(HL)
-0272: 4E             LD    C,(HL)
-0273: 4E             LD    C,(HL)
-0274: 4E             LD    C,(HL)
-0275: 4E             LD    C,(HL)
-0276: 4E             LD    C,(HL)
-0277: 4E             LD    C,(HL)
-0278: 4E             LD    C,(HL)
-0279: 51             LD    D,C
-027a: 51             LD    D,C
-027b: 51             LD    D,C
-027c: 57             LD    D,A
-027d: 57             LD    D,A
-027e: 57             LD    D,A
-027f: 51             LD    D,C
-0280: 57             LD    D,A
+0271: 4E 4E 4E 4E 4E 4E 4E 4E 51 51 51 57 57 57 51 57 
+
+
+*** Initialize OUT 0 to F by LD 16 bytes at 0039, 0800 times!
 0281: 21 39 00       LD    HL,$0039
 0284: 01 FF 10       LD    BC,$10FF
 0287: 0C             INC   C
@@ -576,6 +565,8 @@ ORG $0000
 028e: B2             OR    A,D
 028f: 20 F0          JR    NZ,$0281
 
+
+*** Initialize OUT B to C by LD 2 bytes at 0049, 0080 times
 0291: 1E 80          LD    E,#$80
 0293: 21 49 00       LD    HL,$0049
 0296: 01 0A 02       LD    BC,$020A
@@ -589,9 +580,9 @@ ORG $0000
 02a1: 31 00 00       LD    SP,$0000
 02a4: F7             RST   $30
 
-02a5: DB 02          IN    A,(DSW1_TO_2A03 ; Coins)
+02a5: DB 02          IN    A,(DSW1_TO_2A03)
 02a7: E6 80          AND   A,#$80
-02a9: C2 BF BD       JP    NZ,$BDBF
+02a9: C2 BF BD       JP    NZ,$BDBF       ;If service dipswitch is on (DSW2, switch 8), go to service routine
 
 02ac: 3E C9          LD    A,#$C9
 02ae: 32 67 FF       LD    ($FF67),A
@@ -602,10 +593,12 @@ ORG $0000
 02ba: CD 42 2D       CALL  $2D42
 02bd: DB 01          IN    A,(I0_1_JOYSTICK?)
 02bf: E6 40          AND   A,#$40
-02c1: C2 2A 0C       JP    NZ,$0C2A
+02c1: C2 2A 0C       JP    NZ,$0C2A       ;If service service switch is on, go to service2? routine
 
 02c4: D3 05          OUT   ($05),A
 02c6: 01 06 A8       LD    BC,$A806
+
+*** OUT through this loop A8 times to 02D7
 02c9: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
 02cb: E5             PUSH  HL
 02cc: E5             PUSH  HL
@@ -647,7 +640,7 @@ ORG $0000
 0308: 11 00 D0       LD    DE,RAM
 030b: AF             XOR   A,A
 030c: 01 00 08       LD    BC,$0800
-030f: CD 58 2D       CALL  $2D58
+030f: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT
 0312: F7             RST   $30
 
 0313: DB 97          IN    A,($97)
@@ -660,11 +653,11 @@ ORG $0000
 0320: 3E 0B          LD    A,#$0B
 0322: D3 D7          OUT   ($D7),A
 0324: 3E 00          LD    A,#$00
-0326: CD 58 2D       CALL  $2D58
+0326: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT
 0329: 3E C9          LD    A,#$C9
 032b: 32 67 FF       LD    ($FF67),A
 032e: 32 40 FF       LD    ($FF40),A
-0331: DB 02          IN    A,(DSW1_TO_2A03 ; Coins)
+0331: DB 02          IN    A,(DSW1_TO_2A03)
 0333: 4F             LD    C,A
 0334: 06 35          LD    B,#$35
 0336: AF             XOR   A,A
@@ -717,7 +710,7 @@ ORG $0000
 037a: 08             EX    AF,AF'
 037b: 21 C3 D7       LD    HL,$D7C3
 037e: ED 69          OUT   (C),L
-0380: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY ; Difficulty, Time, Attract sounds, Rematch at a discount)
+0380: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY)
 0382: CB F9          SET   7,C
 0384: E6 0F          AND   A,#$0F
 0386: FE 0F          CP    A,#$0F
@@ -728,7 +721,7 @@ ORG $0000
 
 038d: 87             ADD   A,A
 038e: 47             LD    B,A
-038f: DB 02          IN    A,(DSW1_TO_2A03 ; Coins)
+038f: DB 02          IN    A,(DSW1_TO_2A03)
 0391: E6 40          AND   A,#$40
 0393: 0F             RRCA  
 0394: 80             ADD   A,B
@@ -789,7 +782,7 @@ ORG $0000
 03ef: 11 10 D5       LD    DE,$D510
 03f2: 01 A0 01       LD    BC,$01A0
 03f5: AF             XOR   A,A
-03f6: CD 58 2D       CALL  $2D58
+03f6: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT
 03f9: 11 20 D5       LD    DE,$D520
 03fc: D5             PUSH  DE
 03fd: 21 35 04       LD    HL,$0435
@@ -852,8 +845,8 @@ ORG $0000
 045f: AF             XOR   A,A
 0460: 11 00 D0       LD    DE,RAM
 0463: 4F             LD    C,A
-0464: CD 52 2D       CALL  $2D52
-0467: 32 FD DF       LD    (PALETTE_BANK ; palette bank (bit 0 = bottom monitor bit 1 = top monitor)),A
+0464: CD 52 2D       CALL  COPY_A_TO_DE+_FOR_C_COUNT
+0467: 32 FD DF       LD    (PALETTE_BANK),A
 046a: C3 45 04       JP    $0445
 
 046d: 31 00 00       LD    SP,$0000
@@ -898,9 +891,9 @@ ORG $0000
 04c8: AF             XOR   A,A
 04c9: 11 00 D0       LD    DE,RAM
 04cc: 4F             LD    C,A
-04cd: CD 52 2D       CALL  $2D52
+04cd: CD 52 2D       CALL  COPY_A_TO_DE+_FOR_C_COUNT
 04d0: 3E 03          LD    A,#$03
-04d2: 32 F7 DF       LD    (BIG_SPRITE1_SHOW_WHERE ; big sprite #1 bit 0: show on top monitor; bit 1: show on bottom monitor),A
+04d2: 32 F7 DF       LD    (BIG_SPRITE1_SHOW_WHERE),A
 04d5: 21 F7 D7       LD    HL,$D7F7
 04d8: 7E             LD    A,(HL)
 04d9: A7             AND   A,A
@@ -920,7 +913,7 @@ ORG $0000
 04f3: CD 2E 2D       CALL  $2D2E
 04f6: CD A8 2E       CALL  $2EA8
 04f9: 3E 01          LD    A,#$01
-04fb: 32 F7 DF       LD    (BIG_SPRITE1_SHOW_WHERE ; big sprite #1 bit 0: show on top monitor; bit 1: show on bottom monitor),A
+04fb: 32 F7 DF       LD    (BIG_SPRITE1_SHOW_WHERE),A
 04fe: 3E FC          LD    A,#$FC
 0500: 32 61 D0       LD    ($D061),A
 0503: CD E0 2F       CALL  $2FE0
@@ -944,7 +937,7 @@ ORG $0000
 0533: AF             XOR   A,A
 0534: 32 B6 D7       LD    ($D7B6),A
 0537: 3E 02          LD    A,#$02
-0539: 32 F7 DF       LD    (BIG_SPRITE1_SHOW_WHERE ; big sprite #1 bit 0: show on top monitor; bit 1: show on bottom monitor),A
+0539: 32 F7 DF       LD    (BIG_SPRITE1_SHOW_WHERE),A
 053c: CD 81 12       CALL  $1281
 053f: CD 46 04       CALL  $0446
 0542: CD E5 2E       CALL  $2EE5
@@ -1106,7 +1099,7 @@ ORG $0000
 0652: 5F             LD    E,A
 0653: 06 C0          LD    B,#$C0
 0655: CD 1F 16       CALL  $161F
-0658: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY ; Difficulty, Time, Attract sounds, Rematch at a discount)
+0658: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY)
 065a: E6 40          AND   A,#$40
 065c: C2 67 06       JP    NZ,$0667
 
@@ -1204,7 +1197,7 @@ ORG $0000
 06e6: CB 6F          BIT   5,A
 06e8: 20 0A          JR    NZ,$06F4
 
-06ea: CD 67 2D       CALL  $2D67
+06ea: CD 67 2D       CALL  SET_I_AND_SPLIT_A_NYBBLES_INTO_A_AND_A'
 06ed: 4F             LD    C,A
 06ee: CD 1E 32       CALL  $321E
 06f1: C3 3F 0B       JP    $0B3F
@@ -1246,10 +1239,10 @@ ORG $0000
 0734: 32 B6 D7       LD    ($D7B6),A
 0737: AF             XOR   A,A
 0738: 32 C1 D0       LD    ($D0C1),A
-073b: 32 FD DF       LD    (PALETTE_BANK ; palette bank (bit 0 = bottom monitor bit 1 = top monitor)),A
+073b: 32 FD DF       LD    (PALETTE_BANK),A
 073e: 11 6C D0       LD    DE,$D06C
 0741: 0E 14          LD    C,#$14
-0743: CD 52 2D       CALL  $2D52
+0743: CD 52 2D       CALL  COPY_A_TO_DE+_FOR_C_COUNT
 0746: 0E 0C          LD    C,#$0C
 0748: CD 94 0C       CALL  $0C94
 074b: 21 00 D5       LD    HL,$D500
@@ -1272,9 +1265,7 @@ ORG $0000
 0771: CD 7B 2F       CALL  $2F7B
 0774: 18 0B          JR    $0781
 
-
-*** call function to draw bandage on forehead of rematch fighter
-0776: CD B0 2F       CALL  $2FB0
+0776: CD B0 2F       CALL  $2FB0          ;call function to draw bandage on forehead of rematch fighter
 0779: 18 49          JR    $07C4
 
 077b: AF             XOR   A,A
@@ -1520,7 +1511,7 @@ ORG $0000
 095d: CD 3E 2D       CALL  $2D3E
 0960: CD 78 0C       CALL  $0C78
 0963: 3E 03          LD    A,#$03
-0965: 32 FD DF       LD    (PALETTE_BANK ; palette bank (bit 0 = bottom monitor bit 1 = top monitor)),A
+0965: 32 FD DF       LD    (PALETTE_BANK),A
 0968: C3 DD 08       JP    $08DD
 
 096b: 3A ED D7       LD    A,($D7ED)
@@ -1594,7 +1585,7 @@ ORG $0000
 0a02: 3E FE          LD    A,#$FE
 0a04: 32 CD D7       LD    ($D7CD),A
 0a07: E1             POP   HL
-0a08: 22 FA DF       LD    (BIG_SPRITE2_YPOS_LOW ; big sprite #2 y pos low 8 bits),HL
+0a08: 22 FA DF       LD    (BIG_SPRITE2_YPOS_LOW),HL
 0a0b: CD 3E 2D       CALL  $2D3E
 0a0e: 3E 32          LD    A,#$32
 0a10: CD A6 10       CALL  $10A6
@@ -1640,7 +1631,7 @@ ORG $0000
 0a5a: CD A8 2E       CALL  $2EA8
 0a5d: AF             XOR   A,A
 0a5e: 32 C1 D0       LD    ($D0C1),A
-0a61: 32 FD DF       LD    (PALETTE_BANK ; palette bank (bit 0 = bottom monitor bit 1 = top monitor)),A
+0a61: 32 FD DF       LD    (PALETTE_BANK),A
 0a64: FD 21 C8 D7    LD    IY,$D7C8
 0a68: 3A BE D7       LD    A,($D7BE)
 0a6b: FE 38          CP    A,#$38
@@ -1801,7 +1792,7 @@ ORG $0000
 0b39: 07             RLCA  
 0b3a: 38 37          JR    C,$0B73
 
-NMI_starts_here?:
+NMI_STARTS_HERE?:
 0b3c: CD 04 32       CALL  $3204
 0b3f: CD 39 1A       CALL  $1A39
 0b42: CD C1 1A       CALL  $1AC1
@@ -1913,7 +1904,7 @@ NMI_starts_here?:
 0c0a: FE FD          CP    A,#$FD
 0c0c: 28 11          JR    Z,$0C1F
 
-0c0e: CD 75 2D       CALL  $2D75
+0c0e: CD 75 2D       CALL  SPLIT_A_NYBBLES_INTO_A_AND_A'/C
 0c11: 01 30 B3       LD    BC,$B330
 0c14: 81             ADD   A,C
 0c15: 4F             LD    C,A
@@ -1940,14 +1931,14 @@ NMI_starts_here?:
 0c30: 11 00 D5       LD    DE,$D500
 0c33: 01 00 02       LD    BC,$0200
 0c36: AF             XOR   A,A
-0c37: CD 58 2D       CALL  $2D58
+0c37: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT
 0c3a: CD 46 04       CALL  $0446
 0c3d: CD 3F 30       CALL  $303F
 0c40: 21 00 00       LD    HL,$0000
 0c43: 01 00 C0       LD    BC,NVRAM
 0c46: CD 9D 2D       CALL  $2D9D
 0c49: 11 2C FE       LD    DE,$FE2C
-0c4c: CD 8D 10       CALL  $108D
+0c4c: CD 8D 10       CALL  DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
 0c4f: CD AF 2D       CALL  $2DAF
 0c52: DD 21 64 46    LD    IX,$4664
 0c56: DF             RST   $18
@@ -2246,7 +2237,7 @@ NMI_starts_here?:
 0e37: 7E             LD    A,(HL)
 0e38: 23             INC   HL
 0e39: D9             EXX   
-0e3a: CD 75 2D       CALL  $2D75
+0e3a: CD 75 2D       CALL  SPLIT_A_NYBBLES_INTO_A_AND_A'/C
 0e3d: 4F             LD    C,A
 0e3e: 3E 01          LD    A,#$01
 0e40: D3 0F          OUT   (NVRAM_ENABLE?),A
@@ -2459,7 +2450,7 @@ NMI_starts_here?:
 
 0f6a: C6 01          ADD   A,#$01
 0f6c: 27             DAA   
-0f6d: CD 75 2D       CALL  $2D75
+0f6d: CD 75 2D       CALL  SPLIT_A_NYBBLES_INTO_A_AND_A'/C
 0f70: 71             LD    (HL),C
 0f71: 2D             DEC   L
 0f72: 2D             DEC   L
@@ -2668,11 +2659,12 @@ NMI_starts_here?:
 108c: C9             RET   
 
 
-*** a is bcd digits. put a into 10s digit and 1s digit on screen
-108d: CD 75 2D       CALL  $2D75
+*** A contains 2 bcd digits. Display A as 2 digits at DE with blank padding
+DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
+108d: CD 75 2D       CALL  SPLIT_A_NYBBLES_INTO_A_AND_A'/C
 1090: 20 02          JR    NZ,$1094
 
-1092: 3E FF          LD    A,#$FF
+1092: 3E FF          LD    A,#$FF         ;Replace 0 tens digit with a space
 1094: 12             LD    (DE),A
 1095: 1C             INC   E
 1096: 1C             INC   E
@@ -2685,7 +2677,7 @@ NMI_starts_here?:
 109c: 7E             LD    A,(HL)
 109d: 2C             INC   L
 109e: 2C             INC   L
-109f: CD 8D 10       CALL  $108D
+109f: CD 8D 10       CALL  DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
 10a2: 3E 2B          LD    A,#$2B
 10a4: 12             LD    (DE),A
 10a5: C9             RET   
@@ -3004,10 +2996,10 @@ NMI_starts_here?:
 1292: 6F             LD    L,A
 1293: 11 CF D7       LD    DE,$D7CF
 1296: 0E 08          LD    C,#$08
-1298: CD 52 2D       CALL  $2D52
+1298: CD 52 2D       CALL  COPY_A_TO_DE+_FOR_C_COUNT
 129b: 11 A0 D4       LD    DE,$D4A0
 129e: 0E 07          LD    C,#$07
-12a0: CD 52 2D       CALL  $2D52
+12a0: CD 52 2D       CALL  COPY_A_TO_DE+_FOR_C_COUNT
 12a3: 22 F4 D7       LD    ($D7F4),HL
 12a6: 21 00 00       LD    HL,$0000
 12a9: 22 EE DF       LD    ($DFEE),HL
@@ -3058,7 +3050,7 @@ NMI_starts_here?:
 12f0: 11 00 D0       LD    DE,RAM
 12f3: AF             XOR   A,A
 12f4: 01 00 02       LD    BC,$0200
-12f7: CD 58 2D       CALL  $2D58
+12f7: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT
 12fa: 3A F6 D7       LD    A,($D7F6)
 12fd: 01 BE B2       LD    BC,$B2BE
 1300: 87             ADD   A,A
@@ -3068,7 +3060,7 @@ NMI_starts_here?:
 1306: 20 0C          JR    NZ,$1314
 
 1308: 3E 01          LD    A,#$01
-130a: 32 2E D0       LD    (KOS),A
+130a: 32 2E D0       LD    (KNOCKDOWNS),A
 130d: 32 0A D0       LD    ($D00A),A
 1310: 3E 07          LD    A,#$07
 1312: 18 09          JR    $131D
@@ -3331,7 +3323,7 @@ NMI_starts_here?:
 1479: 27             DAA   
 147a: 77             LD    (HL),A
 147b: 11 C2 FD       LD    DE,$FDC2
-147e: CD 8D 10       CALL  $108D
+147e: CD 8D 10       CALL  DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
 1481: 2C             INC   L
 1482: DB 00          IN    A,(IO_0_BUTTONS)
 1484: E6 0F          AND   A,#$0F
@@ -3443,7 +3435,7 @@ NMI_starts_here?:
 150e: EB             EX    DE,HL
 150f: AF             XOR   A,A
 1510: 0E 04          LD    C,#$04
-1512: CD 52 2D       CALL  $2D52
+1512: CD 52 2D       CALL  COPY_A_TO_DE+_FOR_C_COUNT
 1515: EB             EX    DE,HL
 1516: 36 06          LD    (HL),#$06
 1518: 2C             INC   L
@@ -3545,7 +3537,7 @@ NMI_starts_here?:
 1592: 3C             INC   A
 1593: 20 0F          JR    NZ,$15A4
 
-1595: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY ; Difficulty, Time, Attract sounds, Rematch at a discount)
+1595: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY)
 1597: E6 10          AND   A,#$10
 1599: 20 F3          JR    NZ,$158E
 
@@ -3561,7 +3553,7 @@ NMI_starts_here?:
 15aa: D3 04          OUT   (TO_VLM5030),A
 15ac: EB             EX    DE,HL
 15ad: 0E 05          LD    C,#$05
-15af: CD 52 2D       CALL  $2D52
+15af: CD 52 2D       CALL  COPY_A_TO_DE+_FOR_C_COUNT
 15b2: D3 0C          OUT   (VLM5030_RESET),A
 15b4: C9             RET   
 
@@ -3682,7 +3674,7 @@ NMI_starts_here?:
 164a: FD 77 F7       LD    (IY+$F7),A
 164d: FD 7E 03       LD    A,(IY+$03)
 1650: 11 B2 F3       LD    DE,$F3B2
-1653: CD 8D 10       CALL  $108D
+1653: CD 8D 10       CALL  DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
 1656: FD 7E F7       LD    A,(IY+$F7)
 1659: 87             ADD   A,A
 165a: 5F             LD    E,A
@@ -3704,7 +3696,7 @@ NMI_starts_here?:
 
 1676: FD 34 F7       INC   (IY+$F7)
 
-*** process rematch (because credit and R punch pressed)
+*** Process rematch (because credit and R punch pressed)
 1679: FD 34 F7       INC   (IY+$F7)
 167c: 18 CF          JR    $164D
 
@@ -3716,12 +3708,12 @@ NMI_starts_here?:
 1687: 18 C4          JR    $164D
 
 
-*** input from 00 into A, check bit 3 (and $04) and if NZ, jmp 1676
+*** Input from 00 into A, check bit 3 (and $04) and if NZ, jmp 1676
 1689: DB 00          IN    A,(IO_0_BUTTONS)
 168b: E6 04          AND   A,#$04
 168d: 20 E7          JR    NZ,$1676
 
-print_rematch?:
+PRINT_REMATCH?:
 168f: CD 60 30       CALL  $3060
 1692: FD 7E 03       LD    A,(IY+$03)
 1695: FD BE 00       CP    A,(IY+$00)
@@ -3729,6 +3721,8 @@ print_rematch?:
 
 169a: 18 B1          JR    $164D          ;?
 
+
+*** JR table of 6 entries used at 165D
 169c: 18 C7          JR    $1665          ;?
 
 169e: 18 DE          JR    $167E          ;?
@@ -3775,7 +3769,7 @@ print_rematch?:
 16e4: FD 7E F7       LD    A,(IY+$F7)
 16e7: F5             PUSH  AF
 16e8: 11 C2 FD       LD    DE,$FDC2
-16eb: CD 8D 10       CALL  $108D
+16eb: CD 8D 10       CALL  DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
 16ee: 3E 14          LD    A,#$14
 16f0: CD 48 2D       CALL  $2D48
 16f3: F1             POP   AF
@@ -3895,7 +3889,7 @@ print_rematch?:
 17a4: AF             XOR   A,A
 17a5: 2D             DEC   L
 17a6: 77             LD    (HL),A
-17a7: CD 75 2D       CALL  $2D75
+17a7: CD 75 2D       CALL  SPLIT_A_NYBBLES_INTO_A_AND_A'/C
 17aa: DD 21 5A DD    LD    IX,$DD5A
 17ae: CD 00 1A       CALL  $1A00
 17b1: 79             LD    A,C
@@ -3904,7 +3898,7 @@ print_rematch?:
 17b9: 2D             DEC   L
 17ba: 2D             DEC   L
 17bb: 7E             LD    A,(HL)
-17bc: CD 75 2D       CALL  $2D75
+17bc: CD 75 2D       CALL  SPLIT_A_NYBBLES_INTO_A_AND_A'/C
 17bf: DD 21 64 DD    LD    IX,$DD64
 17c3: CD 00 1A       CALL  $1A00
 17c6: 79             LD    A,C
@@ -4036,7 +4030,7 @@ print_rematch?:
 188c: 18 33          JR    $18C1
 
 188e: 7B             LD    A,E
-188f: CD 67 2D       CALL  $2D67
+188f: CD 67 2D       CALL  SET_I_AND_SPLIT_A_NYBBLES_INTO_A_AND_A'
 1892: CB 41          BIT   0,C
 1894: 28 1A          JR    Z,$18B0
 
@@ -4278,7 +4272,7 @@ print_rematch?:
 19cb: C9             RET   
 
 19cc: 7B             LD    A,E
-19cd: CD 67 2D       CALL  $2D67
+19cd: CD 67 2D       CALL  SET_I_AND_SPLIT_A_NYBBLES_INTO_A_AND_A'
 19d0: CB 41          BIT   0,C
 19d2: 28 08          JR    Z,$19DC
 
@@ -4413,7 +4407,7 @@ print_rematch?:
 1a71: ED B0          LDIR  
 1a73: 18 E4          JR    $1A59
 
-1a75: CD 75 2D       CALL  $2D75
+1a75: CD 75 2D       CALL  SPLIT_A_NYBBLES_INTO_A_AND_A'/C
 1a78: 2F             CPL   
 1a79: 18 D2          JR    $1A4D
 
@@ -4481,7 +4475,7 @@ print_rematch?:
 1ad6: FE FD          CP    A,#$FD
 1ad8: 20 09          JR    NZ,$1AE3
 
-1ada: 3A 2F D0       LD    A,(CPU_KOS ; if 3, enemy will be knocked out with next knockdown)
+1ada: 3A 2F D0       LD    A,(CPU_KNOCKDOWNS)
 1add: A7             AND   A,A
 1ade: 28 03          JR    Z,$1AE3
 
@@ -5069,7 +5063,7 @@ print_rematch?:
 1dd5: 11 CC D0       LD    DE,$D0CC
 1dd8: 0E 03          LD    C,#$03
 1dda: AF             XOR   A,A
-1ddb: C3 52 2D       JP    $2D52
+1ddb: C3 52 2D       JP    COPY_A_TO_DE+_FOR_C_COUNT
 
 1dde: 7E             LD    A,(HL)
 1ddf: 32 5A D0       LD    ($D05A),A
@@ -5118,7 +5112,7 @@ print_rematch?:
 1e1f: 0E 02          LD    C,#$02
 1e21: 1E 33          LD    E,#$33
 1e23: ED B0          LDIR  
-1e25: 11 F8 DF       LD    DE,BIG_SPRITE2_XPOS_LOW ; big sprite #2 x pos low 8 bits
+1e25: 11 F8 DF       LD    DE,BIG_SPRITE2_XPOS_LOW
 1e28: ED A0          LDI   
 1e2a: 1C             INC   E
 1e2b: ED A0          LDI   
@@ -5216,10 +5210,10 @@ print_rematch?:
 1e9a: 77             LD    (HL),A
 1e9b: 13             INC   DE
 1e9c: 1A             LD    A,(DE)
-1e9d: 32 F8 DF       LD    (BIG_SPRITE2_XPOS_LOW ; big sprite #2 x pos low 8 bits),A
+1e9d: 32 F8 DF       LD    (BIG_SPRITE2_XPOS_LOW),A
 1ea0: 13             INC   DE
 1ea1: 1A             LD    A,(DE)
-1ea2: 32 FA DF       LD    (BIG_SPRITE2_YPOS_LOW ; big sprite #2 y pos low 8 bits),A
+1ea2: 32 FA DF       LD    (BIG_SPRITE2_YPOS_LOW),A
 1ea5: 2D             DEC   L
 1ea6: 18 B4          JR    $1E5C
 
@@ -5266,7 +5260,7 @@ print_rematch?:
 1ed7: 77             LD    (HL),A
 1ed8: 13             INC   DE
 1ed9: 1A             LD    A,(DE)
-1eda: 32 FA DF       LD    (BIG_SPRITE2_YPOS_LOW ; big sprite #2 y pos low 8 bits),A
+1eda: 32 FA DF       LD    (BIG_SPRITE2_YPOS_LOW),A
 1edd: 2D             DEC   L
 1ede: C3 5D 1E       JP    $1E5D
 
@@ -5504,7 +5498,7 @@ print_rematch?:
 2025: 0E 02          LD    C,#$02
 2027: ED B0          LDIR  
 2029: 0E 02          LD    C,#$02
-202b: 11 F2 DF       LD    DE,BIG_SPRITE1_XPOS_LOW ; big sprite #1 x pos low 8 bits
+202b: 11 F2 DF       LD    DE,BIG_SPRITE1_XPOS_LOW
 202e: ED B0          LDIR  
 2030: 12             LD    (DE),A
 2031: AF             XOR   A,A
@@ -5585,7 +5579,7 @@ print_rematch?:
 20a3: 23             INC   HL
 20a4: 23             INC   HL
 20a5: 23             INC   HL
-20a6: 11 F2 DF       LD    DE,BIG_SPRITE1_XPOS_LOW ; big sprite #1 x pos low 8 bits
+20a6: 11 F2 DF       LD    DE,BIG_SPRITE1_XPOS_LOW
 20a9: ED A0          LDI   
 20ab: ED A0          LDI   
 20ad: 12             LD    (DE),A
@@ -5901,10 +5895,10 @@ print_rematch?:
 224b: 77             LD    (HL),A
 224c: 13             INC   DE
 224d: 1A             LD    A,(DE)
-224e: 32 F2 DF       LD    (BIG_SPRITE1_XPOS_LOW ; big sprite #1 x pos low 8 bits),A
+224e: 32 F2 DF       LD    (BIG_SPRITE1_XPOS_LOW),A
 2251: 13             INC   DE
 2252: 1A             LD    A,(DE)
-2253: 32 F4 DF       LD    (BIG_SPRITE1_YPOS_LOW ; big sprite #1 y pos low 8 bits),A
+2253: 32 F4 DF       LD    (BIG_SPRITE1_YPOS_LOW),A
 2256: 2D             DEC   L
 2257: C3 09 21       JP    $2109
 
@@ -5914,7 +5908,7 @@ print_rematch?:
 225e: E6 0F          AND   A,#$0F
 2260: 77             LD    (HL),A
 2261: 13             INC   DE
-2262: 21 F0 DF       LD    HL,BIG_SPRITE1_ZOOM_LOW ; big sprite #1 zoom low 8 bits
+2262: 21 F0 DF       LD    HL,BIG_SPRITE1_ZOOM_LOW
 2265: 1A             LD    A,(DE)
 2266: 77             LD    (HL),A
 2267: 23             INC   HL
@@ -5944,14 +5938,14 @@ print_rematch?:
 2289: DB 67          IN    A,($67)
 228b: E6 0F          AND   A,#$0F
 228d: 13             INC   DE
-228e: 21 F0 DF       LD    HL,BIG_SPRITE1_ZOOM_LOW ; big sprite #1 zoom low 8 bits
+228e: 21 F0 DF       LD    HL,BIG_SPRITE1_ZOOM_LOW
 2291: EB             EX    DE,HL
 2292: ED A0          LDI   
 2294: 12             LD    (DE),A
 2295: 1C             INC   E
 2296: ED A0          LDI   
 2298: 7E             LD    A,(HL)
-2299: CD 75 2D       CALL  $2D75
+2299: CD 75 2D       CALL  SPLIT_A_NYBBLES_INTO_A_AND_A'/C
 229c: 08             EX    AF,AF'
 229d: 12             LD    (DE),A
 229e: 1C             INC   E
@@ -6009,7 +6003,7 @@ print_rematch?:
 22e8: 34             INC   (HL)
 22e9: 13             INC   DE
 22ea: 1A             LD    A,(DE)
-22eb: 32 FA DF       LD    (BIG_SPRITE2_YPOS_LOW ; big sprite #2 y pos low 8 bits),A
+22eb: 32 FA DF       LD    (BIG_SPRITE2_YPOS_LOW),A
 22ee: C9             RET   
 
 22ef: D9             EXX   
@@ -6178,10 +6172,10 @@ print_rematch?:
 23d5: 77             LD    (HL),A
 23d6: C9             RET   
 
-23d7: DD 21 F2 DF    LD    IX,BIG_SPRITE1_XPOS_LOW ; big sprite #1 x pos low 8 bits
+23d7: DD 21 F2 DF    LD    IX,BIG_SPRITE1_XPOS_LOW
 23db: 18 04          JR    $23E1
 
-23dd: DD 21 F4 DF    LD    IX,BIG_SPRITE1_YPOS_LOW ; big sprite #1 y pos low 8 bits
+23dd: DD 21 F4 DF    LD    IX,BIG_SPRITE1_YPOS_LOW
 23e1: D9             EXX   
 23e2: 2C             INC   L
 23e3: E6 0F          AND   A,#$0F
@@ -6808,7 +6802,7 @@ print_rematch?:
 27c4: FE 01          CP    A,#$01
 27c6: 20 B9          JR    NZ,$2781
 
-27c8: 3A 2F D0       LD    A,(CPU_KOS ; if 3, enemy will be knocked out with next knockdown)
+27c8: 3A 2F D0       LD    A,(CPU_KNOCKDOWNS)
 27cb: A7             AND   A,A
 27cc: 20 B2          JR    NZ,$2780
 
@@ -7526,7 +7520,7 @@ print_rematch?:
 2ba1: CB 73          BIT   6,E
 2ba3: 20 2B          JR    NZ,$2BD0
 
-2ba5: 3A 2F D0       LD    A,(CPU_KOS ; if 3, enemy will be knocked out with next knockdown)
+2ba5: 3A 2F D0       LD    A,(CPU_KNOCKDOWNS)
 2ba8: A7             AND   A,A
 2ba9: CA AE 2C       JP    Z,$2CAE
 
@@ -7552,7 +7546,7 @@ print_rematch?:
 2bcb: 11 24 D0       LD    DE,CPU_ENERGY
 2bce: 18 16          JR    $2BE6
 
-2bd0: 3A 2E D0       LD    A,(KOS)
+2bd0: 3A 2E D0       LD    A,(KNOCKDOWNS)
 2bd3: 4F             LD    C,A
 2bd4: 11 22 D0       LD    DE,ENERGY
 2bd7: 21 5E BD       LD    HL,$BD5E
@@ -7585,7 +7579,7 @@ print_rematch?:
 2c04: E6 40          AND   A,#$40
 2c06: 20 32          JR    NZ,$2C3A
 
-2c08: 3A 2F D0       LD    A,(CPU_KOS ; if 3, enemy will be knocked out with next knockdown)
+2c08: 3A 2F D0       LD    A,(CPU_KNOCKDOWNS)
 2c0b: FE 03          CP    A,#$03
 2c0d: 28 14          JR    Z,$2C23
 
@@ -7611,7 +7605,7 @@ print_rematch?:
 2c36: 22 BD D0       LD    ($D0BD),HL
 2c39: C9             RET   
 
-2c3a: 3A 2E D0       LD    A,(KOS)
+2c3a: 3A 2E D0       LD    A,(KNOCKDOWNS)
 2c3d: FE 03          CP    A,#$03
 2c3f: 28 1C          JR    Z,$2C5D
 
@@ -7775,25 +7769,30 @@ print_rematch?:
 
 2d51: C9             RET   
 
+COPY_A_TO_DE+_FOR_C_COUNT:
 2d52: 12             LD    (DE),A
 2d53: 13             INC   DE
 2d54: 0D             DEC   C
-2d55: 20 FB          JR    NZ,$2D52
+2d55: 20 FB          JR    NZ,COPY_A_TO_DE+_FOR_C_COUNT
 
 2d57: C9             RET   
 
+COPY_A_TO_DE+_FOR_BC_COUNT:
 2d58: 0D             DEC   C
 2d59: 0C             INC   C
 2d5a: 20 06          JR    NZ,$2D62
 
-2d5c: CD 52 2D       CALL  $2D52
+2d5c: CD 52 2D       CALL  COPY_A_TO_DE+_FOR_C_COUNT
 2d5f: 10 FB          DJNZ  $2D5C
 
 2d61: C9             RET   
 
-2d62: CD 52 2D       CALL  $2D52
+2d62: CD 52 2D       CALL  COPY_A_TO_DE+_FOR_C_COUNT
 2d65: 18 F5          JR    $2D5C
 
+
+*** input: A ; outputs: I=A, A has high nybble in lower nybble, A' has low nybble in lower nybbble
+SET_I_AND_SPLIT_A_NYBBLES_INTO_A_AND_A':
 2d67: ED 47          LD    I,A
 2d69: E6 0F          AND   A,#$0F
 2d6b: 08             EX    AF,AF'
@@ -7806,7 +7805,8 @@ print_rematch?:
 2d74: C9             RET   
 
 
-*** a= bcd? input, a&c are output: a has tens digit in lower nybble and c has ones digit in lower nybbble
+*** input: A ; outputs: A has high nybble in lower nybble and A'/C has low nybble in lower nybbble
+SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 2d75: 4F             LD    C,A
 2d76: 08             EX    AF,AF'
 2d77: 79             LD    A,C
@@ -7820,7 +7820,7 @@ print_rematch?:
 2d80: E6 0F          AND   A,#$0F
 2d82: C9             RET   
 
-2d83: CD 75 2D       CALL  $2D75
+2d83: CD 75 2D       CALL  SPLIT_A_NYBBLES_INTO_A_AND_A'/C
 2d86: CB 5F          BIT   3,A
 2d88: 28 04          JR    Z,$2D8E
 
@@ -7871,7 +7871,7 @@ print_rematch?:
 2dc4: 11 00 E0       LD    DE,VRAM_CPU
 2dc7: 01 00 08       LD    BC,$0800
 2dca: AF             XOR   A,A
-2dcb: CD 58 2D       CALL  $2D58
+2dcb: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT;Set VRAM_CPU (E000-37FF) to 00
 2dce: 5F             LD    E,A
 2dcf: 21 E6 23       LD    HL,$23E6
 2dd2: 3E 0B          LD    A,#$0B
@@ -7881,7 +7881,7 @@ print_rematch?:
 2dda: E6 0F          AND   A,#$0F
 2ddc: 57             LD    D,A
 2ddd: 19             ADD   HL,DE
-2dde: 11 F0 DF       LD    DE,BIG_SPRITE1_ZOOM_LOW ; big sprite #1 zoom low 8 bits
+2dde: 11 F0 DF       LD    DE,BIG_SPRITE1_ZOOM_LOW
 2de1: 0E 08          LD    C,#$08
 2de3: ED B0          LDIR  
 2de5: C9             RET   
@@ -7901,8 +7901,8 @@ print_rematch?:
 2df3: 01 00 08       LD    BC,$0800
 2df6: 11 00 E8       LD    DE,VRAM_PLAYER
 2df9: AF             XOR   A,A
-2dfa: CD 58 2D       CALL  $2D58
-2dfd: 11 F8 DF       LD    DE,BIG_SPRITE2_XPOS_LOW ; big sprite #2 x pos low 8 bits
+2dfa: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT
+2dfd: 11 F8 DF       LD    DE,BIG_SPRITE2_XPOS_LOW
 2e00: 21 08 2E       LD    HL,$2E08
 2e03: 0E 05          LD    C,#$05
 2e05: ED B0          LDIR  
@@ -8138,7 +8138,7 @@ print_rematch?:
 2f89: CF             RST   $08
 
 2f8a: 3A FB D7       LD    A,($D7FB)
-2f8d: CD 75 2D       CALL  $2D75
+2f8d: CD 75 2D       CALL  SPLIT_A_NYBBLES_INTO_A_AND_A'/C
 2f90: DD 21 64 DA    LD    IX,$DA64
 2f94: A7             AND   A,A
 2f95: C4 00 1A       CALL  NZ,$1A00
@@ -8247,7 +8247,7 @@ print_rematch?:
 303c: C3 65 FF       JP    $FF65
 
 303f: DD 21 79 45    LD    IX,$4579
-3043: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY ; Difficulty, Time, Attract sounds, Rematch at a discount)
+3043: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY)
 3045: 07             RLCA  
 3046: DA 18 00       JP    C,$0018
 
@@ -9201,28 +9201,28 @@ print_rematch?:
 34dd: 20 0B          JR    NZ,$34EA
 
 34df: DD 21 70 D0    LD    IX,$D070
-34e3: FD 21 F2 DF    LD    IY,BIG_SPRITE1_XPOS_LOW ; big sprite #1 x pos low 8 bits
+34e3: FD 21 F2 DF    LD    IY,BIG_SPRITE1_XPOS_LOW
 34e7: CD 7C 35       CALL  $357C
 34ea: 3A 6C D0       LD    A,($D06C)
 34ed: 3D             DEC   A
 34ee: 20 0B          JR    NZ,$34FB
 
 34f0: DD 21 6C D0    LD    IX,$D06C
-34f4: FD 21 F4 DF    LD    IY,BIG_SPRITE1_YPOS_LOW ; big sprite #1 y pos low 8 bits
+34f4: FD 21 F4 DF    LD    IY,BIG_SPRITE1_YPOS_LOW
 34f8: CD 7C 35       CALL  $357C
 34fb: 3A 74 D0       LD    A,($D074)
 34fe: 3D             DEC   A
 34ff: 20 0B          JR    NZ,$350C
 
 3501: DD 21 74 D0    LD    IX,$D074
-3505: FD 21 FA DF    LD    IY,BIG_SPRITE2_YPOS_LOW ; big sprite #2 y pos low 8 bits
+3505: FD 21 FA DF    LD    IY,BIG_SPRITE2_YPOS_LOW
 3509: CD 7C 35       CALL  $357C
 350c: 3A 78 D0       LD    A,($D078)
 350f: 3D             DEC   A
 3510: C0             RET   NZ
 
 3511: DD 21 78 D0    LD    IX,$D078
-3515: FD 21 F0 DF    LD    IY,BIG_SPRITE1_ZOOM_LOW ; big sprite #1 zoom low 8 bits
+3515: FD 21 F0 DF    LD    IY,BIG_SPRITE1_ZOOM_LOW
 3519: C3 7C 35       JP    $357C
 
 351c: CD FB 34       CALL  $34FB
@@ -10170,7 +10170,7 @@ print_rematch?:
 3985: 13             INC   DE
 3986: 1A             LD    A,(DE)
 3987: 07             RLCA  
-3988: 32 FC DF       LD    (BIG_SPRITE2_XPOS_XFLIP ; big sprite #2 x flip (bit 0)),A
+3988: 32 FC DF       LD    (BIG_SPRITE2_XPOS_XFLIP),A
 398b: A7             AND   A,A
 398c: 1F             RRA   
 398d: D9             EXX   
@@ -10324,7 +10324,7 @@ print_rematch?:
 3a51: C8             RET   Z
 
 3a52: 3D             DEC   A
-3a53: 32 F6 DF       LD    (BIG_SPRITE1_XFLIP ; big sprite #1 x flip (bit 0)),A
+3a53: 32 F6 DF       LD    (BIG_SPRITE1_XFLIP),A
 3a56: 06 00          LD    B,#$00
 3a58: 70             LD    (HL),B
 3a59: 2C             INC   L
@@ -10486,7 +10486,7 @@ print_rematch?:
 3b2a: DF             RST   $18
 
 3b2b: 51             LD    D,C
-3b2c: DA 52 2D       JP    C,$2D52
+3b2c: DA 52 2D       JP    C,COPY_A_TO_DE+_FOR_C_COUNT
 
 3b2f: 51             LD    D,C
 3b30: 0F             RRCA  
@@ -14392,7 +14392,7 @@ print_rematch?:
 
 4bcd: 4B             LD    C,E
 4bce: 3C             INC   A
-4bcf: DB 02          IN    A,(DSW1_TO_2A03 ; Coins)
+4bcf: DB 02          IN    A,(DSW1_TO_2A03)
 4bd1: 02             LD    (BC),A
 4bd2: 54             LD    D,H
 4bd3: 2D             DEC   L
@@ -14916,7 +14916,7 @@ print_rematch?:
 4e16: 29             ADD   HL,HL
 4e17: 00             NOP   
 4e18: 2C             INC   L
-4e19: DB 02          IN    A,(DSW1_TO_2A03 ; Coins)
+4e19: DB 02          IN    A,(DSW1_TO_2A03)
 4e1b: 20 1C          JR    NZ,$4E39
 
 4e1d: F4 30 D1       CALL  P,$D130
@@ -26358,7 +26358,7 @@ print_rematch?:
 7fa3: 87             ADD   A,A
 7fa4: 85             ADD   A,L
 7fa5: 03             INC   BC
-7fa6: D3 03          OUT   (DSW2_TO_2A03_BIT4_VLM5030_BUSY ; Difficulty, Time, Attract sounds, Rematch at a discount),A
+7fa6: D3 03          OUT   (DSW2_TO_2A03_BIT4_VLM5030_BUSY),A
 7fa8: 84             ADD   A,H
 7fa9: 00             NOP   
 7faa: CF             RST   $08
@@ -41361,6 +41361,8 @@ bdba: E2 96 39       JP    PO,$3996
 
 bdbd: 80             ADD   A,B
 bdbe: 80             ADD   A,B
+
+*** Service dipswitch is set!
 bdbf: 21 00 D0       LD    HL,RAM
 bdc2: 0E 00          LD    C,#$00
 bdc4: DD 21 CB BD    LD    IX,$BDCB
@@ -41554,7 +41556,7 @@ bf19: CD A8 2E       CALL  $2EA8
 bf1c: DD 21 60 BF    LD    IX,$BF60
 bf20: DF             RST   $18
 
-bf21: DB 02          IN    A,(DSW1_TO_2A03 ; Coins)
+bf21: DB 02          IN    A,(DSW1_TO_2A03)
 bf23: F5             PUSH  AF
 bf24: E6 03          AND   A,#$03
 bf26: 32 2E F7       LD    ($F72E),A
@@ -41577,7 +41579,7 @@ bf45: 0F             RRCA
 bf46: 21 2E FD       LD    HL,$FD2E
 bf49: 06 01          LD    B,#$01
 bf4b: CD 55 BE       CALL  $BE55
-bf4e: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY ; Difficulty, Time, Attract sounds, Rematch at a discount)
+bf4e: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY)
 bf50: E6 0F          AND   A,#$0F
 bf52: 21 AE F5       LD    HL,$F5AE
 bf55: 06 04          LD    B,#$04

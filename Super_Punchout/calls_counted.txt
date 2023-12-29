@@ -8,28 +8,28 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
      11 $2D46
      11 $2EA8
      10 $15EC
-     10 $2D75
+     10 SPLIT_A_NYBBLES_INTO_A_AND_A'/C
       9 $0C94
       9 $2D2E
       9 $2D3E
-      9 $2D52
+      9 COPY_A_TO_DE+_FOR_C_COUNT
       8 $2D25
       8 $2DAF
       7 $10E4
       7 $194F
-      7 $2D58
       7 P,$08E5
       6 $119A
       6 $1A00
       6 $29A7
       6 $2D48
+      6 COPY_A_TO_DE+_FOR_BC_COUNT
       6 M,$30F6
       6 NZ,$A000
-      5 $108D
       5 $2A65
       5 $2D12
       5 $2D42
       5 $2DC4
+      5 DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
       5 P,$06E5
       5 P,$07E5
       4 $19CD
@@ -59,7 +59,6 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       3 $1FE2
       3 $29C1
       3 $2A93
-      3 $2D67
       3 $2F0B
       3 $306D
       3 $3095
@@ -73,6 +72,7 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       3 P,$05E5
       3 P,$8211
       3 PO,$2000
+      3 SET_I_AND_SPLIT_A_NYBBLES_INTO_A_AND_A'
       3 Z,$0021
       3 Z,$4124
       2 $0446
@@ -202,7 +202,7 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       1 $2DBC
       1 $2DEE
       1 $2E44
-      1 $2FB0
+      1 $2FB0          ;call function to draw bandage on forehead of rematch fighter
       1 $2FBC
       1 $2FE0
       1 $2FE6
@@ -247,6 +247,7 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       1 C,$91FF
       1 C,$98FF
       1 C,$E24F
+      1 COPY_A_TO_DE+_FOR_BC_COUNT;Set VRAM_CPU (E000-37FF) to 00
       1 M,$0018
       1 M,$0064
       1 M,$0083
