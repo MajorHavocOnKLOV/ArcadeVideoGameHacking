@@ -27,8 +27,10 @@
 
 IO_LABEL 00 IO_0_BUTTONS
 IO_LABEL 01 I0_1_JOYSTICK?
-IO_LABEL 02 DSW1_TO_2A03 ; Coins
-IO_LABEL 03 DSW2_TO_2A03_BIT4_VLM5030_BUSY ; Difficulty, Time, Attract sounds, Rematch at a discount
+; Coins
+IO_LABEL 02 DSW1_TO_2A03
+; Difficulty, Time, Attract sounds, Rematch at a discount
+IO_LABEL 03 DSW2_TO_2A03_BIT4_VLM5030_BUSY
 IO_LABEL 04 TO_VLM5030
 IO_LABEL 08 NMI_ENABLE_AND_WATCHDOG_RESET
 IO_LABEL 09 WATCHDOG_RESET
@@ -44,14 +46,31 @@ org 0000
 commentline 0000 Dissasembly of the Super Punch-Out!! (Rev B) ROMs used by MAME (labeled as spnchout)
 comment 0000 Z80 starts executing code at 0x0000
 
-commentline 0776 call function to draw bandage on forehead of rematch fighter
+commentline 0030 Check if copyright dipswitch is on (DSW1, switch 8) which displays Nintendo of America (instead of Nintendo)
+; used at 0281
+data 0039-0048
+; used at 0291
+data 0049-004A
+
+commentline 0156 JR table of 55? entries used at ?
+; data used at 25f8
+data 0271-0280
+commentline 0281 Initialize OUT 0 to F by LD 16 bytes at 0039, 0800 times!
+commentline 0291 Initialize OUT B to C by LD 2 bytes at 0049, 0080 times
+comment 02A9 If service dipswitch is on (DSW2, switch 8), go to service routine
+comment 02C1 If service service switch is on, go to service2? routine
+commentline 02c9 OUT through this loop A8 times to 02D7
+
+comment 0776 call function to draw bandage on forehead of rematch fighter
 comment 0b93 return from NMI
 
-commentline 108D a is bcd digits. put a into 10s digit and 1s digit on screen
-commentline 1679 process rematch (because credit and R punch pressed)
-commentline 1689 input from 00 into A, check bit 3 (and $04) and if NZ, jmp 1676
+commentline 108D A contains 2 bcd digits. Display A as 2 digits at DE with blank padding
+comment 1092 Replace 0 tens digit with a space
+commentline 1679 Process rematch (because credit and R punch pressed)
+commentline 1689 Input from 00 into A, check bit 3 (and $04) and if NZ, jmp 1676
 
 comment 169A ?
+commentline 169C JR table of 6 entries used at 165D
 comment 169C ?
 comment 169E ?
 comment 16A0 ?
@@ -60,13 +79,19 @@ comment 16A4 ?
 comment 16A6 ?
 comment 16A8 ?
 
-commentline 2d75 a= bcd? input, a&c are output: a has tens digit in lower nybble and c has ones digit in lower nybbble
+commentline 2d67 input: A ; outputs: I=A, A has high nybble in lower nybble, A' has low nybble in lower nybbble
+commentline 2d75 input: A ; outputs: A has high nybble in lower nybble and A'/C has low nybble in lower nybbble
+comment 2dcb Set VRAM_CPU (E000-37FF) to 00
 commentline 3055 print from 46f0 & 46d4 (what?)
 commentline 3060 print remtach?
 
 commentline 4598 ?
 commentline 46B3 ?
 commentline 46D4 ?
+
+; just to make label at 46f0 work?
+data 46ee-46ef
+
 commentline 46F0 ?
 commentline 471A data for outputting rematch with arrow above right punch button
 commentline 4720 HCTAMER
@@ -84,37 +109,60 @@ commentline f20E bottom screen background RAM, from top left corner to bottom ri
 commentline f20E ~F20E-FECF, 32x26?, 
 commentline f20E char then color palette (44 is white char on black background)
 
-label 0b3c NMI_starts_here?
-label 168f print_rematch?
+label 0b3c NMI_STARTS_HERE?
+label 108D DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
+label 168f PRINT_REMATCH?
+label 2D52 COPY_A_TO_DE+_FOR_C_COUNT
+label 2D58 COPY_A_TO_DE+_FOR_BC_COUNT
+label 2d67 SET_I_AND_SPLIT_A_NYBBLES_INTO_A_AND_A'
+label 2d75 SPLIT_A_NYBBLES_INTO_A_AND_A'/C
 
+commentline BDBF Service dipswitch is set!
 label c000 NVRAM
 label d000 RAM
 label d022 ENERGY
 label d024 CPU_ENERGY
-label d02e KOS
-label d02f CPU_KOS ; if 3, enemy will be knocked out with next knockdown
-label d048 KO_LEVEL ; 1A = max/can KO
+label d02e KNOCKDOWNS
+; if 3, enemy will be knocked out with next knockdown
+label d02f CPU_KNOCKDOWNS
+; 1A = max, can use RightHook/Uppercut button
+label d048 KO_BUTTON_LEVEL
 label d7bf game_status
 label d7cb credits
 label d7f2 TIME
 label d800 VRAM_INFO
 label d880 VRAM_top_monitor
 
-label dff0 BIG_SPRITE1_ZOOM_LOW ; big sprite #1 zoom low 8 bits
-label dff1 BIG_SPRITE1_ZOOM_HIGH ; big sprite #1 zoom high 4 bits
-label dff2 BIG_SPRITE1_XPOS_LOW ; big sprite #1 x pos low 8 bits
-label dff3 BIG_SPRITE1_XPOS_HIGH ; big sprite #1 x pos high 4 bits
-label dff4 BIG_SPRITE1_YPOS_LOW ; big sprite #1 y pos low 8 bits
-label dff5 BIG_SPRITE1_YPOS_HIGH ; big sprite #1 y pos high bit
-label dff6 BIG_SPRITE1_XFLIP ; big sprite #1 x flip (bit 0)
-label dff7 BIG_SPRITE1_SHOW_WHERE ; big sprite #1 bit 0: show on top monitor; bit 1: show on bottom monitor
+; big sprite #1 zoom low 8 bits
+; big sprite #1 zoom high 4 bits
+; big sprite #1 x pos low 8 bits
+; big sprite #1 x pos high 4 bits
+; big sprite #1 y pos low 8 bits
+; big sprite #1 y pos high bit
+; big sprite #1 x flip (bit 0)
+; big sprite #1 bit 0: show on top monitor; bit 1: show on bottom monitor
+label dff0 BIG_SPRITE1_ZOOM_LOW
+label dff1 BIG_SPRITE1_ZOOM_HIGH
+label dff2 BIG_SPRITE1_XPOS_LOW
+label dff3 BIG_SPRITE1_XPOS_HIGH
+label dff4 BIG_SPRITE1_YPOS_LOW
+label dff5 BIG_SPRITE1_YPOS_HIGH
+label dff6 BIG_SPRITE1_XFLIP
+label dff7 BIG_SPRITE1_SHOW_WHERE
 
-label dff8 BIG_SPRITE2_XPOS_LOW ; big sprite #2 x pos low 8 bits
-label dff9 BIG_SPRITE2_XPOS_HIGH ; big sprite #2 x pos high bit
-label dffa BIG_SPRITE2_YPOS_LOW ; big sprite #2 y pos low 8 bits
-label dffb BIG_SPRITE2_YPOS_HIGH ; big sprite #2 y pos high bit
-label dffc BIG_SPRITE2_XPOS_XFLIP ; big sprite #2 x flip (bit 0)
-label dffd PALETTE_BANK ; palette bank (bit 0 = bottom monitor bit 1 = top monitor)
+; big sprite #2 x pos low 8 bits
+; big sprite #2 x pos high bit
+; big sprite #2 y pos low 8 bits
+; big sprite #2 y pos high bit
+; big sprite #2 x flip (bit 0)
+
+label dff8 BIG_SPRITE2_XPOS_LOW
+label dff9 BIG_SPRITE2_XPOS_HIGH
+label dffa BIG_SPRITE2_YPOS_LOW
+label dffb BIG_SPRITE2_YPOS_HIGH
+label dffc BIG_SPRITE2_XPOS_XFLIP
+; palette bank (bit 0 = bottom monitor bit 1 = top monitor)
+label dffd PALETTE_BANK
 
 label e000 VRAM_CPU
 label e800 VRAM_PLAYER
@@ -124,8 +172,6 @@ label f040 VRAM_BACKGROUND
 ; fill f1ae,d22,0620 (fills bottom screen with green Ws)
 label f20e VRAM_bottom_monitor
 label fcc8 REMATCH_AVAILABLE_DRAW_LOCATION
-
-data 46ee-46ef ; just to make label at 46f0 work?
 
 ; Is there security software? 3AB1 was reading areas I didn't expect. Also, I found when I enabled cheats,
 ; I sometimes had to knockdown an opponent far more than 3 times! Why?
