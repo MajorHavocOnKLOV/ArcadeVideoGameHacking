@@ -62,12 +62,16 @@ comment 02C1 If service service switch is on, go to service2? routine
 commentline 02c9 OUT through this loop A8 times to 02D7
 
 comment 0776 call function to draw bandage on forehead of rematch fighter
+label 0b3c NMI_STARTS_HERE?
 comment 0b93 return from NMI
 
 commentline 108D A contains 2 bcd digits. Display A as 2 digits at DE with blank padding
+label 108D DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
 comment 1092 Replace 0 tens digit with a space
 commentline 1679 Process rematch (because credit and R punch pressed)
 commentline 1689 Input from 00 into A, check bit 3 (and $04) and if NZ, jmp 1676
+
+label 168f PRINT_REMATCH?
 
 comment 169A ?
 commentline 169C JR table of 6 entries used at 165D
@@ -79,8 +83,13 @@ comment 16A4 ?
 comment 16A6 ?
 comment 16A8 ?
 
+label 2D52 COPY_A_TO_DE+_FOR_C_COUNT
+label 2D58 COPY_A_TO_DE+_FOR_BC_COUNT
+
 commentline 2d67 input: A ; outputs: I=A, A has high nybble in lower nybble, A' has low nybble in lower nybbble
+label 2d67 SET_I_AND_SPLIT_A_NYBBLES_INTO_A_AND_A'
 commentline 2d75 input: A ; outputs: A has high nybble in lower nybble and A'/C has low nybble in lower nybbble
+label 2d75 SPLIT_A_NYBBLES_INTO_A_AND_A'/C
 comment 2dcb Set VRAM_CPU (E000-37FF) to 00
 commentline 3055 print from 46f0 & 46d4 (what?)
 commentline 3060 print remtach?
@@ -99,27 +108,6 @@ commentline 472A ?
 commentline 4823 ?
 
 commentline BDBF Service dipswitch is set!
-
-commentline d7bf 01 = credit, 02 = start game, 03 = game over, 04 = game over 2?, 05 = game over 3?, 06 = rematch started,
-commentline d7bf or countdown value to add coins for rematch
-
-commentline d880 top screen background RAM, from top left corner to bottom right corner
-commentline d880 ~D880-DF7F, 32x32, 00-09: digits, 0A-23: letters, 24-?: special chars
-commentline d880 char then color palette (44 is white char on black background)
-
-commentline f20E bottom screen background RAM, from top left corner to bottom right corner
-commentline f20E ~F20E-FECF, 32x26?, 
-commentline f20E char then color palette (44 is white char on black background)
-
-label 0b3c NMI_STARTS_HERE?
-label 108D DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
-label 168f PRINT_REMATCH?
-label 2D52 COPY_A_TO_DE+_FOR_C_COUNT
-label 2D58 COPY_A_TO_DE+_FOR_BC_COUNT
-label 2d67 SET_I_AND_SPLIT_A_NYBBLES_INTO_A_AND_A'
-label 2d75 SPLIT_A_NYBBLES_INTO_A_AND_A'/C
-
-commentline BDBF Service dipswitch is set!
 label c000 NVRAM
 label d000 RAM
 label d022 ENERGY
@@ -129,10 +117,17 @@ label d02e KNOCKDOWNS
 label d02f CPU_KNOCKDOWNS
 ; 1A = max, can use RightHook/Uppercut button
 label d048 KO_BUTTON_LEVEL
+
+commentline d7bf 01 = credit, 02 = start game, 03 = game over, 04 = game over 2?, 05 = game over 3?, 06 = rematch started,
+commentline d7bf or countdown value to add coins for rematch
 label d7bf game_status
 label d7cb credits
 label d7f2 TIME
 label d800 VRAM_INFO
+
+commentline d880 top screen background RAM, from top left corner to bottom right corner
+commentline d880 ~D880-DF7F, 32x32, 00-09: digits, 0A-23: letters, 24-?: special chars
+commentline d880 char then color palette (44 is white char on black background)
 label d880 VRAM_top_monitor
 
 ; big sprite #1 zoom low 8 bits
@@ -171,9 +166,13 @@ label e800 VRAM_PLAYER
 label f000 SCROLL_BACKGROUND
 label f040 VRAM_BACKGROUND
 
-; fill f1ae,d22,0620 (fills bottom screen with green Ws)
+commentline f20E bottom screen background RAM, from top left corner to bottom right corner
+commentline f20E ~F20E-FECF, 32x26?, 
+commentline f20E char then color palette (44 is white char on black background)
 label f20e VRAM_bottom_monitor
 label fcc8 REMATCH_AVAILABLE_DRAW_LOCATION
+
+; fill f1ae,d22,0620 (fills bottom screen with green Ws)
 
 ; Is there security software? 3AB1 was reading areas I didn't expect. Also, I found when I enabled cheats,
 ; I sometimes had to knockdown an opponent far more than 3 times! Why?
