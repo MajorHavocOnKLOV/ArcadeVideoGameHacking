@@ -119,6 +119,7 @@ label 2D58 COPY_A_TO_DE+_FOR_BC_COUNT
 label 2d67 SET_I_AND_SPLIT_A_NYBBLES_INTO_A_AND_A'
 label 2d75 SPLIT_A_NYBBLES_INTO_A_AND_A'/C
 
+commentline BDBF Service dipswitch is set!
 label c000 NVRAM
 label d000 RAM
 label d022 ENERGY
