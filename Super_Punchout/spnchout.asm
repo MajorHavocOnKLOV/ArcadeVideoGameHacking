@@ -1,4 +1,4 @@
-org 0, numlab 39, numio 13, numdata 4, numcomm 15, numcommline 31
+org 0, numlab 39, numio 13, numdata 8, numcomm 24, numcommline 35
 
 IO_0_BUTTONS EQU $00
 I0_1_JOYSTICK? EQU $01
@@ -131,7 +131,6 @@ ORG $0000
 0039: 00 00 00 00 08 01 00 00 00 01 01 01 01 00 00 00 
 
 0049: 00 00 
-
 004b: FF             RST   $38
 
 004c: 02             LD    (BC),A
@@ -147,13 +146,11 @@ ORG $0000
 005a: 28 0A          JR    Z,$0066
 
 005c: E4 28 00       CALL  PO,$0028
-005f: B2             OR    A,D
-0060: 20 B2          JR    NZ,$0014
+005f: B2 
+0060: 20 B2 
+0062: 40 B2 
+0064: 60 B2 
 
-0062: 40             LD    B,B
-0063: B2             OR    A,D
-0064: 60             LD    H,B
-0065: B2             OR    A,D
 0066: F5             PUSH  AF
 0067: AF             XOR   A,A
 0068: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
@@ -640,7 +637,7 @@ ORG $0000
 0308: 11 00 D0       LD    DE,RAM
 030b: AF             XOR   A,A
 030c: 01 00 08       LD    BC,$0800
-030f: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT
+030f: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT;Clear D000-D7FF
 0312: F7             RST   $30
 
 0313: DB 97          IN    A,($97)
@@ -653,7 +650,7 @@ ORG $0000
 0320: 3E 0B          LD    A,#$0B
 0322: D3 D7          OUT   ($D7),A
 0324: 3E 00          LD    A,#$00
-0326: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT
+0326: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT;Clear D800-FF7F
 0329: 3E C9          LD    A,#$C9
 032b: 32 67 FF       LD    ($FF67),A
 032e: 32 40 FF       LD    ($FF40),A
@@ -708,13 +705,15 @@ ORG $0000
 0377: F1             POP   AF
 0378: E6 01          AND   A,#$01
 037a: 08             EX    AF,AF'
+
+*** Process coinage dip switches
 037b: 21 C3 D7       LD    HL,$D7C3
 037e: ED 69          OUT   (C),L
-0380: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY)
+0380: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY);Read DSW1
 0382: CB F9          SET   7,C
-0384: E6 0F          AND   A,#$0F
+0384: E6 0F          AND   A,#$0F         ;Mask off coinage
 0386: FE 0F          CP    A,#$0F
-0388: 20 03          JR    NZ,$038D
+0388: 20 03          JR    NZ,$038D       ;If not free play, process coinage
 
 038a: 77             LD    (HL),A
 038b: 18 30          JR    $03BD
@@ -754,6 +753,8 @@ ORG $0000
 
 03bb: 08             EX    AF,AF'
 03bc: 77             LD    (HL),A
+
+*** End Process coinage dip switches?
 03bd: F1             POP   AF
 03be: ED 79          OUT   (C),A
 03c0: CB A1          RES   4,C
@@ -782,7 +783,7 @@ ORG $0000
 03ef: 11 10 D5       LD    DE,$D510
 03f2: 01 A0 01       LD    BC,$01A0
 03f5: AF             XOR   A,A
-03f6: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT
+03f6: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT;Clear D510-D6AF
 03f9: 11 20 D5       LD    DE,$D520
 03fc: D5             PUSH  DE
 03fd: 21 35 04       LD    HL,$0435
@@ -1931,7 +1932,7 @@ NMI_STARTS_HERE?:
 0c30: 11 00 D5       LD    DE,$D500
 0c33: 01 00 02       LD    BC,$0200
 0c36: AF             XOR   A,A
-0c37: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT
+0c37: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT;Clear D500-D6FF
 0c3a: CD 46 04       CALL  $0446
 0c3d: CD 3F 30       CALL  $303F
 0c40: 21 00 00       LD    HL,$0000
@@ -3050,7 +3051,7 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 12f0: 11 00 D0       LD    DE,RAM
 12f3: AF             XOR   A,A
 12f4: 01 00 02       LD    BC,$0200
-12f7: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT
+12f7: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT;Clear D000-D1FF
 12fa: 3A F6 D7       LD    A,($D7F6)
 12fd: 01 BE B2       LD    BC,$B2BE
 1300: 87             ADD   A,A
@@ -7871,7 +7872,7 @@ SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 2dc4: 11 00 E0       LD    DE,VRAM_CPU
 2dc7: 01 00 08       LD    BC,$0800
 2dca: AF             XOR   A,A
-2dcb: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT;Set VRAM_CPU (E000-37FF) to 00
+2dcb: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT;Clear E000-E7FF (VRAM_CPU)
 2dce: 5F             LD    E,A
 2dcf: 21 E6 23       LD    HL,$23E6
 2dd2: 3E 0B          LD    A,#$0B
@@ -7901,7 +7902,7 @@ SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 2df3: 01 00 08       LD    BC,$0800
 2df6: 11 00 E8       LD    DE,VRAM_PLAYER
 2df9: AF             XOR   A,A
-2dfa: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT
+2dfa: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT;Clear E800-EFFF (VRAM_PLAYER)
 2dfd: 11 F8 DF       LD    DE,BIG_SPRITE2_XPOS_LOW
 2e00: 21 08 2E       LD    HL,$2E08
 2e03: 0E 05          LD    C,#$05
@@ -41363,6 +41364,8 @@ bdbd: 80             ADD   A,B
 bdbe: 80             ADD   A,B
 
 *** Service dipswitch is set!
+*** Test RAMs 8C 8D; ROMs 8F 8H 8J 8K 8L; display dip switches
+*** All RAMs (C000-FFFF) and all program ROMS (0000-BFFF) but none of the graphic ROMs
 bdbf: 21 00 D0       LD    HL,RAM
 bdc2: 0E 00          LD    C,#$00
 bdc4: DD 21 CB BD    LD    IX,$BDCB

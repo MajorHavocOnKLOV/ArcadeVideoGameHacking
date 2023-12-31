@@ -22,7 +22,6 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       6 $1A00
       6 $29A7
       6 $2D48
-      6 COPY_A_TO_DE+_FOR_BC_COUNT
       6 M,$30F6
       6 NZ,$A000
       5 $2A65
@@ -247,7 +246,13 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       1 C,$91FF
       1 C,$98FF
       1 C,$E24F
-      1 COPY_A_TO_DE+_FOR_BC_COUNT;Set VRAM_CPU (E000-37FF) to 00
+      1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear D000-D1FF
+      1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear D000-D7FF
+      1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear D500-D6FF
+      1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear D510-D6AF
+      1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear D800-FF7F
+      1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear E000-E7FF (VRAM_CPU)
+      1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear E800-EFFF (VRAM_PLAYER)
       1 M,$0018
       1 M,$0064
       1 M,$0083
