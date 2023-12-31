@@ -1,4 +1,4 @@
-org 0, numlab 39, numio 13, numdata 8, numcomm 24, numcommline 35
+org 0, numlab 39, numio 13, numdata 9, numcomm 24, numcommline 35
 
 IO_0_BUTTONS EQU $00
 I0_1_JOYSTICK? EQU $01
@@ -13294,10 +13294,8 @@ SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 
 
 *** HCTAMER
-4720: 11 0C 1D       LD    DE,$1D0C
-4723: 0A             LD    A,(BC)
-4724: 16 0E          LD    D,#$0E
-4726: 1B             DEC   DE
+4720: HCTAMER
+
 4727: 30 FF          JR    NC,$4728
 
 4729: 46             LD    B,(HL)

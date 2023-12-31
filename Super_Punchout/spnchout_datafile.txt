@@ -119,6 +119,8 @@ data 46ee-46ef
 commentline 46F0 ?
 commentline 471A data for outputting rematch with arrow above right punch button
 commentline 4720 HCTAMER
+ninty 4720-4726
+
 commentline 472A ?
 commentline 4823 ?
 
