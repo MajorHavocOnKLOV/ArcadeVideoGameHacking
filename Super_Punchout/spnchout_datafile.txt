@@ -47,10 +47,13 @@ commentline 0000 Dissasembly of the Super Punch-Out!! (Rev B) ROMs used by MAME 
 comment 0000 Z80 starts executing code at 0x0000
 
 commentline 0030 Check if copyright dipswitch is on (DSW1, switch 8) which displays Nintendo of America (instead of Nintendo)
+
 ; used at 0281
 data 0039-0048
 ; used at 0291
 data 0049-004A
+; used at 0356
+data 005e,4,2
 
 commentline 0156 JR table of 55? entries used at ?
 ; data used at 25f8
@@ -60,14 +63,24 @@ commentline 0291 Initialize OUT B to C by LD 2 bytes at 0049, 0080 times
 comment 02A9 If service dipswitch is on (DSW2, switch 8), go to service routine
 comment 02C1 If service service switch is on, go to service2? routine
 commentline 02c9 OUT through this loop A8 times to 02D7
+comment 030F Clear D000-D7FF
+comment 0326 Clear D800-FF7F
+commentline 037B Process coinage dip switches
+comment 0380 Read DSW1
+comment 0384 Mask off coinage
+comment 0388 If not free play, process coinage
+commentline 03BD End Process coinage dip switches?
+comment 03F6 Clear D510-D6AF
 
 comment 0776 call function to draw bandage on forehead of rematch fighter
 label 0b3c NMI_STARTS_HERE?
 comment 0b93 return from NMI
+comment 0C37 Clear D500-D6FF
 
 commentline 108D A contains 2 bcd digits. Display A as 2 digits at DE with blank padding
 label 108D DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
 comment 1092 Replace 0 tens digit with a space
+comment 12F7 Clear D000-D1FF
 commentline 1679 Process rematch (because credit and R punch pressed)
 commentline 1689 Input from 00 into A, check bit 3 (and $04) and if NZ, jmp 1676
 
@@ -90,7 +103,9 @@ commentline 2d67 input: A ; outputs: I=A, A has high nybble in lower nybble, A' 
 label 2d67 SET_I_AND_SPLIT_A_NYBBLES_INTO_A_AND_A'
 commentline 2d75 input: A ; outputs: A has high nybble in lower nybble and A'/C has low nybble in lower nybbble
 label 2d75 SPLIT_A_NYBBLES_INTO_A_AND_A'/C
-comment 2dcb Set VRAM_CPU (E000-37FF) to 00
+comment 2dcb Clear E000-E7FF (VRAM_CPU)
+comment 2dfa Clear E800-EFFF (VRAM_PLAYER)
+
 commentline 3055 print from 46f0 & 46d4 (what?)
 commentline 3060 print remtach?
 
@@ -108,6 +123,9 @@ commentline 472A ?
 commentline 4823 ?
 
 commentline BDBF Service dipswitch is set!
+commentline BDBF Test RAMs 8C 8D; ROMs 8F 8H 8J 8K 8L; display dip switches
+commentline BDBF All RAMs (C000-FFFF) and all program ROMS (0000-BFFF) but none of the graphic ROMs
+
 label c000 NVRAM
 label d000 RAM
 label d022 ENERGY
