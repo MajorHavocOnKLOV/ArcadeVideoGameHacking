@@ -1,0 +1,2644 @@
+label 0005 H__2_S
+ninty 0005-0008
+label 001D __________________0_S
+ninty 001D-002F
+label 0039 2_000001111000180000_S
+ninty 0039-004C
+label 00C7 GGGG_S
+ninty 00C7-00CA
+label 00E1 ENAC201_S
+ninty 00E1-00E7
+label 00EC NA0NA0N_S
+ninty 00EC-00F2
+label 00F6 ___7V767K6_S
+ninty 00F6-00FF
+label 01FA E40_____W_S
+ninty 01FA-0202
+label 0207 4:88868_S
+ninty 0207-020D
+label 0211 4-868_S
+ninty 0211-0215
+label 0218 0G44Q4U8'_S
+ninty 0218-0220
+label 0222 24L488C4O4H_S
+ninty 0222-022C
+label 0231 B8R8J4J8N4N8W8P8S424,4Y4_S
+ninty 0231-0248
+label 024C 4D4B40004F_S
+ninty 024C-0255
+label 0270 CG_109XWQWWWQQQNNNNNNNNT_S
+ninty 0270-0287
+label 0293 C2A10IX_S
+ninty 0293-0299
+label 0332 56O2_S
+ninty 0332-0335
+label 0370 _2IS_S
+ninty 0370-0373
+label 03CB C0DV_S
+ninty 03CB-03CE
+label 03DF C0DV_S
+ninty 03DF-03E2
+label 03F7 WH"X_S
+ninty 03F7-03FA
+label 03FD 8E45X_S
+ninty 03FD-0401
+label 0429 0814_S
+ninty 0429-042C
+label 0430 OT21_S
+ninty 0430-0433
+label 0435 0AON00_S
+ninty 0435-043A
+label 043C 0LCN008_S
+ninty 043C-0442
+label 0451 Y_0X"_S
+ninty 0451-0455
+label 046B 0014E_S
+ninty 046B-046F
+label 04A5 Y_0X_S
+ninty 04A5-04A8
+label 04DB 46CW5_%H_S
+ninty 04DB-04E2
+label 0588 Y00X_S
+ninty 0588-058B
+label 058E Y22X_S
+ninty 058E-0591
+label 05BF GGG4214_S
+ninty 05BF-05C5
+label 05C7 GGG21G_S
+ninty 05C7-05CC
+label 05CE GGWGG412GG_S
+ninty 05CE-05D7
+label 05DE %_04_S
+ninty 05DE-05E1
+label 0688 4MR00U5_S
+ninty 0688-068E
+label 06B0 00M5_S
+ninty 06B0-06B3
+label 06BC O8U4_S
+ninty 06BC-06BF
+label 06D0 QJ"G6"W61W5'1W_S
+ninty 06D0-06DD
+label 070A Y__X_S
+ninty 070A-070D
+label 0719 Y00XG_S
+ninty 0719-071D
+label 0725 YF0X_S
+ninty 0725-0728
+label 0744 CE"R_S
+ninty 0744-0747
+label 07A9 P2_B_S
+ninty 07A9-07AC
+label 07B4 HBMX_S
+ninty 07B4-07B7
+label 07DF HBHXJD_S
+ninty 07DF-07E4
+label 07F2 :KEB_S
+ninty 07F2-07F5
+label 07F9 X0E205_S
+ninty 07F9-07FE
+label 0806 906O_S
+ninty 0806-0809
+label 0840 Y0_X"H_S
+ninty 0840-0845
+label 0848 Y22X_S
+ninty 0848-084B
+label 086D B:"F_S
+ninty 086D-0870
+label 08CF A2"H_S
+ninty 08CF-08D2
+label 0973 9E"B_S
+ninty 0973-0976
+label 097F HBSX_S
+ninty 097F-0982
+label 09BE 1E":_S
+ninty 09BE-09C1
+label 09E0 28XC_S
+ninty 09E0-09E3
+label 09EE 0HEW0_S
+ninty 09EE-09F2
+label 0AA6 F:8W_S
+ninty 0AA6-0AA9
+label 0AC5 B8A_A_S
+ninty 0AC5-0AC9
+label 0ACF B8B3A_S
+ninty 0ACF-0AD3
+label 0AD9 _A6LWG_86CW_80BDA_A_S
+ninty 0AD9-0AEB
+label 0AED _A6C_S
+ninty 0AED-0AF0
+label 0AF6 W_G0G_G6GG_E6CW_E0G_C6CW_C0_S
+ninty 0AF6-0B10
+label 0BD0 A::L_S
+ninty 0BD0-0BD3
+label 0C19 8OAO0_S
+ninty 0C19-0C1D
+label 0C1F 0E2OME_S
+ninty 0C1F-0C24
+label 0C3F 0100X0_S
+ninty 0C3F-0C44
+label 0C62 G4W8_S
+ninty 0C62-0C65
+label 0C84 Y04X_S
+ninty 0C84-0C87
+label 0C97 ''26_S
+ninty 0C97-0C9A
+label 0CBE JZJZG0X_S
+ninty 0CBE-0CC4
+label 0CD7 JZI'_S
+ninty 0CD7-0CDA
+label 0CDD GJZI'0_S
+ninty 0CDD-0CE2
+label 0CF4 F_1DQXW0X_S
+ninty 0CF4-0CFC
+label 0D1A 1L02XG1JE0Y3_S
+ninty 0D1A-0D25
+label 0D2A 2VP2!!1TG2Y_S
+ninty 0D2A-0D34
+label 0D39 2HU1W_S
+ninty 0D39-0D3D
+label 0D3F 2H11Y_S
+ninty 0D3F-0D43
+label 0D48 E0GY0NS0XD02O0I_S
+ninty 0D48-0D56
+label 0D7A 6P0YH_S
+ninty 0D7A-0D7E
+label 0D94 GP6U_S
+ninty 0D94-0D97
+label 0DA9 H5ED_S
+ninty 0DA9-0DAC
+label 0DB1 GHFED_S
+ninty 0DB1-0DB5
+label 0DBC JJ66_S
+ninty 0DBC-0DBF
+label 0DCB ZFZNF_S
+ninty 0DCB-0DCF
+label 0DD4 7777_S
+ninty 0DD4-0DD7
+label 0DEA EYEN_S
+ninty 0DEA-0DED
+label 0E0B MEE7_S
+ninty 0E0B-0E0E
+label 0E10 X5EE'_S
+ninty 0E10-0E14
+label 0E18 GXFEE'_S
+ninty 0E18-0E1D
+label 0E2C 66ZZ_S
+ninty 0E2C-0E2F
+label 0E31 WDE7_S
+ninty 0E31-0E34
+label 0E4E E_0X_S
+ninty 0E4E-0E51
+label 0E6D 66ZZ_S
+ninty 0E6D-0E70
+label 0E9F "V"F_S
+ninty 0E9F-0EA2
+label 0F04 F'V''_S
+ninty 0F04-0F08
+label 0F5E 4YP0_S
+ninty 0F5E-0F61
+label 0F99 0XWO5_S
+ninty 0F99-0F9D
+label 0FCF E2W2_S
+ninty 0FCF-0FD2
+label 0FD9 H!!!!!!_S
+ninty 0FD9-0FDF
+label 0FEE IH'06_S
+ninty 0FEE-0FF2
+label 0FF9 O1!!!0_S
+ninty 0FF9-0FFE
+label 100B SS":_S
+ninty 100B-100E
+label 1056 4589_S
+ninty 1056-1059
+label 106D IH!!!!!!0_S
+ninty 106D-1075
+label 107F QNS690_S
+ninty 107F-1084
+label 1087 GJZI_S
+ninty 1087-108A
+label 10A8 VH!!!0_S
+ninty 10A8-10AD
+label 10CC DE360_S
+ninty 10CC-10D0
+label 1124 5608H_S
+ninty 1124-1128
+label 1178 D230_S
+ninty 1178-117B
+label 1184 08H0_S
+ninty 1184-1187
+label 11C7 01HG_S
+ninty 11C7-11CA
+label 11D4 QSI'_S
+ninty 11D4-11D7
+label 11D9 QSI'_S
+ninty 11D9-11DC
+label 11DE A8I'0_S
+ninty 11DE-11E2
+label 11F1 QSI'_S
+ninty 11F1-11F4
+label 1221 CX0E_S
+ninty 1221-1224
+label 124F 26N'X_S
+ninty 124F-1253
+label 1288 ,OO0_S
+ninty 1288-128B
+label 12A6 Y00X_S
+ninty 12A6-12A9
+label 12D6 FFFF_S
+ninty 12D6-12D9
+label 1311 :9O7_S
+ninty 1311-1314
+label 1393 _102_S
+ninty 1393-1396
+label 1398 ___010_S
+ninty 1398-139D
+label 139F V132112H31B_S
+ninty 139F-13A9
+label 13B4 11SC_S
+ninty 13B4-13B7
+label 13B9 2'1I2_S
+ninty 13B9-13BD
+label 13D4 30004_S
+ninty 13D4-13D8
+label 13E0 :__00_S
+ninty 13E0-13E4
+label 13FA 6EBYX_S
+ninty 13FA-13FE
+label 1431 7778V_S
+ninty 1431-1435
+label 1450 O26'_S
+ninty 1450-1453
+label 14B4 -688_S
+ninty 14B4-14B7
+label 14C0 "1O'_S
+ninty 14C0-14C3
+label 14D6 P%LI_S
+ninty 14D6-14D9
+label 1508 6'46_S
+ninty 1508-150B
+label 1516 36'66_S
+ninty 1516-151A
+label 151C 6X06P%_S
+ninty 151C-1521
+label 153F WDJJJJ'I_S
+ninty 153F-1546
+label 1571 '06'_S
+ninty 1571-1574
+label 160A 46MRH_S
+ninty 160A-160E
+label 161B OGCG_S
+ninty 161B-161E
+label 16A6 -O2O_S
+ninty 16A6-16A9
+label 16BB O_26_S
+ninty 16BB-16BE
+label 173E ,0W7_S
+ninty 173E-1741
+label 1758 8G'0_S
+ninty 1758-175B
+label 1787 '5'30_S
+ninty 1787-178B
+label 17B7 ""Q0_S
+ninty 17B7-17BA
+label 17DF :9W4_S
+ninty 17DF-17E2
+label 17EA 0V'2_S
+ninty 17EA-17ED
+label 180F H985_S
+ninty 180F-1812
+label 1868 W5OR_S
+ninty 1868-186B
+label 1877 ''G6_S
+ninty 1877-187A
+label 18B6 ''_6_S
+ninty 18B6-18B9
+label 18BB ''_6_S
+ninty 18BB-18BE
+label 18C0 ''_6BW8_S
+ninty 18C0-18C6
+label 18C8 ''_6_S
+ninty 18C8-18CB
+label 18D1 ''06''_6_S
+ninty 18D1-18D8
+label 18DA ''16''_6_S
+ninty 18DA-18E1
+label 1919 ,F'V'_S
+ninty 1919-191D
+label 192C ''_6RW_S
+ninty 192C-1931
+label 1933 1E''''_S
+ninty 1933-1938
+label 1967 ,F'V'_S
+ninty 1967-196B
+label 1993 3E''_S
+ninty 1993-1996
+label 1998 SS":_S
+ninty 1998-199B
+label 19B1 ,F'V'_S
+ninty 19B1-19B5
+label 19C4 ''_66W_S
+ninty 19C4-19C9
+label 19E2 ''_65W8''_6_S
+ninty 19E2-19EC
+label 1A43 M06Z_S
+ninty 1A43-1A46
+label 1AAE R19!DM!!_S
+ninty 1AAE-1AB5
+label 1AB7 0C19_S
+ninty 1AB7-1ABA
+label 1AD8 _:9W_S
+ninty 1AD8-1ADB
+label 1B00 Q4O:_S
+ninty 1B00-1B03
+label 1B0E Q2OW_S
+ninty 1B0E-1B11
+label 1B98 2ESI_S
+ninty 1B98-1B9B
+label 1B9F YW0X_S
+ninty 1B9F-1BA2
+label 1BAA %NAW_S
+ninty 1BAA-1BAD
+label 1BF4 53W3_S
+ninty 1BF4-1BF7
+label 1C02 %WW1_S
+ninty 1C02-1C05
+label 1C0B 1:WP_S
+ninty 1C0B-1C0E
+label 1C64 16"16_S
+ninty 1C64-1C68
+label 1C7C 777748_S
+ninty 1C7C-1C81
+label 1C97 ,06D_S
+ninty 1C97-1C9A
+label 1CC3 FFFFO_S
+ninty 1CC3-1CC7
+label 1D0E R2QJ_S
+ninty 1D0E-1D11
+label 1D47 S2QJ_S
+ninty 1D47-1D4A
+label 1D53 JH16_S
+ninty 1D53-1D56
+label 1D61 9T'X06O_S
+ninty 1D61-1D67
+label 1D6F 2QJS_S
+ninty 1D6F-1D72
+label 1D96 4:OT_S
+ninty 1D96-1D99
+label 1DA0 FG3W_S
+ninty 1DA0-1DA3
+label 1DB3 4JQT_S
+ninty 1DB3-1DB6
+label 1DD2 HAO9_S
+ninty 1DD2-1DD5
+label 1DF9 06U%_S
+ninty 1DF9-1DFC
+label 1E00 O7726'_S
+ninty 1E00-1E05
+label 1E17 3EDUI1_S
+ninty 1E17-1E1C
+label 1E1F 3U2E_S
+ninty 1E1F-1E22
+label 1E33 N"16_S
+ninty 1E33-1E36
+label 1E5C QJ444_S
+ninty 1E5C-1E60
+label 1E6C QJ'16_S
+ninty 1E6C-1E70
+label 1EBE 86'U6_S
+ninty 1EBE-1EC2
+label 1EC8 QJD%_S
+ninty 1EC8-1ECB
+label 1EE6 QJF%_S
+ninty 1EE6-1EE9
+label 1F1E :J44FE_S
+ninty 1F1E-1F23
+label 1F97 %06U6_S
+ninty 1F97-1F9B
+label 1FF5 X,26'_S
+ninty 1FF5-1FF9
+label 205A "26"O_S
+ninty 205A-205E
+label 2070 X26'_S
+ninty 2070-2073
+label 20A3 HZZZ_S
+ninty 20A3-20A6
+label 20DF N"16_S
+ninty 20DF-20E2
+label 20F3 FFFF_S
+ninty 20F3-20F6
+label 2107 QJ44444_S
+ninty 2107-210D
+label 2110 OJ4G_S
+ninty 2110-2113
+label 211A QJ'16_S
+ninty 211A-211E
+label 2131 %V0Y_S
+ninty 2131-2134
+label 2183 R:36_S
+ninty 2183-2186
+label 218F JH16_S
+ninty 218F-2192
+label 219E O_O1O%O,O'OZO:OTOPOMO_S
+ninty 219E-21B2
+label 21F9 N-0VF_S
+ninty 21F9-21FD
+label 2212 0X301_S
+ninty 2212-2216
+label 2233 1NX16"_S
+ninty 2233-2238
+label 229B ZSI8"_S
+ninty 229B-229F
+label 22DE 9Z1X06O_S
+ninty 22DE-22E4
+label 22E7 2QJ44_S
+ninty 22E7-22EB
+label 2301 23W1_S
+ninty 2301-2304
+label 230E E6'W_S
+ninty 230E-2311
+label 231A 6Y1%_S
+ninty 231A-231D
+label 2337 O1OWO_S
+ninty 2337-233B
+label 2341 5O2OOO_S
+ninty 2341-2346
+label 234E Y0_X4G_S
+ninty 234E-2353
+label 235C A:44_S
+ninty 235C-235F
+label 23BE 2Q7W_S
+ninty 23BE-23C1
+label 23CF 4430_S
+ninty 23CF-23D2
+label 23F5 :J44FE_S
+ninty 23F5-23FA
+label 240C B%16_S
+ninty 240C-240F
+label 243A %06W_S
+ninty 243A-243D
+label 244F 16Q%_S
+ninty 244F-2452
+label 2489 QZVZ_S
+ninty 2489-248C
+label 24B3 CY00X_S
+ninty 24B3-24B7
+label 24C9 -X3O_S
+ninty 24C9-24CC
+label 24DE 4:RO_S
+ninty 24DE-24E1
+label 2504 0U1EE_S
+ninty 2504-2508
+label 2519 3U0E_S
+ninty 2519-251C
+label 2551 0%702_S
+ninty 2551-2555
+label 2683 QOU,_S
+ninty 2683-2686
+label 268E OZ38Z_S
+ninty 268E-2692
+label 26A1 UXFW0_S
+ninty 26A1-26A5
+label 26B1 4W062_S
+ninty 26B1-26B5
+label 26FB E:'W_S
+ninty 26FB-26FE
+label 273A Y0_X_S
+ninty 273A-273D
+label 2761 SQ%U_S
+ninty 2761-2764
+label 2776 Y:_UOQ_S
+ninty 2776-277B
+label 278A .U9OE_S
+ninty 278A-278E
+label 27D9 511O_S
+ninty 27D9-27DC
+label 27E5 G1K1KZMLIZMZMZMZM3_S
+ninty 27E5-27F6
+label 27FF I.M.M.M.M1_S
+ninty 27FF-2808
+label 280A GFKFK.M_S
+ninty 280A-2810
+label 281D X331_S
+ninty 281D-2820
+label 2843 0M1G0J_S
+ninty 2843-2848
+label 284A G00C3_S
+ninty 284A-284E
+label 2859 2C_G00M0C_S
+ninty 2859-2861
+label 286D G0C_A_S
+ninty 286D-2871
+label 2886 G0C_A0_S
+ninty 2886-288B
+label 2897 00Q8M0C_A1_S
+ninty 2897-28A0
+label 28B7 5G1C02_S
+ninty 28B7-28BC
+label 28C7 3C00C3_S
+ninty 28C7-28CC
+label 28D6 X040_020_030_050_00_S
+ninty 28D6-28E8
+label 28F5 7Z107_S
+ninty 28F5-28F9
+label 28FB FFFF40_S
+ninty 28FB-2900
+label 29AA 777Q_S
+ninty 29AA-29AD
+label 29AF 06O6_S
+ninty 29AF-29B2
+label 29BA 0U.B_S
+ninty 29BA-29BD
+label 29C8 77QWE_S
+ninty 29C8-29CC
+label 29D2 XO06F_S
+ninty 29D2-29D6
+label 29D8 0U9!_S
+ninty 29D8-29DB
+label 29DF -:TURS_S
+ninty 29DF-29E4
+label 2A12 Y:',_S
+ninty 2A12-2A15
+label 2A68 T8777Q_S
+ninty 2A68-2A6D
+label 2A79 X06O0_S
+ninty 2A79-2A7D
+label 2AA9 "0',X-X-UUUXOORR_S
+ninty 2AA9-2AB8
+label 2ACA %4R%4"_S
+ninty 2ACA-2ACF
+label 2AD5 04H26_S
+ninty 2AD5-2AD9
+label 2AF1 4"-6_S
+ninty 2AF1-2AF4
+label 2AF9 Y-1XL_S
+ninty 2AF9-2AFD
+label 2B27 4"860_S
+ninty 2B27-2B2B
+label 2B37 Y11X_S
+ninty 2B37-2B3A
+label 2B3E _A_F_0_S
+ninty 2B3E-2B43
+label 2B46 _"_2_7_S
+ninty 2B46-2B4B
+label 2B4E A_______F____K_P_U_Z_S
+ninty 2B4E-2B61
+label 2B63 'X'O"I_S
+ninty 2B63-2B68
+label 2BA3 _:.W_S
+ninty 2BA3-2BA6
+label 2BC0 MH!0_S
+ninty 2BC0-2BC3
+label 2BCE %:MO_S
+ninty 2BCE-2BD1
+label 2C06 _:2W_S
+ninty 2C06-2C09
+label 2C0E H4R%4"86K_S
+ninty 2C0E-2C16
+label 2C21 160O_S
+ninty 2C21-2C24
+label 2C40 H41%4"86S_S
+ninty 2C40-2C48
+label 2C4D 031'_S
+ninty 2C4D-2C50
+label 2D26 WDJJZI_S
+ninty 2D26-2D2B
+label 2D52 WDJI_S
+ninty 2D52-2D55
+label 2D58 6WCD_S
+ninty 2D58-2D5B
+label 2D6D FFFFW_S
+ninty 2D6D-2D71
+label 2D79 FFFF8OF_S
+ninty 2D79-2D7F
+label 2DDB HPWF_S
+ninty 2DDB-2DDE
+label 2DEB 0H8013O601200_S
+ninty 2DEB-2DF7
+label 2E00 5E%8X_S
+ninty 2E00-2E04
+label 2E09 0103_S
+ninty 2E09-2E0C
+label 2E77 165E_S
+ninty 2E77-2E7A
+label 2ED4 GZ''_S
+ninty 2ED4-2ED7
+label 2EFA X26N2X_S
+ninty 2EFA-2EFF
+label 2F18 X785_S
+ninty 2F18-2F1B
+label 2F31 26N2X_S
+ninty 2F31-2F35
+label 2F63 F'N'V'_S
+ninty 2F63-2F68
+label 2FA9 F'V'_S
+ninty 2FA9-2FAC
+label 2FD2 SS":_S
+ninty 2FD2-2FD5
+label 2FEF 8E4610HA_S
+ninty 2FEF-2FF6
+label 2FFA WDZZ_6Z-6Z_S
+ninty 2FFA-3003
+label 3098 2,3O_S
+ninty 3098-309B
+label 30DC 5O.Z_S
+ninty 30DC-30DF
+label 316D HQDW_S
+ninty 316D-3170
+label 31B2 O_U0_S
+ninty 31B2-31B5
+label 3202 A:PO_S
+ninty 3202-3205
+label 3225 JXGF_S
+ninty 3225-3228
+label 3230 'DW57W_S
+ninty 3230-3235
+label 323A '3O7_S
+ninty 323A-323D
+label 323F BH36"_S
+ninty 323F-3243
+label 3257 G%87_S
+ninty 3257-325A
+label 325F O26'_S
+ninty 325F-3262
+label 3266 26SIS1_S
+ninty 3266-326B
+label 326D 8N816ZO_S
+ninty 326D-3273
+label 3280 88HW5'LOSIT_S
+ninty 3280-328A
+label 329C 81030_S
+ninty 329C-32A0
+label 32AA 3KX5_S
+ninty 32AA-32AD
+label 32AF 906O_S
+ninty 32AF-32B2
+label 32B8 SSITQDW_S
+ninty 32B8-32BE
+label 32EB L:88W1_S
+ninty 32EB-32F0
+label 32F4 3SX8S_S
+ninty 32F4-32F8
+label 3316 E7C3A894D6B2G9F5YD7A8B2110_S
+ninty 3316-332F
+label 3331 GPC20V401_S
+ninty 3331-3339
+label 33AE 'N'G_S
+ninty 33AE-33B1
+label 33B6 483B_S
+ninty 33B6-33B9
+label 33D9 17H38_1H3K_S
+ninty 33D9-33E2
+label 33FE 4YP0_S
+ninty 33FE-3401
+label 340F 66P4_S
+ninty 340F-3412
+label 342F -XB8F_S
+ninty 342F-3433
+label 343B YX9O_S
+ninty 343B-343E
+label 344B 851O438_S
+ninty 344B-3451
+label 345E 4OP3W_S
+ninty 345E-3462
+label 3468 8GW7_S
+ninty 3468-346B
+label 346D YB80_S
+ninty 346D-3470
+label 348F T_TDTETFTGX9T_T0T1T2T3X8T_THTITJTKX9T_T4T5T6T7X8T_THTITJTKT_T_T4T5T6T7T_S
+ninty 348F-34D5
+label 3525 'N'Y_S
+ninty 3525-3528
+label 35A2 95707O_S
+ninty 35A2-35A7
+label 35B8 'SO53_S
+ninty 35B8-35BC
+label 35EF '06'06'26_S
+ninty 35EF-35F7
+label 3652 4"3W5'_S
+ninty 3652-3657
+label 3685 VVVV_S
+ninty 3685-3688
+label 369C I:OF_S
+ninty 369C-369F
+label 36A1 FFF__S
+ninty 36A1-36A4
+label 36B4 M!A1C_S
+ninty 36B4-36B8
+label 36BE P9J3_S
+ninty 36BE-36C1
+label 36C5 B8LN2_S
+ninty 36C5-36C9
+label 36CB DM0MD1NAC!M_S
+ninty 36CB-36D5
+label 36D8 T8N:19Y_S
+ninty 36D8-36DE
+label 36E0 X7Z3_S
+ninty 36E0-36E3
+label 36E5 86NB7_S
+ninty 36E5-36E9
+label 3784 38":_S
+ninty 3784-3787
+label 378C 38E:_S
+ninty 378C-378F
+label 3985 27QJ_S
+ninty 3985-3988
+label 39C8 ZFZN9_S
+ninty 39C8-39CC
+label 39DD ZFZNY_S
+ninty 39DD-39E1
+label 3A18 0018_S
+ninty 3A18-3A1B
+label 3A31 ZFZN_S
+ninty 3A31-3A34
+label 3A5C 2308_S
+ninty 3A5C-3A5F
+label 3ABA ZFZNDW_S
+ninty 3ABA-3ABF
+label 3AE7 ZFZNF_S
+ninty 3AE7-3AEB
+label 3B19 Q_QMQ_S
+ninty 3B19-3B1D
+label 3B25 Q9Q'Q_S
+ninty 3B25-3B29
+label 3B2D RFQ"R_S
+ninty 3B2D-3B31
+label 3B69 QUQVQ_S
+ninty 3B69-3B6D
+label 3B71 MWSQTQ_S
+ninty 3B71-3B76
+label 3B7F MW0R_S
+ninty 3B7F-3B82
+label 3C48 SRUR_S
+ninty 3C48-3C4B
+label 3C72 Q0AG30AJ30AM30BP30B430B730BL30B_S
+ninty 3C72-3C90
+label 3CAA 2FC40E'60A260A860A_S
+ninty 3CAA-3CBB
+label 3CBD BW0E_S
+ninty 3CBD-3CC0
+label 3CD4 0EU20AW20AY20A-20HI_S
+ninty 3CD4-3CE6
+label 3CE8 30ESFI_S
+ninty 3CE8-3CED
+label 3CF1 30E:_S
+ninty 3CF1-3CF4
+label 3CF8 30E4_S
+ninty 3CF8-3CFB
+label 3CFF F!30E%_S
+ninty 3CFF-3D04
+label 3D07 FB30E_S
+ninty 3D07-3D0B
+label 3D16 0_2W_S
+ninty 3D16-3D19
+label 3D21 90LW0_S
+ninty 3D21-3D25
+label 3D2D 0_2W_S
+ninty 3D2D-3D30
+label 3D49 IALS_BY_CONTROL_S
+ninty 3D49-3D57
+label 3D59 SELECT_INIT_S
+ninty 3D59-3D63
+label 3D69 TTON_TO_PRINT_!_S
+ninty 3D69-3D77
+label 3D79 AND_PRESS_BU_S
+ninty 3D79-3D84
+label 3D86 'W00000_S
+ninty 3D86-3D8C
+label 3D98 NAME_ENTRY_:_S
+ninty 3D98-3DA3
+label 3DAA 0W00'"2-_2_S
+ninty 3DAA-3DB3
+label 3DBF INTRODUCING_S
+ninty 3DBF-3DC9
+label 3DD1 THE_LEFT_CORNER_S
+ninty 3DD1-3DDF
+label 3DE9 POUNDS,_S
+ninty 3DE9-3DEF
+label 3DF2 WEIGHING_S
+ninty 3DF2-3DF9
+label 3E00 FROM_S
+ninty 3E00-3E03
+label 3E05 -W000_S
+ninty 3E05-3E09
+label 3E0C O_BOXING_ASSOC._S
+ninty 3E0C-3E1A
+label 3E1C WORLD_VIDE_S
+ninty 3E1C-3E25
+label 3E27 0000_S
+ninty 3E27-3E2A
+label 3F85 R72FJCFJCFF8_S
+ninty 3F85-3F90
+label 3F92 0I_4F34.4F5_S
+ninty 3F92-3F9C
+label 3FAC R:2F1CF1CF"8_S
+ninty 3FAC-3FB7
+label 3FB9 0JR2FX6.YFZ_S
+ninty 3FB9-3FC3
+label 3FD0 RC2BOCBOCBK8_S
+ninty 3FD0-3FDB
+label 40B2 TWX8_S
+ninty 40B2-40B5
+label 40B7 TWXU5_S
+ninty 40B7-40BB
+label 40C1 8_XW_S
+ninty 40C1-40C4
+label 40C9 TWX9_S
+ninty 40C9-40CC
+label 40CE TWXZ5_S
+ninty 40CE-40D2
+label 40D8 9_XW_S
+ninty 40D8-40DB
+label 40DD A,D09_S
+ninty 40DD-40E1
+label 419F 7W854_S
+ninty 419F-41A3
+label 41B7 7W8:3_S
+ninty 41B7-41BB
+label 41CC 7W8D6_S
+ninty 41CC-41D0
+label 41D2 7W8K70_S
+ninty 41D2-41D7
+label 41D9 7W8T90_S
+ninty 41D9-41DE
+label 41EA 7W8W3_S
+ninty 41EA-41EE
+label 4243 7W8547_S
+ninty 4243-4248
+label 425C 7W8:3_S
+ninty 425C-4260
+label 426F 48D30_S
+ninty 426F-4273
+label 4279 78J30_S
+ninty 4279-427D
+label 4282 98S207_S
+ninty 4282-4287
+label 4289 8W08_S
+ninty 4289-428C
+label 4293 8W08_S
+ninty 4293-4296
+label 42DF 0_0_2W_S
+ninty 42DF-42E4
+label 42E6 904W0_S
+ninty 42E6-42EA
+label 42F4 00_HIT_AVERAGE_S
+ninty 42F4-4301
+label 4306 4W000BEST_5_S
+ninty 4306-4310
+label 4312 DW_PER_CENT._S
+ninty 4312-431D
+label 4328 0CD0_._S
+ninty 4328-432D
+label 4342 K.O.TIME_S
+ninty 4342-4349
+label 435A BEST_3_S
+ninty 435A-435F
+label 4379 OW_'__"_S
+ninty 4379-437F
+label 4394 OW_'__"_S
+ninty 4394-439A
+label 43AF OW_'__"_S
+ninty 43AF-43B5
+label 43D9 SWBEAR_HUGGER_S
+ninty 43D9-43E5
+label 43E7 00001._S
+ninty 43E7-43EC
+label 43F2 SWDRAGON_CHAN_S
+ninty 43F2-43FE
+label 4400 0002._S
+ninty 4400-4404
+label 440A 0VODKA_S
+ninty 440A-440F
+label 4413 SW_DRUNKENSKI_S
+ninty 4413-441F
+label 4421 00003._S
+ninty 4421-4426
+label 442C SWGREAT_TIGER_S
+ninty 442C-4438
+label 443A 0004._S
+ninty 443A-443E
+label 4444 0SUPER_S
+ninty 4444-4449
+label 444D SW_MACHO_MAN_S
+ninty 444D-4458
+label 445A 005._S
+ninty 445A-445D
+label 446D _DW0O_S
+ninty 446D-4471
+label 44C5 SCORE_S
+ninty 44C5-44C9
+label 44CC _NO._NAME_S
+ninty 44CC-44D4
+label 4504 _GW0000_S
+ninty 4504-450A
+label 4510 _4W0_S
+ninty 4510-4513
+label 4527 _GW0_S
+ninty 4527-452A
+label 4537 0_0_2W_S
+ninty 4537-453C
+label 453E 904W0_S
+ninty 453E-4542
+label 454B NO.NAME__SCORE_S
+ninty 454B-4558
+label 455B 00NO.NAME__SCORE_S
+ninty 455B-456A
+label 45BB 4W000NEW_FEATURE:_S
+ninty 45BB-45CB
+label 45CE NOB_OF_CONTROL,_S
+ninty 45CE-45DC
+label 45DE 00PULL_THE_K_S
+ninty 45DE-45E9
+label 45EC _DUCK_PUNCHES_!_S
+ninty 45EC-45FA
+label 45FC 0AND_S
+ninty 45FC-45FF
+label 4607 ASTER_DUCKING_!_S
+ninty 4607-4615
+label 4617 0W000LET_S_M_S
+ninty 4617-4622
+label 4628 'W00000GOOD_DUCK_S
+ninty 4628-4637
+label 463B 00NEW_S
+ninty 463B-463F
+label 4643 00CONTROL_S
+ninty 4643-464B
+label 466B LEAR_BACKUP_RAM_S
+ninty 466B-4679
+label 467B 'W001.C_S
+ninty 467B-4681
+label 4684 -W000PRESS_K.O._S
+ninty 4684-4692
+label 4696 'W002.TEST_S
+ninty 4696-469F
+label 46A2 N0WAIT_S
+ninty 46A2-46A7
+label 46A9 WW0A_S
+ninty 46A9-46AC
+label 46BA NE_MORE_COIN_!!_S
+ninty 46BA-46C8
+label 46CA 0DEPOSIT_O_S
+ninty 46CA-46D3
+label 46DB PRESS_START_FOR_S
+ninty 46DB-46E9
+label 46F7 00NEW_PLAY_S
+ninty 46F7-4700
+label 4720 F_0REMATCH_S
+ninty 4720-4729
+label 473B REMATCH_!!_S
+ninty 473B-4744
+label 4751 T_COINS_IN_TIME_S
+ninty 4751-475F
+label 4761 DEPOSI_S
+ninty 4761-4766
+label 4775 0BEAR_HUGGER_S
+ninty 4775-4780
+label 4785 0DRAGON_CHAN_S
+ninty 4785-4790
+label 4795 ODKA_DRUNKENSKI_S
+ninty 4795-47A3
+label 47AB 0GREAT_TIGER_S
+ninty 47AB-47B6
+label 47BB 0SUPER_MACHO_MAN_S
+ninty 47BB-47CA
+label 47CF 0CANADA_S
+ninty 47CF-47D5
+label 47DA 0HONG_KONG_S
+ninty 47DA-47E3
+label 47E8 0U.S.S.R._S
+ninty 47E8-47F0
+label 47F5 0INDIA_S
+ninty 47F5-47FA
+label 47FF 0U.S.A._S
+ninty 47FF-4805
+label 480C ON_OF_THE_WORLD_S
+ninty 480C-481A
+label 481C N0CHAMPI_S
+ninty 481C-4823
+label 482A 00000NEXT_FIGHTER_!_S
+ninty 482A-483C
+label 484E 00000_S
+ninty 484E-4852
+label 4858 0FROM_:_S
+ninty 4858-485E
+label 486A _GW0_S
+ninty 486A-486D
+label 4891 WVBA_S
+ninty 4891-4894
+label 48A2 HALL_OF_FAME_S
+ninty 48A2-48AD
+label 48D1 NO.NAME__SCORE_S
+ninty 48D1-48DE
+label 4919 BEST_SCORE_S
+ninty 4919-4922
+label 4930 1K.O.TIME_S
+ninty 4930-4938
+label 4969 0II0_S
+ninty 4969-496C
+label 499D K.O._S
+ninty 499D-49A0
+label 49AB BONUS_S
+ninty 49AB-49AF
+label 49CB PLAY_S
+ninty 49CB-49CE
+label 49D9 SCORE_S
+ninty 49D9-49DD
+label 4A5D DEDE_S
+ninty 4A5D-4A60
+label 4A62 DEDE_S
+ninty 4A62-4A65
+label 4A6F FG_FGFG_FGFG_S
+ninty 4A6F-4A7A
+label 4A8F STATUS_S
+ninty 4A8F-4A94
+label 4AFB 0NEW_S
+ninty 4AFB-4AFE
+label 4B00 0RECORD_S
+ninty 4B00-4B06
+label 4B0E HIT__AVERAGE_S
+ninty 4B0E-4B19
+label 4B57 0!N8KI0_._S
+ninty 4B57-4B5F
+label 4B74 5A60_S
+ninty 4B74-4B77
+label 4B79 5H70_S
+ninty 4B79-4B7C
+label 4B7E "M55O20_S
+ninty 4B7E-4B84
+label 4B86 1S45U20_S
+ninty 4B86-4B8C
+label 4B8E 1Y45-20_S
+ninty 4B8E-4B94
+label 4B96 45,20_S
+ninty 4B96-4B9A
+label 4B9E 1055110_S
+ninty 4B9E-4BA4
+label 4BA6 1545720_S
+ninty 4BA6-4BAC
+label 4BB6 A31F50_S
+ninty 4BB6-4BBB
+label 4BBD 0!N80_S
+ninty 4BBD-4BC1
+label 4BD0 W01V20"T22_S
+ninty 4BD0-4BD9
+label 4C4B 80_Z_S
+ninty 4C4B-4C4E
+label 4D02 0RL2R_S
+ninty 4D02-4D06
+label 4D1E :W0!_S
+ninty 4D1E-4D21
+label 4DA3 VW0!_S
+ninty 4DA3-4DA6
+label 4DC1 740W_S
+ninty 4DC1-4DC4
+label 4DCB F40W12_S
+ninty 4DCB-4DD0
+label 4DD7 M70W92_S
+ninty 4DD7-4DDC
+label 4DFB 0ZL2_S
+ninty 4DFB-4DFE
+label 4E25 WW07_S
+ninty 4E25-4E28
+label 4E3D N.00_S
+ninty 4E3D-4E40
+label 4E4C P9P0P,P-PRPIPCP6O_S
+ninty 4E4C-4E5C
+label 4E62 PWPQPKP_S
+ninty 4E62-4E68
+label 4EBA ZSZSZSZSZSZSZ_S
+ninty 4EBA-4EC6
+label 4EDE YZSZ_S
+ninty 4EDE-4EE1
+label 4FE4 3QQI_S
+ninty 4FE4-4FE7
+label 4FED CQQ7_S
+ninty 4FED-4FF0
+label 4FF9 0RFH_S
+ninty 4FF9-4FFC
+label 4FFF 0QT9RF8_S
+ninty 4FFF-5005
+label 500E 00UHN_S
+ninty 500E-5012
+label 501F 00S:AP_S
+ninty 501F-5024
+label 5032 0TLARF7_S
+ninty 5032-5038
+label 504D 00UHI_S
+ninty 504D-5051
+label 505B 0VT9U_S
+ninty 505B-505F
+label 5071 0W%I_S
+ninty 5071-5074
+label 5077 ARF7_S
+ninty 5077-507A
+label 5086 0XAH_S
+ninty 5086-5089
+label 50A9 0YQ6S_S
+ninty 50A9-50AD
+label 50B0 0YCI_S
+ninty 50B0-50B3
+label 50C1 4Z74Y_S
+ninty 50C1-50C5
+label 50CD 5ZZ5Y_S
+ninty 50CD-50D1
+label 5117 463O_S
+ninty 5117-511A
+label 51B2 2N:4N_S
+ninty 51B2-51B6
+label 51BC 2NS4I_S
+ninty 51BC-51C0
+label 51C6 3NI4I_S
+ninty 51C6-51CA
+label 51D0 N83J_S
+ninty 51D0-51D3
+label 521F 1NY3M_S
+ninty 521F-5223
+label 5229 4NV2H_S
+ninty 5229-522D
+label 522F NT3M_S
+ninty 522F-5232
+label 5295 463O_S
+ninty 5295-5298
+label 52D4 I0HV0_S
+ninty 52D4-52D8
+label 532C 513O_S
+ninty 532C-532F
+label 5397 814J_S
+ninty 5397-539A
+label 5439 08P2_S
+ninty 5439-543C
+label 5520 Q93I_S
+ninty 5520-5523
+label 5531 77W2_S
+ninty 5531-5534
+label 5559 7S3P_S
+ninty 5559-555C
+label 5563 7M3P_S
+ninty 5563-5566
+label 5683 682P52_S
+ninty 5683-5688
+label 56E1 672PS2_S
+ninty 56E1-56E6
+label 56FF 4644_S
+ninty 56FF-5702
+label 5708 P72606_S
+ninty 5708-570D
+label 5848 PW2I_S
+ninty 5848-584B
+label 5853 PU3I_S
+ninty 5853-5856
+label 5859 PR25_S
+ninty 5859-585C
+label 58CD 4Q29_S
+ninty 58CD-58D0
+label 58EA 38D4_S
+ninty 58EA-58ED
+label 58EF 8618_S
+ninty 58EF-58F2
+label 591B 28T3_S
+ninty 591B-591E
+label 5922 08P2_S
+ninty 5922-5925
+label 592A 08I28_S
+ninty 592A-592E
+label 59BF 903Q46J0_S
+ninty 59BF-59C6
+label 59C8 9"2Q%A0_S
+ninty 59C8-59CE
+label 59D0 9!2Q-8I0_S
+ninty 59D0-59D7
+label 5A09 9P491_S
+ninty 5A09-5A0D
+label 5A24 49M2_S
+ninty 5A24-5A27
+label 5A29 9G28_S
+ninty 5A29-5A2C
+label 5A33 9828_S
+ninty 5A33-5A36
+label 5B4C 0.20_S
+ninty 5B4C-5B4F
+label 5B68 OH2I_S
+ninty 5B68-5B6B
+label 5BEE 0O2J_S
+ninty 5BEE-5BF1
+label 5C75 2OC2_S
+ninty 5C75-5C78
+label 5CB7 1U2O33_S
+ninty 5CB7-5CBC
+label 5CC0 1S2O03_S
+ninty 5CC0-5CC5
+label 5CC9 1Q1O"2_S
+ninty 5CC9-5CCE
+label 5CE4 2U32Z2_S
+ninty 5CE4-5CE9
+label 5CED 2R42T2_S
+ninty 5CED-5CF2
+label 5CFA 42K40_S
+ninty 5CFA-5CFE
+label 5D04 42G2_S
+ninty 5D04-5D07
+label 5D38 32Z3_S
+ninty 5D38-5D3B
+label 5D41 12T3_S
+ninty 5D41-5D44
+label 5DAE 2OV2_S
+ninty 5DAE-5DB1
+label 5DF7 OZ20_S
+ninty 5DF7-5DFA
+label 5E26 O941N2_S
+ninty 5E26-5E2B
+label 5E2F O521L3_S
+ninty 5E2F-5E34
+label 5F85 2OO2_S
+ninty 5F85-5F88
+label 5F8A OM21_S
+ninty 5F8A-5F8D
+label 602E 2283_S
+ninty 602E-6031
+label 6036 0255_S
+ninty 6036-6039
+label 607A 3M1J_S
+ninty 607A-607D
+label 6261 QM3I_S
+ninty 6261-6264
+label 62E6 4QY3_S
+ninty 62E6-62E9
+label 630C 1AF3_S
+ninty 630C-630F
+label 6373 AI2H_S
+ninty 6373-6376
+label 63D7 R:2H_S
+ninty 63D7-63DA
+label 63E7 RR1B_S
+ninty 63E7-63EA
+label 63F1 RN1B_S
+ninty 63F1-63F4
+label 63FB RL2B_S
+ninty 63FB-63FE
+label 6405 RI2B_S
+ninty 6405-6408
+label 6448 CG4I_S
+ninty 6448-644B
+label 6459 R71H_S
+ninty 6459-645C
+label 6463 R42B_S
+ninty 6463-6466
+label 6472 R"3B_S
+ninty 6472-6475
+label 649E 39_3A_S
+ninty 649E-64A2
+label 64E3 AF4Q_S
+ninty 64E3-64E6
+label 64EC AB4Q_S
+ninty 64EC-64EF
+label 654A DQ5H0_S
+ninty 654A-654E
+label 6597 DR1H_S
+ninty 6597-659A
+label 65A3 2DP3H_S
+ninty 65A3-65A7
+label 65AB 0DM3_S
+ninty 65AB-65AE
+label 65BF 0DB3R_S
+ninty 65BF-65C3
+label 6715 BJ5I_S
+ninty 6715-6718
+label 67C5 3RC2_S
+ninty 67C5-67C8
+label 68E2 BJ2I_S
+ninty 68E2-68E5
+label 68F6 4BB2_S
+ninty 68F6-68F9
+label 68FF 4B92_S
+ninty 68FF-6902
+label 6908 4B73_S
+ninty 6908-690B
+label 6911 4B43_S
+ninty 6911-6914
+label 6946 AB4C_S
+ninty 6946-6949
+label 6959 RZ1CN5R_S
+ninty 6959-695F
+label 6963 RW2CI3I_S
+ninty 6963-6969
+label 696D RT2CF4H_S
+ninty 696D-6973
+label 6985 3RM1_S
+ninty 6985-6988
+label 698A C12B_S
+ninty 698A-698D
+label 69A5 C_1RF2B_S
+ninty 69A5-69AB
+label 69BE RR2R2_S
+ninty 69BE-69C2
+label 69D5 0RL4C_S
+ninty 69D5-69D9
+label 6BD7 E_4E_S
+ninty 6BD7-6BDA
+label 6C58 F12J_S
+ninty 6C58-6C5B
+label 6C61 LT3E_S
+ninty 6C61-6C64
+label 6C6A LQ2E_S
+ninty 6C6A-6C6D
+label 7325 2LB29_S
+ninty 7325-7329
+label 7350 LM3QV2_S
+ninty 7350-7355
+label 735D 1LJ4I_S
+ninty 735D-7361
+label 7367 LF4H_S
+ninty 7367-736A
+label 73B5 RK1L_S
+ninty 73B5-73B8
+label 73DE R"3L_S
+ninty 73DE-73E1
+label 73F7 LT29_A_S
+ninty 73F7-73FC
+label 7424 LP29_S
+ninty 7424-7427
+label 742F L7LN_S
+ninty 742F-7432
+label 7436 M:3AM3_S
+ninty 7436-743B
+label 7444 M73Q_S
+ninty 7444-7447
+label 7450 A92M42Q_S
+ninty 7450-7456
+label 745A M24H_S
+ninty 745A-745D
+label 7478 B72L_S
+ninty 7478-747B
+label 7482 B_1L_S
+ninty 7482-7485
+label 7499 2BZ2_S
+ninty 7499-749C
+label 7568 4B14_S
+ninty 7568-756B
+label 758F MI3QV2_S
+ninty 758F-7594
+label 75A0 MF2LJ_S
+ninty 75A0-75A4
+label 75B0 MD2LF_S
+ninty 75B0-75B4
+label 75CF RZ1CJ_S
+ninty 75CF-75D3
+label 75DA RW2L_S
+ninty 75DA-75DD
+label 75FB 1RF2B_S
+ninty 75FB-75FF
+label 761A RL2M!_S
+ninty 761A-761E
+label 7621 0RIM_S
+ninty 7621-7624
+label 762C 0C52J_S
+ninty 762C-7630
+label 7654 M64R_S
+ninty 7654-7657
+label 7664 2MT3C_S
+ninty 7664-7668
+label 766E 1MQ3H_S
+ninty 766E-7672
+label 7678 MN3H_S
+ninty 7678-767B
+label 7B2A 2E80_S
+ninty 7B2A-7B2D
+label 7CCE 0U2043_S
+ninty 7CCE-7CD3
+label 7CD9 XZ083_S
+ninty 7CD9-7CDD
+label 7CF5 1H30_S
+ninty 7CF5-7CF8
+label 7D0C 1Q50S4_S
+ninty 7D0C-7D11
+label 7D17 1V50-4_S
+ninty 7D17-7D1C
+label 7D22 1Z40"5_S
+ninty 7D22-7D27
+label 7D2D 3077_S
+ninty 7D2D-7D30
+label 7D38 20A7_S
+ninty 7D38-7D3B
+label 7D43 1,20K7_S
+ninty 7D43-7D48
+label 7EA4 2530_S
+ninty 7EA4-7EA7
+label 7EB1 2920_S
+ninty 7EB1-7EB4
+label 7EBE 2F30_S
+ninty 7EBE-7EC1
+label 7ECB 2K30_S
+ninty 7ECB-7ECE
+label 8037 4"30_S
+ninty 8037-803A
+label 8073 4B20_S
+ninty 8073-8076
+label 812A 4"30_S
+ninty 812A-812D
+label 81D4 3T30_S
+ninty 81D4-81D7
+label 8396 6'I0_S
+ninty 8396-8399
+label 83A5 6!I0_S
+ninty 83A5-83A8
+label 83B4 6.I0_S
+ninty 83B4-83B7
+label 83C3 6"I0_S
+ninty 83C3-83C6
+label 83CC _42-_S
+ninty 83CC-83CF
+label 83D5 357:_S
+ninty 83D5-83D8
+label 83EC 0D6I_S
+ninty 83EC-83EF
+label 83F3 J4M-_S
+ninty 83F3-83F6
+label 83FC N3PZ_S
+ninty 83FC-83FF
+label 8405 Q3SZ_S
+ninty 8405-8408
+label 8410 T26U20_S
+ninty 8410-8415
+label 843D U25V2_S
+ninty 843D-8441
+label 8447 W2XY_S
+ninty 8447-844A
+label 845E Z2-Y_S
+ninty 845E-8461
+label 8467 :5!:_S
+ninty 8467-846A
+label 8470 ,5%:_S
+ninty 8470-8473
+label 8479 _53:_S
+ninty 8479-847C
+label 8482 0469_S
+ninty 8482-8485
+label 8497 F5J:_S
+ninty 8497-849A
+label 84A0 K3MZ_S
+ninty 84A0-84A3
+label 84A9 N4Q-_S
+ninty 84A9-84AC
+label 84B2 R4U-_S
+ninty 84B2-84B5
+label 8613 6350_S
+ninty 8613-8616
+label 8640 I06W40_S
+ninty 8640-8645
+label 8651 06-30_S
+ninty 8651-8655
+label 869F 7U40_S
+ninty 869F-86A2
+label 86B2 7:60_S
+ninty 86B2-86B5
+label 86C3 7"70_S
+ninty 86C3-86C6
+label 878A WWW0000000YYWWW0000XXXXXXXYY00YYY0WWWWXX000XXXXXY00000000ZZZZZZZ00000YYYYXXXXXX000XXXXYYYY0000WWWXXYY0000000ZZZZZW0000WWWWXXXX0000YYYYYYYYYYYYYY00YYYYXXX00000YYYXWWWW00WWWWWWWWWWW0000CCCCCCCCCCC00000DDDDDDDDDDD000_S
+ninty 878A-885E
+label 8862 XXXX00000_S
+ninty 8862-886A
+label 886F YYYYYY00_S
+ninty 886F-8876
+label 887D YYYYYYY0_S
+ninty 887D-8884
+label 8888 YYYYYYYY00_S
+ninty 8888-8891
+label 8894 YYY0000_S
+ninty 8894-889A
+label 889D WWY000000Y_S
+ninty 889D-88A6
+label 88AA XXY000000_S
+ninty 88AA-88B2
+label 88B6 XYYY00000_S
+ninty 88B6-88BE
+label 88C3 --0000000000X-----00_S
+ninty 88C3-88D6
+label 88D9 ::::::0000_S
+ninty 88D9-88E2
+label 88E9 000ZZZWWW000000YYWWWW0000000XXXXXXXW0000YYYYYXXZZ0000YYYWWWZZ0000ZZZYXXZZ00:::::::::::::::00------------0000000---WW000000W-WWWW0_S
+ninty 88E9-8969
+label 8971 YYYYYYY_S
+ninty 8971-8977
+label 897F YYYYYWWWW_S
+ninty 897F-8987
+label 898F 0WWWWWWWWW_S
+ninty 898F-8998
+label 89B0 '0''4_S
+ninty 89B0-89B4
+label 89C0 0N74_S
+ninty 89C0-89C3
+label 89C9 R000_S
+ninty 89C9-89CC
+label 89E8 ,10D2_S
+ninty 89E8-89EC
+label 89F0 A0D0_S
+ninty 89F0-89F3
+label 8A08 V00H0_S
+ninty 8A08-8A0C
+label 8A10 0H01_S
+ninty 8A10-8A13
+label 8A28 000P_S
+ninty 8A28-8A2B
+label 8A30 000P_S
+ninty 8A30-8A33
+label 8A38 O000P_S
+ninty 8A38-8A3C
+label 8A40 C000P_S
+ninty 8A40-8A44
+label 8A48 000Q_S
+ninty 8A48-8A4B
+label 8A50 000Q_S
+ninty 8A50-8A53
+label 8A58 000S_S
+ninty 8A58-8A5B
+label 8A60 6000S_S
+ninty 8A60-8A64
+label 8A68 9000P_S
+ninty 8A68-8A6C
+label 8A70 000P_S
+ninty 8A70-8A73
+label 8A78 000Q_S
+ninty 8A78-8A7B
+label 8A80 N000S_S
+ninty 8A80-8A84
+label 8A90 0004_S
+ninty 8A90-8A93
+label 8AA8 AMLKJQPON_S
+ninty 8AA8-8AB0
+label 8ABC 0G20_S
+ninty 8ABC-8ABF
+label 8AD6 0110_S
+ninty 8AD6-8AD9
+label 8AE1 H058_S
+ninty 8AE1-8AE4
+label 8B23 A001MLKJQPON2_S
+ninty 8B23-8B2F
+label 8B35 A011MLKJQPON_0_S
+ninty 8B35-8B42
+label 8B4A A061MLKJQPON_S
+ninty 8B4A-8B55
+label 8B7A 0710_S
+ninty 8B7A-8B7D
+label 8B9D A061_S
+ninty 8B9D-8BA0
+label 8BA7 A041MLKJQPON_S
+ninty 8BA7-8BB2
+label 8BD7 0510_S
+ninty 8BD7-8BDA
+label 8BF9 A041F_S
+ninty 8BF9-8BFD
+label 8C04 MLKJQPON_S
+ninty 8C04-8C0B
+label 8C0D ''''_S
+ninty 8C0D-8C10
+label 8C13 MLKJQPON_S
+ninty 8C13-8C1A
+label 8C1C ''''_S
+ninty 8C1C-8C1F
+label 8C22 A21MLKJQPON_S
+ninty 8C22-8C2C
+label 8C30 B%%%%_S
+ninty 8C30-8C34
+label 8C42 AA20_S
+ninty 8C42-8C45
+label 8C54 B0E2_S
+ninty 8C54-8C57
+label 8C86 A001A2_S
+ninty 8C86-8C8B
+label 8C9F BMLKJQPON_S
+ninty 8C9F-8CA7
+label 8CAB B%%%%_S
+ninty 8CAB-8CAF
+label 8CBD A820_S
+ninty 8CBD-8CC0
+label 8CCF B0C2_S
+ninty 8CCF-8CD2
+label 8D01 00182_S
+ninty 8D01-8D05
+label 8D19 AMLKJQPON_S
+ninty 8D19-8D21
+label 8D37 A0B10000_S
+ninty 8D37-8D3E
+label 8D55 WX20_S
+ninty 8D55-8D58
+label 8D85 A011B2_S
+ninty 8D85-8D8A
+label 8D9E AMLKJQPON_S
+ninty 8D9E-8DA6
+label 8DAA A2222_S
+ninty 8DAA-8DAE
+label 8DD2 0D1W0_S
+ninty 8DD2-8DD6
+label 8E02 1192_S
+ninty 8E02-8E05
+label 8E17 A0G1MLKJQPON_S
+ninty 8E17-8E22
+label 8E59 A0H14444_S
+ninty 8E59-8E60
+label 8E71 A0I1_S
+ninty 8E71-8E74
+label 8EA2 A0U1_S
+ninty 8EA2-8EA5
+label 8EB8 A0I1_S
+ninty 8EB8-8EBB
+label 8ECD B0U2_S
+ninty 8ECD-8ED0
+label 8EDA A0K1MLKJQPON_S
+ninty 8EDA-8EE5
+label 8F03 A0B16666_S
+ninty 8F03-8F0A
+label 8F20 B0F23_S
+ninty 8F20-8F24
+label 8F36 A0L1_S
+ninty 8F36-8F39
+label 8F5F D0V4_S
+ninty 8F5F-8F62
+label 8F69 A0L1_S
+ninty 8F69-8F6C
+label 8F7B D0V4_S
+ninty 8F7B-8F7E
+label 9088 C0R3_S
+ninty 9088-908B
+label 908F A0Q1_S
+ninty 908F-9092
+label 90AD A0R1_S
+ninty 90AD-90B0
+label 90EC C0T3_S
+ninty 90EC-90EF
+label 90F3 A0S1_S
+ninty 90F3-90F6
+label 9111 A0T1_S
+ninty 9111-9114
+label 9155 H0W8_S
+ninty 9155-9158
+label 91B1 H0X8_S
+ninty 91B1-91B4
+label 920D H0W8_S
+ninty 920D-9210
+label 926A H0X8_S
+ninty 926A-926D
+label 92AB A0Y1_S
+ninty 92AB-92AE
+label 92D5 D014_S
+ninty 92D5-92D8
+label 92ED A0Z1_S
+ninty 92ED-92F0
+label 9317 D014_S
+ninty 9317-931A
+label 932F A0U1_S
+ninty 932F-9332
+label 9337 FFFF_S
+ninty 9337-933A
+label 9349 0001_S
+ninty 9349-934C
+label 934F 0002_S
+ninty 934F-9352
+label 9355 0000006_S
+ninty 9355-935B
+label 9364 000000C_S
+ninty 9364-936A
+label 937C 20000008_S
+ninty 937C-9383
+label 9397 000B_S
+ninty 9397-939A
+label 93EE T000B_S
+ninty 93EE-93F2
+label 940C 000T_S
+ninty 940C-940F
+label 945D 0008_S
+ninty 945D-9460
+label 9472 000W_S
+ninty 9472-9475
+label 94DE 0-LE_S
+ninty 94DE-94E1
+label 94E4 0S5E_S
+ninty 94E4-94E7
+label 94FC 0-CE_S
+ninty 94FC-94FF
+label 9502 0W1E_S
+ninty 9502-9505
+label 951A 00WUE_S
+ninty 951A-951E
+label 952C 0YW0E_S
+ninty 952C-9530
+label 9532 7W0E_S
+ninty 9532-9535
+label 954A 00OTE_S
+ninty 954A-954E
+label 9562 __-HE_S
+ninty 9562-9566
+label 9568 0-EE_S
+ninty 9568-956B
+label 956E __W0E_S
+ninty 956E-9572
+label 9586 00WEE_S
+ninty 9586-958A
+label 95B1 3000_S
+ninty 95B1-95B4
+label 9608 A-0:_S
+ninty 9608-960B
+label 9610 D00X_S
+ninty 9610-9613
+label 962E F04V_S
+ninty 962E-9631
+label 9633 4-0S_S
+ninty 9633-9636
+label 964E D00X_S
+ninty 964E-9651
+label 9653 0-0W_S
+ninty 9653-9656
+label 969D A:0X_S
+ninty 969D-96A0
+label 96B5 A:0-_S
+ninty 96B5-96B8
+label 96CE A:0X_S
+ninty 96CE-96D1
+label 96E6 A:0-_S
+ninty 96E6-96E9
+label 970C A0J1_S
+ninty 970C-970F
+label 9716 OOX0_S
+ninty 9716-9719
+label 9727 00009_S
+ninty 9727-972B
+label 973D A0J17_S
+ninty 973D-9741
+label 974D D0I4_S
+ninty 974D-9750
+label 9764 0S18FGFI_S
+ninty 9764-976B
+label 9777 A0J1_O_S
+ninty 9777-977C
+label 978B 0S6Y_S
+ninty 978B-978E
+label 9794 D0J4O_S
+ninty 9794-9798
+label 979A H0I8W_S
+ninty 979A-979E
+label 97A3 R,'4.W_S
+ninty 97A3-97A8
+label 97B5 !'HA_S
+ninty 97B5-97B8
+label 97C2 00030_S
+ninty 97C2-97C6
+label 97CA R,"4._S
+ninty 97CA-97CE
+label 97D7 I30%_S
+ninty 97D7-97DA
+label 97E3 0J10_S
+ninty 97E3-97E6
+label 9818 QS0HJ7_S
+ninty 9818-981D
+label 9859 :E02S0O_S
+ninty 9859-985F
+label 9862 BWD_QS0HK7_S
+ninty 9862-986B
+label 9878 YESAS_S
+ninty 9878-987C
+label 9885 022Y_S
+ninty 9885-9888
+label 9890 00030_S
+ninty 9890-9894
+label 9898 R,'4._S
+ninty 9898-989C
+label 98A5 II0%_S
+ninty 98A5-98A8
+label 98B1 0JH0_S
+ninty 98B1-98B4
+label 98CB AAX0_S
+ninty 98CB-98CE
+label 98E7 0H37_S
+ninty 98E7-98EA
+label 9928 2S0O_S
+ninty 9928-992B
+label 9931 0H47_S
+ninty 9931-9934
+label 9936 BZXBWPQ_S
+ninty 9936-993C
+label 9946 YFHAS_S
+ninty 9946-994A
+label 995F R,"4.W_S
+ninty 995F-9964
+label 996F !'SA_S
+ninty 996F-9972
+label 9984 ,'9._S
+ninty 9984-9987
+label 99C6 ,"G.L_S
+ninty 99C6-99CA
+label 99E5 SNWBP_S
+ninty 99E5-99E9
+label 99F5 WBHO0_S
+ninty 99F5-99F9
+label 9A02 S,'2.H_S
+ninty 9A02-9A07
+label 9A3B ,"9._S
+ninty 9A3B-9A3E
+label 9A4C QS'SA_S
+ninty 9A4C-9A50
+label 9A52 1.WD_S
+ninty 9A52-9A55
+label 9A7E ,'G.L_S
+ninty 9A7E-9A82
+label 9AAD BH80_S
+ninty 9AAD-9AB0
+label 9ABA ,"2.H_S
+ninty 9ABA-9ABE
+label 9B74 AC10'_S
+ninty 9B74-9B78
+label 9B86 110W_S
+ninty 9B86-9B89
+label 9B90 AC10,_S
+ninty 9B90-9B94
+label 9B9F 110W_S
+ninty 9B9F-9BA2
+label 9BAB 00000_S
+ninty 9BAB-9BAF
+label 9BB5 B,"4._S
+ninty 9BB5-9BB9
+label 9BC2 !W0B7_S
+ninty 9BC2-9BC6
+label 9BCC 00000_S
+ninty 9BCC-9BD0
+label 9BDA 00000_S
+ninty 9BDA-9BDE
+label 9BF6 A0G1XX0_S
+ninty 9BF6-9BFC
+label 9C0E YI8H6_S
+ninty 9C0E-9C12
+label 9C14 IFH6_S
+ninty 9C14-9C17
+label 9C36 VVX0_S
+ninty 9C36-9C39
+label 9C3D I1HF_S
+ninty 9C3D-9C40
+label 9C45 F0G6_S
+ninty 9C45-9C48
+label 9C52 0I4L_S
+ninty 9C52-9C55
+label 9C66 00000_S
+ninty 9C66-9C6A
+label 9C7F 000D_S
+ninty 9C7F-9C82
+label 9C85 ''X0_S
+ninty 9C85-9C88
+label 9C8C I6H4_S
+ninty 9C8C-9C8F
+label 9C94 A0G1_S
+ninty 9C94-9C97
+label 9CA8 YICH20_S
+ninty 9CA8-9CAD
+label 9CB1 W06F0NAT_S
+ninty 9CB1-9CB8
+label 9CEA K14Z31_S
+ninty 9CEA-9CEF
+label 9D12 K14H31_S
+ninty 9D12-9D17
+label 9D3F PS07F0NAQ_S
+ninty 9D3F-9D47
+label 9D63 0210_S
+ninty 9D63-9D66
+label 9DDF 4FDVCV_S
+ninty 9DDF-9DE4
+label 9DE6 SFNVMVLV_S
+ninty 9DE6-9DED
+label 9DF2 H01OW_S
+ninty 9DF2-9DF6
+label 9E0A O06V_S
+ninty 9E0A-9E0D
+label 9E11 0CVW_S
+ninty 9E11-9E14
+label 9E16 04VW_S
+ninty 9E16-9E19
+label 9E1E O0DVH_S
+ninty 9E1E-9E22
+label 9E24 O06VW_S
+ninty 9E24-9E28
+label 9E2D 0CVJ_S
+ninty 9E2D-9E30
+label 9E32 07OW_S
+ninty 9E32-9E35
+label 9E3C H03OW_S
+ninty 9E3C-9E40
+label 9E58 O0H8G8F8EF_S
+ninty 9E58-9E61
+label 9E71 01OW_S
+ninty 9E71-9E74
+label 9E8A A00IY_S
+ninty 9E8A-9E8E
+label 9E9E %0IW_S
+ninty 9E9E-9EA1
+label 9EBC A00006_S
+ninty 9EBC-9EC1
+label 9EC7 A0D1_S
+ninty 9EC7-9ECA
+label 9F03 00006_S
+ninty 9F03-9F07
+label 9F09 A0D1_S
+ninty 9F09-9F0C
+label 9F17 !WX0_S
+ninty 9F17-9F1A
+label 9F30 A3.0X_S
+ninty 9F30-9F34
+label 9F36 A"0Y_S
+ninty 9F36-9F39
+label 9F3B AO10Z_S
+ninty 9F3B-9F3F
+label 9F43 00000_S
+ninty 9F43-9F47
+label 9F4D A0P1S_S
+ninty 9F4D-9F51
+label 9F63 RX07_S
+ninty 9F63-9F66
+label 9F6C ,Q1007_S
+ninty 9F6C-9F71
+label 9F73 D004Y!_S
+ninty 9F73-9F78
+label 9F94 A_04_S
+ninty 9F94-9F97
+label 9F99 A3.0X_S
+ninty 9F99-9F9D
+label 9F9F A"0Y_S
+ninty 9F9F-9FA2
+label 9FA4 O10-_S
+ninty 9FA4-9FA7
+label 9FA9 00000_S
+ninty 9FA9-9FAD
+label 9FB1 A0P1S_S
+ninty 9FB1-9FB5
+label 9FC3 YHX07_S
+ninty 9FC3-9FC7
+label 9FCC D002Y!,Q1007_S
+ninty 9FCC-9FD7
+label 9FF3 A_04_S
+ninty 9FF3-9FF6
+label 9FF8 A061-_S
+ninty 9FF8-9FFC
+label A000 B00000_S
+ninty A000-A005
+label A007 0C1-_S
+ninty A007-A00A
+label A019 F:X0_S
+ninty A019-A01C
+label A028 H028U_S
+ninty A028-A02C
+label A049 00000_S
+ninty A049-A04D
+label A063 C7X0D_S
+ninty A063-A067
+label A073 008O_S
+ninty A073-A076
+label A090 00000_S
+ninty A090-A094
+label A0AA C7X0D_S
+ninty A0AA-A0AE
+label A0BA 002O_S
+ninty A0BA-A0BD
+label A0D3 A071-_S
+ninty A0D3-A0D7
+label A0DB 0CH-_B00000_S
+ninty A0DB-A0E5
+label A0F4 F:X0_S
+ninty A0F4-A0F7
+label A103 H038U_S
+ninty A103-A107
+label A12C AAH0X_S
+ninty A12C-A130
+label A13B 0BO:_S
+ninty A13B-A13E
+label A142 A0AH_S
+ninty A142-A145
+label A167 AA10Z_S
+ninty A167-A16B
+label A173 B80:FC_S
+ninty A173-A178
+label A17A R0A1_S
+ninty A17A-A17D
+label A195 A051_S
+ninty A195-A198
+label A1AC A051_S
+ninty A1AC-A1AF
+label A1C1 A061_S
+ninty A1C1-A1C4
+label A1C9 8_70_S
+ninty A1C9-A1CC
+label A1D8 A051_S
+ninty A1D8-A1DB
+label A1EE 0000C_S
+ninty A1EE-A1F2
+label A1F4 0M26_S
+ninty A1F4-A1F7
+label A20C 0N4WCX0_S
+ninty A20C-A212
+label A21D A0S1Y_S
+ninty A21D-A221
+label A234 D0S4_S
+ninty A234-A237
+label A24E _8FGFI_S
+ninty A24E-A253
+label A25C A0V1_W_S
+ninty A25C-A261
+label A270 S1!PC_S
+ninty A270-A274
+label A28B A0V1'_S
+ninty A28B-A28F
+label A2EA A0:2_S
+ninty A2EA-A2ED
+label A360 _R02F_S
+ninty A360-A364
+label A397 3FWG_S
+ninty A397-A39A
+label A3D6 "4.3_S
+ninty A3D6-A3D9
+label A40F !0Y40-_S
+ninty A40F-A414
+label A421 '4.3_S
+ninty A421-A424
+label A434 ZF0GS_S
+ninty A434-A438
+label A45C !0Y40-_S
+ninty A45C-A461
+label A46E ,"5.3_S
+ninty A46E-A472
+label A47D XM0-_S
+ninty A47D-A480
+label A495 !0YK0KD_S
+ninty A495-A49B
+label A4A6 ,'5.3_S
+ninty A4A6-A4AA
+label A4B5 X60-_S
+ninty A4B5-A4B8
+label A4C3 L_DQ_S
+ninty A4C3-A4C6
+label A4CC !0Y40K_S
+ninty A4CC-A4D1
+label A4DC ,"5.WH3_S
+ninty A4DC-A4E2
+label A502 !0YK0KD_S
+ninty A502-A508
+label A513 ,'5.W13_S
+ninty A513-A519
+label A52F M_DS_S
+ninty A52F-A532
+label A538 !0Y40K_S
+ninty A538-A53D
+label A547 WKUIU2W4_S
+ninty A547-A54E
+label A550 W4U2UIWK_S
+ninty A550-A557
+label A55E %!02_S
+ninty A55E-A561
+label A56D !020_S
+ninty A56D-A570
+label A578 SLFZFX8Y8X8Y8-_S
+ninty A578-A585
+label A588 040-E_S
+ninty A588-A58C
+label A590 440Z_S
+ninty A590-A593
+label A597 040Y_S
+ninty A597-A59A
+label A59E 018440X_S
+ninty A59E-A5A4
+label A5B8 ZF0'E_S
+ninty A5B8-A5BC
+label A5C3 7K3N0-_S
+ninty A5C3-A5C8
+label A5CC 640Z_S
+ninty A5CC-A5CF
+label A5D7 240X_S
+ninty A5D7-A5DA
+label A5E8 ZV0'E_S
+ninty A5E8-A5EC
+label A5F3 260-_S
+ninty A5F3-A5F6
+label A5FA 640Z_S
+ninty A5FA-A5FD
+label A605 240X_S
+ninty A605-A608
+label A613 ,"5.3_S
+ninty A613-A617
+label A637 YK04D_S
+ninty A637-A63B
+label A646 ,'5.3_S
+ninty A646-A64A
+label A66A Y404_S
+ninty A66A-A66D
+label A678 ,"5.3_S
+ninty A678-A67C
+label A6A0 YK04D_S
+ninty A6A0-A6A4
+label A6AF ,'5.3_S
+ninty A6AF-A6B3
+label A6D7 Y404_S
+ninty A6D7-A6DA
+label A6E8 0S0ZV-_S
+ninty A6E8-A6ED
+label A6FD 440-_S
+ninty A6FD-A700
+label A704 040Y_S
+ninty A704-A707
+label A70B _18440W_S
+ninty A70B-A711
+label A716 E_0S0ZF-_S
+ninty A716-A71D
+label A72B 440-_S
+ninty A72B-A72E
+label A732 040Y_S
+ninty A732-A735
+label A739 C1_18440W_S
+ninty A739-A741
+label A743 00000_S
+ninty A743-A747
+label A749 A0D1_S
+ninty A749-A74C
+label A757 .YX0_S
+ninty A757-A75A
+label A774 A051_S
+ninty A774-A777
+label A78B A0O1_S
+ninty A78B-A78E
+label A79E 0I000_S
+ninty A79E-A7A2
+label A7A4 0MH7_S
+ninty A7A4-A7A7
+label A7BF C0S3Y_S
+ninty A7BF-A7C3
+label A7D3 D0S4_S
+ninty A7D3-A7D6
+label A7DE 0I00C_S
+ninty A7DE-A7E2
+label A7E4 0M17_S
+ninty A7E4-A7E7
+label A7FF C0S3Y_S
+ninty A7FF-A803
+label A813 D0S4_S
+ninty A813-A816
+label A825 A110I000_S
+ninty A825-A82C
+label A831 A0D1Z_S
+ninty A831-A835
+label A84D 0D80_S
+ninty A84D-A850
+label A852 110O_S
+ninty A852-A855
+label A85F F0D63_S
+ninty A85F-A863
+label A873 0I000_S
+ninty A873-A877
+label A879 A0D1_S
+ninty A879-A87C
+label A887 !WX0_S
+ninty A887-A88A
+label A8A0 A3.0X_S
+ninty A8A0-A8A4
+label A8AA 0E10I000_S
+ninty A8AA-A8B1
+label A8B6 A0F1_S
+ninty A8B6-A8B9
+label A8E0 ,G10_S
+ninty A8E0-A8E3
+label A8E5 D0E4Y!_S
+ninty A8E5-A8EA
+label A8F5 D0G4_S
+ninty A8F5-A8F8
+label A90C 0I000_S
+ninty A90C-A910
+label A912 A0F1_S
+ninty A912-A915
+label A920 !WX0_S
+ninty A920-A923
+label A93D A0O1_S
+ninty A93D-A940
+label A954 A0O1_S
+ninty A954-A957
+label A96B A051_S
+ninty A96B-A96E
+label A980 A051_S
+ninty A980-A983
+label A996 A04H_S
+ninty A996-A999
+label A9A9 A0O1_S
+ninty A9A9-A9AC
+label A9BF A0E1_S
+ninty A9BF-A9C2
+label A9C7 4_70_S
+ninty A9C7-A9CA
+label A9E8 ,G1070_S
+ninty A9E8-A9ED
+label A9EF D0E4Y!_S
+ninty A9EF-A9F4
+label AA14 A0OH3._S
+ninty AA14-AA19
+label AA22 LRI00_S
+ninty AA22-AA26
+label AA28 OH0X_S
+ninty AA28-AA2B
+label AA2D A0PHU_S
+ninty AA2D-AA31
+label AA53 B!M_F,0O_S
+ninty AA53-AA5A
+label AA65 04KW_S
+ninty AA65-AA68
+label AA83 ,Q1007_S
+ninty AA83-AA88
+label AA8A D004Y!_S
+ninty AA8A-AA8F
+label AAA7 A3.0X_S
+ninty AAA7-AAAB
+label AAAD A"0Y_S
+ninty AAAD-AAB0
+label AAB7 O10X_S
+ninty AAB7-AABA
+label AABC LRI00_S
+ninty AABC-AAC0
+label AAC4 A0P1S_S
+ninty AAC4-AAC8
+label AAF0 LRI00_S
+ninty AAF0-AAF4
+label AAF7 A0P17_S
+ninty AAF7-AAFB
+label AB03 XX0G_S
+ninty AB03-AB06
+label AB20 0L5SFG_S
+ninty AB20-AB25
+label AB2A FUF00_S
+ninty AB2A-AB2E
+label AB30 R0M16_S
+ninty AB30-AB34
+label AB5C A0S1Y_S
+ninty AB5C-AB60
+label AB70 D0S4_S
+ninty AB70-AB73
+label AB7D 0SFG_S
+ninty AB7D-AB80
+label AB88 FUF00_S
+ninty AB88-AB8C
+label AB97 AM10_S
+ninty AB97-AB9A
+label ABA7 0N4WFX0_S
+ninty ABA7-ABAD
+label ABB6 A0S1Y_S
+ninty ABB6-ABBA
+label ABC8 D0S4_S
+ninty ABC8-ABCB
+label ABD3 R,'5._S
+ninty ABD3-ABD7
+label ABDA R440YE_S
+ninty ABDA-ABDF
+label ABEF 020W0Q_S
+ninty ABEF-ABF4
+label ABF6 420-3B,'2._S
+ninty ABF6-ABFF
+label AC04 B540W_S
+ninty AC04-AC08
+label AC0A 420-_S
+ninty AC0A-AC0D
+label AC10 !510WF0QS_S
+ninty AC10-AC18
+label AC1A QS,"2._S
+ninty AC1A-AC1F
+label AC21 420-E_S
+ninty AC21-AC25
+label AC2A B540W_S
+ninty AC2A-AC2E
+label AC30 420-_S
+ninty AC30-AC33
+label AC35 !510W0A3_S
+ninty AC35-AC3C
+label AC3E E40YE4AS_S
+ninty AC3E-AC45
+label AC51 E20W_S
+ninty AC51-AC54
+label AC7F L0-C_S
+ninty AC7F-AC82
+label AC89 G047_S
+ninty AC89-AC8C
+label AC97 O0-F_S
+ninty AC97-AC9A
+label ACA2 H054_S
+ninty ACA2-ACA5
+label ACB0 A0E1_S
+ninty ACB0-ACB3
+label ACBB 0O13.0T_S
+ninty ACBB-ACC1
+label ACC8 A0P1O30R000_S
+ninty ACC8-ACD2
+label ACE3 L0-C_S
+ninty ACE3-ACE6
+label AD11 ,"5.3_S
+ninty AD11-AD15
+label AD3B !0Y405D_S
+ninty AD3B-AD41
+label AD5F ,"5.3_S
+ninty AD5F-AD63
+label AD71 X10T_S
+ninty AD71-AD74
+label AD7E !0Y405D_S
+ninty AD7E-AD84
+label AD8F ,'5.3_S
+ninty AD8F-AD93
+label ADB9 !0YK05_S
+ninty ADB9-ADBE
+label ADC9 ,'5.3_S
+ninty ADC9-ADCD
+label ADDB XH0T_S
+ninty ADDB-ADDE
+label ADE8 !0YK05_S
+ninty ADE8-ADED
+label ADF7 B012_S
+ninty ADF7-ADFA
+label AE12 520W_S
+ninty AE12-AE15
+label AE26 _190W_S
+ninty AE26-AE2A
+label AE32 ZF0OEW_S
+ninty AE32-AE37
+label AE3A 04-F0W_S
+ninty AE3A-AE3F
+label AE47 430W_S
+ninty AE47-AE4A
+label AE59 120WE_S
+ninty AE59-AE5D
+label AE72 520W_S
+ninty AE72-AE75
+label AE83 ZV0OE_S
+ninty AE83-AE87
+label AE8A 0K-V0W_S
+ninty AE8A-AE8F
+label AE97 4J0W_S
+ninty AE97-AE9A
+label AEA6 A0O1_S
+ninty AEA6-AEA9
+label AEAD LRI00_S
+ninty AEAD-AEB1
+label AEB9 H0P8_S
+ninty AEB9-AEBC
+label AEC0 0QC2,X0G_S
+ninty AEC0-AEC7
+label AED9 A0OH_5_S
+ninty AED9-AEDE
+label AEE2 LRI00_S
+ninty AEE2-AEE6
+label AEEE H0PO_S
+ninty AEEE-AEF1
+label AEF5 0QS2,X07_S
+ninty AEF5-AEFC
+label B280 HDH3SHBHHYXHHH_S
+ninty B280-B28D
+label B292 2HHHHYKXKBLBMXL2M2L1'1.1,HLXLXMHHHHX32H1YHUCH_S
+ninty B292-B2BE
+label B2C0 21013V3_2_2_S
+ninty B2C0-B2CA
+label B2CC 31313_273_S
+ninty B2CC-B2D4
+label B2D6 3333313F3031033_S
+ninty B2D6-B2E4
+label B2E6 33310F3_3737333V3131073_S
+ninty B2E6-B2FC
+label B300 C669L:-IHG98O654321W_1_1_1_14G4G8G4G88888GG8585858588WGO8G8G8W8OGGGO_S
+ninty B300-B343
+label B34B 'W_COIN_S
+ninty B34B-B351
+label B358 CREDIT_S
+ninty B358-B35D
+label B368 'W00000_S
+ninty B368-B36E
+label B371 -W_COIN_S
+ninty B371-B377
+label B37E NEW_PLAY_S
+ninty B37E-B385
+label B38F -W_COIN_S
+ninty B38F-B395
+label B39C REMATCH_S
+ninty B39C-B3A2
+label B3A7 124T2_S
+ninty B3A7-B3AB
+label B3AD 8NAQ3_S
+ninty B3AD-B3B1
+label B3CC 7O3M_S
+ninty B3CC-B3CF
+label B3E4 2X2W261_S
+ninty B3E4-B3EA
+label B473 01IC84IFC3GG41GG41IK84O-A2II21II42GI62IJ82KKC2GK41GL84IMC3KQI2MSJ1OYK1GG83IIC3KKE2IIC3KKE2MNE4IKE3KLG3MMG2W070IK83KMC2MOG2MNE3ONG3KMF2KMG2MOI1OQK1WW70KID3KKE3KOG3MQK2OWM1_S
+ninty B473-B51C
+label B520 000GP_S
+ninty B520-B524
+label B52C 0000W_S
+ninty B52C-B530
+label B539 0001_S
+ninty B539-B53C
+label B545 000B_S
+ninty B545-B548
+label B568 000_1_S
+ninty B568-B56C
+label B56F 0004W000'1_S
+ninty B56F-B578
+label B58E 3000_S
+ninty B58E-B591
+label B59A D000_S
+ninty B59A-B59D
+label B5A6 3000_S
+ninty B5A6-B5A9
+label B5D6 D000_S
+ninty B5D6-B5D9
+label B5EE 3000_S
+ninty B5EE-B5F1
+label B5F8 000_1_S
+ninty B5F8-B5FC
+label B606 3000_S
+ninty B606-B609
+label B60B 5'3C286H3K6K3H6K6K3H3HCCCC3333K3K6H6H336KH63HK63636363_S
+ninty B60B-B640
+label B642 3N2C186_4_S
+ninty B642-B64A
+label B64E _______EE4_8_5N3I2C184_4N3H186_4_S
+ninty B64E-B66D
+label B67F FEE9FEFEC9999C66696999_S
+ninty B67F-B694
+label B697 ZIIEEI63I33966CCI3CC96EE6999_S
+ninty B697-B6B2
+label B6B4 I99I966IZ99ZZC6ZI9EI966I3EE3EEEEE_S
+ninty B6B4-B6D4
+label B6DC 0O8VEH6_S
+ninty B6DC-B6E2
+label B6E6 0OGV9_S
+ninty B6E6-B6EA
+label B6F6 BH8V3_S
+ninty B6F6-B6FA
+label B717 WVGH09_S
+ninty B717-B71C
+label B725 0OWVF_S
+ninty B725-B729
+label B72E 5H2L_S
+ninty B72E-B731
+label B747 5J2100C_S
+ninty B747-B74D
+label B752 5J2I_S
+ninty B752-B755
+label B75A 0V23_S
+ninty B75A-B75D
+label B780 0OOV0H9_S
+ninty B780-B786
+label B79D 0O0V0HF9_S
+ninty B79D-B7A4
+label B7B2 0O0Z_S
+ninty B7B2-B7B5
+label B7BE 0V0HF_S
+ninty B7BE-B7C2
+label B7C8 0V0H00_S
+ninty B7C8-B7CD
+label B7CF YBO0_S
+ninty B7CF-B7D2
+label B7D9 210V6_S
+ninty B7D9-B7DD
+label B7E3 PF3V0O50WV9_S
+ninty B7E3-B7ED
+label B7F5 21_H09_S
+ninty B7F5-B7FA
+label B7FE -HDO3V0_S
+ninty B7FE-B804
+label B816 1131V0O0_S
+ninty B816-B81D
+label B81F 32V14F_S
+ninty B81F-B824
+label B829 5D0O2V:4_S
+ninty B829-B830
+label B839 8V254_S
+ninty B839-B83D
+label B841 HF1E_S
+ninty B841-B844
+label B849 8V7O8V_S
+ninty B849-B84E
+label B859 5C0O8VI_S
+ninty B859-B85F
+label B872 MF144Z_S
+ninty B872-B877
+label B87C YD1VYOAJAV_S
+ninty B87C-B885
+label B896 Y214O8V_S
+ninty B896-B89C
+label B8A2 310V3006_S
+ninty B8A2-B8A9
+label B8B6 Z31506_S
+ninty B8B6-B8BB
+label B8C4 A4C0_S
+ninty B8C4-B8C7
+label B8CC 2105_S
+ninty B8CC-B8CF
+label B8D1 210E4V2C_S
+ninty B8D1-B8D8
+label B8FB GV15212_S
+ninty B8FB-B901
+label B90E 08VI_S
+ninty B90E-B911
+label B91C :ON7150O_S
+ninty B91C-B923
+label B94C 0O70E_S
+ninty B94C-B950
+label B953 152I_S
+ninty B953-B956
+label B95B WVPH3_S
+ninty B95B-B95F
+label B991 0_01V_S
+ninty B991-B995
+label B9AA AZ00_S
+ninty B9AA-B9AD
+label B9BF 0A_0AV0AF_S
+ninty B9BF-B9C7
+label B9CC ,Z0A_S
+ninty B9CC-B9CF
+label B9E2 0F_0FV0FF_S
+ninty B9E2-B9EA
+label B9FC 3V02F_S
+ninty B9FC-BA00
+label BA02 0-03__S
+ninty BA02-BA06
+label BA14 JJ06_S
+ninty BA14-BA17
+label BA40 CV0CF_S
+ninty BA40-BA44
+label BA46 0-0C__S
+ninty BA46-BA4A
+label BA54 8J0C_S
+ninty BA54-BA57
+label BA84 GV0GF_S
+ninty BA84-BA88
+label BA94 8J0C_S
+ninty BA94-BA97
+label BAC7 W0'G0_S
+ninty BAC7-BACB
+label BADB 8V04F_S
+ninty BADB-BADF
+label BB16 EV0EF_S
+ninty BB16-BB1A
+label BB29 :P0:_S
+ninty BB29-BB2C
+label BB4E IV0IF_S
+ninty BB4E-BB52
+label BB61 6V05F_S
+ninty BB61-BB65
+label BB91 6V0DF_S
+ninty BB91-BB95
+label BBCD S0UZ_S
+ninty BBCD-BBD0
+label BBD2 JV09F_S
+ninty BBD2-BBD6
+label BC0E BV0BF_S
+ninty BC0E-BC12
+label BC21 HV0HF_S
+ninty BC21-BC25
+label BC6F XW80PW0WP_S
+ninty BC6F-BC77
+label BC81 HXGW_S
+ninty BC81-BC84
+label BCBC P8PP_S
+ninty BCBC-BCBF
+label BCD0 8XW00PO00_S
+ninty BCD0-BCD8
+label BCFF 8XW08P_S
+ninty BCFF-BD04
+label BD07 0P8X_S
+ninty BD07-BD0A
+label BD1B 0HHX_S
+ninty BD1B-BD1E
+label BD4E PW0WPP_S
+ninty BD4E-BD53
+label BD64 _______________________________________________________ODNETNIN4891THGIRYPOCEOGWCOO_S
+ninty BD64-BDB6
+label BDE0 0HJO_S
+ninty BDE0-BDE3
+label BE24 GZJJI_S
+ninty BE24-BE28
+label BE2C WS8I8SI_S
+ninty BE2C-BE32
+label BE3C OKX381_S
+ninty BE3C-BE41
+label BE4D 10HA_S
+ninty BE4D-BE50
+label BE55 FEOFH58F_EONH_S
+ninty BE55-BE61
+label BE69 G''''_S
+ninty BE69-BE6D
+label BE70 HUG62OW6_S
+ninty BE70-BE77
+label BE86 W'06_S
+ninty BE86-BE89
+label BE95 W62O_S
+ninty BE95-BE98
+label BEC5 0E00X_S
+ninty BEC5-BEC9
+label BF33 %XFF_S
+ninty BF33-BF36
+label BF67 00OPTION_SWITCH_S
+ninty BF67-BF75
+label BF81 __0W0A_S
+ninty BF81-BF86
+label BF8C 0W000COIN_S
+ninty BF8C-BF94
+label BF9B 0W000DIFFICULTY_S
+ninty BF9B-BFA9
+label BFB0 0W000TIME_S
+ninty BFB0-BFB8
+label BFBF 0W000MUSIC_S
+ninty BFBF-BFC8
+label BFCF 0W000DISCOUNT_S
+ninty BFCF-BFDB
