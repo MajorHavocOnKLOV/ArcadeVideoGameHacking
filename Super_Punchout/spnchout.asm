@@ -1,4 +1,4 @@
-org 0, numlab 39, numio 13, numdata 9, numcomm 24, numcommline 35
+org 0, numlab 63, numio 13, numdata 33, numcomm 24, numcommline 35
 
 IO_0_BUTTONS EQU $00
 I0_1_JOYSTICK? EQU $01
@@ -21,6 +21,30 @@ COPY_A_TO_DE+_FOR_C_COUNT EQU $2d52
 COPY_A_TO_DE+_FOR_BC_COUNT EQU $2d58
 SET_I_AND_SPLIT_A_NYBBLES_INTO_A_AND_A' EQU $2d67
 SPLIT_A_NYBBLES_INTO_A_AND_A'/C EQU $2d75
+SELECT_INITIALS_BY_CONTROL_S EQU $3d49
+AND_PRESS_BUTTON_TO_PRINT_!_S EQU $3d69
+NAME_ENTRY_:_S EQU $3d98
+INTRODUCING_S EQU $3dbf
+IN_THE_LEFT_CORNER_S EQU $3dd1
+POUNDS,_S EQU $3de9
+WEIGHING_S EQU $3df2
+FROM_S EQU $3e00
+WORLD_VIDEO_BOXING_ASSOC._S EQU $3e0c
+HIT_AVERAGE_S EQU $42f4
+BEST_5_S EQU $4306
+PER_CENT._S EQU $4312
+K.O.TIME_S EQU $4342
+BEST_3_S EQU $435a
+BEAR_HUGGER_S EQU $43d9
+00001._S EQU $43e7
+DRAGON_CHAN_S EQU $43f2
+0002._S EQU $4400
+VODKA_DRUNKENSKI_S EQU $440a
+00003._S EQU $4421
+GREAT_TIGER_S EQU $442c
+0004._S EQU $443a
+SUPER_MACHO_MAN_S EQU $4444
+005._S EQU $445a
 NVRAM EQU $c000
 RAM EQU $d000
 ENERGY EQU $d022
@@ -11000,59 +11024,16 @@ SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 3d47: E3             EX    (SP),HL
 3d48: DF             RST   $18
 
-3d49: 15             DEC   D
-3d4a: 18 1B          JR    $3D67
+SELECT_INITIALS_BY_CONTROL_S:
+3d49: LORTNOC.YB.SLAI.TINI.TCELES
 
-3d4c: 1D             DEC   E
-3d4d: 17             RLA   
-3d4e: 18 0C          JR    $3D5C
-
-3d50: FF             RST   $38
-
-3d51: 22 0B FF       LD    ($FF0B),HL
-3d54: 1C             INC   E
-3d55: 15             DEC   D
-3d56: 0A             LD    A,(BC)
-3d57: 12             LD    (DE),A
-3d58: DB 1D          IN    A,($1D)
-3d5a: 12             LD    (DE),A
-3d5b: 17             RLA   
-3d5c: 12             LD    (DE),A
-3d5d: FF             RST   $38
-
-3d5e: 1D             DEC   E
-3d5f: 0C             INC   C
-3d60: 0E 15          LD    C,#$15
-3d62: 0E 1C          LD    C,#$1C
 3d64: E3             EX    (SP),HL
 3d65: 00             NOP   
 3d66: 00             NOP   
 3d67: E2 DF 29       JP    PO,$29DF
 
-3d6a: FF             RST   $38
+3d6a: .TNIRP.OT.NOTT.UB.SSERP
 
-3d6b: 1D             DEC   E
-3d6c: 17             RLA   
-3d6d: 12             LD    (DE),A
-3d6e: 1B             DEC   DE
-3d6f: 19             ADD   HL,DE
-3d70: FF             RST   $38
-
-3d71: 18 1D          JR    $3D90
-
-3d73: FF             RST   $38
-
-3d74: 17             RLA   
-3d75: 18 1D          JR    $3D94
-
-3d77: 1D             DEC   E
-3d78: DC 1E 0B       CALL  C,$0B1E
-3d7b: FF             RST   $38
-
-3d7c: 1C             INC   E
-3d7d: 1C             INC   E
-3d7e: 0E 1B          LD    C,#$1B
-3d80: 19             ADD   HL,DE
 3d81: FF             RST   $38
 
 3d82: 0D             DEC   C
@@ -11079,15 +11060,9 @@ SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 
 3d97: FF             RST   $38
 
-3d98: 25             DEC   H
-3d99: FF             RST   $38
+NAME_ENTRY_:_S:
+3d98: :.YRTNE.EMAN
 
-3d9a: 22 1B 1D       LD    ($1D1B),HL
-3d9d: 17             RLA   
-3d9e: 0E FF          LD    C,#$FF
-3da0: 0E 16          LD    C,#$16
-3da2: 0A             LD    A,(BC)
-3da3: 17             RLA   
 3da4: E7             RST   $20
 
 3da5: 00             NOP   
@@ -11115,15 +11090,8 @@ SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 3dbc: F5             PUSH  AF
 3dbd: 2B             DEC   HL
 3dbe: DB 10          IN    A,($10)
-3dc0: 17             RLA   
-3dc1: 12             LD    (DE),A
-3dc2: 0C             INC   C
-3dc3: 1E 0D          LD    E,#$0D
-3dc5: 18 1B          JR    $3DE2
+3dc0: NICUDORTNI
 
-3dc7: 1D             DEC   E
-3dc8: 17             RLA   
-3dc9: 12             LD    (DE),A
 3dca: E8             RET   PE
 
 3dcb: 00             NOP   
@@ -11133,38 +11101,21 @@ SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 3dcf: 2B             DEC   HL
 3dd0: DF             RST   $18
 
-3dd1: 1B             DEC   DE
-3dd2: 0E 17          LD    C,#$17
-3dd4: 1B             DEC   DE
-3dd5: 18 0C          JR    $3DE3
+IN_THE_LEFT_CORNER_S:
+3dd1: RENROC.TFEL.EHT..NI
 
-3dd7: FF             RST   $38
-
-3dd8: 1D             DEC   E
-3dd9: 0F             RRCA  
-3dda: 0E 15          LD    C,#$15
-3ddc: FF             RST   $38
-
-3ddd: 0E 11          LD    C,#$11
-3ddf: 1D             DEC   E
-3de0: D3 FF          OUT   ($FF),A
-3de2: 17             RLA   
-3de3: 12             LD    (DE),A
 3de4: E6 00          AND   A,#$00
 3de6: 00             NOP   
 3de7: E6 D7          AND   A,#$D7
-3de9: 2A 1C 0D       LD    HL,($0D1C)
-3dec: 17             RLA   
-3ded: 1E 18          LD    E,#$18
-3def: 19             ADD   HL,DE
+POUNDS,_S:
+3de9: ,SDNUOP
+
 3df0: E5             PUSH  HL
 3df1: D8             RET   C
 
-3df2: 10 17          DJNZ  $3E0B
+WEIGHING_S:
+3df2: GNIHGIEW
 
-3df4: 12             LD    (DE),A
-3df5: 11 10 12       LD    DE,$1210
-3df8: 0E 20          LD    C,#$20
 3dfa: E6 00          AND   A,#$00
 3dfc: 00             NOP   
 3dfd: EF             RST   $28
@@ -11172,8 +11123,8 @@ SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 3dfe: E7             RST   $20
 
 3dff: D4 16 18       CALL  NC,$1816
-3e02: 1B             DEC   DE
-3e03: 0F             RRCA  
+3e02: RF
+
 3e04: E6 00          AND   A,#$00
 3e06: 00             NOP   
 3e07: 00             NOP   
@@ -11182,31 +11133,8 @@ SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 3e0a: E3             EX    (SP),HL
 3e0b: DF             RST   $18
 
-3e0c: 2B             DEC   HL
-3e0d: 0C             INC   C
-3e0e: 18 1C          JR    $3E2C
-
-3e10: 1C             INC   E
-3e11: 0A             LD    A,(BC)
-3e12: FF             RST   $38
-
-3e13: 10 17          DJNZ  $3E2C
-
-3e15: 12             LD    (DE),A
-3e16: 21 18 0B       LD    HL,$0B18
-3e19: FF             RST   $38
-
-3e1a: 18 DA          JR    $3DF6
-
-3e1c: 0E 0D          LD    C,#$0D
-3e1e: 12             LD    (DE),A
-3e1f: 1F             RRA   
-3e20: FF             RST   $38
-
-3e21: 0D             DEC   C
-3e22: 15             DEC   D
-3e23: 1B             DEC   DE
-3e24: 18 20          JR    $3E46
+WORLD_VIDEO_BOXING_ASSOC._S:
+3e0c: .COSSA.GNIXOB.O.EDIV.DLROW
 
 3e26: E4 00 00       CALL  PO,$0000
 3e29: 00             NOP   
@@ -12243,26 +12171,19 @@ SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 42f0: 20 48          JR    NZ,$433A
 
 42f2: DD FF          Illegal Opcode
-42f4: 0E 10          LD    C,#$10
-42f6: 0A             LD    A,(BC)
-42f7: 1B             DEC   DE
-42f8: 0E 1F          LD    C,#$1F
-42fa: 0A             LD    A,(BC)
-42fb: FF             RST   $38
+HIT_AVERAGE_S:
+42f4: EGAREVA.TIH
 
-42fc: 1D             DEC   E
-42fd: 12             LD    (DE),A
-42fe: 11 FF 00       LD    DE,$00FF
+42ff: FF             RST   $38
+
+4300: 00             NOP   
 4301: 00             NOP   
 4302: 89             ADC   A,C
 4303: 20 04          JR    NZ,$4309
 
 4305: D6 05          SUB   A,#$05
-4307: FF             RST   $38
+4307: .TSEB
 
-4308: 1D             DEC   E
-4309: 1C             INC   E
-430a: 0E 0B          LD    C,#$0B
 430c: 00             NOP   
 430d: 00             NOP   
 430e: 00             NOP   
@@ -12270,12 +12191,8 @@ SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 
 4311: DA 2B 1D       JP    C,$1D2B
 
-4314: 17             RLA   
-4315: 0E 0C          LD    C,#$0C
-4317: FF             RST   $38
+4314: NEC.REP
 
-4318: 1B             DEC   DE
-4319: 0E 19          LD    C,#$19
 431b: FF             RST   $38
 
 431c: 20 44          JR    NZ,$4362
@@ -12317,13 +12234,9 @@ SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 
 4341: D8             RET   C
 
-4342: 0E 16          LD    C,#$16
-4344: 12             LD    (DE),A
-4345: 1D             DEC   E
-4346: 2B             DEC   HL
-4347: 18 2B          JR    $4374
+K.O.TIME_S:
+4342: EMIT.O.K
 
-4349: 14             INC   D
 434a: 8B             ADC   A,E
 434b: 91             SUB   A,C
 434c: 73             LD    (HL),E
@@ -12340,11 +12253,8 @@ SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 4357: 73             LD    (HL),E
 4358: 8C             ADC   A,H
 4359: D6 03          SUB   A,#$03
-435b: FF             RST   $38
+435b: .TSEB
 
-435c: 1D             DEC   E
-435d: 1C             INC   E
-435e: 0E 0B          LD    C,#$0B
 4360: 8C             ADC   A,H
 4361: 91             SUB   A,C
 4362: 73             LD    (HL),E
@@ -12480,117 +12390,68 @@ SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 43d6: 20 18          JR    NZ,$43F0
 
 43d8: DB 1B          IN    A,($1B)
-43da: 0E 10          LD    C,#$10
-43dc: 10 1E          DJNZ  $43FC
+43da: EGGUH.RAEB
 
-43de: 11 FF 1B       LD    DE,$1BFF
-43e1: 0A             LD    A,(BC)
-43e2: 0E 0B          LD    C,#$0B
 43e4: 20 1C          JR    NZ,$4402
 
 43e6: D2 2B 01       JP    NC,$012B
 
-43e9: 00             NOP   
-43ea: 00             NOP   
-43eb: 00             NOP   
-43ec: 00             NOP   
+43e9: 0000
+
 43ed: 8F             ADC   A,A
 43ee: 83             ADD   A,E
 43ef: 20 18          JR    NZ,$4409
 
 43f1: DB 17          IN    A,($17)
-43f3: 0A             LD    A,(BC)
-43f4: 11 0C FF       LD    DE,$FF0C
-43f7: 17             RLA   
-43f8: 18 10          JR    $440A
+43f3: AHC.NOGARD
 
-43fa: 0A             LD    A,(BC)
-43fb: 1B             DEC   DE
-43fc: 0D             DEC   C
 43fd: 20 1C          JR    NZ,$441B
 
 43ff: D2 2B 02       JP    NC,$022B
 
-4402: 00             NOP   
-4403: 00             NOP   
-4404: 00             NOP   
+4402: 000
+
 4405: 8F             ADC   A,A
 4406: 89             ADC   A,C
-4407: 20 18          JR    NZ,$4421
+4407: 20 18          JR    NZ,00003._S
 
 4409: D5             PUSH  DE
-440a: 0A             LD    A,(BC)
-440b: 14             INC   D
-440c: 0D             DEC   C
-440d: 18 1F          JR    $442E
-
-440f: 00             NOP   
-4410: 8F             ADC   A,A
-4411: 83             ADD   A,E
-4412: DB 12          IN    A,($12)
-4414: 14             INC   D
-4415: 1C             INC   E
-4416: 17             RLA   
-4417: 0E 14          LD    C,#$14
-4419: 17             RLA   
-441a: 1E 1B          LD    E,#$1B
-441c: 0D             DEC   C
-441d: FF             RST   $38
+VODKA_DRUNKENSKI_S:
+440a: AKDOV0...IKSNEKNURD.
 
 441e: 20 1C          JR    NZ,$443C
 
 4420: D2 2B 03       JP    NC,$032B
 
-4423: 00             NOP   
-4424: 00             NOP   
-4425: 00             NOP   
-4426: 00             NOP   
+4423: 0000
+
 4427: 8F             ADC   A,A
 4428: 83             ADD   A,E
 4429: 20 18          JR    NZ,$4443
 
 442b: DB 1B          IN    A,($1B)
-442d: 0E 10          LD    C,#$10
-442f: 12             LD    (DE),A
-4430: 1D             DEC   E
-4431: FF             RST   $38
+442d: EGIT.TAERG
 
-4432: 1D             DEC   E
-4433: 0A             LD    A,(BC)
-4434: 0E 1B          LD    C,#$1B
-4436: 10 20          DJNZ  $4458
+4437: 20 1C          JR    NZ,$4455
 
-4438: 1C             INC   E
 4439: D2 2B 04       JP    NC,$042B
 
-443c: 00             NOP   
-443d: 00             NOP   
-443e: 00             NOP   
+443c: 000
+
 443f: 8F             ADC   A,A
 4440: 89             ADC   A,C
 4441: 20 18          JR    NZ,$445B
 
 4443: D5             PUSH  DE
-4444: 1B             DEC   DE
-4445: 0E 19          LD    C,#$19
-4447: 1E 1C          LD    E,#$1C
-4449: 00             NOP   
-444a: 8F             ADC   A,A
-444b: 84             ADD   A,H
-444c: DA 17 0A       JP    C,$0A17
+SUPER_MACHO_MAN_S:
+4444: REPUS0...NAM.OHCAM.
 
-444f: 16 FF          LD    D,#$FF
-4451: 18 11          JR    $4464
-
-4453: 0C             INC   C
-4454: 0A             LD    A,(BC)
-4455: 16 FF          LD    D,#$FF
 4457: 20 1C          JR    NZ,$4475
 
 4459: D2 2B 05       JP    NC,$052B
 
-445c: 00             NOP   
-445d: 00             NOP   
+445c: 00
+
 445e: 91             SUB   A,C
 445f: 75             LD    (HL),L
 4460: 1C             INC   E
@@ -28615,12 +28476,12 @@ SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 89f6: 88             ADC   A,B
 89f7: C0             RET   NZ
 
-89f8: 01 00 44       LD    BC,$4400
+89f8: 01 00 44       LD    BC,0002._S
 89fb: 81             ADD   A,C
 89fc: 21 8D 88       LD    HL,$888D
 89ff: C0             RET   NZ
 
-8a00: 01 00 44       LD    BC,$4400
+8a00: 01 00 44       LD    BC,0002._S
 8a03: C1             POP   BC
 8a04: A6             AND   A,(HL)
 8a05: 8D             ADC   A,L
@@ -30719,7 +30580,7 @@ SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 
 92d4: BC             CP    A,H
 92d5: 04             INC   B
-92d6: 01 00 44       LD    BC,$4400
+92d6: 01 00 44       LD    BC,0002._S
 92d9: 88             ADC   A,B
 92da: B0             OR    A,B
 92db: 42             LD    B,D
@@ -30782,7 +30643,7 @@ SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 9315: 9A             SBC   A,D
 9316: BC             CP    A,H
 9317: 04             INC   B
-9318: 01 00 44       LD    BC,$4400
+9318: 01 00 44       LD    BC,0002._S
 931b: 88             ADC   A,B
 931c: B0             OR    A,B
 931d: 42             LD    B,D

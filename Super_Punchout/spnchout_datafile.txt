@@ -109,6 +109,57 @@ comment 2dfa Clear E800-EFFF (VRAM_PLAYER)
 commentline 3055 print from 46f0 & 46d4 (what?)
 commentline 3060 print remtach?
 
+label 3D49 SELECT_INITIALS_BY_CONTROL_S
+ninty 3D49-3D63
+label 3D69 AND_PRESS_BUTTON_TO_PRINT_!_S
+ninty 3D69-3D80
+label 3D98 NAME_ENTRY_:_S
+ninty 3D98-3DA3
+label 3DBF INTRODUCING_S
+ninty 3DBF-3DC9
+label 3DD1 IN_THE_LEFT_CORNER_S
+ninty 3DD1-3DE3
+label 3DE9 POUNDS,_S
+ninty 3DE9-3DEF
+label 3DF2 WEIGHING_S
+ninty 3DF2-3DF9
+label 3E00 FROM_S
+ninty 3E00-3E03
+label 3E0C WORLD_VIDEO_BOXING_ASSOC._S
+ninty 3E0C-3E25
+label 42F4 HIT_AVERAGE_S
+ninty 42F4-42FE
+label 4306 BEST_5_S
+ninty 4306-430B
+label 4312 PER_CENT._S
+ninty 4312-431A
+label 4342 K.O.TIME_S
+ninty 4342-4349
+label 435A BEST_3_S
+ninty 435A-435F
+label 43D9 BEAR_HUGGER_S
+ninty 43D9-43E3
+label 43E7 00001._S
+ninty 43E7-43EC
+label 43F2 DRAGON_CHAN_S
+ninty 43F2-43FC
+label 4400 0002._S
+ninty 4400-4404
+label 440A VODKA_DRUNKENSKI_S
+ninty 440A-441D
+label 4421 00003._S
+ninty 4421-4426
+label 442C GREAT_TIGER_S
+ninty 442C-4436
+label 443A 0004._S
+ninty 443A-443E
+label 4444 SUPER_MACHO_MAN_S
+ninty 4444-4456
+label 445A 005._S
+ninty 445A-445D
+
+
+
 commentline 4598 ?
 commentline 46B3 ?
 commentline 46D4 ?
