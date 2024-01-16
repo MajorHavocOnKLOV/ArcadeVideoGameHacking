@@ -1,4 +1,4 @@
-org 0, numlab 63, numio 13, numdata 33, numcomm 24, numcommline 35
+org 0, numlab 123, numio 13, numdata 92, numcomm 24, numcommline 34
 
 IO_0_BUTTONS EQU $00
 I0_1_JOYSTICK? EQU $01
@@ -45,6 +45,66 @@ GREAT_TIGER_S EQU $442c
 0004._S EQU $443a
 SUPER_MACHO_MAN_S EQU $4444
 005._S EQU $445a
+_NO._NAME____SCORE__S EQU $44c4
+_NO.NAME__SCORE__S EQU $454a
+00NO.NAME__SCORE_S EQU $455b
+4W000NEW_FEATURE:_S EQU $45bb
+NOB_OF_CONTROL,_S EQU $45ce
+00PULL_THE_K_S EQU $45de
+_DUCK_PUNCHES_!_S EQU $45ec
+0AND_S EQU $45fc
+ASTER_DUCKING_!_S EQU $4607
+0W000LET_S_M_S EQU $4617
+'W00000GOOD_DUCK_S EQU $4628
+00NEW_S EQU $463b
+00CONTROL_S EQU $4643
+LEAR_BACKUP_RAM_S EQU $466b
+-W000PRESS_K.O._S EQU $4684
+'W002.TEST_S EQU $4696
+N0WAIT_S EQU $46a2
+NE_MORE_COIN_!!_S EQU $46ba
+0DEPOSIT_O_S EQU $46ca
+PRESS_START_FOR_S EQU $46db
+00NEW_PLAY_S EQU $46f7
+F_0REMATCH_S EQU $4720
+REMATCH_!!_S EQU $473b
+T_COINS_IN_TIME_S EQU $4751
+DEPOSI_S EQU $4761
+0BEAR_HUGGER_S EQU $4775
+0DRAGON_CHAN_S EQU $4785
+ODKA_DRUNKENSKI_S EQU $4795
+0GREAT_TIGER_S EQU $47ab
+0SUPER_MACHO_MAN_S EQU $47bb
+0CANADA_S EQU $47cf
+0HONG_KONG_S EQU $47da
+0U.S.S.R._S EQU $47e8
+0INDIA_S EQU $47f5
+0U.S.A._S EQU $47ff
+ON_OF_THE_WORLD_S EQU $480c
+N0CHAMPI_S EQU $481c
+00000NEXT_FIGHTER_!_S EQU $482a
+00000_S EQU $484e
+0FROM_:_S EQU $4858
+HALL_OF_FAME_S EQU $48a2
+NO.NAME__SCORE_S EQU $48d1
+BEST_SCORE_S EQU $4919
+1K.O.TIME_S EQU $4930
+K.O._S EQU $499d
+BONUS_S EQU $49ab
+PLAY_S EQU $49cb
+SCORE_S EQU $49d9
+STATUS_S EQU $4a8f
+0NEW_S EQU $4afb
+0RECORD_S EQU $4b00
+HIT__AVERAGE_S EQU $4b0e
+_______________________________________________________ODNETNIN4891THGIRYPOCEOGWCOO_S EQU $bd64
+00OPTION_SWITCH_S EQU $bf67
+__0W0A_S EQU $bf81
+0W000COIN_S EQU $bf8c
+0W000DIFFICULTY_S EQU $bf9b
+0W000TIME_S EQU $bfb0
+0W000MUSIC_S EQU $bfbf
+0W000DISCOUNT_S EQU $bfcf
 NVRAM EQU $c000
 RAM EQU $d000
 ENERGY EQU $d022
@@ -12556,21 +12616,7 @@ SUPER_MACHO_MAN_S:
 44c1: 20 18          JR    NZ,$44DB
 
 44c3: D6 FF          SUB   A,#$FF
-44c5: 0E 1B          LD    C,#$1B
-44c7: 18 0C          JR    $44D5
-
-44c9: 1C             INC   E
-44ca: E3             EX    (SP),HL
-44cb: D9             EXX   
-44cc: 0E 16          LD    C,#$16
-44ce: 0A             LD    A,(BC)
-44cf: 17             RLA   
-44d0: FF             RST   $38
-
-44d1: 2B             DEC   HL
-44d2: 18 17          JR    $44EB
-
-44d4: FF             RST   $38
+44c5: EROCS..EMAN..ON.
 
 44d5: 91             SUB   A,C
 44d6: D6 C4          SUB   A,#$C4
@@ -12687,40 +12733,13 @@ SUPER_MACHO_MAN_S:
 4548: 04             INC   B
 4549: DF             RST   $18
 
-454a: FF             RST   $38
-
-454b: 0E 1B          LD    C,#$1B
-454d: 18 0C          JR    $455B
-
-454f: 1C             INC   E
-4550: FF             RST   $38
-
-4551: FF             RST   $38
-
-4552: 0E 16          LD    C,#$16
-4554: 0A             LD    A,(BC)
-4555: 17             RLA   
-4556: 2B             DEC   HL
-4557: 18 17          JR    $4570
+_NO.NAME__SCORE__S:
+454a: .EROCS..EMAN.ON
 
 4559: 82             ADD   A,D
 455a: DE 0E          SBC   A,#$0E
-455c: 1B             DEC   DE
-455d: 18 0C          JR    $456B
+455c: ROCS..EMAN.ON00
 
-455f: 1C             INC   E
-4560: FF             RST   $38
-
-4561: FF             RST   $38
-
-4562: 0E 16          LD    C,#$16
-4564: 0A             LD    A,(BC)
-4565: 17             RLA   
-4566: 2B             DEC   HL
-4567: 18 17          JR    $4580
-
-4569: 00             NOP   
-456a: 00             NOP   
 456b: 81             ADD   A,C
 456c: 20 44          JR    NZ,$45B2
 
@@ -12802,70 +12821,25 @@ SUPER_MACHO_MAN_S:
 
 45b9: E2 DC 25       JP    PO,$25DC
 
-45bc: 0E 1B          LD    C,#$1B
-45be: 1E 1D          LD    E,#$1D
-45c0: 0A             LD    A,(BC)
-45c1: 0E 0F          LD    C,#$0F
-45c3: FF             RST   $38
-
-45c4: 20 0E          JR    NZ,$45D4
-
-45c6: 17             RLA   
-45c7: 00             NOP   
-45c8: 00             NOP   
-45c9: 00             NOP   
-45ca: 20 34          JR    NZ,$4600
+45bc: ERUTAEF.WEN000W.
 
 45cc: E2 DF 2A       JP    PO,$2ADF
 
-45cf: 15             DEC   D
-45d0: 18 1B          JR    $45ED
-
-45d2: 1D             DEC   E
-45d3: 17             RLA   
-45d4: 18 0C          JR    $45E2
-
-45d6: FF             RST   $38
-
-45d7: 0F             RRCA  
-45d8: 18 FF          JR    $45D9
-
-45da: 0B             DEC   BC
-45db: 18 17          JR    $45F4
+45cf: LORTNOC.FO.BON
 
 45dd: DA 14 FF       JP    C,$FF14
 
-45e0: 0E 11          LD    C,#$11
-45e2: 1D             DEC   E
-45e3: FF             RST   $38
+45e0: EHT.LLUP00
 
-45e4: 15             DEC   D
-45e5: 15             DEC   D
-45e6: 1E 19          LD    E,#$19
-45e8: 00             NOP   
-45e9: 00             NOP   
 45ea: E9             JP    (HL)
 45eb: DF             RST   $18
 
-45ec: 29             ADD   HL,HL
-45ed: FF             RST   $38
-
-45ee: 1C             INC   E
-45ef: 0E 11          LD    C,#$11
-45f1: 0C             INC   C
-45f2: 17             RLA   
-45f3: 1E 19          LD    E,#$19
-45f5: FF             RST   $38
-
-45f6: 14             INC   D
-45f7: 0C             INC   C
-45f8: 1E 0D          LD    E,#$0D
-45fa: FF             RST   $38
+_DUCK_PUNCHES_!_S:
+45ec: !.SEHCNUP.KCUD.
 
 45fb: D3 0D          OUT   (VLM5030_START),A
-45fd: 17             RLA   
-45fe: 0A             LD    A,(BC)
-45ff: 00             NOP   
+45fd: NA0
+
 4600: EF             RST   $28
 
 4601: E8             RET   PE
@@ -12874,75 +12848,34 @@ SUPER_MACHO_MAN_S:
 4603: 2A 00 E5       LD    HL,($E500)
 4606: DF             RST   $18
 
-4607: 29             ADD   HL,HL
-4608: FF             RST   $38
+ASTER_DUCKING_!_S:
+4607: !.GNIKCUD.RETSA
 
-4609: 10 17          DJNZ  $4622
-
-460b: 12             LD    (DE),A
-460c: 14             INC   D
-460d: 0C             INC   C
-460e: 1E 0D          LD    E,#$0D
-4610: FF             RST   $38
-
-4611: 1B             DEC   DE
-4612: 0E 1D          LD    C,#$1D
-4614: 1C             INC   E
-4615: 0A             LD    A,(BC)
 4616: D7             RST   $10
 
-4617: 16 FF          LD    D,#$FF
-4619: 1C             INC   E
-461a: FF             RST   $38
-
-461b: 1D             DEC   E
-461c: 0E 15          LD    C,#$15
-461e: 00             NOP   
-461f: 00             NOP   
-4620: 00             NOP   
-4621: 20 30          JR    NZ,$4653
+0W000LET_S_M_S:
+4617: M.S.TEL000W.
 
 4623: EA F2 29       JP    PE,$29F2
 
 4626: DA FF 14       JP    C,$14FF
 
-4629: 0C             INC   C
-462a: 1E 0D          LD    E,#$0D
-462c: FF             RST   $38
-
-462d: 0D             DEC   C
-462e: 18 18          JR    $4648
-
-4630: 10 00          DJNZ  $4632
-
-4632: 00             NOP   
-4633: 00             NOP   
-4634: 00             NOP   
-4635: 00             NOP   
-4636: 20 2C          JR    NZ,$4664
+4629: CUD.DOOG00000W'
 
 4638: EF             RST   $28
 
 4639: ED D3          Illegal Opcode
-463b: 20 0E          JR    NZ,$464B
+00NEW_S:
+463b: WEN00
 
-463d: 17             RLA   
-463e: 00             NOP   
-463f: 00             NOP   
 4640: EF             RST   $28
 
 4641: E9             JP    (HL)
 4642: D7             RST   $10
 
-4643: 15             DEC   D
-4644: 18 1B          JR    $4661
+00CONTROL_S:
+4643: LORTNOC00
 
-4646: 1D             DEC   E
-4647: 17             RLA   
-4648: 18 0C          JR    $4656
-
-464a: 00             NOP   
-464b: 00             NOP   
 464c: 8F             ADC   A,A
 464d: 8E             ADC   A,(HL)
 464e: 92             SUB   A,D
@@ -12973,20 +12906,9 @@ SUPER_MACHO_MAN_S:
 4669: 8A             ADC   A,D
 466a: DF             RST   $18
 
-466b: 16 0A          LD    D,#$0A
-466d: 1B             DEC   DE
-466e: FF             RST   $38
+LEAR_BACKUP_RAM_S:
+466b: MAR.PUKCAB.RAEL
 
-466f: 19             ADD   HL,DE
-4670: 1E 14          LD    E,#$14
-4672: 0C             INC   C
-4673: 0A             LD    A,(BC)
-4674: 0B             DEC   BC
-4675: FF             RST   $38
-
-4676: 1B             DEC   DE
-4677: 0A             LD    A,(BC)
-4678: 0E 15          LD    C,#$15
 467a: D3 0C          OUT   (VLM5030_RESET),A
 467c: 2B             DEC   HL
 467d: 01 00 00       LD    BC,$0000
@@ -12995,36 +12917,17 @@ SUPER_MACHO_MAN_S:
 4682: 85             ADD   A,L
 4683: DA 2B 18       JP    C,$182B
 
-4686: 2B             DEC   HL
-4687: 14             INC   D
-4688: FF             RST   $38
-
-4689: 1C             INC   E
-468a: 1C             INC   E
-468b: 0E 1B          LD    C,#$1B
-468d: 19             ADD   HL,DE
-468e: 00             NOP   
-468f: 00             NOP   
-4690: 00             NOP   
-4691: 20 24          JR    NZ,$46B7
+4686: .K.SSERP000W-
 
 4693: 8F             ADC   A,A
 4694: 87             ADD   A,A
 4695: D6 1D          SUB   A,#$1D
-4697: 1C             INC   E
-4698: 0E 1D          LD    C,#$1D
-469a: 2B             DEC   HL
-469b: 02             LD    (BC),A
-469c: 00             NOP   
-469d: 00             NOP   
-469e: 20 2C          JR    NZ,$46CC
+4697: SET.200W'
 
 46a0: 8B             ADC   A,E
 46a1: D4 1D 12       CALL  NC,$121D
-46a4: 0A             LD    A,(BC)
-46a5: 20 00          JR    NZ,$46A7
+46a4: AW0.
 
-46a7: 4E             LD    C,(HL)
 46a8: FA 0A 00       JP    M,$000A
 
 46ab: 20 20          JR    NZ,$46CD
@@ -13044,32 +12947,13 @@ SUPER_MACHO_MAN_S:
 46b8: E3             EX    (SP),HL
 46b9: DF             RST   $18
 
-46ba: 29             ADD   HL,HL
-46bb: 29             ADD   HL,HL
-46bc: FF             RST   $38
+NE_MORE_COIN_!!_S:
+46ba: !!.NIOC.EROM.EN
 
-46bd: 17             RLA   
-46be: 12             LD    (DE),A
-46bf: 18 0C          JR    $46CD
-
-46c1: FF             RST   $38
-
-46c2: 0E 1B          LD    C,#$1B
-46c4: 18 16          JR    $46DC
-
-46c6: FF             RST   $38
-
-46c7: 0E 17          LD    C,#$17
 46c9: D9             EXX   
-46ca: 18 FF          JR    $46CB
+0DEPOSIT_O_S:
+46ca: O.TISOPED0
 
-46cc: 1D             DEC   E
-46cd: 12             LD    (DE),A
-46ce: 1C             INC   E
-46cf: 18 19          JR    $46EA
-
-46d1: 0E 0D          LD    C,#$0D
-46d3: 00             NOP   
 
 *** ?
 46d4: CE FB          ADC   A,#$FB
@@ -13079,22 +12963,9 @@ SUPER_MACHO_MAN_S:
 46d9: E9             JP    (HL)
 46da: DF             RST   $18
 
-46db: 1B             DEC   DE
-46dc: 18 0F          JR    $46ED
+PRESS_START_FOR_S:
+46db: ROF.TRATS.SSERP
 
-46de: FF             RST   $38
-
-46df: 1D             DEC   E
-46e0: 1B             DEC   DE
-46e1: 0A             LD    A,(BC)
-46e2: 1D             DEC   E
-46e3: 1C             INC   E
-46e4: FF             RST   $38
-
-46e5: 1C             INC   E
-46e6: 1C             INC   E
-46e7: 0E 1B          LD    C,#$1B
-46e9: 19             ADD   HL,DE
 46ea: E8             RET   PE
 
 46eb: 00             NOP   
@@ -13112,15 +12983,9 @@ SUPER_MACHO_MAN_S:
 
 46f6: FF             RST   $38
 
-46f7: 22 0A 15       LD    ($150A),HL
-46fa: 19             ADD   HL,DE
-46fb: FF             RST   $38
+00NEW_PLAY_S:
+46f7: YALP.WEN00
 
-46fc: 20 0E          JR    NZ,$470C
-
-46fe: 17             RLA   
-46ff: 00             NOP   
-4700: 00             NOP   
 4701: E3             EX    (SP),HL
 4702: D1             POP   DE
 4703: FB             EI    
@@ -13153,13 +13018,9 @@ SUPER_MACHO_MAN_S:
 
 471f: D7             RST   $10
 
+F_0REMATCH_S:
+4720: HCTAMER...
 
-*** HCTAMER
-4720: HCTAMER
-
-4727: 30 FF          JR    NC,$4728
-
-4729: 46             LD    B,(HL)
 
 *** ?
 472a: CE FA          ADC   A,#$FA
@@ -13180,12 +13041,8 @@ SUPER_MACHO_MAN_S:
 
 473a: DA 29 29       JP    C,$2929
 
-473d: FF             RST   $38
+473d: .HCTAMER
 
-473e: 11 0C 1D       LD    DE,$1D0C
-4741: 0A             LD    A,(BC)
-4742: 16 0E          LD    D,#$0E
-4744: 1B             DEC   DE
 4745: E7             RST   $20
 
 4746: 00             NOP   
@@ -13199,27 +13056,11 @@ SUPER_MACHO_MAN_S:
 
 474e: 1C             INC   E
 474f: E4 DF 0E       CALL  PO,$0EDF
-4752: 16 12          LD    D,#$12
-4754: 1D             DEC   E
-4755: FF             RST   $38
+4752: MIT.NI.SNIOC.T
 
-4756: 17             RLA   
-4757: 12             LD    (DE),A
-4758: FF             RST   $38
-
-4759: 1C             INC   E
-475a: 17             RLA   
-475b: 12             LD    (DE),A
-475c: 18 0C          JR    $476A
-
-475e: FF             RST   $38
-
-475f: 1D             DEC   E
 4760: D6 12          SUB   A,#$12
-4762: 1C             INC   E
-4763: 18 19          JR    $477E
+4762: SOPED
 
-4765: 0E 0D          LD    C,#$0D
 4767: E7             RST   $20
 
 4768: 00             NOP   
@@ -13236,187 +13077,94 @@ SUPER_MACHO_MAN_S:
 4772: 20 1C          JR    NZ,$4790
 
 4774: DB 1B          IN    A,($1B)
-4776: 0E 10          LD    C,#$10
-4778: 10 1E          DJNZ  $4798
+4776: EGGUH.RAEB0
 
-477a: 11 FF 1B       LD    DE,$1BFF
-477d: 0A             LD    A,(BC)
-477e: 0E 0B          LD    C,#$0B
-4780: 00             NOP   
 4781: 8B             ADC   A,E
 4782: 20 1C          JR    NZ,$47A0
 
 4784: DB 17          IN    A,($17)
-4786: 0A             LD    A,(BC)
-4787: 11 0C FF       LD    DE,$FF0C
-478a: 17             RLA   
-478b: 18 10          JR    $479D
+4786: AHC.NOGARD0
 
-478d: 0A             LD    A,(BC)
-478e: 1B             DEC   DE
-478f: 0D             DEC   C
-4790: 00             NOP   
 4791: 88             ADC   A,B
 4792: 20 1C          JR    NZ,$47B0
 
 4794: DF             RST   $18
 
-4795: 12             LD    (DE),A
-4796: 14             INC   D
-4797: 1C             INC   E
-4798: 17             RLA   
-4799: 0E 14          LD    C,#$14
-479b: 17             RLA   
-479c: 1E 1B          LD    E,#$1B
-479e: 0D             DEC   C
-479f: FF             RST   $38
+ODKA_DRUNKENSKI_S:
+4795: IKSNEKNURD.AKDO
 
-47a0: 0A             LD    A,(BC)
-47a1: 14             INC   D
-47a2: 0D             DEC   C
-47a3: 18 D1          JR    $4776
-
+47a4: D1             POP   DE
 47a5: 1F             RRA   
 47a6: 00             NOP   
 47a7: 8B             ADC   A,E
 47a8: 20 1C          JR    NZ,$47C6
 
 47aa: DB 1B          IN    A,($1B)
-47ac: 0E 10          LD    C,#$10
-47ae: 12             LD    (DE),A
-47af: 1D             DEC   E
-47b0: FF             RST   $38
-
-47b1: 1D             DEC   E
-47b2: 0A             LD    A,(BC)
-47b3: 0E 1B          LD    C,#$1B
-47b5: 10 00          DJNZ  $47B7
+47ac: EGIT.TAERG0
 
 47b7: 89             ADC   A,C
 47b8: 20 1C          JR    NZ,$47D6
 
 47ba: DF             RST   $18
 
-47bb: 17             RLA   
-47bc: 0A             LD    A,(BC)
-47bd: 16 FF          LD    D,#$FF
-47bf: 18 11          JR    $47D2
+0SUPER_MACHO_MAN_S:
+47bb: NAM.OHCAM.REPUS0
 
-47c1: 0C             INC   C
-47c2: 0A             LD    A,(BC)
-47c3: 16 FF          LD    D,#$FF
-47c5: 1B             DEC   DE
-47c6: 0E 19          LD    C,#$19
-47c8: 1E 1C          LD    E,#$1C
-47ca: 00             NOP   
 47cb: 8A             ADC   A,D
 47cc: 20 34          JR    NZ,$4802
 
 47ce: D6 0A          SUB   A,#$0A
-47d0: 0D             DEC   C
-47d1: 0A             LD    A,(BC)
-47d2: 17             RLA   
-47d3: 0A             LD    A,(BC)
-47d4: 0C             INC   C
-47d5: 00             NOP   
+47d0: DANAC0
+
 47d6: 88             ADC   A,B
 47d7: 20 34          JR    NZ,$480D
 
 47d9: D9             EXX   
-47da: 10 17          DJNZ  $47F3
+0HONG_KONG_S:
+47da: GNOK.GNOH0
 
-47dc: 18 14          JR    $47F2
-
-47de: FF             RST   $38
-
-47df: 10 17          DJNZ  $47F8
-
-47e1: 18 11          JR    $47F4
-
-47e3: 00             NOP   
 47e4: 88             ADC   A,B
 47e5: 20 34          JR    NZ,$481B
 
 47e7: D8             RET   C
 
-47e8: 2B             DEC   HL
-47e9: 1B             DEC   DE
-47ea: 2B             DEC   HL
-47eb: 1C             INC   E
-47ec: 2B             DEC   HL
-47ed: 1C             INC   E
-47ee: 2B             DEC   HL
-47ef: 1E 00          LD    E,#$00
+0U.S.S.R._S:
+47e8: .R.S.S.U0
+
 47f1: 8B             ADC   A,E
 47f2: 20 34          JR    NZ,$4828
 
 47f4: D5             PUSH  DE
-47f5: 0A             LD    A,(BC)
-47f6: 12             LD    (DE),A
-47f7: 0D             DEC   C
-47f8: 17             RLA   
-47f9: 12             LD    (DE),A
-47fa: 00             NOP   
+0INDIA_S:
+47f5: AIDNI0
+
 47fb: 8A             ADC   A,D
 47fc: 20 34          JR    NZ,$4832
 
 47fe: D6 2B          SUB   A,#$2B
-4800: 0A             LD    A,(BC)
-4801: 2B             DEC   HL
-4802: 1C             INC   E
-4803: 2B             DEC   HL
-4804: 1E 00          LD    E,#$00
+4800: A.S.U0
+
 4806: C2 F6 01       JP    NZ,$01F6
 
 4809: 20 34          JR    NZ,$483F
 
 480b: DF             RST   $18
 
-480c: 0D             DEC   C
-480d: 15             DEC   D
-480e: 1B             DEC   DE
-480f: 18 20          JR    $4831
+ON_OF_THE_WORLD_S:
+480c: DLROW.EHT.FO.NO
 
-4811: FF             RST   $38
+481b: D6 12          SUB   A,#$12
+481d: PMAHC0.
 
-4812: 0E 11          LD    C,#$11
-4814: 1D             DEC   E
-4815: FF             RST   $38
-
-4816: 0F             RRCA  
-4817: 18 FF          JR    $4818
-
-4819: 17             RLA   
-481a: 18 D6          JR    $47F2
-
-481c: 12             LD    (DE),A
-481d: 19             ADD   HL,DE
-481e: 16 0A          LD    D,#$0A
-4820: 11 0C 00       LD    DE,$000C
-
-*** ?
-4823: 4E             LD    C,(HL)
+Error: missed a comment line at 4823, line=4825
 4824: F5             PUSH  AF
 4825: 0D             DEC   C
 4826: 89             ADC   A,C
 4827: 20 2C          JR    NZ,$4855
 
 4829: DE 29          SBC   A,#$29
-482b: FF             RST   $38
+482b: .RETHGIF.TXEN00000
 
-482c: 1B             DEC   DE
-482d: 0E 1D          LD    C,#$1D
-482f: 11 10 12       LD    DE,$1210
-4832: 0F             RRCA  
-4833: FF             RST   $38
-
-4834: 1D             DEC   E
-4835: 21 0E 17       LD    HL,$170E
-4838: 00             NOP   
-4839: 00             NOP   
-483a: 00             NOP   
-483b: 00             NOP   
-483c: 00             NOP   
 483d: 84             ADD   A,H
 483e: 20 1C          JR    NZ,$485C
 
@@ -13437,22 +13185,16 @@ SUPER_MACHO_MAN_S:
 484c: EF             RST   $28
 
 484d: E9             JP    (HL)
-484e: 00             NOP   
-484f: 00             NOP   
-4850: 00             NOP   
-4851: 00             NOP   
-4852: 00             NOP   
+00000_S:
+484e: 00000
+
 4853: 8F             ADC   A,A
 4854: 83             ADD   A,E
 4855: 20 24          JR    NZ,$487B
 
 4857: D6 25          SUB   A,#$25
-4859: FF             RST   $38
+4859: .MORF0
 
-485a: 16 18          LD    D,#$18
-485c: 1B             DEC   DE
-485d: 0F             RRCA  
-485e: 00             NOP   
 485f: 40             LD    B,B
 4860: D8             RET   C
 
@@ -13528,17 +13270,10 @@ SUPER_MACHO_MAN_S:
 489f: 20 44          JR    NZ,$48E5
 
 48a1: DC 0E 16       CALL  C,$160E
-48a4: 0A             LD    A,(BC)
-48a5: 0F             RRCA  
-48a6: FF             RST   $38
+48a4: AF.FO.LLAH
 
-48a7: 0F             RRCA  
-48a8: 18 FF          JR    $48A9
-
-48aa: 15             DEC   D
-48ab: 15             DEC   D
-48ac: 0A             LD    A,(BC)
-48ad: 11 91 F1       LD    DE,$F191
+48ae: 91             SUB   A,C
+48af: F1             POP   AF
 48b0: 7F             LD    A,A
 48b1: E1             POP   HL
 48b2: 00             NOP   
@@ -13574,19 +13309,8 @@ SUPER_MACHO_MAN_S:
 
 48d0: FF             RST   $38
 
-48d1: 0E 1B          LD    C,#$1B
-48d3: 18 0C          JR    $48E1
-
-48d5: 1C             INC   E
-48d6: FF             RST   $38
-
-48d7: FF             RST   $38
-
-48d8: 0E 16          LD    C,#$16
-48da: 0A             LD    A,(BC)
-48db: 17             RLA   
-48dc: 2B             DEC   HL
-48dd: 18 17          JR    $48F6
+NO.NAME__SCORE_S:
+48d1: EROCS..EMAN.ON
 
 48df: E1             POP   HL
 48e0: 00             NOP   
@@ -13636,15 +13360,9 @@ SUPER_MACHO_MAN_S:
 4912: 05             DEC   B
 4913: 01 74 14       LD    BC,$1474
 4916: DC 72 7B       CALL  C,$7B72
-4919: 0E 1B          LD    C,#$1B
-491b: 18 0C          JR    $4929
+BEST_SCORE_S:
+4919: EROCS.TSEB
 
-491d: 1C             INC   E
-491e: FF             RST   $38
-
-491f: 1D             DEC   E
-4920: 1C             INC   E
-4921: 0E 0B          LD    C,#$0B
 4923: 91             SUB   A,C
 4924: 7B             LD    A,E
 4925: 94             SUB   A,H
@@ -13654,14 +13372,11 @@ SUPER_MACHO_MAN_S:
 492c: F2 72 D9       JP    P,$D972
 
 492f: 7B             LD    A,E
-4930: 0E 16          LD    C,#$16
-4932: 12             LD    (DE),A
-4933: 1D             DEC   E
-4934: 2B             DEC   HL
-4935: 18 2B          JR    $4962
+1K.O.TIME_S:
+4930: EMIT.O.K1
 
-4937: 14             INC   D
-4938: 01 7B 94       LD    BC,$947B
+4939: 7B             LD    A,E
+493a: 94             SUB   A,H
 493b: F2 72 D1       JP    P,$D172
 
 493e: 74             LD    (HL),H
@@ -13758,10 +13473,9 @@ SUPER_MACHO_MAN_S:
 499b: 73             LD    (HL),E
 499c: FF             RST   $38
 
-499d: 2B             DEC   HL
-499e: 18 2B          JR    $49CB
+K.O._S:
+499d: .O.K
 
-49a0: 14             INC   D
 49a1: 73             LD    (HL),E
 49a2: FF             RST   $38
 
@@ -13770,9 +13484,8 @@ SUPER_MACHO_MAN_S:
 49a6: 73             LD    (HL),E
 49a7: 31 E5 D8       LD    SP,$D8E5
 49aa: 73             LD    (HL),E
-49ab: 1C             INC   E
-49ac: 1E 17          LD    E,#$17
-49ae: 18 0B          JR    $49BB
+BONUS_S:
+49ab: SUNOB
 
 49b0: 73             LD    (HL),E
 49b1: FF             RST   $38
@@ -13802,8 +13515,9 @@ SUPER_MACHO_MAN_S:
 49c9: 73             LD    (HL),E
 49ca: FF             RST   $38
 
-49cb: 22 0A 15       LD    ($150A),HL
-49ce: 19             ADD   HL,DE
+PLAY_S:
+49cb: YALP
+
 49cf: 73             LD    (HL),E
 49d0: FF             RST   $38
 
@@ -13812,10 +13526,9 @@ SUPER_MACHO_MAN_S:
 49d4: 73             LD    (HL),E
 49d5: 31 E5 D8       LD    SP,$D8E5
 49d8: 73             LD    (HL),E
-49d9: 0E 1B          LD    C,#$1B
-49db: 18 0C          JR    $49E9
+SCORE_S:
+49d9: EROCS
 
-49dd: 1C             INC   E
 49de: 73             LD    (HL),E
 49df: FF             RST   $38
 
@@ -13987,11 +13700,9 @@ SUPER_MACHO_MAN_S:
 4a8b: 20 04          JR    NZ,$4A91
 
 4a8d: ED D6          Illegal Opcode
-4a8f: 1C             INC   E
-4a90: 1E 1D          LD    E,#$1D
-4a92: 0A             LD    A,(BC)
-4a93: 1D             DEC   E
-4a94: 1C             INC   E
+STATUS_S:
+4a8f: SUTATS
+
 4a95: ED 00          Illegal Opcode
 4a97: 20 90          JR    NZ,$4A29
 
@@ -14073,14 +13784,11 @@ SUPER_MACHO_MAN_S:
 4af8: 00             NOP   
 4af9: 82             ADD   A,D
 4afa: D3 20          OUT   ($20),A
-4afc: 0E 17          LD    C,#$17
-4afe: 00             NOP   
-4aff: D6 0D          SUB   A,#$0D
-4b01: 1B             DEC   DE
-4b02: 18 0C          JR    $4B10
+4afc: EN0
 
-4b04: 0E 1B          LD    C,#$1B
-4b06: 00             NOP   
+4aff: D6 0D          SUB   A,#$0D
+4b01: ROCER0
+
 4b07: 9E             SBC   A,(HL)
 4b08: D8             RET   C
 
@@ -14088,18 +13796,11 @@ SUPER_MACHO_MAN_S:
 4b0a: 20 14          JR    NZ,$4B20
 
 4b0c: DD 7B          Illegal Opcode
-4b0e: 0E 10          LD    C,#$10
-4b10: 0A             LD    A,(BC)
-4b11: 1B             DEC   DE
-4b12: 0E 1F          LD    C,#$1F
-4b14: 0A             LD    A,(BC)
-4b15: FF             RST   $38
+HIT__AVERAGE_S:
+4b0e: EGAREVA..TIH
 
-4b16: FF             RST   $38
-
-4b17: 1D             DEC   E
-4b18: 12             LD    (DE),A
-4b19: 11 91 7B       LD    DE,$7B91
+4b1a: 91             SUB   A,C
+4b1b: 7B             LD    A,E
 4b1c: 94             SUB   A,H
 4b1d: 00             NOP   
 4b1e: 20 18          JR    NZ,$4B38
@@ -29865,7 +29566,7 @@ SUPER_MACHO_MAN_S:
 8fec: 3E 40          LD    A,#$40
 8fee: 42             LD    B,D
 8fef: 44             LD    B,H
-8ff0: F4 17 46       CALL  P,$4617
+8ff0: F4 17 46       CALL  P,0W000LET_S_M_S
 8ff3: 84             ADD   A,H
 8ff4: C8             RET   Z
 
@@ -29954,7 +29655,7 @@ SUPER_MACHO_MAN_S:
 9045: 3E 40          LD    A,#$40
 9047: 42             LD    B,D
 9048: 44             LD    B,H
-9049: F4 17 46       CALL  P,$4617
+9049: F4 17 46       CALL  P,0W000LET_S_M_S
 904c: 8C             ADC   A,H
 904d: C8             RET   Z
 
@@ -40972,7 +40673,7 @@ bcf6: 38 68          JR    C,$BD60
 
 bcf8: 48             LD    C,B
 bcf9: 48             LD    C,B
-bcfa: 38 68          JR    C,$BD64
+bcfa: 38 68          JR    C,_______________________________________________________ODNETNIN4891THGIRYPOCEOGWCOO_S
 
 bcfc: 50             LD    D,B
 bcfd: 50             LD    D,B
@@ -41078,141 +40779,10 @@ bd60: 18 26          JR    $BD88
 
 bd62: 18 26          JR    $BD8A
 
-bd64: 18 18          JR    $BD7E
-
-bd66: 0C             INC   C
-bd67: 20 10          JR    NZ,$BD79
-
-bd69: 18 0E          JR    $BD79
-
-bd6b: 43             LD    B,E
-bd6c: 4F             LD    C,A
-bd6d: 50             LD    D,B
-bd6e: 59             LD    E,C
-bd6f: 52             LD    D,D
-bd70: 49             LD    C,C
-bd71: 47             LD    B,A
-bd72: 48             LD    C,B
-bd73: 54             LD    D,H
-bd74: 31 39 38       LD    SP,$3839
-bd77: 34             INC   (HL)
-bd78: 4E             LD    C,(HL)
-bd79: 49             LD    C,C
-bd7a: 4E             LD    C,(HL)
-bd7b: 54             LD    D,H
-bd7c: 45             LD    B,L
-bd7d: 4E             LD    C,(HL)
-bd7e: 44             LD    B,H
-bd7f: 4F             LD    C,A
-bd80: FF             RST   $38
-
-bd81: FF             RST   $38
-
-bd82: FF             RST   $38
-
-bd83: FF             RST   $38
-
-bd84: FF             RST   $38
-
-bd85: FF             RST   $38
-
-bd86: FF             RST   $38
-
-bd87: FF             RST   $38
-
-bd88: FF             RST   $38
-
-bd89: FF             RST   $38
-
-bd8a: FF             RST   $38
-
-bd8b: FF             RST   $38
-
-bd8c: FF             RST   $38
-
-bd8d: FF             RST   $38
-
-bd8e: FF             RST   $38
-
-bd8f: FF             RST   $38
-
-bd90: FF             RST   $38
-
-bd91: FF             RST   $38
-
-bd92: FF             RST   $38
-
-bd93: FF             RST   $38
-
-bd94: FF             RST   $38
-
-bd95: FF             RST   $38
-
-bd96: FF             RST   $38
-
-bd97: FF             RST   $38
-
-bd98: FF             RST   $38
-
-bd99: FF             RST   $38
-
-bd9a: FF             RST   $38
-
-bd9b: FF             RST   $38
-
-bd9c: FF             RST   $38
-
-bd9d: FF             RST   $38
-
-bd9e: FF             RST   $38
-
-bd9f: FF             RST   $38
-
-bda0: FF             RST   $38
-
-bda1: FF             RST   $38
-
-bda2: FF             RST   $38
-
-bda3: FF             RST   $38
-
-bda4: FF             RST   $38
-
-bda5: FF             RST   $38
-
-bda6: FF             RST   $38
-
-bda7: FF             RST   $38
-
-bda8: FF             RST   $38
-
-bda9: FF             RST   $38
-
-bdaa: FF             RST   $38
-
-bdab: FF             RST   $38
-
-bdac: FF             RST   $38
-
-bdad: FF             RST   $38
-
-bdae: FF             RST   $38
-
-bdaf: FF             RST   $38
-
-bdb0: FF             RST   $38
-
-bdb1: FF             RST   $38
-
-bdb2: FF             RST   $38
-
-bdb3: FF             RST   $38
-
-bdb4: FF             RST   $38
-
-bdb5: FF             RST   $38
-
-bdb6: FF             RST   $38
+_______________________________________________________ODNETNIN4891THGIRYPOCEOGWCOO_S:
+bd64: OOCWGOE.........................
+bd84: ................................
+bda4: ...................
 
 bdb7: E3             EX    (SP),HL
 bdb8: 6E             LD    L,(HL)
@@ -41454,21 +41024,8 @@ bf61: F4 13 20       CALL  P,$2013
 bf64: 2C             INC   L
 bf65: 8A             ADC   A,D
 bf66: DD 11          Illegal Opcode
-bf68: 0C             INC   C
-bf69: 1D             DEC   E
-bf6a: 12             LD    (DE),A
-bf6b: 20 1C          JR    NZ,$BF89
+bf68: CTIWS.NOITPO00
 
-bf6d: FF             RST   $38
-
-bf6e: 17             RLA   
-bf6f: 18 12          JR    $BF83
-
-bf71: 1D             DEC   E
-bf72: 19             ADD   HL,DE
-bf73: 18 00          JR    $BF75
-
-bf75: 00             NOP   
 bf76: 83             ADD   A,E
 bf77: D1             POP   DE
 bf78: 0D             DEC   C
@@ -41480,13 +41037,8 @@ bf7d: D1             POP   DE
 bf7e: 0B             DEC   BC
 bf7f: 83             ADD   A,E
 bf80: D1             POP   DE
-bf81: 0A             LD    A,(BC)
-bf82: 00             NOP   
-bf83: 20 30          JR    NZ,$BFB5
-
-bf85: FF             RST   $38
-
-bf86: FF             RST   $38
+__0W0A_S:
+bf81: A0W...
 
 bf87: F3             DI    
 bf88: FF             RST   $38
@@ -41494,12 +41046,7 @@ bf88: FF             RST   $38
 bf89: 20 2C          JR    NZ,$BFB7
 
 bf8b: D4 17 12       CALL  NC,$1217
-bf8e: 18 0C          JR    $BF9C
-
-bf90: 00             NOP   
-bf91: 00             NOP   
-bf92: 00             NOP   
-bf93: 20 30          JR    NZ,$BFC5
+bf8e: OC000W.
 
 bf95: 8F             ADC   A,A
 bf96: F3             DI    
@@ -41509,17 +41056,7 @@ bf98: 20 2C          JR    NZ,$BFC6
 
 bf9a: DA 22 1D       JP    C,$1D22
 
-bf9d: 15             DEC   D
-bf9e: 1E 0C          LD    E,#$0C
-bfa0: 12             LD    (DE),A
-bfa1: 0F             RRCA  
-bfa2: 0F             RRCA  
-bfa3: 12             LD    (DE),A
-bfa4: 0D             DEC   C
-bfa5: 00             NOP   
-bfa6: 00             NOP   
-bfa7: 00             NOP   
-bfa8: 20 30          JR    NZ,$BFDA
+bf9d: LUCIFFID000W.
 
 bfaa: 8F             ADC   A,A
 bfab: F3             DI    
@@ -41528,12 +41065,7 @@ bfac: FF             RST   $38
 bfad: 20 2C          JR    NZ,$BFDB
 
 bfaf: D4 0E 16       CALL  NC,$160E
-bfb2: 12             LD    (DE),A
-bfb3: 1D             DEC   E
-bfb4: 00             NOP   
-bfb5: 00             NOP   
-bfb6: 00             NOP   
-bfb7: 20 30          JR    NZ,$BFE9
+bfb2: IT000W.
 
 bfb9: 8D             ADC   A,L
 bfba: F5             PUSH  AF
@@ -41542,14 +41074,8 @@ bfbb: FF             RST   $38
 bfbc: 20 2C          JR    NZ,$BFEA
 
 bfbe: D5             PUSH  DE
-bfbf: 0C             INC   C
-bfc0: 12             LD    (DE),A
-bfc1: 1C             INC   E
-bfc2: 1E 16          LD    E,#$16
-bfc4: 00             NOP   
-bfc5: 00             NOP   
-bfc6: 00             NOP   
-bfc7: 20 30          JR    NZ,$BFF9
+0W000MUSIC_S:
+bfbf: CISUM000W.
 
 bfc9: 8D             ADC   A,L
 bfca: F5             PUSH  AF
@@ -41559,17 +41085,8 @@ bfcc: 20 2C          JR    NZ,$BFFA
 
 bfce: D8             RET   C
 
-bfcf: 1D             DEC   E
-bfd0: 17             RLA   
-bfd1: 1E 18          LD    E,#$18
-bfd3: 0C             INC   C
-bfd4: 1C             INC   E
-bfd5: 12             LD    (DE),A
-bfd6: 0D             DEC   C
-bfd7: 00             NOP   
-bfd8: 00             NOP   
-bfd9: 00             NOP   
-bfda: 20 30          JR    NZ,$C00C
+0W000DISCOUNT_S:
+bfcf: TNUOCSID000W.
 
 bfdc: 8D             ADC   A,L
 bfdd: F5             PUSH  AF

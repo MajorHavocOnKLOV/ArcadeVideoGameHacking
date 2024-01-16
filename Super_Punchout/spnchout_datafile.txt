@@ -157,20 +157,142 @@ label 4444 SUPER_MACHO_MAN_S
 ninty 4444-4456
 label 445A 005._S
 ninty 445A-445D
+label 44C4 _NO._NAME____SCORE__S
+ninty 44C4-44D4
 
+label 454A _NO.NAME__SCORE__S
+ninty 454A-4558
+label 455B 00NO.NAME__SCORE_S
+ninty 455B-456A
+label 45BB 4W000NEW_FEATURE:_S
+ninty 45BB-45CB
+label 45CE NOB_OF_CONTROL,_S
+ninty 45CE-45DC
+label 45DE 00PULL_THE_K_S
+ninty 45DE-45E9
+label 45EC _DUCK_PUNCHES_!_S
+ninty 45EC-45FA
+label 45FC 0AND_S
+ninty 45FC-45FF
+label 4607 ASTER_DUCKING_!_S
+ninty 4607-4615
+label 4617 0W000LET_S_M_S
+ninty 4617-4622
+label 4628 'W00000GOOD_DUCK_S
+ninty 4628-4637
+label 463B 00NEW_S
+ninty 463B-463F
+label 4643 00CONTROL_S
+ninty 4643-464B
+label 466B LEAR_BACKUP_RAM_S
+ninty 466B-4679
+label 4684 -W000PRESS_K.O._S
+ninty 4684-4692
+label 4696 'W002.TEST_S
+ninty 4696-469F
+label 46A2 N0WAIT_S
+ninty 46A2-46A7
+label 46BA NE_MORE_COIN_!!_S
+ninty 46BA-46C8
+label 46CA 0DEPOSIT_O_S
+ninty 46CA-46D3
+label 46DB PRESS_START_FOR_S
+ninty 46DB-46E9
 
+; just to make label at 46f0 work?
+data 46ee-46ef
+
+label 46F7 00NEW_PLAY_S
+ninty 46F7-4700
+label 4720 F_0REMATCH_S
+ninty 4720-4729
+label 473B REMATCH_!!_S
+ninty 473B-4744
+label 4751 T_COINS_IN_TIME_S
+ninty 4751-475F
+label 4761 DEPOSI_S
+ninty 4761-4766
+label 4775 0BEAR_HUGGER_S
+ninty 4775-4780
+label 4785 0DRAGON_CHAN_S
+ninty 4785-4790
+label 4795 ODKA_DRUNKENSKI_S
+ninty 4795-47A3
+label 47AB 0GREAT_TIGER_S
+ninty 47AB-47B6
+label 47BB 0SUPER_MACHO_MAN_S
+ninty 47BB-47CA
+label 47CF 0CANADA_S
+ninty 47CF-47D5
+label 47DA 0HONG_KONG_S
+ninty 47DA-47E3
+label 47E8 0U.S.S.R._S
+ninty 47E8-47F0
+label 47F5 0INDIA_S
+ninty 47F5-47FA
+label 47FF 0U.S.A._S
+ninty 47FF-4805
+label 480C ON_OF_THE_WORLD_S
+ninty 480C-481A
+label 481C N0CHAMPI_S
+ninty 481C-4823
+label 482A 00000NEXT_FIGHTER_!_S
+ninty 482A-483C
+label 484E 00000_S
+ninty 484E-4852
+label 4858 0FROM_:_S
+ninty 4858-485E
+label 48A2 HALL_OF_FAME_S
+ninty 48A2-48AD
+label 48D1 NO.NAME__SCORE_S
+ninty 48D1-48DE
+label 4919 BEST_SCORE_S
+ninty 4919-4922
+label 4930 1K.O.TIME_S
+ninty 4930-4938
+label 499D K.O._S
+ninty 499D-49A0
+label 49AB BONUS_S
+ninty 49AB-49AF
+label 49CB PLAY_S
+ninty 49CB-49CE
+label 49D9 SCORE_S
+ninty 49D9-49DD
+label 4A8F STATUS_S
+ninty 4A8F-4A94
+label 4AFB 0NEW_S
+ninty 4AFB-4AFE
+label 4B00 0RECORD_S
+ninty 4B00-4B06
+label 4B0E HIT__AVERAGE_S
+ninty 4B0E-4B19
+
+label BD64 _______________________________________________________ODNETNIN4891THGIRYPOCEOGWCOO_S
+ninty BD64-BDB6
+
+label BF67 00OPTION_SWITCH_S
+ninty BF67-BF75
+label BF81 __0W0A_S
+ninty BF81-BF86
+label BF8C 0W000COIN_S
+ninty BF8C-BF94
+label BF9B 0W000DIFFICULTY_S
+ninty BF9B-BFA9
+label BFB0 0W000TIME_S
+ninty BFB0-BFB8
+label BFBF 0W000MUSIC_S
+ninty BFBF-BFC8
+label BFCF 0W000DISCOUNT_S
+ninty BFCF-BFDB
 
 commentline 4598 ?
 commentline 46B3 ?
 commentline 46D4 ?
 
-; just to make label at 46f0 work?
-data 46ee-46ef
-
 commentline 46F0 ?
 commentline 471A data for outputting rematch with arrow above right punch button
-commentline 4720 HCTAMER
-ninty 4720-4726
+;commentline 4720 HCTAMER
+;ninty 4720-4726
 
 commentline 472A ?
 commentline 4823 ?
