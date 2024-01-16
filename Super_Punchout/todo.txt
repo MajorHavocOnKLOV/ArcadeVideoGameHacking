@@ -1,0 +1,9 @@
+2023-01-15
+Find strings in ROMs
+- finish processing spnchout_strings_ff2space_with_labels.txt
+
+Find high scores in RAM
+- dump mame ram to a file
+- convert2ascii
+- strings
+- search for fjb or bjf
