@@ -1,7 +1,13 @@
+2023-01-16
+Nintendo background character output routine is more complicated thatn I realized
+- They added special encodings into their text streams that I need to understand and add to the text processing
+- for example, the high nybble of bits can specify some alternate processing while the low nybble shows a count
+
 2023-01-15
 Find strings in ROMs
 - finish processing spnchout_strings_ff2space_with_labels.txt
 
+Discovered 
 Find high scores in RAM
 - dump mame ram to a file
 - convert2ascii
