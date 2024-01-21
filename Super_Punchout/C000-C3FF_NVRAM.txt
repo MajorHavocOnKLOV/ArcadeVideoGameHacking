@@ -15,7 +15,6 @@ cat spnchout.asm | grep '$C[0-3][0-9A-F][0-9A-F]' | cut -c28- | grep -v '^SP' | 
       2 C252
       2 C33A
       1 C008
-      1 C00C
       1 C00D
       1 C018
       1 C0A1

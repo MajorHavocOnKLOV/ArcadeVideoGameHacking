@@ -137,11 +137,11 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       2 NZ,$5220
       2 NZ,$522C
       2 P,$0084
-      2 P,$4617
       2 P,$461A
       2 P,$5002
       2 P,$8311
       2 P,$F1F5
+      2 P,0W000LET_S_M_S
       2 PE,$4123
       2 PO,$7080
       2 PO,$90C0
@@ -234,7 +234,6 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       1 C,$0022
       1 C,$0065
       1 C,$07A0
-      1 C,$0B1E
       1 C,$160E
       1 C,$2087
       1 C,$411A

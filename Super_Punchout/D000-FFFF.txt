@@ -166,7 +166,6 @@ cat spnchout.asm | grep '$[DEF][0-9A-F][0-9A-F][0-9A-F]' | cut -c28- | sed 's/.*
       2 FDC2
       2 FE3E
       2 FF01
-      2 FF0C
       2 FF1D
       2 FF66
       2 FF67
@@ -385,7 +384,6 @@ cat spnchout.asm | grep '$[DEF][0-9A-F][0-9A-F][0-9A-F]' | cut -c28- | sed 's/.*
       1 F14C
       1 F164
       1 F183
-      1 F191
       1 F2E5
       1 F2E7
       1 F302
@@ -462,7 +460,6 @@ cat spnchout.asm | grep '$[DEF][0-9A-F][0-9A-F][0-9A-F]' | cut -c28- | sed 's/.*
       1 FE2C
       1 FE41
       1 FE9B
-      1 FF0B
       1 FF10
       1 FF14
       1 FF36
