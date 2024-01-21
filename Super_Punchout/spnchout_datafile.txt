@@ -303,6 +303,8 @@ commentline BDBF All RAMs (C000-FFFF) and all program ROMS (0000-BFFF) but none 
 
 label c000 NVRAM
 label d000 RAM
+label D004 OPPONENT_NUMBER
+label D005 FIGHT_NUMBER?
 label d022 ENERGY
 label d024 CPU_ENERGY
 label d02e KNOCKDOWNS
@@ -316,6 +318,10 @@ commentline d7bf or countdown value to add coins for rematch
 label d7bf game_status
 label d7cb credits
 label d7f2 TIME
+label D7FB FIGHT_NUMBER
+comment D7FB zero based
+label D7FC FIGHT_NUMBER_FOR_DISPLAY
+comment D7FB one based
 label d800 VRAM_INFO
 
 commentline d880 top screen background RAM, from top left corner to bottom right corner
