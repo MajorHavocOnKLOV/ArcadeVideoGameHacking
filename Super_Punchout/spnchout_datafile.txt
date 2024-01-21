@@ -86,6 +86,9 @@ label 057A DRAW_RING_LEFT_CORNER
 comment 05BD jump to start of attract mode loop ...
 
 comment 0776 call function to draw bandage on forehead of rematch fighter
+comment 08F1 zero based
+comment 08F7 one based
+
 label 0b3c NMI_STARTS_HERE?
 comment 0b93 return from NMI
 comment 0C37 Clear D500-D6FF
@@ -363,9 +366,7 @@ label D7BF game_status
 label D7CB credits
 label D7F2 TIME
 label D7FB FIGHT_NUMBER
-comment D7FB zero based
 label D7FC FIGHT_NUMBER_FOR_DISPLAY
-comment D7FB one based
 label D800 VRAM_INFO
 
 commentline d880 top screen background RAM, from top left corner to bottom right corner
