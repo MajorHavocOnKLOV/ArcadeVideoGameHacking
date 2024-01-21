@@ -46,6 +46,11 @@ org 0000
 commentline 0000 Dissasembly of the Super Punch-Out!! (Rev B) ROMs used by MAME (labeled as spnchout)
 comment 0000 Z80 starts executing code at 0x0000
 
+commentline 0008 draw with 1 line between operations
+comment 0008 $0040 = 1 line (32 flip/colors plus 32 characters)
+commentline 0018 draw with 2 lines between operations
+comment 0018 $0080 = 2 lines (64 flip/colors plus 64 characters)
+
 commentline 0030 Check if copyright dipswitch is on (DSW1, switch 8) which displays Nintendo of America (instead of Nintendo)
 
 ; used at 0281
@@ -72,10 +77,19 @@ comment 0388 If not free play, process coinage
 commentline 03BD End Process coinage dip switches?
 comment 03F6 Clear D510-D6AF
 
+label 0445 RST10_CLEAR_BACKGROUNDS_TOP_AND_BOTTOM
+label 0446 CLEAR_BACKGROUNDS_TOP_AND_BOTTOM
+label 04A5 START_ATTRACT_LOOP
+comment 04CD draw (C)1984 Nintendo at bottom of bottom screen
+
+label 057A DRAW_RING_LEFT_CORNER
+comment 05BD jump to start of attract mode loop ...
+
 comment 0776 call function to draw bandage on forehead of rematch fighter
 label 0b3c NMI_STARTS_HERE?
 comment 0b93 return from NMI
 comment 0C37 Clear D500-D6FF
+label 0CA1 SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM
 
 commentline 108D A contains 2 bcd digits. Display A as 2 digits at DE with blank padding
 label 108D DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
@@ -96,6 +110,7 @@ comment 16A4 ?
 comment 16A6 ?
 comment 16A8 ?
 
+label 2D2E WAIT___
 label 2D52 COPY_A_TO_DE+_FOR_C_COUNT
 label 2D58 COPY_A_TO_DE+_FOR_BC_COUNT
 
@@ -106,8 +121,37 @@ label 2d75 SPLIT_A_NYBBLES_INTO_A_AND_A'/C
 comment 2dcb Clear E000-E7FF (VRAM_CPU)
 comment 2dfa Clear E800-EFFF (VRAM_PLAYER)
 
+commentline 2e0e Show high scores, upper and lower screens
+comment 2E0E draw red background top
+comment 2E13 draw Hall of Fame background top
+comment 2E18 draw CPU and user health bars (bottom of top screen)
+comment 2E1D draw greenish/tan background bottom
+comment 2E22 ?
+LABEL 2E63 DISPLAY_BEST_KO_TIMES_AND_HIT_AVG
+label 2EAE GET_AND_DRAW_TOP_10_SCORES?
+
+label 2EE5 DRAW_UPPER_SCREEN_FOR_A_FIGHT
+
+comment 2F80 Write 0'00"00 graphics
+label 2FB6 DRAW_KO_BONUS
 commentline 3055 print from 46f0 & 46d4 (what?)
 commentline 3060 print remtach?
+
+comment 30ED set flags (Z and M/sign)
+comment 30F1 if msb (sign) set, jump
+comment 30F6 if any of 2 msbs set, jump
+comment 30FC high nybble 0x0/0b000: put fighter drawing on screen through convuluted method? writes instruction to RAM and then calls
+comment 3121 high nybble 0x?/0b001?: load color from IX+
+comment 3128 high nybble 0x3/0b0011: reposition IX (source) from the next 2 bytes
+comment 3138 high nybble 0x5/0b0101: 
+comment 3166 load B with number of iterations (from low nybble)
+comment 316F high nybble 0x8/0b1000: subtract low nybble from HL twice w/o carry
+comment 317C high nybble 0x9/0x?/0b1?01: color from IX+1 to HL-, load character from IX+. Write to HL-, B times
+comment 3193 high nybble 0xD/0b1101:  load color from C to HL-, load character from IX+ to HL-, B times
+comment 31A5 high nybble 0xF/0b1111: load IX+ into E, output E to HL-, B times
+comment 31B3 high nybble 0xE/0b1110: output space (0xFF) to HL-, B times
+
+data 36AE-396E
 
 label 3D49 SELECT_INITIALS_BY_CONTROL_S
 ninty 3D49-3D63
@@ -315,14 +359,14 @@ label d048 KO_BUTTON_LEVEL
 
 commentline d7bf 01 = credit, 02 = start game, 03 = game over, 04 = game over 2?, 05 = game over 3?, 06 = rematch started,
 commentline d7bf or countdown value to add coins for rematch
-label d7bf game_status
-label d7cb credits
-label d7f2 TIME
+label D7BF game_status
+label D7CB credits
+label D7F2 TIME
 label D7FB FIGHT_NUMBER
 comment D7FB zero based
 label D7FC FIGHT_NUMBER_FOR_DISPLAY
 comment D7FB one based
-label d800 VRAM_INFO
+label D800 VRAM_INFO
 
 commentline d880 top screen background RAM, from top left corner to bottom right corner
 commentline d880 ~D880-DF7F, 32x32, 00-09: digits, 0A-23: letters, 24-?: special chars
