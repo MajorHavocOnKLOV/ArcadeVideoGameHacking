@@ -2,17 +2,17 @@ org 0, numlab 140, numio 13, numdata 116, numcomm 48, numcommline 36
 
 IO_0_BUTTONS EQU $00
 I0_1_JOYSTICK? EQU $01
-DSW1_TO_2A03 EQU $02
-DSW2_TO_2A03_BIT4_VLM5030_BUSY EQU $03
-TO_VLM5030 EQU $04
-NMI_ENABLE_AND_WATCHDOG_RESET EQU $08
-WATCHDOG_RESET EQU $09
-LATCHED_INTO_Z80_BUS_REQ EQU $0a
-2A03_RESET EQU $0b
-VLM5030_RESET EQU $0c
-VLM5030_START EQU $0d
-VLM5030_VCU EQU $0e
-NVRAM_ENABLE? EQU $0f
+I0_DSW1_TO_2A03 EQU $02
+I0_DSW2_TO_2A03_BIT4_VLM5030_BUSY EQU $03
+I0_TO_VLM5030 EQU $04
+I0_NMI_ENABLE_AND_WATCHDOG_RESET EQU $08
+I0_WATCHDOG_RESET EQU $09
+I0_LATCHED_INTO_Z80_BUS_REQ EQU $0a
+I0_2A03_RESET EQU $0b
+I0_VLM5030_RESET EQU $0c
+I0_VLM5030_START EQU $0d
+I0_VLM5030_VCU EQU $0e
+I0_NVRAM_ENABLE? EQU $0f
 
 RST10_CLEAR_BACKGROUNDS_TOP_AND_BOTTOM EQU $0445
 CLEAR_BACKGROUNDS_TOP_AND_BOTTOM EQU $0446
@@ -221,7 +221,7 @@ ORG $0000
 
 
 *** Check if copyright dipswitch is on (DSW1, switch 8) which displays Nintendo of America (instead of Nintendo)
-0030: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY)
+0030: DB 03          IN    A,(I0_DSW2_TO_2A03_BIT4_VLM5030_BUSY)
 0032: E6 80          AND   A,#$80
 0034: C9             RET   
 
@@ -258,8 +258,8 @@ ORG $0000
 
 0066: F5             PUSH  AF
 0067: AF             XOR   A,A
-0068: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
-006a: D3 0A          OUT   (LATCHED_INTO_Z80_BUS_REQ),A
+0068: D3 08          OUT   (I0_NMI_ENABLE_AND_WATCHDOG_RESET),A
+006a: D3 0A          OUT   (I0_LATCHED_INTO_Z80_BUS_REQ),A
 006c: 08             EX    AF,AF'
 006d: F5             PUSH  AF
 006e: E5             PUSH  HL
@@ -682,7 +682,7 @@ ORG $0000
 02a1: 31 00 00       LD    SP,$0000
 02a4: F7             RST   $30
 
-02a5: DB 02          IN    A,(DSW1_TO_2A03)
+02a5: DB 02          IN    A,(I0_DSW1_TO_2A03)
 02a7: E6 80          AND   A,#$80
 02a9: C2 BF BD       JP    NZ,$BDBF       ;If service dipswitch is on (DSW2, switch 8), go to service routine
 
@@ -690,8 +690,8 @@ ORG $0000
 02ae: 32 67 FF       LD    ($FF67),A
 02b1: 3E 01          LD    A,#$01
 02b3: 32 C2 D7       LD    ($D7C2),A
-02b6: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
-02b8: D3 0B          OUT   (2A03_RESET),A
+02b6: D3 08          OUT   (I0_NMI_ENABLE_AND_WATCHDOG_RESET),A
+02b8: D3 0B          OUT   (I0_2A03_RESET),A
 02ba: CD 42 2D       CALL  $2D42
 02bd: DB 01          IN    A,(I0_1_JOYSTICK?)
 02bf: E6 40          AND   A,#$40
@@ -701,17 +701,17 @@ ORG $0000
 02c6: 01 06 A8       LD    BC,$A806
 
 *** OUT through this loop A8 times to 02D7
-02c9: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
+02c9: D3 08          OUT   (I0_NMI_ENABLE_AND_WATCHDOG_RESET),A
 02cb: E5             PUSH  HL
 02cc: E5             PUSH  HL
 02cd: ED 41          OUT   (C),B
-02cf: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
+02cf: D3 08          OUT   (I0_NMI_ENABLE_AND_WATCHDOG_RESET),A
 02d1: E1             POP   HL
 02d2: E1             POP   HL
 02d3: 32 C2 D7       LD    ($D7C2),A
 02d6: 10 F1          DJNZ  $02C9
 
-02d8: D3 0B          OUT   (2A03_RESET),A
+02d8: D3 0B          OUT   (I0_2A03_RESET),A
 02da: D3 E7          OUT   ($E7),A
 02dc: 0E D7          LD    C,#$D7
 02de: ED 79          OUT   (C),A
@@ -759,7 +759,7 @@ ORG $0000
 0329: 3E C9          LD    A,#$C9
 032b: 32 67 FF       LD    ($FF67),A
 032e: 32 40 FF       LD    ($FF40),A
-0331: DB 02          IN    A,(DSW1_TO_2A03)
+0331: DB 02          IN    A,(I0_DSW1_TO_2A03)
 0333: 4F             LD    C,A
 0334: 06 35          LD    B,#$35
 0336: AF             XOR   A,A
@@ -814,7 +814,7 @@ ORG $0000
 *** Process coinage dip switches
 037b: 21 C3 D7       LD    HL,$D7C3
 037e: ED 69          OUT   (C),L
-0380: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY);Read DSW1
+0380: DB 03          IN    A,(I0_DSW2_TO_2A03_BIT4_VLM5030_BUSY);Read DSW1
 0382: CB F9          SET   7,C
 0384: E6 0F          AND   A,#$0F         ;Mask off coinage
 0386: FE 0F          CP    A,#$0F
@@ -825,7 +825,7 @@ ORG $0000
 
 038d: 87             ADD   A,A
 038e: 47             LD    B,A
-038f: DB 02          IN    A,(DSW1_TO_2A03)
+038f: DB 02          IN    A,(I0_DSW1_TO_2A03)
 0391: E6 40          AND   A,#$40
 0393: 0F             RRCA  
 0394: 80             ADD   A,B
@@ -904,11 +904,11 @@ ORG $0000
 0411: F1             POP   AF
 0412: 32 A0 D7       LD    ($D7A0),A
 0415: 3E 00          LD    A,#$00
-0417: D3 09          OUT   (WATCHDOG_RESET),A
+0417: D3 09          OUT   (I0_WATCHDOG_RESET),A
 0419: F1             POP   AF
 041a: 32 DF D7       LD    ($D7DF),A
 041d: AF             XOR   A,A
-041e: D3 0A          OUT   (LATCHED_INTO_Z80_BUS_REQ),A
+041e: D3 0A          OUT   (I0_LATCHED_INTO_Z80_BUS_REQ),A
 0420: C3 A5 04       JP    START_ATTRACT_LOOP
 
 0423: 11 C0 D5       LD    DE,$D5C0
@@ -948,7 +948,7 @@ CLEAR_BACKGROUNDS_TOP_AND_BOTTOM:
 0452: 21 00 FF       LD    HL,$FF00
 0455: 22 CC D7       LD    ($D7CC),HL
 0458: 3E 01          LD    A,#$01
-045a: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
+045a: D3 08          OUT   (I0_NMI_ENABLE_AND_WATCHDOG_RESET),A
 045c: CD E4 10       CALL  $10E4
 045f: AF             XOR   A,A
 0460: 11 00 D0       LD    DE,RAM
@@ -988,7 +988,7 @@ START_ATTRACT_LOOP:
 04a8: 22 CC D7       LD    ($D7CC),HL
 04ab: 31 00 00       LD    SP,$0000
 04ae: 3E 01          LD    A,#$01
-04b0: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
+04b0: D3 08          OUT   (I0_NMI_ENABLE_AND_WATCHDOG_RESET),A
 04b2: CD E4 10       CALL  $10E4
 04b5: AF             XOR   A,A
 04b6: 32 B6 D7       LD    ($D7B6),A
@@ -1209,7 +1209,7 @@ DRAW_RING_LEFT_CORNER:
 0652: 5F             LD    E,A
 0653: 06 C0          LD    B,#$C0
 0655: CD 1F 16       CALL  $161F
-0658: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY)
+0658: DB 03          IN    A,(I0_DSW2_TO_2A03_BIT4_VLM5030_BUSY)
 065a: E6 40          AND   A,#$40
 065c: C2 67 06       JP    NZ,$0667
 
@@ -1334,7 +1334,7 @@ DRAW_RING_LEFT_CORNER:
 070d: 22 CC D7       LD    ($D7CC),HL
 0710: 31 00 00       LD    SP,$0000
 0713: 3E 01          LD    A,#$01
-0715: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
+0715: D3 08          OUT   (I0_NMI_ENABLE_AND_WATCHDOG_RESET),A
 0717: CD E4 10       CALL  $10E4
 071a: 21 00 00       LD    HL,$0000
 071d: 22 EA D7       LD    ($D7EA),HL
@@ -1925,7 +1925,7 @@ NMI_STARTS_HERE?:
 0b70: D2 AA 2D       JP    NC,$2DAA
 
 0b73: 3E 01          LD    A,#$01
-0b75: D3 0A          OUT   (LATCHED_INTO_Z80_BUS_REQ),A
+0b75: D3 0A          OUT   (I0_LATCHED_INTO_Z80_BUS_REQ),A
 0b77: CD 7A 15       CALL  $157A
 0b7a: CD 53 15       CALL  $1553
 0b7d: 3E 0B          LD    A,#$0B
@@ -1942,12 +1942,12 @@ NMI_STARTS_HERE?:
 0b8c: F1             POP   AF
 0b8d: 08             EX    AF,AF'
 0b8e: 3E 01          LD    A,#$01
-0b90: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
+0b90: D3 08          OUT   (I0_NMI_ENABLE_AND_WATCHDOG_RESET),A
 0b92: F1             POP   AF
 0b93: ED 45          RETN                 ;return from NMI
 
 0b95: 3E 01          LD    A,#$01
-0b97: D3 0A          OUT   (LATCHED_INTO_Z80_BUS_REQ),A
+0b97: D3 0A          OUT   (I0_LATCHED_INTO_Z80_BUS_REQ),A
 0b99: 18 E2          JR    $0B7D
 
 0b9b: 3C             INC   A
@@ -2004,7 +2004,7 @@ NMI_STARTS_HERE?:
 0bf8: CD E2 1F       CALL  $1FE2
 0bfb: CD 4C 3A       CALL  $3A4C
 0bfe: 3E 01          LD    A,#$01
-0c00: D3 0A          OUT   (LATCHED_INTO_Z80_BUS_REQ),A
+0c00: D3 0A          OUT   (I0_LATCHED_INTO_Z80_BUS_REQ),A
 0c02: C3 7A 0B       JP    $0B7A
 
 0c05: 1A             LD    A,(DE)
@@ -2068,7 +2068,7 @@ NMI_STARTS_HERE?:
 0c6c: CD 3E 2D       CALL  $2D3E
 0c6f: AF             XOR   A,A
 0c70: 32 C2 D7       LD    ($D7C2),A
-0c73: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
+0c73: D3 08          OUT   (I0_NMI_ENABLE_AND_WATCHDOG_RESET),A
 0c75: C3 BF BD       JP    $BDBF
 
 0c78: 21 01 F0       LD    HL,$F001
@@ -2217,10 +2217,10 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 0d64: CB A9          RES   5,C
 0d66: ED 79          OUT   (C),A
 0d68: 3E 01          LD    A,#$01
-0d6a: D3 0F          OUT   (NVRAM_ENABLE?),A
+0d6a: D3 0F          OUT   (I0_NVRAM_ENABLE?),A
 0d6c: 4E             LD    C,(HL)
 0d6d: AF             XOR   A,A
-0d6e: D3 0F          OUT   (NVRAM_ENABLE?),A
+0d6e: D3 0F          OUT   (I0_NVRAM_ENABLE?),A
 0d70: 79             LD    A,C
 0d71: E6 0F          AND   A,#$0F
 0d73: FE 0A          CP    A,#$0A
@@ -2233,11 +2233,11 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 0d7e: 06 28          LD    B,#$28
 0d80: 0E 06          LD    C,#$06
 0d82: 3E 01          LD    A,#$01
-0d84: D3 0F          OUT   (NVRAM_ENABLE?),A
+0d84: D3 0F          OUT   (I0_NVRAM_ENABLE?),A
 0d86: 5E             LD    E,(HL)
 0d87: 23             INC   HL
 0d88: AF             XOR   A,A
-0d89: D3 0F          OUT   (NVRAM_ENABLE?),A
+0d89: D3 0F          OUT   (I0_NVRAM_ENABLE?),A
 0d8b: 7B             LD    A,E
 0d8c: E6 0F          AND   A,#$0F
 0d8e: FE 0A          CP    A,#$0A
@@ -2277,13 +2277,13 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 
 0dc7: D9             EXX   
 0dc8: 3E 01          LD    A,#$01
-0dca: D3 0F          OUT   (NVRAM_ENABLE?),A
+0dca: D3 0F          OUT   (I0_NVRAM_ENABLE?),A
 0dcc: 4E             LD    C,(HL)
 0dcd: 23             INC   HL
 0dce: 46             LD    B,(HL)
 0dcf: 23             INC   HL
 0dd0: AF             XOR   A,A
-0dd1: D3 0F          OUT   (NVRAM_ENABLE?),A
+0dd1: D3 0F          OUT   (I0_NVRAM_ENABLE?),A
 0dd3: 78             LD    A,B
 0dd4: 07             RLCA  
 0dd5: 07             RLCA  
@@ -2309,11 +2309,11 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 0df2: CD F8 0D       CALL  $0DF8
 0df5: 21 01 C2       LD    HL,$C201
 0df8: 3E 01          LD    A,#$01
-0dfa: D3 0F          OUT   (NVRAM_ENABLE?),A
+0dfa: D3 0F          OUT   (I0_NVRAM_ENABLE?),A
 0dfc: 3E 0F          LD    A,#$0F
 0dfe: 77             LD    (HL),A
 0dff: AF             XOR   A,A
-0e00: D3 0F          OUT   (NVRAM_ENABLE?),A
+0e00: D3 0F          OUT   (I0_NVRAM_ENABLE?),A
 0e02: E5             PUSH  HL
 0e03: 23             INC   HL
 0e04: D9             EXX   
@@ -2330,10 +2330,10 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 0e1f: CD 2C 0E       CALL  $0E2C
 0e22: E1             POP   HL
 0e23: 3E 01          LD    A,#$01
-0e25: D3 0F          OUT   (NVRAM_ENABLE?),A
+0e25: D3 0F          OUT   (I0_NVRAM_ENABLE?),A
 0e27: AF             XOR   A,A
 0e28: 77             LD    (HL),A
-0e29: D3 0F          OUT   (NVRAM_ENABLE?),A
+0e29: D3 0F          OUT   (I0_NVRAM_ENABLE?),A
 0e2b: C9             RET   
 
 0e2c: 23             INC   HL
@@ -2351,13 +2351,13 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 0e3a: CD 75 2D       CALL  SPLIT_A_NYBBLES_INTO_A_AND_A'/C
 0e3d: 4F             LD    C,A
 0e3e: 3E 01          LD    A,#$01
-0e40: D3 0F          OUT   (NVRAM_ENABLE?),A
+0e40: D3 0F          OUT   (I0_NVRAM_ENABLE?),A
 0e42: 08             EX    AF,AF'
 0e43: 77             LD    (HL),A
 0e44: 23             INC   HL
 0e45: 71             LD    (HL),C
 0e46: AF             XOR   A,A
-0e47: D3 0F          OUT   (NVRAM_ENABLE?),A
+0e47: D3 0F          OUT   (I0_NVRAM_ENABLE?),A
 0e49: 23             INC   HL
 0e4a: D9             EXX   
 0e4b: 10 EA          DJNZ  $0E37
@@ -3648,7 +3648,7 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 1592: 3C             INC   A
 1593: 20 0F          JR    NZ,$15A4
 
-1595: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY)
+1595: DB 03          IN    A,(I0_DSW2_TO_2A03_BIT4_VLM5030_BUSY)
 1597: E6 10          AND   A,#$10
 1599: 20 F3          JR    NZ,$158E
 
@@ -3659,13 +3659,13 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 15a3: C9             RET   
 
 15a4: 3E 01          LD    A,#$01
-15a6: D3 0C          OUT   (VLM5030_RESET),A
+15a6: D3 0C          OUT   (I0_VLM5030_RESET),A
 15a8: 3E 00          LD    A,#$00
-15aa: D3 04          OUT   (TO_VLM5030),A
+15aa: D3 04          OUT   (I0_TO_VLM5030),A
 15ac: EB             EX    DE,HL
 15ad: 0E 05          LD    C,#$05
 15af: CD 52 2D       CALL  COPY_A_TO_DE+_FOR_C_COUNT
-15b2: D3 0C          OUT   (VLM5030_RESET),A
+15b2: D3 0C          OUT   (I0_VLM5030_RESET),A
 15b4: C9             RET   
 
 15b5: 3A CC D7       LD    A,($D7CC)
@@ -3681,7 +3681,7 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 15c0: D6 02          SUB   A,#$02
 15c2: 32 B0 D7       LD    ($D7B0),A
 15c5: AF             XOR   A,A
-15c6: D3 0D          OUT   (VLM5030_START),A
+15c6: D3 0D          OUT   (I0_VLM5030_START),A
 15c8: C9             RET   
 
 15c9: 7E             LD    A,(HL)
@@ -3691,20 +3691,20 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 15cc: 36 00          LD    (HL),#$00
 15ce: 08             EX    AF,AF'
 15cf: 3E 01          LD    A,#$01
-15d1: D3 0C          OUT   (VLM5030_RESET),A
+15d1: D3 0C          OUT   (I0_VLM5030_RESET),A
 15d3: AF             XOR   A,A
 15d4: 08             EX    AF,AF'
-15d5: D3 04          OUT   (TO_VLM5030),A
+15d5: D3 04          OUT   (I0_TO_VLM5030),A
 15d7: 79             LD    A,C
 15d8: 32 B0 D7       LD    ($D7B0),A
 15db: 08             EX    AF,AF'
-15dc: D3 0C          OUT   (VLM5030_RESET),A
+15dc: D3 0C          OUT   (I0_VLM5030_RESET),A
 15de: 2C             INC   L
-15df: D3 0E          OUT   (VLM5030_VCU),A
+15df: D3 0E          OUT   (I0_VLM5030_VCU),A
 15e1: 7E             LD    A,(HL)
-15e2: D3 04          OUT   (TO_VLM5030),A
+15e2: D3 04          OUT   (I0_TO_VLM5030),A
 15e4: 3E 01          LD    A,#$01
-15e6: D3 0D          OUT   (VLM5030_START),A
+15e6: D3 0D          OUT   (I0_VLM5030_START),A
 15e8: 37             SCF   
 15e9: C9             RET   
 
@@ -7968,11 +7968,11 @@ SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 2dae: C9             RET   
 
 2daf: 3E 01          LD    A,#$01
-2db1: D3 0A          OUT   (LATCHED_INTO_Z80_BUS_REQ),A
+2db1: D3 0A          OUT   (I0_LATCHED_INTO_Z80_BUS_REQ),A
 2db3: C3 46 2D       JP    $2D46
 
 2db6: CD 46 2D       CALL  $2D46
-2db9: D3 0A          OUT   (LATCHED_INTO_Z80_BUS_REQ),A
+2db9: D3 0A          OUT   (I0_LATCHED_INTO_Z80_BUS_REQ),A
 2dbb: C9             RET   
 
 2dbc: DD 21 76 48    LD    IX,$4876
@@ -8366,7 +8366,7 @@ DRAW_KO_BONUS_VALUE:
 303c: C3 65 FF       JP    $FF65
 
 303f: DD 21 79 45    LD    IX,$4579
-3043: DB 03          IN    A,(DSW2_TO_2A03_BIT4_VLM5030_BUSY)
+3043: DB 03          IN    A,(I0_DSW2_TO_2A03_BIT4_VLM5030_BUSY)
 3045: 07             RLCA  
 3046: DA 18 00       JP    C,$0018
 
@@ -10793,7 +10793,7 @@ _NO.NAME__SCORE__S:
 _DUCK_PUNCHES_!_S:
 45ec: !.SEHCNUP.KCUD.
 
-45fb: D3 0D          OUT   (VLM5030_START),A
+45fb: D3 0D          OUT   (I0_VLM5030_START),A
 45fd: NA0
 
 4600: EF             RST   $28
@@ -10865,7 +10865,7 @@ ASTER_DUCKING_!_S:
 LEAR_BACKUP_RAM_S:
 466b: MAR.PUKCAB.RAEL
 
-467a: D3 0C          OUT   (VLM5030_RESET),A
+467a: D3 0C          OUT   (I0_VLM5030_RESET),A
 467c: 2B             DEC   HL
 467d: 01 00 00       LD    BC,$0000
 4680: 20 2C          JR    NZ,$46AE
@@ -13585,7 +13585,7 @@ be0c: DD 21 13 BE    LD    IX,$BE13
 be10: C3 1E BE       JP    $BE1E
 
 be13: 3E 01          LD    A,#$01
-be15: D3 0A          OUT   (LATCHED_INTO_Z80_BUS_REQ),A
+be15: D3 0A          OUT   (I0_LATCHED_INTO_Z80_BUS_REQ),A
 be17: 79             LD    A,C
 be18: A7             AND   A,A
 be19: 20 FE          JR    NZ,$BE19
@@ -13698,7 +13698,7 @@ beac: 31 00 00       LD    SP,$0000
 beaf: 3E FF          LD    A,#$FF
 beb1: 32 C2 D7       LD    ($D7C2),A
 beb4: 3E 01          LD    A,#$01
-beb6: D3 08          OUT   (NMI_ENABLE_AND_WATCHDOG_RESET),A
+beb6: D3 08          OUT   (I0_NMI_ENABLE_AND_WATCHDOG_RESET),A
 beb8: CD 36 2D       CALL  $2D36
 bebb: 21 EF BF       LD    HL,$BFEF
 bebe: DD 21 C5 BE    LD    IX,$BEC5
