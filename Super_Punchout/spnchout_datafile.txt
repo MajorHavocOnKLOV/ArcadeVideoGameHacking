@@ -85,9 +85,9 @@ comment 04CD draw (C)1984 Nintendo at bottom of bottom screen
 label 057A DRAW_RING_LEFT_CORNER
 comment 05BD jump to start of attract mode loop ...
 
-comment 0776 call function to draw bandage on forehead of rematch fighter
-comment 08F1 zero based
-comment 08F7 one based
+;comment 0776 call function to draw bandage on forehead of rematch fighter
+comment 08F1 fight number zero based
+comment 08F7 fight number one based BCD for display
 
 label 0b3c NMI_STARTS_HERE?
 comment 0b93 return from NMI
@@ -136,7 +136,8 @@ label 2EAE GET_AND_DRAW_TOP_10_SCORES?
 label 2EE5 DRAW_UPPER_SCREEN_FOR_A_FIGHT
 
 comment 2F80 Write 0'00"00 graphics
-label 2FB6 DRAW_KO_BONUS
+label 2FB0 DRAW_BANDAGE_ON_REMATCHED_FIGHTER
+label 2FB6 DRAW_KO_BONUS_VALUE
 commentline 3055 print from 46f0 & 46d4 (what?)
 commentline 3060 print remtach?
 
@@ -154,7 +155,11 @@ comment 3193 high nybble 0xD/0b1101:  load color from C to HL-, load character f
 comment 31A5 high nybble 0xF/0b1111: load IX+ into E, output E to HL-, B times
 comment 31B3 high nybble 0xE/0b1110: output space (0xFF) to HL-, B times
 
+; used Ghidra data labels to breakdown some data sections
 data 36AE-396E
+data 3AFD-3D26
+data 3D27-3D41
+data 3D42-3DA5
 
 label 3D49 SELECT_INITIALS_BY_CONTROL_S
 ninty 3D49-3D63
@@ -162,6 +167,10 @@ label 3D69 AND_PRESS_BUTTON_TO_PRINT_!_S
 ninty 3D69-3D80
 label 3D98 NAME_ENTRY_:_S
 ninty 3D98-3DA3
+
+;data 3DA6-3E35
+data 3DA6-3DBE
+
 label 3DBF INTRODUCING_S
 ninty 3DBF-3DC9
 label 3DD1 IN_THE_LEFT_CORNER_S
@@ -174,6 +183,38 @@ label 3E00 FROM_S
 ninty 3E00-3E03
 label 3E0C WORLD_VIDEO_BOXING_ASSOC._S
 ninty 3E0C-3E25
+
+data 3E36-40AD
+data 40AE-40DE
+data 40DF-40DF
+data 40E0-40E0
+data 40E1-40E1
+data 40E2-40E2
+data 40E3-42D8
+data 42D9-42EB
+data 42EC-42F3
+;data 42EC-432C
+
+; from Ghidra
+;data 432D-43D0
+;data 43D1-446A
+;data 446B-4479
+;data 447A-44F5
+;data 44F6-4530
+;data 4531-4543
+;data 4544-4597
+;data 4598-45B2
+;data 45B3-4663
+;data 4664-46A6
+;data 46A7-46B2
+;data 46B3-46D3
+;data 46D4-46EF
+;data 46F0-4719
+;data 471A-4729
+;data 472A-4805
+;data 4806-4822
+
+
 label 42F4 HIT_AVERAGE_S
 ninty 42F4-42FE
 label 4306 BEST_5_S
@@ -211,6 +252,9 @@ label 454A _NO.NAME__SCORE__S
 ninty 454A-4558
 label 455B 00NO.NAME__SCORE_S
 ninty 455B-456A
+
+commentline 4598 ?
+
 label 45BB 4W000NEW_FEATURE:_S
 ninty 45BB-45CB
 label 45CE NOB_OF_CONTROL,_S
@@ -239,20 +283,35 @@ label 4696 'W002.TEST_S
 ninty 4696-469F
 label 46A2 N0WAIT_S
 ninty 46A2-46A7
+
+commentline 46B3 ?
+
 label 46BA NE_MORE_COIN_!!_S
 ninty 46BA-46C8
 label 46CA 0DEPOSIT_O_S
 ninty 46CA-46D3
+
+commentline 46D4 ?
+
 label 46DB PRESS_START_FOR_S
 ninty 46DB-46E9
 
 ; just to make label at 46f0 work?
 data 46ee-46ef
 
+commentline 46F0 ?
+
 label 46F7 00NEW_PLAY_S
 ninty 46F7-4700
+
+commentline 471A data for outputting rematch with arrow above right punch button
+;commentline 4720 HCTAMER
+;ninty 4720-4726
 label 4720 F_0REMATCH_S
 ninty 4720-4729
+
+commentline 472A ?
+
 label 473B REMATCH_!!_S
 ninty 473B-4744
 label 4751 T_COINS_IN_TIME_S
@@ -283,16 +342,28 @@ label 480C ON_OF_THE_WORLD_S
 ninty 480C-481A
 label 481C N0CHAMPI_S
 ninty 481C-4823
+
+; commentline 4823 ?
+
+;data 4823-4875
+data 4824-4829
+
 label 482A 00000NEXT_FIGHTER_!_S
 ninty 482A-483C
 label 484E 00000_S
 ninty 484E-4852
 label 4858 0FROM_:_S
 ninty 4858-485E
+data 4876-4889
+
+;data 488A-4902
+data 488A-48A1
+
 label 48A2 HALL_OF_FAME_S
 ninty 48A2-48AD
 label 48D1 NO.NAME__SCORE_S
 ninty 48D1-48DE
+data 4903-490F
 label 4919 BEST_SCORE_S
 ninty 4919-4922
 label 4930 1K.O.TIME_S
@@ -314,8 +385,19 @@ ninty 4B00-4B06
 label 4B0E HIT__AVERAGE_S
 ninty 4B0E-4B19
 
+; below section still needs to be broken up from Ghidra
+;data 4910-BDBE
+data 4B1A-BD63
+
 label BD64 _______________________________________________________ODNETNIN4891THGIRYPOCEOGWCOO_S
 ninty BD64-BDB6
+
+commentline BDBF Service dipswitch is set!
+commentline BDBF Test RAMs 8C 8D; ROMs 8F 8H 8J 8K 8L; display dip switches
+commentline BDBF All RAMs (C000-FFFF) and all program ROMS (0000-BFFF) but none of the graphic ROMs
+
+;data BEF5-BFE6
+data BEF5-BF66
 
 label BF67 00OPTION_SWITCH_S
 ninty BF67-BF75
@@ -332,33 +414,24 @@ ninty BFBF-BFC8
 label BFCF 0W000DISCOUNT_S
 ninty BFCF-BFDB
 
-commentline 4598 ?
-commentline 46B3 ?
-commentline 46D4 ?
+data BFE7-BFE7
+data BFE8-BFEE
+data BFEF-BFEF
+data BFF0-BFFF
 
-commentline 46F0 ?
-commentline 471A data for outputting rematch with arrow above right punch button
-;commentline 4720 HCTAMER
-;ninty 4720-4726
-
-commentline 472A ?
-commentline 4823 ?
-
-commentline BDBF Service dipswitch is set!
-commentline BDBF Test RAMs 8C 8D; ROMs 8F 8H 8J 8K 8L; display dip switches
-commentline BDBF All RAMs (C000-FFFF) and all program ROMS (0000-BFFF) but none of the graphic ROMs
-
-label c000 NVRAM
-label d000 RAM
+label C000 NVRAM
+label D000 RAM
 label D004 OPPONENT_NUMBER
-label D005 FIGHT_NUMBER?
-label d022 ENERGY
-label d024 CPU_ENERGY
-label d02e KNOCKDOWNS
+label D005 FIGHT_NUMBER2
+label D022 HEALTH
+label D023 HEALTH_DISPLAYED
+label D024 CPU_HEALTH
+label D025 CPU_HEALTH_DISPLAYED
+label D02E KNOCKDOWNS
 ; if 3, enemy will be knocked out with next knockdown
-label d02f CPU_KNOCKDOWNS
+label D02F CPU_KNOCKDOWNS
 ; 1A = max, can use RightHook/Uppercut button
-label d048 KO_BUTTON_LEVEL
+label D048 KO_BUTTON_LEVEL
 
 commentline d7bf 01 = credit, 02 = start game, 03 = game over, 04 = game over 2?, 05 = game over 3?, 06 = rematch started,
 commentline d7bf or countdown value to add coins for rematch
