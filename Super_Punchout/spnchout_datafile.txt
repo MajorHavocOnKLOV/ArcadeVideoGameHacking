@@ -82,7 +82,9 @@ label 0446 CLEAR_BACKGROUNDS_TOP_AND_BOTTOM
 label 04A5 START_ATTRACT_LOOP
 comment 04CD draw (C)1984 Nintendo at bottom of bottom screen
 
-label 057A DRAW_RING_LEFT_CORNER
+comment 0542 draws KO Time, Best Score, Fight Table, and Challenger picture
+comment 0545 draws frame around fight table and health bars
+
 comment 05BD jump to start of attract mode loop ...
 
 ;comment 0776 call function to draw bandage on forehead of rematch fighter
@@ -114,6 +116,8 @@ comment 16A6 ?
 comment 16A8 ?
 
 label 2D2E WAIT___
+label 2D3A DISPLAY_NEXT_FIGHTER_TEXT_IN_BOTTOM_SCREEN
+
 label 2D52 COPY_A_TO_DE+_FOR_C_COUNT
 label 2D58 COPY_A_TO_DE+_FOR_BC_COUNT
 
@@ -125,22 +129,27 @@ comment 2dcb Clear E000-E7FF (VRAM_CPU)
 comment 2dfa Clear E800-EFFF (VRAM_PLAYER)
 
 commentline 2e0e Show high scores, upper and lower screens
+label 2E0D DRAW_HIGH_SCORES_ATTRACT_SCREEN
 comment 2E0E draw red background top
 comment 2E13 draw Hall of Fame background top
 comment 2E18 draw CPU and user health bars (bottom of top screen)
 comment 2E1D draw greenish/tan background bottom
 comment 2E22 ?
-LABEL 2E63 DISPLAY_BEST_KO_TIMES_AND_HIT_AVG
+label 2E44 DRAW_MINI_CHAMP_WITH_BELT_AT_BOTTOM_OF_TOP_SCREEN
+label 2E63 DISPLAY_BEST_KO_TIMES_AND_HIT_AVG
+label 2EA8 CLEAR_BOTTOM_SCREEN
 label 2EAE GET_AND_DRAW_TOP_10_SCORES?
 
-label 2EE5 DRAW_UPPER_SCREEN_FOR_A_FIGHT
+label 2EE5 DRAW_UPPER_SCREEN_FOR_A_FIGHTA
+label 2F0B UNFURL_CPU_DRAWING
+label 2F7B DRAW_UPPER_SCREEN_FOR_A_FIGHTB
 
 comment 2F80 Write 0'00"00 graphics
 label 2FB0 DRAW_BANDAGE_ON_REMATCHED_FIGHTER
 label 2FB6 DRAW_KO_BONUS_VALUE
 commentline 3055 print from 46f0 & 46d4 (what?)
 commentline 3060 print remtach?
-
+label 30A4 DRAW_RING_LEFT_CORNER
 comment 30ED set flags (Z and M/sign)
 comment 30F1 if msb (sign) set, jump
 comment 30F6 if any of 2 msbs set, jump
@@ -159,7 +168,8 @@ comment 31B3 high nybble 0xE/0b1110: output space (0xFF) to HL-, B times
 data 36AE-396E
 data 3AFD-3D26
 data 3D27-3D41
-data 3D42-3DA5
+;data 3D42-3DA5
+data 3D42-3D48
 
 label 3D49 SELECT_INITIALS_BY_CONTROL_S
 ninty 3D49-3D63
