@@ -5,7 +5,7 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
 
      11 $2D46
      10 $15EC
-     10 $2EA8
+     10 CLEAR_BOTTOM_SCREEN
      10 SPLIT_A_NYBBLES_INTO_A_AND_A'/C
       9 $0C94
       9 $2D3E
@@ -27,12 +27,11 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       4 $19CD
       4 $19F3
       4 $2D36
-      4 $2D3A
       4 $2F62
-      4 $2F7B
       4 $30E5
       4 $3A4C
       4 $BE97
+      4 DISPLAY_NEXT_FIGHTER_TEXT_IN_BOTTOM_SCREEN
       3 $0C78
       3 $0DBC
       3 $0E2C
@@ -47,15 +46,16 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       3 $1FE2
       3 $29C1
       3 $2A93
-      3 $2F0B
       3 $306D
       3 $3095
       3 $309A
       3 $357C
+      3 DRAW_UPPER_SCREEN_FOR_A_FIGHTB
       3 M,$9172
       3 NZ,$9100
       3 RST10_CLEAR_BACKGROUNDS_TOP_AND_BOTTOM
       3 SET_I_AND_SPLIT_A_NYBBLES_INTO_A_AND_A'
+      3 UNFURL_CPU_DRAWING
       2 $0452
       2 $0C05
       2 $0D56
@@ -86,10 +86,8 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       2 $2905
       2 $2D9D
       2 $2DF3
-      2 $2E0D
       2 $2EDA
       2 $303F
-      2 $30A4
       2 $3330
       2 $34D6
       2 $35A2
@@ -98,8 +96,9 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       2 C,$0528
       2 CLEAR_BACKGROUNDS_TOP_AND_BOTTOM
       2 DISPLAY_BEST_KO_TIMES_AND_HIT_AVG
+      2 DRAW_HIGH_SCORES_ATTRACT_SCREEN
       2 DRAW_KO_BONUS_VALUE
-      2 DRAW_UPPER_SCREEN_FOR_A_FIGHT
+      2 DRAW_RING_LEFT_CORNER
       2 GET_AND_DRAW_TOP_10_SCORES?
       2 SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM
       1 $0CBD
@@ -149,7 +148,6 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       1 $2D32
       1 $2DBC
       1 $2DEE
-      1 $2E44
       1 $2FBC
       1 $2FE0
       1 $2FE6
@@ -184,6 +182,10 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear E800-EFFF (VRAM_PLAYER)
       1 COPY_A_TO_DE+_FOR_C_COUNT;draw (C)1984 Nintendo at bottom of bottom screen
       1 DRAW_BANDAGE_ON_REMATCHED_FIGHTER
+      1 DRAW_MINI_CHAMP_WITH_BELT_AT_BOTTOM_OF_TOP_SCREEN
+      1 DRAW_UPPER_SCREEN_FOR_A_FIGHTA
+      1 DRAW_UPPER_SCREEN_FOR_A_FIGHTA;draws KO Time, Best Score, Fight Table, and Challenger picture
+      1 DRAW_UPPER_SCREEN_FOR_A_FIGHTB;draws frame around fight table and health bars
       1 M,$2001
       1 M,$2005
       1 M,$2416
