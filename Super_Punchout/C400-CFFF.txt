@@ -3,18 +3,4 @@ cd /mnt/e/git-repos/ArcadeVideoGameHacking.git/Super_Punchout
 cat spnchout.asm | grep '$C[4-9A-F][0-9A-F][0-9A-F]' | cut -c28- | grep -v '^SP' | sed 's/.*\(C[0-3][[:alnum:]][[:alnum:]]\).*/\1/' | sort | uniq -c | sort -k1b,1nr -k2b,2 >> C400-CFFF.txt
 
 
-      1 $C422
-      1 ($C441),HL
-      1 ($C841),HL
-      1 DE,$C903
-      1 DE,$C904
-      1 DE,$C905
-      1 DE,$CE05
       1 HL,$C9C9
-      1 M,$C969
-      1 PO,$CE00
-      1 Z,$C4B1
-      1 Z,$C864
-      1 Z,$C8A1
-      1 Z,$CB67
-      1 Z,$CCA1

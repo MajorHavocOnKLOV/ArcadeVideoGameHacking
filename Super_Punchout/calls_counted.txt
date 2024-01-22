@@ -3,34 +3,27 @@ cd /mnt/e/git-repos/ArcadeVideoGameHacking.git/Super_Punchout
 cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2 >> calls_counted.txt
 
 
-     23 P,$11E5
-     18 M,$03F1
      11 $2D46
-     11 $2EA8
      10 $15EC
+     10 $2EA8
      10 SPLIT_A_NYBBLES_INTO_A_AND_A'/C
       9 $0C94
-      9 $2D2E
       9 $2D3E
-      9 COPY_A_TO_DE+_FOR_C_COUNT
       8 $2D25
-      8 $2DAF
+      8 COPY_A_TO_DE+_FOR_C_COUNT
+      8 WAIT___
       7 $10E4
       7 $194F
-      7 P,$08E5
       6 $119A
       6 $1A00
       6 $29A7
       6 $2D48
-      6 M,$30F6
-      6 NZ,$A000
+      6 $2DAF
       5 $2A65
       5 $2D12
       5 $2D42
       5 $2DC4
       5 DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
-      5 P,$06E5
-      5 P,$07E5
       4 $19CD
       4 $19F3
       4 $2D36
@@ -39,11 +32,7 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       4 $2F7B
       4 $30E5
       4 $3A4C
-      4 $BE55
       4 $BE97
-      4 P,$4117
-      4 Z,$0056
-      3 $0445
       3 $0C78
       3 $0DBC
       3 $0E2C
@@ -63,21 +52,12 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       3 $3095
       3 $309A
       3 $357C
-      3 M,$1200
       3 M,$9172
-      3 NC,$4124
-      3 NZ,$8000
       3 NZ,$9100
-      3 P,$05E5
-      3 P,$8211
-      3 PO,$2000
+      3 RST10_CLEAR_BACKGROUNDS_TOP_AND_BOTTOM
       3 SET_I_AND_SPLIT_A_NYBBLES_INTO_A_AND_A'
-      3 Z,$0021
-      3 Z,$4124
-      2 $0446
       2 $0452
       2 $0C05
-      2 $0CA1
       2 $0D56
       2 $0DC7
       2 $0DE5
@@ -107,11 +87,7 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       2 $2D9D
       2 $2DF3
       2 $2E0D
-      2 $2E63
-      2 $2EAE
       2 $2EDA
-      2 $2EE5
-      2 $2FB6
       2 $303F
       2 $30A4
       2 $3330
@@ -120,37 +96,12 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       2 $35B2
       2 $396F
       2 C,$0528
-      2 M,$0500
-      2 M,$066C
-      2 M,$0800
-      2 M,$1817
-      2 M,$8408
-      2 M,$A281
-      2 M,$FC00
-      2 M,$FC64
-      2 NC,$1828
-      2 NC,$A0FC
-      2 NC,$D0DA
-      2 NC,$E0FC
-      2 NZ,$020B
-      2 NZ,$2100
-      2 NZ,$5220
-      2 NZ,$522C
-      2 P,$0084
-      2 P,$461A
-      2 P,$5002
-      2 P,$8311
-      2 P,$F1F5
-      2 P,0W000LET_S_M_S
-      2 PE,$4123
-      2 PO,$7080
-      2 PO,$90C0
-      2 PO,$C0B0
-      2 PO,$F1A6
-      2 Z,$0428
-      2 Z,$2100
-      1 $0084
-      1 $0123
+      2 CLEAR_BACKGROUNDS_TOP_AND_BOTTOM
+      2 DISPLAY_BEST_KO_TIMES_AND_HIT_AVG
+      2 DRAW_KO_BONUS_VALUE
+      2 DRAW_UPPER_SCREEN_FOR_A_FIGHT
+      2 GET_AND_DRAW_TOP_10_SCORES?
+      2 SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM
       1 $0CBD
       1 $0D06
       1 $0DEF
@@ -180,7 +131,6 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       1 $1842
       1 $184C
       1 $1884
-      1 $18B6
       1 $1905
       1 $1911
       1 $195E
@@ -196,17 +146,14 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       1 $29E3
       1 $2A14
       1 $2B67
-      1 $2D26
       1 $2D32
       1 $2DBC
       1 $2DEE
       1 $2E44
-      1 $2FB0          ;call function to draw bandage on forehead of rematch fighter
       1 $2FBC
       1 $2FE0
       1 $2FE6
       1 $300F
-      1 $3021
       1 $3022
       1 $3037
       1 $304F
@@ -215,36 +162,19 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       1 $3067
       1 $30B4
       1 $30DD
-      1 $3126
       1 $3204
       1 $321E
       1 $3389
       1 $34FB
       1 $351C
       1 $3558
-      1 $4122
-      1 $8116
-      1 $820F
       1 $AFEC
       1 $BE93
-      1 $D571
-      1 $F11B
-      1 $FC03
       1 $FF66
-      1 C,$0022
-      1 C,$0065
-      1 C,$07A0
-      1 C,$160E
-      1 C,$2087
-      1 C,$411A
-      1 C,$423E
-      1 C,$42DE
       1 C,$4445
       1 C,$7B72
-      1 C,$820E
       1 C,$91FF
       1 C,$98FF
-      1 C,$E24F
       1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear D000-D1FF
       1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear D000-D7FF
       1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear D500-D6FF
@@ -252,248 +182,40 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear D800-FF7F
       1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear E000-E7FF (VRAM_CPU)
       1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear E800-EFFF (VRAM_PLAYER)
-      1 M,$0018
-      1 M,$0064
-      1 M,$0083
-      1 M,$020B
-      1 M,$0254
-      1 M,$02E1
-      1 M,$02FC
-      1 M,$0309
-      1 M,$035F
-      1 M,$06F1
-      1 M,$086A
-      1 M,$092B
-      1 M,$0B64
-      1 M,$1111
-      1 M,$1492
-      1 M,$15B8
-      1 M,$18FE
+      1 COPY_A_TO_DE+_FOR_C_COUNT;draw (C)1984 Nintendo at bottom of bottom screen
+      1 DRAW_BANDAGE_ON_REMATCHED_FIGHTER
       1 M,$2001
       1 M,$2005
-      1 M,$22A8
-      1 M,$22E0
-      1 M,$240C
       1 M,$2416
-      1 M,$4162
-      1 M,$441A
-      1 M,$441C
-      1 M,$5A03
-      1 M,$6103
-      1 M,$6171
-      1 M,$6602
-      1 M,$6900
-      1 M,$6AD3
-      1 M,$6DD1
-      1 M,$6DD3
-      1 M,$7003
-      1 M,$7202
-      1 M,$753B
-      1 M,$7E00
-      1 M,$7F81
-      1 M,$8200
-      1 M,$8311
-      1 M,$8600
-      1 M,$8700
-      1 M,$9209
-      1 M,$9506
-      1 M,$9AFC
-      1 M,$A01A
-      1 M,$A900
-      1 M,$AB00
-      1 M,$B1E9
-      1 M,$C969
-      1 M,$D442
-      1 M,$D929
-      1 M,$F721
-      1 M,$FCFF
-      1 M,$FE23
-      1 NC,$0020
-      1 NC,$006B
-      1 NC,$0126
-      1 NC,$028E
-      1 NC,$0295
-      1 NC,$02D3
-      1 NC,$03C9
       1 NC,$0A28
-      1 NC,$0CA8
       1 NC,$1217
       1 NC,$121D
       1 NC,$160E
       1 NC,$1816
-      1 NC,$1C0E
       1 NC,$1C1D
-      1 NC,$20CA
       1 NC,$2BFF
-      1 NC,$48EA
-      1 NC,$58FA
-      1 NC,$8000
-      1 NC,$8905
-      1 NC,$94F6
-      1 NC,$973B
-      1 NC,$A8EC
-      1 NC,$B0ED
-      1 NC,$BCE2
-      1 NC,$BCEB
-      1 NC,$BCFC
-      1 NC,$D30E
       1 NC,$D4F2
-      1 NC,$D8EB
-      1 NC,$DA61
-      1 NC,$DCB1
-      1 NC,$DCE2
-      1 NC,$E824
-      1 NC,$E8EC
-      1 NC,$F4F6
       1 NZ,$0000
-      1 NZ,$0020
-      1 NZ,$0022
-      1 NZ,$0075
-      1 NZ,$0087
-      1 NZ,$030B
       1 NZ,$0CF0
       1 NZ,$1A00
-      1 NZ,$3E21
-      1 NZ,$4122
-      1 NZ,$5421
-      1 NZ,$7206
-      1 NZ,$7942
-      1 NZ,$7A42
-      1 NZ,$8241
-      1 NZ,$8404
-      1 NZ,$8906
-      1 NZ,$8942
-      1 NZ,$8A41
-      1 NZ,$8A42
-      1 NZ,$8B41
-      1 NZ,$8C41
-      1 NZ,$8E41
-      1 NZ,$9621
-      1 NZ,$B311
-      1 NZ,$D164
-      1 NZ,$E410
-      1 P,$0073
-      1 P,$0081
-      1 P,$0082
-      1 P,$00B6
-      1 P,$0109
       1 P,$0184
-      1 P,$0209
-      1 P,$0406
-      1 P,$04E5
-      1 P,$0DE5
-      1 P,$0DF8
-      1 P,$11F3
-      1 P,$11F4
-      1 P,$2013
       1 P,$2016
-      1 P,$4111
-      1 P,$54F3
-      1 P,$5EF5
-      1 P,$5F5B
-      1 P,$716F
-      1 P,$8116
-      1 P,$8213
-      1 P,$8511
-      1 P,$8611
-      1 P,$8802
-      1 P,$90F2
-      1 P,$AFF5
-      1 P,$D130
-      1 P,$D131
-      1 P,$D25F
-      1 P,$E724
       1 P,$F2E5
       1 P,$F2E7
-      1 P,$F522
-      1 P,$F841
       1 P,$FD41
       1 P,$FD61
-      1 P,$FF01
-      1 PE,$001B
-      1 PE,$001D
-      1 PE,$0052
-      1 PE,$028E
-      1 PE,$0552
-      1 PE,$0622
-      1 PE,$0C0E
-      1 PE,$0DF8
-      1 PE,$0F20
-      1 PE,$1E05
       1 PE,$2008
-      1 PE,$2305
-      1 PE,$4121
-      1 PE,$4124
-      1 PE,$44C8
-      1 PE,$820A
-      1 PE,$8320
-      1 PE,$8702
-      1 PE,$9100
-      1 PE,$AAB0
-      1 PE,$B023
-      1 PE,$C124
-      1 PE,$DED3
-      1 PE,$E356
-      1 PE,$E427
       1 PE,$EACD
-      1 PE,$EB0E
       1 PO,$0000
-      1 PO,$0018
       1 PO,$0028
-      1 PO,$0082
-      1 PO,$0083
-      1 PO,$0100
-      1 PO,$0252
-      1 PO,$0300
-      1 PO,$030C
-      1 PO,$0DF8
       1 PO,$0EDF
       1 PO,$1420
-      1 PO,$1600
-      1 PO,$1820
       1 PO,$1C20
       1 PO,$2008
       1 PO,$2A30
-      1 PO,$3930
-      1 PO,$4122
-      1 PO,$4123
-      1 PO,$4207
-      1 PO,$480A
-      1 PO,$7020
-      1 PO,$8100
-      1 PO,$8212
-      1 PO,$8503
-      1 PO,$8951
       1 PO,$8A08
-      1 PO,$9100
-      1 PO,$940E
-      1 PO,$963E
-      1 PO,$A404
-      1 PO,$A91D
-      1 PO,$DF04
-      1 PO,$E200
       1 PO,$E203
       1 PO,$E295
       1 PO,$E297
-      1 PO,$E6B9
-      1 PO,$E80E
       1 PO,$F147
-      1 PO,$F304
       1 PO,$F630
-      1 PO,NVRAM
-      1 Z,$0000
-      1 Z,$0091
-      1 Z,$0518
-      1 Z,$147A
-      1 Z,$2E21
-      1 Z,$4120
-      1 Z,$8000
-      1 Z,$8183
-      1 Z,$947A
-      1 Z,$9482
-      1 Z,$9941
-      1 Z,$C4B1
-      1 Z,$C864
-      1 Z,$C8A1
-      1 Z,$F129
-      1 Z,$FD03
