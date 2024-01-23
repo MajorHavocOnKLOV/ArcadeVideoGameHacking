@@ -25,7 +25,6 @@ cat spnchout.asm | grep '$[DEF][0-9A-F][0-9A-F][0-9A-F]' | cut -c28- | sed 's/.*
       6 D051
       6 D064
       6 D0C1
-      6 D410
       6 D7B0
       6 D7B6
       6 D7B8
