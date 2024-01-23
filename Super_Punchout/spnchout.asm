@@ -1,4 +1,4 @@
-org 0, numlab 146, numio 13, numdata 116, numcomm 50, numcommline 36
+org 0, numlab 151, numio 13, numdata 116, numcomm 50, numcommline 37
 
 IO_0_BUTTONS EQU $00
 I0_1_JOYSTICK? EQU $01
@@ -167,18 +167,18 @@ ORG $0000
 0000: 11 00 08       LD    DE,$0800       ;Z80 starts executing code at 0x0000
 0003: C3 81 02       JP    $0281
 
-0006: FF             RST   $38
+0006: FF             RST7  $38
 
-0007: FF             RST   $38
+0007: FF             RST7  $38
 
 
 *** draw with 1 line between operations
 0008: 11 40 00       LD    DE,$0040       ;$0040 = 1 line (32 flip/colors plus 32 characters)
 000b: C3 CE 30       JP    $30CE
 
-000e: FF             RST   $38
+000e: FF             RST7  $38
 
-000f: FF             RST   $38
+000f: FF             RST7  $38
 
 0010: 3E FF          LD    A,#$FF
 0012: 32 CD D7       LD    ($D7CD),A
@@ -189,41 +189,41 @@ ORG $0000
 0018: 11 80 00       LD    DE,$0080       ;$0080 = 2 lines (64 flip/colors plus 64 characters)
 001b: C3 CE 30       JP    $30CE
 
-001e: FF             RST   $38
+001e: FF             RST7  $38
 
-001f: FF             RST   $38
+001f: FF             RST7  $38
 
-0020: FF             RST   $38
+0020: FF             RST7  $38
 
-0021: FF             RST   $38
+0021: FF             RST7  $38
 
-0022: FF             RST   $38
+0022: FF             RST7  $38
 
-0023: FF             RST   $38
+0023: FF             RST7  $38
 
-0024: FF             RST   $38
+0024: FF             RST7  $38
 
-0025: FF             RST   $38
+0025: FF             RST7  $38
 
-0026: FF             RST   $38
+0026: FF             RST7  $38
 
-0027: FF             RST   $38
+0027: FF             RST7  $38
 
-0028: FF             RST   $38
+0028: FF             RST7  $38
 
-0029: FF             RST   $38
+0029: FF             RST7  $38
 
-002a: FF             RST   $38
+002a: FF             RST7  $38
 
-002b: FF             RST   $38
+002b: FF             RST7  $38
 
-002c: FF             RST   $38
+002c: FF             RST7  $38
 
-002d: FF             RST   $38
+002d: FF             RST7  $38
 
-002e: FF             RST   $38
+002e: FF             RST7  $38
 
-002f: FF             RST   $38
+002f: FF             RST7  $38
 
 
 *** Check if copyright dipswitch is on (DSW1, switch 8) which displays Nintendo of America (instead of Nintendo)
@@ -231,18 +231,18 @@ ORG $0000
 0032: E6 80          AND   A,#$80
 0034: C9             RET   
 
-0035: FF             RST   $38
+0035: FF             RST7  $38
 
-0036: FF             RST   $38
+0036: FF             RST7  $38
 
-0037: FF             RST   $38
+0037: FF             RST7  $38
 
-0038: C7             RST   $00
+0038: C7             RST0  $00
 
 0039: 00 00 00 00 08 01 00 00 00 01 01 01 01 00 00 00 
 
 0049: 00 00 
-004b: FF             RST   $38
+004b: FF             RST7  $38
 
 004c: 02             LD    (BC),A
 004d: D0             RET   NC
@@ -281,7 +281,7 @@ ORG $0000
 
 007c: F6 E3          OR    A,#$E3
 007e: F4 E5 F2       CALL  P,$F2E5
-0081: E7             RST   $20
+0081: E7             RST4  $20
 
 0082: F0             RET   P
 
@@ -381,11 +381,11 @@ ORG $0000
 00f9: 36 37          LD    (HL),#$37
 00fb: 56             LD    D,(HL)
 00fc: 37             SCF   
-00fd: FF             RST   $38
+00fd: FF             RST7  $38
 
-00fe: FF             RST   $38
+00fe: FF             RST7  $38
 
-00ff: FF             RST   $38
+00ff: FF             RST7  $38
 
 0100: C3 18 1F       JP    $1F18
 
@@ -557,15 +557,15 @@ ORG $0000
 
 01f8: C3 FD 20       JP    $20FD
 
-01fb: FF             RST   $38
+01fb: FF             RST7  $38
 
-01fc: FF             RST   $38
+01fc: FF             RST7  $38
 
-01fd: FF             RST   $38
+01fd: FF             RST7  $38
 
-01fe: FF             RST   $38
+01fe: FF             RST7  $38
 
-01ff: FF             RST   $38
+01ff: FF             RST7  $38
 
 0200: 00             NOP   
 0201: 04             INC   B
@@ -686,7 +686,7 @@ ORG $0000
 029f: 20 F2          JR    NZ,$0293
 
 02a1: 31 00 00       LD    SP,$0000
-02a4: F7             RST   $30
+02a4: F7             RST6  $30
 
 02a5: DB 02          IN    A,(I0_DSW1_TO_2A03)
 02a7: E6 80          AND   A,#$80
@@ -749,7 +749,7 @@ ORG $0000
 030b: AF             XOR   A,A
 030c: 01 00 08       LD    BC,$0800
 030f: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT;Clear D000-D7FF
-0312: F7             RST   $30
+0312: F7             RST6  $30
 
 0313: DB 97          IN    A,($97)
 0315: CB E7          SET   4,A
@@ -943,7 +943,7 @@ ORG $0000
 0443: 80             ADD   A,B
 0444: 04             INC   B
 RST10_CLEAR_BACKGROUNDS_TOP_AND_BOTTOM:
-0445: D7             RST   $10
+0445: D7             RST2  $10
 
 CLEAR_BACKGROUNDS_TOP_AND_BOTTOM:
 0446: CD BC 2D       CALL  $2DBC
@@ -1047,7 +1047,7 @@ START_ATTRACT_LOOP:
 0529: CD 2E 2D       CALL  WAIT___
 052c: CD 2E 2D       CALL  WAIT___
 052f: CD 36 2D       CALL  $2D36
-0532: D7             RST   $10
+0532: D7             RST2  $10
 
 0533: AF             XOR   A,A
 0534: 32 B6 D7       LD    ($D7B6),A
@@ -1065,7 +1065,7 @@ START_ATTRACT_LOOP:
 0555: 32 CD D7       LD    ($D7CD),A
 0558: CD 0B 2F       CALL  UNFURL_CPU_DRAWING
 055b: CD 3A 2D       CALL  DISPLAY_NEXT_FIGHTER_TEXT_IN_BOTTOM_SCREEN
-055e: D7             RST   $10
+055e: D7             RST2  $10
 
 055f: CD A8 2E       CALL  CLEAR_BOTTOM_SCREEN
 0562: CD 6D 30       CALL  $306D
@@ -1074,7 +1074,7 @@ START_ATTRACT_LOOP:
 056a: CD 3A 2D       CALL  DISPLAY_NEXT_FIGHTER_TEXT_IN_BOTTOM_SCREEN
 056d: CD F0 12       CALL  $12F0
 0570: CD 44 13       CALL  $1344
-0573: D7             RST   $10
+0573: D7             RST2  $10
 
 0574: CD C4 2D       CALL  $2DC4
 0577: CD A8 2E       CALL  CLEAR_BOTTOM_SCREEN
@@ -1139,7 +1139,7 @@ START_ATTRACT_LOOP:
 05dd: 40             LD    B,B
 05de: 04             INC   B
 05df: 00             NOP   
-05e0: FF             RST   $38
+05e0: FF             RST7  $38
 
 05e1: 2E CB          LD    L,#$CB
 05e3: 36 80          LD    (HL),#$80
@@ -1371,7 +1371,7 @@ START_ATTRACT_LOOP:
 075b: CD 8B 12       CALL  $128B
 075e: CD 45 04       CALL  RST10_CLEAR_BACKGROUNDS_TOP_AND_BOTTOM
 0761: CD AF 2D       CALL  $2DAF
-0764: D7             RST   $10
+0764: D7             RST2  $10
 
 0765: CD E5 2E       CALL  DRAW_UPPER_SCREEN_FOR_A_FIGHTA
 0768: CD 0F 30       CALL  $300F
@@ -1401,7 +1401,7 @@ START_ATTRACT_LOOP:
 0796: 3D             DEC   A
 0797: 28 DD          JR    Z,$0776
 
-0799: D7             RST   $10
+0799: D7             RST2  $10
 
 079a: CD 4F 19       CALL  $194F
 079d: CD A8 2E       CALL  CLEAR_BOTTOM_SCREEN
@@ -1420,7 +1420,7 @@ START_ATTRACT_LOOP:
 07bc: CD 25 2D       CALL  $2D25
 07bf: 3E 44          LD    A,#$44
 07c1: CD 48 2D       CALL  $2D48
-07c4: D7             RST   $10
+07c4: D7             RST2  $10
 
 07c5: CD 4F 19       CALL  $194F
 07c8: CD A8 2E       CALL  CLEAR_BOTTOM_SCREEN
@@ -1482,7 +1482,7 @@ START_ATTRACT_LOOP:
 0831: 13             INC   DE
 0832: 1A             LD    A,(DE)
 0833: F5             PUSH  AF
-0834: D7             RST   $10
+0834: D7             RST2  $10
 
 0835: CD C4 2D       CALL  $2DC4
 0838: CD A8 2E       CALL  CLEAR_BOTTOM_SCREEN
@@ -1527,7 +1527,7 @@ START_ATTRACT_LOOP:
 088b: 30 DF          JR    NC,$086C
 
 088d: CD 42 2D       CALL  $2D42
-0890: D7             RST   $10
+0890: D7             RST2  $10
 
 0891: 3E FD          LD    A,#$FD
 0893: 32 CD D7       LD    ($D7CD),A
@@ -1535,7 +1535,7 @@ START_ATTRACT_LOOP:
 0898: CD EC 15       CALL  $15EC
 089b: CD E8 0E       CALL  $0EE8
 089e: CD E4 10       CALL  $10E4
-08a1: D7             RST   $10
+08a1: D7             RST2  $10
 
 08a2: CD 4F 19       CALL  $194F
 08a5: 3E FD          LD    A,#$FD
@@ -1578,7 +1578,7 @@ START_ATTRACT_LOOP:
 08f6: 27             DAA   
 08f7: 77             LD    (HL),A         ;fight number one based BCD for display
 08f8: CD B2 12       CALL  $12B2
-08fb: D7             RST   $10
+08fb: D7             RST2  $10
 
 08fc: CD C4 2D       CALL  $2DC4
 08ff: CD F3 2D       CALL  $2DF3
@@ -1588,7 +1588,7 @@ START_ATTRACT_LOOP:
 090b: 3E FE          LD    A,#$FE
 090d: 32 CD D7       LD    ($D7CD),A
 0910: CD 3E 2D       CALL  $2D3E
-0913: D7             RST   $10
+0913: D7             RST2  $10
 
 0914: CD 4F 19       CALL  $194F
 0917: 3E FE          LD    A,#$FE
@@ -1614,7 +1614,7 @@ START_ATTRACT_LOOP:
 0945: A7             AND   A,A
 0946: 20 FA          JR    NZ,$0942
 
-0948: D7             RST   $10
+0948: D7             RST2  $10
 
 0949: 21 00 DD       LD    HL,$DD00
 094c: 11 30 DD       LD    DE,$DD30
@@ -1663,7 +1663,7 @@ START_ATTRACT_LOOP:
 09af: CD 0A 16       CALL  $160A
 09b2: 3E 02          LD    A,#$02
 09b4: CD EC 15       CALL  $15EC
-09b7: D7             RST   $10
+09b7: D7             RST2  $10
 
 09b8: 3E FE          LD    A,#$FE
 09ba: 32 CD D7       LD    ($D7CD),A
@@ -1684,7 +1684,7 @@ START_ATTRACT_LOOP:
 09e1: 21 38 02       LD    HL,$0238
 09e4: E5             PUSH  HL
 09e5: CD 78 0C       CALL  $0C78
-09e8: D7             RST   $10
+09e8: D7             RST2  $10
 
 09e9: CD 4F 19       CALL  $194F
 09ec: CD 95 30       CALL  $3095
@@ -1694,7 +1694,7 @@ START_ATTRACT_LOOP:
 09f4: 21 30 DD       LD    HL,$DD30
 09f7: CD 6D 12       CALL  $126D
 09fa: DD 21 62 4B    LD    IX,$4B62
-09fe: CF             RST   $08
+09fe: CF             RST1  $08
 
 09ff: CD EE 2D       CALL  $2DEE
 0a02: 3E FE          LD    A,#$FE
@@ -1706,7 +1706,7 @@ START_ATTRACT_LOOP:
 0a10: CD A6 10       CALL  $10A6
 0a13: 30 20          JR    NC,$0A35
 
-0a15: D7             RST   $10
+0a15: D7             RST2  $10
 
 0a16: CD BC 2F       CALL  $2FBC
 0a19: 3E FE          LD    A,#$FE
@@ -1721,17 +1721,17 @@ START_ATTRACT_LOOP:
 0a2e: 3D             DEC   A
 0a2f: 20 FC          JR    NZ,$0A2D
 
-0a31: D7             RST   $10
+0a31: D7             RST2  $10
 
 0a32: CD BB 10       CALL  $10BB
-0a35: D7             RST   $10
+0a35: D7             RST2  $10
 
 0a36: 3A FA D7       LD    A,($D7FA)
 0a39: FE 05          CP    A,#$05
 0a3b: 38 0E          JR    C,$0A4B
 
 0a3d: DD 21 43 4B    LD    IX,$4B43
-0a41: CF             RST   $08
+0a41: CF             RST1  $08
 
 0a42: CD 9C 0E       CALL  $0E9C
 0a45: CD 01 11       CALL  $1101
@@ -1739,7 +1739,7 @@ START_ATTRACT_LOOP:
 0a4b: 3E FE          LD    A,#$FE
 0a4d: 32 CD D7       LD    ($D7CD),A
 0a50: CD 3A 2D       CALL  DISPLAY_NEXT_FIGHTER_TEXT_IN_BOTTOM_SCREEN
-0a53: D7             RST   $10
+0a53: D7             RST2  $10
 
 0a54: CD C4 2D       CALL  $2DC4
 0a57: CD F3 2D       CALL  $2DF3
@@ -1770,7 +1770,7 @@ START_ATTRACT_LOOP:
 0a92: D2 6E 07       JP    NC,$076E
 
 0a95: FD 36 02 00    LD    (IY+$02),#$00
-0a99: D7             RST   $10
+0a99: D7             RST2  $10
 
 0a9a: CD A8 2E       CALL  CLEAR_BOTTOM_SCREEN
 0a9d: 3E FE          LD    A,#$FE
@@ -1797,7 +1797,7 @@ START_ATTRACT_LOOP:
 
 0ac3: 0A             LD    A,(BC)
 0ac4: F6 0A          OR    A,#$0A
-0ac6: FF             RST   $38
+0ac6: FF             RST7  $38
 
 0ac7: 0A             LD    A,(BC)
 0ac8: 08             EX    AF,AF'
@@ -1814,45 +1814,45 @@ START_ATTRACT_LOOP:
 0ad6: F2 0A F6       JP    P,$F60A
 
 0ad9: 0A             LD    A,(BC)
-0ada: FF             RST   $38
+0ada: FF             RST7  $38
 
 0adb: 0A             LD    A,(BC)
 0adc: 0D             DEC   C
 0add: 0B             DEC   BC
 0ade: 00             NOP   
 0adf: 08             EX    AF,AF'
-0ae0: FF             RST   $38
+0ae0: FF             RST7  $38
 
 0ae1: 20 0C          JR    NZ,$0AEF
 
 0ae3: 06 08          LD    B,#$08
-0ae5: FF             RST   $38
+0ae5: FF             RST7  $38
 
 0ae6: 10 20          DJNZ  $0B08
 
 0ae8: 4C             LD    C,H
 0ae9: 06 0A          LD    B,#$0A
-0aeb: FF             RST   $38
+0aeb: FF             RST7  $38
 
 0aec: 28 0C          JR    Z,$0AFA
 
 0aee: 06 0A          LD    B,#$0A
-0af0: FF             RST   $38
+0af0: FF             RST7  $38
 
 0af1: 28 00          JR    Z,$0AF3
 
 0af3: 0A             LD    A,(BC)
-0af4: FF             RST   $38
+0af4: FF             RST7  $38
 
 0af5: 28 00          JR    Z,$0AF7
 
 0af7: 0C             INC   C
-0af8: FF             RST   $38
+0af8: FF             RST7  $38
 
 0af9: 20 0C          JR    NZ,$0B07
 
 0afb: 06 0C          LD    B,#$0C
-0afd: FF             RST   $38
+0afd: FF             RST7  $38
 
 0afe: 10 00          DJNZ  $0B00
 
@@ -1860,12 +1860,12 @@ START_ATTRACT_LOOP:
 0b02: 20 0C          JR    NZ,$0B10
 
 0b04: 06 0E          LD    B,#$0E
-0b06: FF             RST   $38
+0b06: FF             RST7  $38
 
 0b07: 10 10          DJNZ  $0B19
 
 0b09: 06 10          LD    B,#$10
-0b0b: FF             RST   $38
+0b0b: FF             RST7  $38
 
 0b0c: 10 00          DJNZ  $0B0E
 
@@ -1875,7 +1875,7 @@ START_ATTRACT_LOOP:
 
 0b12: 2C             INC   L
 0b13: 97             SUB   A,A
-0b14: F7             RST   $30
+0b14: F7             RST6  $30
 
 0b15: 88             ADC   A,B
 0b16: 28 60          JR    Z,$0B78
@@ -2056,7 +2056,7 @@ NMI_STARTS_HERE?:
 0c4c: CD 8D 10       CALL  DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
 0c4f: CD AF 2D       CALL  $2DAF
 0c52: DD 21 64 46    LD    IX,$4664
-0c56: DF             RST   $18
+0c56: DF             RST3  $18
 
 0c57: CD AF 2D       CALL  $2DAF
 0c5a: 06 FF          LD    B,#$FF
@@ -2266,7 +2266,7 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 0dac: 11 B0 D4       LD    DE,$D4B0
 0daf: CD BC 0D       CALL  $0DBC
 0db2: 0E 0F          LD    C,#$0F
-0db4: 11 10 D4       LD    DE,$D410
+0db4: 11 10 D4       LD    DE,KO_TIME_TABLE_BEAR_HUGGER
 0db7: CD BC 0D       CALL  $0DBC
 0dba: 37             SCF   
 0dbb: C9             RET   
@@ -2331,7 +2331,7 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 0e14: 21 B0 D4       LD    HL,$D4B0
 0e17: CD 2C 0E       CALL  $0E2C
 0e1a: 0E 0F          LD    C,#$0F
-0e1c: 21 10 D4       LD    HL,$D410
+0e1c: 21 10 D4       LD    HL,KO_TIME_TABLE_BEAR_HUGGER
 0e1f: CD 2C 0E       CALL  $0E2C
 0e22: E1             POP   HL
 0e23: 3E 01          LD    A,#$01
@@ -2378,7 +2378,7 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 0e5b: 21 B0 D4       LD    HL,$D4B0
 0e5e: 0E 05          LD    C,#$05
 0e60: CD 6D 0E       CALL  $0E6D
-0e63: 21 10 D4       LD    HL,$D410
+0e63: 21 10 D4       LD    HL,KO_TIME_TABLE_BEAR_HUGGER
 0e66: 0E 0F          LD    C,#$0F
 0e68: CD 6D 0E       CALL  $0E6D
 0e6b: D9             EXX   
@@ -2861,7 +2861,7 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 1117: 06 04          LD    B,#$04
 1119: CD 69 11       CALL  $1169
 111c: 21 1F D4       LD    HL,$D41F
-111f: DD 21 10 D4    LD    IX,$D410
+111f: DD 21 10 D4    LD    IX,KO_TIME_TABLE_BEAR_HUGGER
 1123: D9             EXX   
 1124: 11 08 00       LD    DE,$0008
 1127: 06 05          LD    B,#$05
@@ -2946,7 +2946,7 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 11a9: C9             RET   
 
 11aa: DD 21 07 4B    LD    IX,$4B07
-11ae: CF             RST   $08
+11ae: CF             RST1  $08
 
 11af: AF             XOR   A,A
 11b0: 32 A0 D4       LD    ($D4A0),A
@@ -3265,18 +3265,18 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 138c: DD 2B          DEC   IX
 138e: 18 EE          JR    $137E
 
-1390: FF             RST   $38
+1390: FF             RST7  $38
 
-1391: D7             RST   $10
+1391: D7             RST2  $10
 
 1392: FA 02 00       JP    M,$0002
 
 1395: 01 FF D5       LD    BC,$D5FF
 1398: 00             NOP   
 1399: 01 00 FF       LD    BC,$FF00
-139c: FF             RST   $38
+139c: FF             RST7  $38
 
-139d: FF             RST   $38
+139d: FF             RST7  $38
 
 139e: D0             RET   NC
 
@@ -3312,7 +3312,7 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 13cd: 02             LD    (BC),A
 13ce: 92             SUB   A,D
 13cf: 01 10 FF       LD    BC,$FF10
-13d2: D7             RST   $10
+13d2: D7             RST2  $10
 
 13d3: DA 04 00       JP    C,$0004
 
@@ -3321,7 +3321,7 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 13d8: 03             INC   BC
 13d9: ED 01          Illegal Opcode
 13db: 00             NOP   
-13dc: EF             RST   $28
+13dc: EF             RST5  $28
 
 13dd: 04             INC   B
 13de: 00             NOP   
@@ -3329,9 +3329,9 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 
 13e0: 00             NOP   
 13e1: 00             NOP   
-13e2: FF             RST   $38
+13e2: FF             RST7  $38
 
-13e3: FF             RST   $38
+13e3: FF             RST7  $38
 
 13e4: 3A FA D7       LD    A,($D7FA)
 13e7: FE 05          CP    A,#$05
@@ -3344,7 +3344,7 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 
 13f0: 36 00          LD    (HL),#$00
 13f2: DD 21 E8 4A    LD    IX,$4AE8
-13f6: CF             RST   $08
+13f6: CF             RST1  $08
 
 13f7: 11 E5 DF       LD    DE,$DFE5
 13fa: 21 22 0B       LD    HL,$0B22
@@ -4354,7 +4354,7 @@ PRINT_REMATCH?:
 199c: ED 53 74 FF    LD    ($FF74),DE
 19a0: C9             RET   
 
-19a1: 21 10 D4       LD    HL,$D410
+19a1: 21 10 D4       LD    HL,KO_TIME_TABLE_BEAR_HUGGER
 19a4: 3A 04 D0       LD    A,(OPPONENT_NUMBER)
 19a7: 87             ADD   A,A
 19a8: 87             ADD   A,A
@@ -7021,7 +7021,7 @@ PRINT_REMATCH?:
 285b: 16 00          LD    D,#$00
 285d: 00             NOP   
 285e: 47             LD    B,A
-285f: FF             RST   $38
+285f: FF             RST7  $38
 
 2860: 43             LD    B,E
 2861: 02             LD    (BC),A
@@ -7030,7 +7030,7 @@ PRINT_REMATCH?:
 2865: 00             NOP   
 2866: 00             NOP   
 2867: 61             LD    H,C
-2868: FF             RST   $38
+2868: FF             RST7  $38
 
 2869: 63             LD    H,E
 286a: 00             NOP   
@@ -7038,7 +7038,7 @@ PRINT_REMATCH?:
 286c: F8             RET   M
 
 286d: 41             LD    B,C
-286e: FF             RST   $38
+286e: FF             RST7  $38
 
 286f: 43             LD    B,E
 2870: 00             NOP   
@@ -7050,7 +7050,7 @@ PRINT_REMATCH?:
 2878: 04             INC   B
 2879: 00             NOP   
 287a: 61             LD    H,C
-287b: FF             RST   $38
+287b: FF             RST7  $38
 
 287c: 63             LD    H,E
 287d: 00             NOP   
@@ -7063,7 +7063,7 @@ PRINT_REMATCH?:
 
 2886: 00             NOP   
 2887: 41             LD    B,C
-2888: FF             RST   $38
+2888: FF             RST7  $38
 
 2889: 43             LD    B,E
 288a: 00             NOP   
@@ -7125,32 +7125,32 @@ PRINT_REMATCH?:
 28cd: 63             LD    H,E
 28ce: 00             NOP   
 28cf: 00             NOP   
-28d0: FF             RST   $38
+28d0: FF             RST7  $38
 
 28d1: 40             LD    B,B
 28d2: 00             NOP   
 28d3: 00             NOP   
-28d4: FF             RST   $38
+28d4: FF             RST7  $38
 
 28d5: 80             ADD   A,B
 28d6: 00             NOP   
 28d7: 00             NOP   
-28d8: FF             RST   $38
+28d8: FF             RST7  $38
 
 28d9: 00             NOP   
 28da: 05             DEC   B
 28db: 00             NOP   
-28dc: FF             RST   $38
+28dc: FF             RST7  $38
 
 28dd: 00             NOP   
 28de: 03             INC   BC
 28df: 00             NOP   
-28e0: FF             RST   $38
+28e0: FF             RST7  $38
 
 28e1: 00             NOP   
 28e2: 02             LD    (BC),A
 28e3: 00             NOP   
-28e4: FF             RST   $38
+28e4: FF             RST7  $38
 
 28e5: 00             NOP   
 28e6: 04             INC   B
@@ -7546,55 +7546,55 @@ PRINT_REMATCH?:
 2b3d: C9             RET   
 
 2b3e: 00             NOP   
-2b3f: FF             RST   $38
+2b3f: FF             RST7  $38
 
 2b40: 46             LD    B,(HL)
-2b41: FF             RST   $38
+2b41: FF             RST7  $38
 
 2b42: 41             LD    B,C
-2b43: FF             RST   $38
+2b43: FF             RST7  $38
 
 2b44: 3C             INC   A
-2b45: FF             RST   $38
+2b45: FF             RST7  $38
 
 2b46: 37             SCF   
-2b47: FF             RST   $38
+2b47: FF             RST7  $38
 
 2b48: 32 FF 2D       LD    ($2DFF),A
-2b4b: FF             RST   $38
+2b4b: FF             RST7  $38
 
 2b4c: 28 FF          JR    Z,$2B4D
 
 2b4e: 23             INC   HL
-2b4f: FF             RST   $38
+2b4f: FF             RST7  $38
 
 2b50: 1E FF          LD    E,#$FF
 2b52: 19             ADD   HL,DE
-2b53: FF             RST   $38
+2b53: FF             RST7  $38
 
 2b54: 14             INC   D
-2b55: FF             RST   $38
+2b55: FF             RST7  $38
 
-2b56: FF             RST   $38
+2b56: FF             RST7  $38
 
-2b57: FF             RST   $38
+2b57: FF             RST7  $38
 
-2b58: FF             RST   $38
+2b58: FF             RST7  $38
 
 2b59: 0F             RRCA  
-2b5a: FF             RST   $38
+2b5a: FF             RST7  $38
 
-2b5b: FF             RST   $38
+2b5b: FF             RST7  $38
 
-2b5c: FF             RST   $38
+2b5c: FF             RST7  $38
 
-2b5d: FF             RST   $38
+2b5d: FF             RST7  $38
 
-2b5e: FF             RST   $38
+2b5e: FF             RST7  $38
 
-2b5f: FF             RST   $38
+2b5f: FF             RST7  $38
 
-2b60: FF             RST   $38
+2b60: FF             RST7  $38
 
 2b61: 0A             LD    A,(BC)
 2b62: CD 12 2D       CALL  $2D12
@@ -7982,7 +7982,7 @@ SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 2dbb: C9             RET   
 
 2dbc: DD 21 76 48    LD    IX,$4876
-2dc0: CF             RST   $08
+2dc0: CF             RST1  $08
 
 2dc1: C3 65 FF       JP    $FF65
 
@@ -8032,24 +8032,24 @@ SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 
 2e0c: 00             NOP   
 DRAW_HIGH_SCORES_ATTRACT_SCREEN:
-2e0d: D7             RST   $10
+2e0d: D7             RST2  $10
 
 
 *** Show high scores, upper and lower screens
 2e0e: DD 21 6B 44    LD    IX,$446B       ;draw red background top
-2e12: CF             RST   $08
+2e12: CF             RST1  $08
 
 2e13: DD 21 7A 44    LD    IX,$447A       ;draw Hall of Fame background top
-2e17: CF             RST   $08
+2e17: CF             RST1  $08
 
 2e18: DD 21 F6 44    LD    IX,$44F6       ;draw CPU and user health bars (bottom of top screen)
-2e1c: CF             RST   $08
+2e1c: CF             RST1  $08
 
 2e1d: DD 21 31 45    LD    IX,$4531       ;draw greenish/tan background bottom
-2e21: DF             RST   $18
+2e21: DF             RST3  $18
 
 2e22: DD 21 44 45    LD    IX,$4544       ;?
-2e26: DF             RST   $18
+2e26: DF             RST3  $18
 
 2e27: 11 90 DA       LD    DE,$DA90
 2e2a: 01 40 0A       LD    BC,$0A40
@@ -8080,10 +8080,10 @@ DRAW_MINI_CHAMP_WITH_BELT_AT_BOTTOM_OF_TOP_SCREEN:
 
 DISPLAY_BEST_KO_TIMES_AND_HIT_AVG:
 2e63: DD 21 D9 42    LD    IX,$42D9
-2e67: DF             RST   $18
+2e67: DF             RST3  $18
 
 2e68: DD 21 EC 42    LD    IX,$42EC
-2e6c: DF             RST   $18
+2e6c: DF             RST3  $18
 
 2e6d: 11 18 F6       LD    DE,$F618
 2e70: 01 80 00       LD    BC,$0080
@@ -8101,13 +8101,13 @@ DISPLAY_BEST_KO_TIMES_AND_HIT_AVG:
 2e84: 20 F3          JR    NZ,$2E79
 
 2e86: DD 21 2D 43    LD    IX,$432D
-2e8a: CF             RST   $08
+2e8a: CF             RST1  $08
 
 2e8b: DD 21 D1 43    LD    IX,$43D1
-2e8f: CF             RST   $08
+2e8f: CF             RST1  $08
 
 2e90: 11 22 DA       LD    DE,$DA22
-2e93: 21 10 D4       LD    HL,$D410
+2e93: 21 10 D4       LD    HL,KO_TIME_TABLE_BEAR_HUGGER
 2e96: D9             EXX   
 2e97: 0E 05          LD    C,#$05
 2e99: CD 5E 19       CALL  $195E
@@ -8124,7 +8124,7 @@ DISPLAY_BEST_KO_TIMES_AND_HIT_AVG:
 
 CLEAR_BOTTOM_SCREEN:
 2ea8: DD 21 27 3D    LD    IX,$3D27
-2eac: DF             RST   $18
+2eac: DF             RST3  $18
 
 2ead: C9             RET   
 
@@ -8166,16 +8166,16 @@ GET_AND_DRAW_TOP_10_SCORES?:
 
 DRAW_UPPER_SCREEN_FOR_A_FIGHTA:
 2ee5: DD 21 68 4B    LD    IX,$4B68
-2ee9: CF             RST   $08
+2ee9: CF             RST1  $08
 
 2eea: DD 21 10 49    LD    IX,$4910
-2eee: CF             RST   $08
+2eee: CF             RST1  $08
 
 2eef: DD 21 6C 49    LD    IX,$496C
-2ef3: CF             RST   $08
+2ef3: CF             RST1  $08
 
 2ef4: DD 21 7F 49    LD    IX,$497F
-2ef8: CF             RST   $08
+2ef8: CF             RST1  $08
 
 2ef9: DD 21 32 4E    LD    IX,$4E32
 2efd: 06 02          LD    B,#$02
@@ -8257,13 +8257,13 @@ UNFURL_CPU_DRAWING:
 
 DRAW_UPPER_SCREEN_FOR_A_FIGHTB:
 2f7b: DD 21 27 4A    LD    IX,$4A27
-2f7f: CF             RST   $08
+2f7f: CF             RST1  $08
 
 2f80: DD 21 55 4A    LD    IX,$4A55       ;Write 0'00"00 graphics
-2f84: CF             RST   $08
+2f84: CF             RST1  $08
 
 2f85: DD 21 7F 49    LD    IX,$497F
-2f89: CF             RST   $08
+2f89: CF             RST1  $08
 
 2f8a: 3A FB D7       LD    A,(FIGHT_NUMBER)
 2f8d: CD 75 2D       CALL  SPLIT_A_NYBBLES_INTO_A_AND_A'/C
@@ -8274,7 +8274,7 @@ DRAW_UPPER_SCREEN_FOR_A_FIGHTB:
 2f99: DD 21 68 DA    LD    IX,$DA68
 2f9d: CD 00 1A       CALL  $1A00
 2fa0: DD 21 88 4A    LD    IX,$4A88
-2fa4: CF             RST   $08
+2fa4: CF             RST1  $08
 
 2fa5: 21 D3 D7       LD    HL,$D7D3
 2fa8: 5E             LD    E,(HL)
@@ -8286,22 +8286,22 @@ DRAW_UPPER_SCREEN_FOR_A_FIGHTB:
 
 DRAW_BANDAGE_ON_REMATCHED_FIGHTER:
 2fb0: DD 21 CE 4B    LD    IX,$4BCE
-2fb4: CF             RST   $08
+2fb4: CF             RST1  $08
 
 2fb5: C9             RET   
 
 DRAW_KO_BONUS_VALUE:
 2fb6: DD 21 18 4E    LD    IX,$4E18
-2fba: CF             RST   $08
+2fba: CF             RST1  $08
 
 2fbb: C9             RET   
 
 2fbc: CD 7B 2F       CALL  DRAW_UPPER_SCREEN_FOR_A_FIGHTB
 2fbf: DD 21 8A 48    LD    IX,$488A
-2fc3: CF             RST   $08
+2fc3: CF             RST1  $08
 
 2fc4: DD 21 03 49    LD    IX,$4903
-2fc8: CF             RST   $08
+2fc8: CF             RST1  $08
 
 2fc9: 11 5A DE       LD    DE,$DE5A
 2fcc: 21 FC D7       LD    HL,FIGHT_NUMBER_FOR_DISPLAY
@@ -8314,12 +8314,12 @@ DRAW_KO_BONUS_VALUE:
 2fdd: C3 B0 19       JP    $19B0
 
 2fe0: DD 21 B3 45    LD    IX,$45B3
-2fe4: DF             RST   $18
+2fe4: DF             RST3  $18
 
 2fe5: C9             RET   
 
 2fe6: DD 21 42 3D    LD    IX,$3D42
-2fea: DF             RST   $18
+2fea: DF             RST3  $18
 
 2feb: 21 9E F9       LD    HL,$F99E
 2fee: 3E 0A          LD    A,#$0A
@@ -8343,12 +8343,12 @@ DRAW_KO_BONUS_VALUE:
 3007: 10 EC          DJNZ  $2FF5
 
 3009: DD 21 A6 3D    LD    IX,$3DA6
-300d: DF             RST   $18
+300d: DF             RST3  $18
 
 300e: C9             RET   
 
 300f: DD 21 44 B3    LD    IX,$B344
-3013: DF             RST   $18
+3013: DF             RST3  $18
 
 3014: 3A C8 D7       LD    A,($D7C8)
 3017: 32 B4 F6       LD    ($F6B4),A
@@ -8360,7 +8360,7 @@ DRAW_KO_BONUS_VALUE:
 3021: C9             RET   
 
 3022: DD 21 88 B3    LD    IX,$B388
-3026: DF             RST   $18
+3026: DF             RST3  $18
 
 3027: 3A C9 D7       LD    A,($D7C9)
 302a: 32 B4 F8       LD    ($F8B4),A
@@ -8372,7 +8372,7 @@ DRAW_KO_BONUS_VALUE:
 3035: 18 D8          JR    $300F
 
 3037: DD 21 A7 46    LD    IX,$46A7
-303b: DF             RST   $18
+303b: DF             RST3  $18
 
 303c: C3 65 FF       JP    $FF65
 
@@ -8382,39 +8382,39 @@ DRAW_KO_BONUS_VALUE:
 3046: DA 18 00       JP    C,$0018
 
 3049: DD 21 98 45    LD    IX,$4598
-304d: DF             RST   $18
+304d: DF             RST3  $18
 
 304e: C9             RET   
 
 304f: DD 21 B3 46    LD    IX,$46B3
-3053: DF             RST   $18
+3053: DF             RST3  $18
 
 3054: C9             RET   
 
 
 *** print from 46f0 & 46d4 (what?)
 3055: DD 21 F0 46    LD    IX,$46F0
-3059: DF             RST   $18
+3059: DF             RST3  $18
 
 305a: DD 21 D4 46    LD    IX,$46D4
-305e: DF             RST   $18
+305e: DF             RST3  $18
 
 305f: C9             RET   
 
 
 *** print remtach?
 3060: DD 21 1A 47    LD    IX,$471A
-3064: DF             RST   $18
+3064: DF             RST3  $18
 
 3065: 18 F3          JR    $305A
 
 3067: DD 21 2A 47    LD    IX,$472A
-306b: DF             RST   $18
+306b: DF             RST3  $18
 
 306c: C9             RET   
 
 306d: DD 21 23 48    LD    IX,$4823
-3071: DF             RST   $18
+3071: DF             RST3  $18
 
 3072: 21 AC 00       LD    HL,$00AC
 3075: 3A 04 D0       LD    A,(OPPONENT_NUMBER)
@@ -8431,7 +8431,7 @@ DRAW_KO_BONUS_VALUE:
 308c: C8             RET   Z
 
 308d: DD 21 06 48    LD    IX,$4806
-3091: DF             RST   $18
+3091: DF             RST3  $18
 
 3092: C3 A0 D7       JP    $D7A0
 
@@ -8446,12 +8446,12 @@ DRAW_KO_BONUS_VALUE:
 
 DRAW_RING_LEFT_CORNER:
 30a4: DD 21 36 3E    LD    IX,$3E36
-30a8: DF             RST   $18
+30a8: DF             RST3  $18
 
 30a9: 3E 05          LD    A,#$05
 30ab: CD B4 30       CALL  $30B4
 30ae: DD 21 AE 40    LD    IX,$40AE
-30b2: DF             RST   $18
+30b2: DF             RST3  $18
 
 30b3: C9             RET   
 
@@ -8633,151 +8633,151 @@ DRAW_RING_LEFT_CORNER:
 31b3: 1E FF          LD    E,#$FF         ;high nybble 0xE/0b1110: output space (0xFF) to HL-, B times
 31b5: 18 F3          JR    $31AA
 
-31b7: FF             RST   $38
+31b7: FF             RST7  $38
 
-31b8: FF             RST   $38
+31b8: FF             RST7  $38
 
-31b9: FF             RST   $38
+31b9: FF             RST7  $38
 
-31ba: FF             RST   $38
+31ba: FF             RST7  $38
 
-31bb: FF             RST   $38
+31bb: FF             RST7  $38
 
-31bc: FF             RST   $38
+31bc: FF             RST7  $38
 
-31bd: FF             RST   $38
+31bd: FF             RST7  $38
 
-31be: FF             RST   $38
+31be: FF             RST7  $38
 
-31bf: FF             RST   $38
+31bf: FF             RST7  $38
 
-31c0: FF             RST   $38
+31c0: FF             RST7  $38
 
-31c1: FF             RST   $38
+31c1: FF             RST7  $38
 
-31c2: FF             RST   $38
+31c2: FF             RST7  $38
 
-31c3: FF             RST   $38
+31c3: FF             RST7  $38
 
-31c4: FF             RST   $38
+31c4: FF             RST7  $38
 
-31c5: FF             RST   $38
+31c5: FF             RST7  $38
 
-31c6: FF             RST   $38
+31c6: FF             RST7  $38
 
-31c7: FF             RST   $38
+31c7: FF             RST7  $38
 
-31c8: FF             RST   $38
+31c8: FF             RST7  $38
 
-31c9: FF             RST   $38
+31c9: FF             RST7  $38
 
-31ca: FF             RST   $38
+31ca: FF             RST7  $38
 
-31cb: FF             RST   $38
+31cb: FF             RST7  $38
 
-31cc: FF             RST   $38
+31cc: FF             RST7  $38
 
-31cd: FF             RST   $38
+31cd: FF             RST7  $38
 
-31ce: FF             RST   $38
+31ce: FF             RST7  $38
 
-31cf: FF             RST   $38
+31cf: FF             RST7  $38
 
-31d0: FF             RST   $38
+31d0: FF             RST7  $38
 
-31d1: FF             RST   $38
+31d1: FF             RST7  $38
 
-31d2: FF             RST   $38
+31d2: FF             RST7  $38
 
-31d3: FF             RST   $38
+31d3: FF             RST7  $38
 
-31d4: FF             RST   $38
+31d4: FF             RST7  $38
 
-31d5: FF             RST   $38
+31d5: FF             RST7  $38
 
-31d6: FF             RST   $38
+31d6: FF             RST7  $38
 
-31d7: FF             RST   $38
+31d7: FF             RST7  $38
 
-31d8: FF             RST   $38
+31d8: FF             RST7  $38
 
-31d9: FF             RST   $38
+31d9: FF             RST7  $38
 
-31da: FF             RST   $38
+31da: FF             RST7  $38
 
-31db: FF             RST   $38
+31db: FF             RST7  $38
 
-31dc: FF             RST   $38
+31dc: FF             RST7  $38
 
-31dd: FF             RST   $38
+31dd: FF             RST7  $38
 
-31de: FF             RST   $38
+31de: FF             RST7  $38
 
-31df: FF             RST   $38
+31df: FF             RST7  $38
 
-31e0: FF             RST   $38
+31e0: FF             RST7  $38
 
-31e1: FF             RST   $38
+31e1: FF             RST7  $38
 
-31e2: FF             RST   $38
+31e2: FF             RST7  $38
 
-31e3: FF             RST   $38
+31e3: FF             RST7  $38
 
-31e4: FF             RST   $38
+31e4: FF             RST7  $38
 
-31e5: FF             RST   $38
+31e5: FF             RST7  $38
 
-31e6: FF             RST   $38
+31e6: FF             RST7  $38
 
-31e7: FF             RST   $38
+31e7: FF             RST7  $38
 
-31e8: FF             RST   $38
+31e8: FF             RST7  $38
 
-31e9: FF             RST   $38
+31e9: FF             RST7  $38
 
-31ea: FF             RST   $38
+31ea: FF             RST7  $38
 
-31eb: FF             RST   $38
+31eb: FF             RST7  $38
 
-31ec: FF             RST   $38
+31ec: FF             RST7  $38
 
-31ed: FF             RST   $38
+31ed: FF             RST7  $38
 
-31ee: FF             RST   $38
+31ee: FF             RST7  $38
 
-31ef: FF             RST   $38
+31ef: FF             RST7  $38
 
-31f0: FF             RST   $38
+31f0: FF             RST7  $38
 
-31f1: FF             RST   $38
+31f1: FF             RST7  $38
 
-31f2: FF             RST   $38
+31f2: FF             RST7  $38
 
-31f3: FF             RST   $38
+31f3: FF             RST7  $38
 
-31f4: FF             RST   $38
+31f4: FF             RST7  $38
 
-31f5: FF             RST   $38
+31f5: FF             RST7  $38
 
-31f6: FF             RST   $38
+31f6: FF             RST7  $38
 
-31f7: FF             RST   $38
+31f7: FF             RST7  $38
 
-31f8: FF             RST   $38
+31f8: FF             RST7  $38
 
-31f9: FF             RST   $38
+31f9: FF             RST7  $38
 
-31fa: FF             RST   $38
+31fa: FF             RST7  $38
 
-31fb: FF             RST   $38
+31fb: FF             RST7  $38
 
-31fc: FF             RST   $38
+31fc: FF             RST7  $38
 
-31fd: FF             RST   $38
+31fd: FF             RST7  $38
 
-31fe: FF             RST   $38
+31fe: FF             RST7  $38
 
-31ff: FF             RST   $38
+31ff: FF             RST7  $38
 
 3200: 35             DEC   (HL)
 3201: AF             XOR   A,A
@@ -9265,7 +9265,7 @@ DRAW_RING_LEFT_CORNER:
 3489: ED 7B 76 FF    LD    SP,($FF76)
 348d: C9             RET   
 
-348e: FF             RST   $38
+348e: FF             RST7  $38
 
 348f: 1D             DEC   E
 3490: 07             RLCA  
@@ -9275,10 +9275,10 @@ DRAW_RING_LEFT_CORNER:
 3495: 1D             DEC   E
 3496: 04             INC   B
 3497: 1D             DEC   E
-3498: FF             RST   $38
+3498: FF             RST7  $38
 
 3499: 1D             DEC   E
-349a: FF             RST   $38
+349a: FF             RST7  $38
 
 349b: 1D             DEC   E
 349c: 14             INC   D
@@ -9296,7 +9296,7 @@ DRAW_RING_LEFT_CORNER:
 34ad: 1D             DEC   E
 34ae: 04             INC   B
 34af: 1D             DEC   E
-34b0: FF             RST   $38
+34b0: FF             RST7  $38
 
 34b1: 1D             DEC   E
 34b2: 09             ADD   HL,BC
@@ -9313,7 +9313,7 @@ DRAW_RING_LEFT_CORNER:
 34c3: 1D             DEC   E
 34c4: 01 1D 00       LD    BC,$001D
 34c7: 1D             DEC   E
-34c8: FF             RST   $38
+34c8: FF             RST7  $38
 
 34c9: 1D             DEC   E
 34ca: 09             ADD   HL,BC
@@ -9323,7 +9323,7 @@ DRAW_RING_LEFT_CORNER:
 34d0: 0E 1D          LD    C,#$1D
 34d2: 0D             DEC   C
 34d3: 1D             DEC   E
-34d4: FF             RST   $38
+34d4: FF             RST7  $38
 
 34d5: 1D             DEC   E
 34d6: CD 58 35       CALL  $3558
@@ -10048,7 +10048,7 @@ SELECT_INITIALS_BY_CONTROL_S:
 
 3d6a: .TNIRP.OT.NOTT.UB.SSERP
 
-3d81: FF             RST   $38
+3d81: FF             RST7  $38
 
 3d82: 0D             DEC   C
 3d83: 17             RLA   
@@ -10061,7 +10061,7 @@ SELECT_INITIALS_BY_CONTROL_S:
 3d8a: 00             NOP   
 3d8b: 20 2C          JR    NZ,$3DB9
 
-3d8d: E7             RST   $20
+3d8d: E7             RST4  $20
 
 3d8e: D5             PUSH  DE
 3d8f: 28 FF          JR    Z,$3D90
@@ -10072,12 +10072,12 @@ SELECT_INITIALS_BY_CONTROL_S:
 
 3d95: 30 DD          JR    NC,$3D74
 
-3d97: FF             RST   $38
+3d97: FF             RST7  $38
 
 NAME_ENTRY_:_S:
 3d98: :.YRTNE.EMAN
 
-3da4: E7             RST   $20
+3da4: E7             RST4  $20
 
 3da5: 00             NOP   
 3da6: C6 FC 03 84 02 2F 24 02 2D 2C 00 00 20 30 E2 00 
@@ -10093,7 +10093,7 @@ INTRODUCING_S:
 3dcd: E5             PUSH  HL
 3dce: F3             DI    
 3dcf: 2B             DEC   HL
-3dd0: DF             RST   $18
+3dd0: DF             RST3  $18
 
 IN_THE_LEFT_CORNER_S:
 3dd1: RENROC.TFEL.EHT..NI
@@ -10112,9 +10112,9 @@ WEIGHING_S:
 
 3dfa: E6 00          AND   A,#$00
 3dfc: 00             NOP   
-3dfd: EF             RST   $28
+3dfd: EF             RST5  $28
 
-3dfe: E7             RST   $20
+3dfe: E7             RST4  $20
 
 3dff: D4 16 18       CALL  NC,$1816
 3e02: RF
@@ -10125,7 +10125,7 @@ WEIGHING_S:
 3e08: 20 24          JR    NZ,$3E2E
 
 3e0a: E3             EX    (SP),HL
-3e0b: DF             RST   $18
+3e0b: DF             RST3  $18
 
 WORLD_VIDEO_BOXING_ASSOC._S:
 3e0c: .COSSA.GNIXOB.O.EDIV.DLROW
@@ -10134,7 +10134,7 @@ WORLD_VIDEO_BOXING_ASSOC._S:
 3e29: 00             NOP   
 3e2a: 00             NOP   
 3e2b: E4 20 1C       CALL  PO,$1C20
-3e2e: EF             RST   $28
+3e2e: EF             RST5  $28
 
 3e2f: E9             JP    (HL)
 3e30: 20 24          JR    NZ,$3E56
@@ -10235,7 +10235,7 @@ WORLD_VIDEO_BOXING_ASSOC._S:
 HIT_AVERAGE_S:
 42f4: EGAREVA.TIH
 
-42ff: FF             RST   $38
+42ff: FF             RST7  $38
 
 4300: 00             NOP   
 4301: 00             NOP   
@@ -10254,7 +10254,7 @@ HIT_AVERAGE_S:
 
 4314: NEC.REP
 
-431b: FF             RST   $38
+431b: FF             RST7  $38
 
 431c: 20 44          JR    NZ,$4362
 
@@ -10277,10 +10277,10 @@ HIT_AVERAGE_S:
 
 4331: 74             LD    (HL),H
 4332: 1C             INC   E
-4333: FF             RST   $38
+4333: FF             RST7  $38
 
 4334: 72             LD    (HL),D
-4335: FF             RST   $38
+4335: FF             RST7  $38
 
 4336: 72             LD    (HL),D
 4337: 91             SUB   A,C
@@ -10326,7 +10326,7 @@ K.O.TIME_S:
 4367: FE 72          CP    A,#$72
 4369: D1             POP   DE
 436a: 78             LD    A,B
-436b: FF             RST   $38
+436b: FF             RST7  $38
 
 436c: 72             LD    (HL),D
 436d: 91             SUB   A,C
@@ -10338,19 +10338,19 @@ K.O.TIME_S:
 4373: 1C             INC   E
 4374: 20 04          JR    NZ,$437A
 
-4376: D7             RST   $10
+4376: D7             RST2  $10
 
-4377: FF             RST   $38
+4377: FF             RST7  $38
 
-4378: FF             RST   $38
+4378: FF             RST7  $38
 
 4379: 2D             DEC   L
-437a: FF             RST   $38
+437a: FF             RST7  $38
 
-437b: FF             RST   $38
+437b: FF             RST7  $38
 
 437c: 2C             INC   L
-437d: FF             RST   $38
+437d: FF             RST7  $38
 
 437e: 20 18          JR    NZ,$4398
 
@@ -10370,19 +10370,19 @@ K.O.TIME_S:
 438e: 73             LD    (HL),E
 438f: 20 04          JR    NZ,$4395
 
-4391: D7             RST   $10
+4391: D7             RST2  $10
 
-4392: FF             RST   $38
+4392: FF             RST7  $38
 
-4393: FF             RST   $38
+4393: FF             RST7  $38
 
 4394: 2D             DEC   L
-4395: FF             RST   $38
+4395: FF             RST7  $38
 
-4396: FF             RST   $38
+4396: FF             RST7  $38
 
 4397: 2C             INC   L
-4398: FF             RST   $38
+4398: FF             RST7  $38
 
 4399: 20 18          JR    NZ,$43B3
 
@@ -10402,19 +10402,19 @@ K.O.TIME_S:
 43a9: 73             LD    (HL),E
 43aa: 20 04          JR    NZ,$43B0
 
-43ac: D7             RST   $10
+43ac: D7             RST2  $10
 
-43ad: FF             RST   $38
+43ad: FF             RST7  $38
 
-43ae: FF             RST   $38
+43ae: FF             RST7  $38
 
 43af: 2D             DEC   L
-43b0: FF             RST   $38
+43b0: FF             RST7  $38
 
-43b1: FF             RST   $38
+43b1: FF             RST7  $38
 
 43b2: 2C             INC   L
-43b3: FF             RST   $38
+43b3: FF             RST7  $38
 
 43b4: 20 18          JR    NZ,$43CE
 
@@ -10435,7 +10435,7 @@ K.O.TIME_S:
 43c5: FE 72          CP    A,#$72
 43c7: D1             POP   DE
 43c8: 7A             LD    A,D
-43c9: FF             RST   $38
+43c9: FF             RST7  $38
 
 43ca: 72             LD    (HL),D
 43cb: 91             SUB   A,C
@@ -10519,7 +10519,7 @@ SUPER_MACHO_MAN_S:
 4461: FE 72          CP    A,#$72
 4463: D1             POP   DE
 4464: 79             LD    A,C
-4465: FF             RST   $38
+4465: FF             RST7  $38
 
 4466: 72             LD    (HL),D
 4467: 91             SUB   A,C
@@ -10533,7 +10533,7 @@ SUPER_MACHO_MAN_S:
 
 446f: 20 44          JR    NZ,$44B5
 
-4471: FF             RST   $38
+4471: FF             RST7  $38
 
 4472: FE FF          CP    A,#$FF
 4474: FE F2          CP    A,#$F2
@@ -10547,7 +10547,7 @@ SUPER_MACHO_MAN_S:
 447d: 02             LD    (BC),A
 447e: D5             PUSH  DE
 447f: 44             LD    B,H
-4480: FF             RST   $38
+4480: FF             RST7  $38
 
 4481: D4 F2 D4       CALL  NC,$D4F2
 4484: 91             SUB   A,C
@@ -10557,10 +10557,10 @@ SUPER_MACHO_MAN_S:
 448b: 12             LD    (DE),A
 448c: C8             RET   Z
 
-448d: FF             RST   $38
+448d: FF             RST7  $38
 
 448e: 0F             RRCA  
-448f: D7             RST   $10
+448f: D7             RST2  $10
 
 4490: 7F             LD    A,A
 4491: D1             POP   DE
@@ -10574,10 +10574,10 @@ SUPER_MACHO_MAN_S:
 449a: 12             LD    (DE),A
 449b: D8             RET   C
 
-449c: FF             RST   $38
+449c: FF             RST7  $38
 
 449d: 0F             RRCA  
-449e: E7             RST   $20
+449e: E7             RST4  $20
 
 449f: 7F             LD    A,A
 44a0: D1             POP   DE
@@ -10591,7 +10591,7 @@ SUPER_MACHO_MAN_S:
 44a9: 19             ADD   HL,DE
 44aa: E8             RET   PE
 
-44ab: FF             RST   $38
+44ab: FF             RST7  $38
 
 44ac: 09             ADD   HL,BC
 44ad: F0             RET   P
@@ -10601,16 +10601,16 @@ SUPER_MACHO_MAN_S:
 44b0: D6 C4          SUB   A,#$C4
 44b2: 00             NOP   
 44b3: 91             SUB   A,C
-44b4: D7             RST   $10
+44b4: D7             RST2  $10
 
 44b5: 44             LD    B,H
-44b6: FF             RST   $38
+44b6: FF             RST7  $38
 
 44b7: 72             LD    (HL),D
 44b8: F3             DI    
 44b9: 72             LD    (HL),D
 44ba: 91             SUB   A,C
-44bb: D7             RST   $10
+44bb: D7             RST2  $10
 
 44bc: C4 00 91       CALL  NZ,$9100
 44bf: D6 44          SUB   A,#$44
@@ -10623,16 +10623,16 @@ SUPER_MACHO_MAN_S:
 44d6: D6 C4          SUB   A,#$C4
 44d8: 00             NOP   
 44d9: 91             SUB   A,C
-44da: D7             RST   $10
+44da: D7             RST2  $10
 
 44db: 44             LD    B,H
-44dc: FF             RST   $38
+44dc: FF             RST7  $38
 
 44dd: 72             LD    (HL),D
 44de: F3             DI    
 44df: 72             LD    (HL),D
 44e0: 91             SUB   A,C
-44e1: D7             RST   $10
+44e1: D7             RST2  $10
 
 44e2: C4 00 91       CALL  NZ,$9100
 44e5: D6 44          SUB   A,#$44
@@ -10658,7 +10658,7 @@ SUPER_MACHO_MAN_S:
 44fb: D8             RET   C
 
 44fc: 44             LD    B,H
-44fd: FF             RST   $38
+44fd: FF             RST7  $38
 
 44fe: D9             EXX   
 44ff: F3             DI    
@@ -10671,40 +10671,40 @@ SUPER_MACHO_MAN_S:
 4507: 00             NOP   
 4508: 20 10          JR    NZ,$451A
 
-450a: FF             RST   $38
+450a: FF             RST7  $38
 
 450b: DE FF          SBC   A,#$FF
 450d: DE F2          SBC   A,#$F2
 450f: DE 00          SBC   A,#$00
 4511: 20 04          JR    NZ,$4517
 
-4513: FF             RST   $38
+4513: FF             RST7  $38
 
 4514: FB             EI    
-4515: FF             RST   $38
+4515: FF             RST7  $38
 
 4516: FB             EI    
 4517: F2 FB 00       JP    P,$00FB
 
-451a: FF             RST   $38
+451a: FF             RST7  $38
 
 451b: FB             EI    
-451c: FF             RST   $38
+451c: FF             RST7  $38
 
 451d: FB             EI    
 451e: F2 FB 00       JP    P,$00FB
 
-4521: FF             RST   $38
+4521: FF             RST7  $38
 
 4522: FB             EI    
-4523: FF             RST   $38
+4523: FF             RST7  $38
 
 4524: FB             EI    
 4525: F2 FB 00       JP    P,$00FB
 
 4528: 20 10          JR    NZ,$453A
 
-452a: FF             RST   $38
+452a: FF             RST7  $38
 
 452b: DE FF          SBC   A,#$FF
 452d: DE F2          SBC   A,#$F2
@@ -10717,10 +10717,10 @@ SUPER_MACHO_MAN_S:
 4536: 82             ADD   A,D
 4537: 20 02          JR    NZ,$453B
 
-4539: FF             RST   $38
+4539: FF             RST7  $38
 
 453a: 00             NOP   
-453b: FF             RST   $38
+453b: FF             RST7  $38
 
 453c: 00             NOP   
 453d: F2 00 20       JP    P,$2000
@@ -10732,7 +10732,7 @@ SUPER_MACHO_MAN_S:
 4544: CE F2          ADC   A,#$F2
 4546: 16 20          LD    D,#$20
 4548: 04             INC   B
-4549: DF             RST   $18
+4549: DF             RST3  $18
 
 _NO.NAME__SCORE__S:
 454a: .EROCS..EMAN.ON
@@ -10744,17 +10744,17 @@ _NO.NAME__SCORE__S:
 456b: 81             ADD   A,C
 456c: 20 44          JR    NZ,$45B2
 
-456e: EF             RST   $28
+456e: EF             RST5  $28
 
-456f: EF             RST   $28
+456f: EF             RST5  $28
 
 4570: 00             NOP   
 4571: 81             ADD   A,C
 4572: 20 48          JR    NZ,$45BC
 
-4574: EF             RST   $28
+4574: EF             RST5  $28
 
-4575: EF             RST   $28
+4575: EF             RST5  $28
 
 4576: 30 6A          JR    NC,$45E2
 
@@ -10810,15 +10810,15 @@ _NO.NAME__SCORE__S:
 45ac: 40             LD    B,B
 45ad: 89             ADC   A,C
 45ae: 00             NOP   
-45af: EF             RST   $28
+45af: EF             RST5  $28
 
-45b0: EF             RST   $28
+45b0: EF             RST5  $28
 
 45b1: E2 00 4E       JP    PO,$4E00
 
 45b4: F4 16 20       CALL  P,$2016
 45b7: 2C             INC   L
-45b8: EF             RST   $28
+45b8: EF             RST5  $28
 
 45b9: E2 DC 25       JP    PO,$25DC
 
@@ -10833,7 +10833,7 @@ _NO.NAME__SCORE__S:
 45e0: EHT.LLUP00
 
 45ea: E9             JP    (HL)
-45eb: DF             RST   $18
+45eb: DF             RST3  $18
 
 _DUCK_PUNCHES_!_S:
 45ec: !.SEHCNUP.KCUD.
@@ -10841,18 +10841,18 @@ _DUCK_PUNCHES_!_S:
 45fb: D3 0D          OUT   (I0_VLM5030_START),A
 45fd: NA0
 
-4600: EF             RST   $28
+4600: EF             RST5  $28
 
 4601: E8             RET   PE
 
 4602: D1             POP   DE
 4603: 2A 00 E5       LD    HL,($E500)
-4606: DF             RST   $18
+4606: DF             RST3  $18
 
 ASTER_DUCKING_!_S:
 4607: !.GNIKCUD.RETSA
 
-4616: D7             RST   $10
+4616: D7             RST2  $10
 
 0W000LET_S_M_S:
 4617: M.S.TEL000W.
@@ -10863,16 +10863,16 @@ ASTER_DUCKING_!_S:
 
 4629: CUD.DOOG00000W'
 
-4638: EF             RST   $28
+4638: EF             RST5  $28
 
 4639: ED D3          Illegal Opcode
 00NEW_S:
 463b: WEN00
 
-4640: EF             RST   $28
+4640: EF             RST5  $28
 
 4641: E9             JP    (HL)
-4642: D7             RST   $10
+4642: D7             RST2  $10
 
 00CONTROL_S:
 4643: LORTNOC00
@@ -10905,7 +10905,7 @@ ASTER_DUCKING_!_S:
 4667: 20 24          JR    NZ,$468D
 
 4669: 8A             ADC   A,D
-466a: DF             RST   $18
+466a: DF             RST3  $18
 
 LEAR_BACKUP_RAM_S:
 466b: MAR.PUKCAB.RAEL
@@ -10933,9 +10933,9 @@ LEAR_BACKUP_RAM_S:
 
 46ab: 20 20          JR    NZ,$46CD
 
-46ad: EF             RST   $28
+46ad: EF             RST5  $28
 
-46ae: EF             RST   $28
+46ae: EF             RST5  $28
 
 46af: E2 30 AA       JP    PO,$AA30
 
@@ -10946,7 +10946,7 @@ LEAR_BACKUP_RAM_S:
 46b4: FC 01 20       CALL  M,$2001
 46b7: 1C             INC   E
 46b8: E3             EX    (SP),HL
-46b9: DF             RST   $18
+46b9: DF             RST3  $18
 
 NE_MORE_COIN_!!_S:
 46ba: !!.NIOC.EROM.EN
@@ -10962,7 +10962,7 @@ NE_MORE_COIN_!!_S:
 46d7: 20 1C          JR    NZ,$46F5
 
 46d9: E9             JP    (HL)
-46da: DF             RST   $18
+46da: DF             RST3  $18
 
 PRESS_START_FOR_S:
 46db: ROF.TRATS.SSERP
@@ -10970,9 +10970,9 @@ PRESS_START_FOR_S:
 46ea: E8             RET   PE
 
 46eb: 00             NOP   
-46ec: EF             RST   $28
+46ec: EF             RST5  $28
 
-46ed: EF             RST   $28
+46ed: EF             RST5  $28
 
 46ee: E2 00 
 
@@ -10982,7 +10982,7 @@ PRESS_START_FOR_S:
 46f1: FC 05 20       CALL  M,$2005
 46f4: 20 D9          JR    NZ,$46CF
 
-46f6: FF             RST   $38
+46f6: FF             RST7  $38
 
 00NEW_PLAY_S:
 46f7: YALP.WEN00
@@ -11017,7 +11017,7 @@ PRESS_START_FOR_S:
 
 471d: 20 20          JR    NZ,$473F
 
-471f: D7             RST   $10
+471f: D7             RST2  $10
 
 F_0REMATCH_S:
 4720: HCTAMER...
@@ -11028,15 +11028,15 @@ F_0REMATCH_S:
 472c: 09             ADD   HL,BC
 472d: 20 20          JR    NZ,$474F
 
-472f: EF             RST   $28
+472f: EF             RST5  $28
 
-4730: EF             RST   $28
+4730: EF             RST5  $28
 
 4731: E2 00 20       JP    PO,$2000
 
 4734: 20 EF          JR    NZ,$4725
 
-4736: EF             RST   $28
+4736: EF             RST5  $28
 
 4737: E2 00 EF       JP    PO,$EF00
 
@@ -11044,14 +11044,14 @@ F_0REMATCH_S:
 
 473d: .HCTAMER
 
-4745: E7             RST   $20
+4745: E7             RST4  $20
 
 4746: 00             NOP   
 4747: 20 20          JR    NZ,$4769
 
-4749: EF             RST   $28
+4749: EF             RST5  $28
 
-474a: EF             RST   $28
+474a: EF             RST5  $28
 
 474b: E2 00 20       JP    PO,$2000
 
@@ -11062,14 +11062,14 @@ F_0REMATCH_S:
 4760: D6 12          SUB   A,#$12
 4762: SOPED
 
-4767: E7             RST   $20
+4767: E7             RST4  $20
 
 4768: 00             NOP   
 4769: 20 20          JR    NZ,$478B
 
-476b: EF             RST   $28
+476b: EF             RST5  $28
 
-476c: EF             RST   $28
+476c: EF             RST5  $28
 
 476d: E2 30 68       JP    PO,$6830
 
@@ -11089,7 +11089,7 @@ F_0REMATCH_S:
 4791: 88             ADC   A,B
 4792: 20 1C          JR    NZ,$47B0
 
-4794: DF             RST   $18
+4794: DF             RST3  $18
 
 ODKA_DRUNKENSKI_S:
 4795: IKSNEKNURD.AKDO
@@ -11106,7 +11106,7 @@ ODKA_DRUNKENSKI_S:
 47b7: 89             ADC   A,C
 47b8: 20 1C          JR    NZ,$47D6
 
-47ba: DF             RST   $18
+47ba: DF             RST3  $18
 
 0SUPER_MACHO_MAN_S:
 47bb: NAM.OHCAM.REPUS0
@@ -11149,7 +11149,7 @@ ODKA_DRUNKENSKI_S:
 
 4809: 20 34          JR    NZ,$483F
 
-480b: DF             RST   $18
+480b: DF             RST3  $18
 
 ON_OF_THE_WORLD_S:
 480c: DLROW.EHT.FO.NO
@@ -11165,21 +11165,21 @@ ON_OF_THE_WORLD_S:
 483d: 84             ADD   A,H
 483e: 20 1C          JR    NZ,$485C
 
-4840: EF             RST   $28
+4840: EF             RST5  $28
 
 4841: E9             JP    (HL)
 4842: 00             NOP   
 4843: 84             ADD   A,H
 4844: 20 1C          JR    NZ,$4862
 
-4846: EF             RST   $28
+4846: EF             RST5  $28
 
 4847: E9             JP    (HL)
 4848: 00             NOP   
 4849: 84             ADD   A,H
 484a: 20 1C          JR    NZ,$4868
 
-484c: EF             RST   $28
+484c: EF             RST5  $28
 
 484d: E9             JP    (HL)
 00000_S:
@@ -11196,21 +11196,21 @@ ON_OF_THE_WORLD_S:
 4860: D8             RET   C
 
 4861: 1E 20          LD    E,#$20
-4863: C7             RST   $00
+4863: C7             RST0  $00
 
-4864: FF             RST   $38
+4864: FF             RST7  $38
 
-4865: C7             RST   $00
+4865: C7             RST0  $00
 
-4866: FF             RST   $38
+4866: FF             RST7  $38
 
-4867: C7             RST   $00
+4867: C7             RST0  $00
 
 4868: F2 C7 00       JP    P,$00C7
 
 486b: 20 10          JR    NZ,$487D
 
-486d: FF             RST   $38
+486d: FF             RST7  $38
 
 486e: FD FF          Illegal Opcode
 4870: FD F2          Illegal Opcode
@@ -11245,7 +11245,7 @@ HALL_OF_FAME_S:
 48c0: 17             RLA   
 48c1: E8             RET   PE
 
-48c2: FF             RST   $38
+48c2: FF             RST7  $38
 
 48c3: 07             RLCA  
 48c4: EE 7F          XOR   A,#$7F
@@ -11253,22 +11253,22 @@ HALL_OF_FAME_S:
 48c7: 00             NOP   
 48c8: 20 7C          JR    NZ,$4946
 
-48ca: EF             RST   $28
+48ca: EF             RST5  $28
 
 48cb: E1             POP   HL
 48cc: 00             NOP   
 48cd: 20 18          JR    NZ,$48E7
 
-48cf: DF             RST   $18
+48cf: DF             RST3  $18
 
-48d0: FF             RST   $38
+48d0: FF             RST7  $38
 
 NO.NAME__SCORE_S:
 48d1: EROCS..EMAN.ON
 
 48df: E1             POP   HL
 48e0: 00             NOP   
-48e1: EF             RST   $28
+48e1: EF             RST5  $28
 
 48e2: E1             POP   HL
 48e3: 00             NOP   
@@ -11288,7 +11288,7 @@ NO.NAME__SCORE_S:
 48f5: E2 00 20       JP    PO,$2000
 
 48f8: 14             INC   D
-48f9: E7             RST   $20
+48f9: E7             RST4  $20
 
 48fa: 20 64          JR    NZ,$4960
 
@@ -11345,10 +11345,10 @@ BEST_SCORE_S:
 4950: 20 14          JR    NZ,$4966
 
 4952: D5             PUSH  DE
-4953: FF             RST   $38
+4953: FF             RST7  $38
 
 4954: 2B             DEC   HL
-4955: FF             RST   $38
+4955: FF             RST7  $38
 
 4956: 73             LD    (HL),E
 4957: 73             LD    (HL),E
@@ -11362,7 +11362,7 @@ BEST_SCORE_S:
 4962: 20 14          JR    NZ,$4978
 
 4964: D4 FF 2B       CALL  NC,$2BFF
-4967: FF             RST   $38
+4967: FF             RST7  $38
 
 4968: 73             LD    (HL),E
 4969: 30 49          JR    NC,$49B4
@@ -11388,7 +11388,7 @@ BEST_SCORE_S:
 
 4980: DA 0A 91       JP    C,$910A
 
-4983: FF             RST   $38
+4983: FF             RST7  $38
 
 4984: 1C             INC   E
 4985: D1             POP   DE
@@ -11406,7 +11406,7 @@ BEST_SCORE_S:
 4990: E1             POP   HL
 4991: 00             NOP   
 4992: 91             SUB   A,C
-4993: FF             RST   $38
+4993: FF             RST7  $38
 
 4994: 1C             INC   E
 4995: D1             POP   DE
@@ -11417,13 +11417,13 @@ BEST_SCORE_S:
 499a: D8             RET   C
 
 499b: 73             LD    (HL),E
-499c: FF             RST   $38
+499c: FF             RST7  $38
 
 K.O._S:
 499d: .O.K
 
 49a1: 73             LD    (HL),E
-49a2: FF             RST   $38
+49a2: FF             RST7  $38
 
 49a3: 00             NOP   
 49a4: D3 FF          OUT   ($FF),A
@@ -11434,7 +11434,7 @@ BONUS_S:
 49ab: SUNOB
 
 49b0: 73             LD    (HL),E
-49b1: FF             RST   $38
+49b1: FF             RST7  $38
 
 49b2: 00             NOP   
 49b3: D2 FF 77       JP    NC,$77FF
@@ -11450,7 +11450,7 @@ BONUS_S:
 49bf: E1             POP   HL
 49c0: 00             NOP   
 49c1: 91             SUB   A,C
-49c2: FF             RST   $38
+49c2: FF             RST7  $38
 
 49c3: 1C             INC   E
 49c4: D2 73 30       JP    NC,$3073
@@ -11459,13 +11459,13 @@ BONUS_S:
 49c8: D8             RET   C
 
 49c9: 73             LD    (HL),E
-49ca: FF             RST   $38
+49ca: FF             RST7  $38
 
 PLAY_S:
 49cb: YALP
 
 49cf: 73             LD    (HL),E
-49d0: FF             RST   $38
+49d0: FF             RST7  $38
 
 49d1: 00             NOP   
 49d2: D3 FF          OUT   ($FF),A
@@ -11476,7 +11476,7 @@ SCORE_S:
 49d9: EROCS
 
 49de: 73             LD    (HL),E
-49df: FF             RST   $38
+49df: FF             RST7  $38
 
 49e0: 00             NOP   
 49e1: D2 FF 76       JP    NC,$76FF
@@ -11498,18 +11498,18 @@ SCORE_S:
 
 49f4: DC FF 91       CALL  C,$91FF
 49f7: 90             SUB   A,B
-49f8: FF             RST   $38
+49f8: FF             RST7  $38
 
 49f9: 8F             ADC   A,A
 49fa: 8E             ADC   A,(HL)
-49fb: FF             RST   $38
+49fb: FF             RST7  $38
 
 49fc: 8D             ADC   A,L
-49fd: FF             RST   $38
+49fd: FF             RST7  $38
 
 49fe: 8C             ADC   A,H
 49ff: 8B             ADC   A,E
-4a00: FF             RST   $38
+4a00: FF             RST7  $38
 
 4a01: 91             SUB   A,C
 4a02: 73             LD    (HL),E
@@ -11522,18 +11522,18 @@ SCORE_S:
 
 4a0b: DC FF 98       CALL  C,$98FF
 4a0e: 97             SUB   A,A
-4a0f: FF             RST   $38
+4a0f: FF             RST7  $38
 
 4a10: 96             SUB   A,(HL)
 4a11: 95             SUB   A,L
-4a12: FF             RST   $38
+4a12: FF             RST7  $38
 
 4a13: 94             SUB   A,H
-4a14: FF             RST   $38
+4a14: FF             RST7  $38
 
 4a15: 93             SUB   A,E
 4a16: 92             SUB   A,D
-4a17: FF             RST   $38
+4a17: FF             RST7  $38
 
 4a18: 91             SUB   A,C
 4a19: 73             LD    (HL),E
@@ -11551,7 +11551,7 @@ SCORE_S:
 
 4a29: 03             INC   BC
 4a2a: 91             SUB   A,C
-4a2b: FF             RST   $38
+4a2b: FF             RST7  $38
 
 4a2c: 1C             INC   E
 4a2d: D1             POP   DE
@@ -11562,7 +11562,7 @@ SCORE_S:
 4a34: E1             POP   HL
 4a35: 00             NOP   
 4a36: 91             SUB   A,C
-4a37: FF             RST   $38
+4a37: FF             RST7  $38
 
 4a38: 24             INC   H
 4a39: D1             POP   DE
@@ -11578,7 +11578,7 @@ SCORE_S:
 4a45: E1             POP   HL
 4a46: 00             NOP   
 4a47: 91             SUB   A,C
-4a48: FF             RST   $38
+4a48: FF             RST7  $38
 
 4a49: 24             INC   H
 4a4a: D1             POP   DE
@@ -11593,10 +11593,10 @@ SCORE_S:
 4a55: 70             LD    (HL),B
 4a56: DD 03          Illegal Opcode
 4a58: 91             SUB   A,C
-4a59: FF             RST   $38
+4a59: FF             RST7  $38
 
 4a5a: 24             INC   H
-4a5b: DF             RST   $18
+4a5b: DF             RST3  $18
 
 4a5c: 73             LD    (HL),E
 4a5d: 45             LD    B,L
@@ -11609,29 +11609,29 @@ SCORE_S:
 4a66: DB 45          IN    A,($45)
 4a68: 44             LD    B,H
 4a69: 73             LD    (HL),E
-4a6a: FF             RST   $38
+4a6a: FF             RST7  $38
 
 4a6b: 00             NOP   
 4a6c: E1             POP   HL
-4a6d: DF             RST   $18
+4a6d: DF             RST3  $18
 
 4a6e: 73             LD    (HL),E
 4a6f: 47             LD    B,A
 4a70: 46             LD    B,(HL)
 4a71: 47             LD    B,A
 4a72: 46             LD    B,(HL)
-4a73: FF             RST   $38
+4a73: FF             RST7  $38
 
 4a74: 47             LD    B,A
 4a75: 46             LD    B,(HL)
 4a76: 47             LD    B,A
 4a77: 46             LD    B,(HL)
-4a78: FF             RST   $38
+4a78: FF             RST7  $38
 
 4a79: 47             LD    B,A
 4a7a: 46             LD    B,(HL)
 4a7b: 73             LD    (HL),E
-4a7c: FF             RST   $38
+4a7c: FF             RST7  $38
 
 4a7d: 00             NOP   
 4a7e: D2 FF 75       JP    NC,$75FF
@@ -11654,7 +11654,7 @@ STATUS_S:
 
 4a99: FA DE D1       JP    M,$D1DE
 
-4a9c: DF             RST   $18
+4a9c: DF             RST3  $18
 
 4a9d: 03             INC   BC
 4a9e: E2 04 20       JP    PO,$2004
@@ -11663,7 +11663,7 @@ STATUS_S:
 4aa2: E4 03 E2       CALL  PO,$E203
 4aa5: 04             INC   B
 4aa6: 91             SUB   A,C
-4aa7: DF             RST   $18
+4aa7: DF             RST3  $18
 
 4aa8: 10 FA          DJNZ  $4AA4
 
@@ -13793,7 +13793,7 @@ __0W0A_S:
 bf81: A0W...
 
 bf87: F3             DI    
-bf88: FF             RST   $38
+bf88: FF             RST7  $38
 
 bf89: 20 2C          JR    NZ,$BFB7
 
@@ -13802,7 +13802,7 @@ bf8e: OC000W.
 
 bf95: 8F             ADC   A,A
 bf96: F3             DI    
-bf97: FF             RST   $38
+bf97: FF             RST7  $38
 
 bf98: 20 2C          JR    NZ,$BFC6
 
@@ -13812,7 +13812,7 @@ bf9d: LUCIFFID000W.
 
 bfaa: 8F             ADC   A,A
 bfab: F3             DI    
-bfac: FF             RST   $38
+bfac: FF             RST7  $38
 
 bfad: 20 2C          JR    NZ,$BFDB
 
@@ -13821,7 +13821,7 @@ bfb2: IT000W.
 
 bfb9: 8D             ADC   A,L
 bfba: F5             PUSH  AF
-bfbb: FF             RST   $38
+bfbb: FF             RST7  $38
 
 bfbc: 20 2C          JR    NZ,$BFEA
 
@@ -13831,7 +13831,7 @@ bfbf: CISUM000W.
 
 bfc9: 8D             ADC   A,L
 bfca: F5             PUSH  AF
-bfcb: FF             RST   $38
+bfcb: FF             RST7  $38
 
 bfcc: 20 2C          JR    NZ,$BFFA
 
@@ -13842,7 +13842,7 @@ bfcf: TNUOCSID000W.
 
 bfdc: 8D             ADC   A,L
 bfdd: F5             PUSH  AF
-bfde: FF             RST   $38
+bfde: FF             RST7  $38
 
 bfdf: 20 2C          JR    NZ,$C00D
 

@@ -1334,6 +1334,10 @@ void main(int argc,char *argv[]) {
                         strcat(out," ");
                      sprintf(out2,"%s",opcodes[i].name);
                      strcat(out,out2);
+                     if (!_stricmp(opcodes[i].name,"RST")) {
+                         sprintf(out2, "%01X", ((opcode >> 3) & 7));
+                         strcat(out, out2);
+                     }
                      for(sp=strlen(out);sp<OPERANDTAB;sp++)
                         strcat(out," ");
                      printoperands(0,opcode,numoperands,operand,
