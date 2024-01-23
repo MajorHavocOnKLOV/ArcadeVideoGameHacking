@@ -733,8 +733,13 @@ void printoperands(int page,int opcode,UBYTE numoperands,UBYTE *operandarray,
                strcat(str,",");
                printcomma=2;
             }
-            sprintf(out2,"(I%c+$%02.2X)",(indx?'X':'Y'),
-                  operandarray[0]);
+            BOOL operation_is_plus = TRUE;
+            char offset = operandarray[0];
+            if (offset < 0) {
+                operation_is_plus = FALSE;
+                offset = ~offset + 1;
+            }
+            sprintf(out2,"(I%c%c$%02.2X)",(indx?'X':'Y'),(operation_is_plus?'+':'-'),offset);
             strcat(str,out2);
          break;
       default:

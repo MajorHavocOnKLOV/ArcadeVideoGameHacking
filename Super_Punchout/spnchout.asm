@@ -2844,19 +2844,19 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 10e7: 0E 02          LD    C,#$02
 10e9: DD 21 28 D5    LD    IX,$D528
 10ed: AF             XOR   A,A
-10ee: DD 77 E5       LD    (IX+$E5),A
-10f1: DD 77 F2       LD    (IX+$F2),A
-10f4: DD 77 F9       LD    (IX+$F9),A
-10f7: DD 36 F8 01    LD    (IX+$F8),#$01
+10ee: DD 77 E5       LD    (IX-$1B),A
+10f1: DD 77 F2       LD    (IX-$0E),A
+10f4: DD 77 F9       LD    (IX-$07),A
+10f7: DD 36 F8 01    LD    (IX-$08),#$01
 10fb: D9             EXX   
 10fc: 06 31          LD    B,#$31
 10fe: CD 69 11       CALL  $1169
 1101: DD 21 B8 D4    LD    IX,$D4B8
 1105: 0E 02          LD    C,#$02
 1107: 21 B7 D4       LD    HL,$D4B7
-110a: DD 36 F8 01    LD    (IX+$F8),#$01
-110e: DD 36 F9 00    LD    (IX+$F9),#$00
-1112: DD 36 F1 00    LD    (IX+$F1),#$00
+110a: DD 36 F8 01    LD    (IX-$08),#$01
+110e: DD 36 F9 00    LD    (IX-$07),#$00
+1112: DD 36 F1 00    LD    (IX-$0F),#$00
 1116: D9             EXX   
 1117: 06 04          LD    B,#$04
 1119: CD 69 11       CALL  $1169
@@ -2917,7 +2917,7 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 117a: 32 0D D5       LD    ($D50D),A
 117d: 20 03          JR    NZ,$1182
 
-117f: DD 7E F8       LD    A,(IX+$F8)
+117f: DD 7E F8       LD    A,(IX-$08)
 1182: DD 77 00       LD    (IX+$00),A
 1185: 11 08 00       LD    DE,$0008
 1188: DD 72 01       LD    (IX+$01),D
@@ -3254,12 +3254,12 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 1379: DD E1          POP   IX
 137b: 09             ADD   HL,BC
 137c: 16 D0          LD    D,#$D0
-137e: DD 7E FF       LD    A,(IX+$FF)
+137e: DD 7E FF       LD    A,(IX-$01)
 1381: FE FF          CP    A,#$FF
 1383: C8             RET   Z
 
 1384: 4F             LD    C,A
-1385: DD 5E FE       LD    E,(IX+$FE)
+1385: DD 5E FE       LD    E,(IX-$02)
 1388: ED B0          LDIR  
 138a: DD 2B          DEC   IX
 138c: DD 2B          DEC   IX
@@ -3372,9 +3372,9 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 141f: FA 24 14       JP    M,$1424
 
 1422: 1E 80          LD    E,#$80
-1424: DD 6E FC       LD    L,(IX+$FC)
-1427: DD 66 FE       LD    H,(IX+$FE)
-142a: DD 7E F8       LD    A,(IX+$F8)
+1424: DD 6E FC       LD    L,(IX-$04)
+1427: DD 66 FE       LD    H,(IX-$02)
+142a: DD 7E F8       LD    A,(IX-$08)
 142d: 4F             LD    C,A
 142e: 08             EX    AF,AF'
 142f: 79             LD    A,C
@@ -3385,9 +3385,9 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 1435: 07             RLCA  
 1436: E6 07          AND   A,#$07
 1438: 4F             LD    C,A
-1439: DD 7E FA       LD    A,(IX+$FA)
+1439: DD 7E FA       LD    A,(IX-$06)
 143c: 46             LD    B,(HL)
-143d: DD 70 FA       LD    (IX+$FA),B
+143d: DD 70 FA       LD    (IX-$06),B
 1440: 08             EX    AF,AF'
 1441: 47             LD    B,A
 1442: 08             EX    AF,AF'
@@ -3787,11 +3787,11 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 1647: 4F             LD    C,A
 1648: 87             ADD   A,A
 1649: 81             ADD   A,C
-164a: FD 77 F7       LD    (IY+$F7),A
+164a: FD 77 F7       LD    (IY-$09),A
 164d: FD 7E 03       LD    A,(IY+$03)
 1650: 11 B2 F3       LD    DE,$F3B2
 1653: CD 8D 10       CALL  DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
-1656: FD 7E F7       LD    A,(IY+$F7)
+1656: FD 7E F7       LD    A,(IY-$09)
 1659: 87             ADD   A,A
 165a: 5F             LD    E,A
 165b: 16 00          LD    D,#$00
@@ -3810,10 +3810,10 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 
 1674: 18 03          JR    $1679
 
-1676: FD 34 F7       INC   (IY+$F7)
+1676: FD 34 F7       INC   (IY-$09)
 
 *** Process rematch (because credit and R punch pressed)
-1679: FD 34 F7       INC   (IY+$F7)
+1679: FD 34 F7       INC   (IY-$09)
 167c: 18 CF          JR    $164D
 
 167e: DB 00          IN    A,(IO_0_BUTTONS)
@@ -3861,7 +3861,7 @@ PRINT_REMATCH?:
 16b2: E6 01          AND   A,#$01
 16b4: 28 CE          JR    Z,$1684
 
-16b6: FD 36 F7 02    LD    (IY+$F7),#$02
+16b6: FD 36 F7 02    LD    (IY-$09),#$02
 16ba: FD 36 02 FF    LD    (IY+$02),#$FF
 16be: 18 8D          JR    $164D
 
@@ -3879,10 +3879,10 @@ PRINT_REMATCH?:
 16d8: FD 77 03       LD    (IY+$03),A
 16db: C9             RET   
 
-16dc: FD 36 F7 30    LD    (IY+$F7),#$30
+16dc: FD 36 F7 30    LD    (IY-$09),#$30
 16e0: AF             XOR   A,A
 16e1: 32 B4 F3       LD    ($F3B4),A
-16e4: FD 7E F7       LD    A,(IY+$F7)
+16e4: FD 7E F7       LD    A,(IY-$09)
 16e7: F5             PUSH  AF
 16e8: 11 C2 FD       LD    DE,$FDC2
 16eb: CD 8D 10       CALL  DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
@@ -3893,7 +3893,7 @@ PRINT_REMATCH?:
 16f6: D8             RET   C
 
 16f7: 27             DAA   
-16f8: FD 77 F7       LD    (IY+$F7),A
+16f8: FD 77 F7       LD    (IY-$09),A
 16fb: FD 7E 03       LD    A,(IY+$03)
 16fe: A7             AND   A,A
 16ff: 28 E3          JR    Z,$16E4
