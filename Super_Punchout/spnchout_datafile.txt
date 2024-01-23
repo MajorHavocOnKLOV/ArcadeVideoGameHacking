@@ -87,6 +87,7 @@ comment 0545 draws frame around fight table and health bars
 
 comment 05BD jump to start of attract mode loop ...
 
+commentline 0752 start a new match goes through here, not sure where it starts though ...
 ;comment 0776 call function to draw bandage on forehead of rematch fighter
 comment 08F1 fight number zero based
 comment 08F7 fight number one based BCD for display
@@ -442,6 +443,13 @@ label D02E KNOCKDOWNS
 label D02F CPU_KNOCKDOWNS
 ; 1A = max, can use RightHook/Uppercut button
 label D048 KO_BUTTON_LEVEL
+
+; each record is 8 bytes: number, ?, initials x3, milliseconds?, seconds, minutes
+label D410 KO_TIME_TABLE_BEAR_HUGGER
+label D428 KO_TIME_TABLE_DRAGON_CHAN
+label D440 KO_TIME_TABLE_VODKA_DRUNKENSKI
+label D458 KO_TIME_TABLE_GREAT_TIGER
+label D470 KO_TIME_TABLE_SUPER_CHAMPION
 
 commentline d7bf 01 = credit, 02 = start game, 03 = game over, 04 = game over 2?, 05 = game over 3?, 06 = rematch started,
 commentline d7bf or countdown value to add coins for rematch
