@@ -45,9 +45,12 @@ org 0000
 
 commentline 0000 Dissasembly of the Super Punch-Out!! (Rev B) ROMs used by MAME (labeled as spnchout)
 comment 0000 Z80 starts executing code at 0x0000
+data 0006-0007
 
 commentline 0008 draw with 1 line between operations
 comment 0008 $0040 = 1 line (32 flip/colors plus 32 characters)
+data 000e-000f
+
 commentline 0018 draw with 2 lines between operations
 comment 0018 $0080 = 2 lines (64 flip/colors plus 64 characters)
 
@@ -92,14 +95,36 @@ commentline 0752 start a new match goes through here, not sure where it starts t
 comment 08F1 fight number zero based
 comment 08F7 fight number one based BCD for display
 
+data 0B11-0B15
+comment 0B16 referenced at 07B4
+data 0B16-0B1B
+data 0B1C-0B21
+data 0B22-0B27
+
 label 0b3c NMI_STARTS_HERE?
 comment 0b93 return from NMI
 comment 0C37 Clear D500-D6FF
+
 label 0CA1 SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM
+
+comment 0DB2 number of KO records, top 3 for each boxer, 5 boxers, =0x0F/15
+commentline 0DBC this function is used to transfer the KO time records from nybbles in NVRAM to bytes in RAM
+label 0DBC GET_BYTES_FROM_NVRAM_AT_HL_INTO_RAM_AT_DE
+comment 0DDE combine the two nybbles from NVRAM into a byte for RAM
+
+comment 0E1A number of KO records, top 3 for each boxer, 5 boxers, =0x0F/15
+comment 0E28 todo: what is this location in NVRAM used for?
+label 0E2C COPY_KO_TIME_FROM_BYTES_IN_RAM_TO_NYBBLES_IN_NVRAM
+label 0E37 GET_BYTES_FROM_RAM_AT_HL_INTO_NVRAM_AT_DE
+
+label 0e4e CHECKSUM_KO_?_?_DATA_IN_RAM?
+
+label 0FEE COPY_?
 
 commentline 108D A contains 2 bcd digits. Display A as 2 digits at DE with blank padding
 label 108D DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
 comment 1092 Replace 0 tens digit with a space
+label 109C DISPLAY_(HL)_AS_2_SPACE_PADDED_DIGITS_AND_$2B_AT_DE
 comment 12F7 Clear D000-D1FF
 commentline 1679 Process rematch (because credit and R punch pressed)
 commentline 1689 Input from 00 into A, check bit 3 (and $04) and if NZ, jmp 1676
@@ -116,6 +141,16 @@ comment 16A4 ?
 comment 16A6 ?
 comment 16A8 ?
 
+label 198D COPY_?2
+
+label 19A1 MAKE_HL_POINT_TO_THE_KO_TABLE_FOR_THE_CURRENT_OPPONENT
+comment 19AA C now has OPPONENT_NUMBER * 8
+comment 19AB A now has OPPONENT_NUMBER * 16
+comment 19AD A now has OPPONENT_NUMBER * 24 and is added to L
+label 19F3 COMPARE_3_BYTES_IN_HL-_TO_BDE
+
+commentline 2D25 this copies characters in RAM/ROM to the screen
+label 2D25 COPY_(HL)_TO_(DE)_EVERY_OTHER_BYTE_FOR_C_COUNT
 label 2D2E WAIT___
 label 2D3A DISPLAY_NEXT_FIGHTER_TEXT_IN_BOTTOM_SCREEN
 
@@ -138,6 +173,9 @@ comment 2E1D draw greenish/tan background bottom
 comment 2E22 ?
 label 2E44 DRAW_MINI_CHAMP_WITH_BELT_AT_BOTTOM_OF_TOP_SCREEN
 label 2E63 DISPLAY_BEST_KO_TIMES_AND_HIT_AVG
+
+
+
 label 2EA8 CLEAR_BOTTOM_SCREEN
 label 2EAE GET_AND_DRAW_TOP_10_SCORES?
 
@@ -151,6 +189,10 @@ label 2FB6 DRAW_KO_BONUS_VALUE
 commentline 3055 print from 46f0 & 46d4 (what?)
 commentline 3060 print remtach?
 label 30A4 DRAW_RING_LEFT_CORNER
+
+label 30CE LOAD_DRAW_DESTINATION(HL)_AND_OPERANDS_COUNT(B)_FROM_IX
+label 30E0 ADD_OFFSET_TO_ORIGINAL_DRAW_DESTINATION_AND_RETURN_IF_NO_MORE_OPERANDS
+
 comment 30ED set flags (Z and M/sign)
 comment 30F1 if msb (sign) set, jump
 comment 30F6 if any of 2 msbs set, jump
@@ -450,6 +492,9 @@ label D428 KO_TIME_TABLE_DRAGON_CHAN
 label D440 KO_TIME_TABLE_VODKA_DRUNKENSKI
 label D458 KO_TIME_TABLE_GREAT_TIGER
 label D470 KO_TIME_TABLE_SUPER_CHAMPION
+
+label D4B0 HIGH_SCORE_OR_OTHER_TABLE1
+label D510 HIGH_SCORE_OR_OTHER_TABLE2
 
 commentline d7bf 01 = credit, 02 = start game, 03 = game over, 04 = game over 2?, 05 = game over 3?, 06 = rematch started,
 commentline d7bf or countdown value to add coins for rematch
