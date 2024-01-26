@@ -78,7 +78,7 @@ comment 0380 Read DSW1
 comment 0384 Mask off coinage
 comment 0388 If not free play, process coinage
 commentline 03BD End Process coinage dip switches?
-comment 03F6 Clear D510-D6AF
+comment 03F6 Clear high score table (D510-D6AF)
 
 label 0445 RST10_CLEAR_BACKGROUNDS_TOP_AND_BOTTOM
 label 0446 CLEAR_BACKGROUNDS_TOP_AND_BOTTOM
@@ -494,7 +494,7 @@ label D458 KO_TIME_TABLE_GREAT_TIGER
 label D470 KO_TIME_TABLE_SUPER_CHAMPION
 
 label D4B0 HIGH_SCORE_OR_OTHER_TABLE1
-label D510 HIGH_SCORE_OR_OTHER_TABLE2
+label D510 HIGH_SCORE_TABLE_TO_D6AF
 
 commentline d7bf 01 = credit, 02 = start game, 03 = game over, 04 = game over 2?, 05 = game over 3?, 06 = rematch started,
 commentline d7bf or countdown value to add coins for rematch
