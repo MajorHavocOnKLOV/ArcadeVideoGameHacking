@@ -1,4 +1,4 @@
-org 0, numlab 151, numio 13, numdata 116, numcomm 50, numcommline 37
+org 0, numlab 165, numio 13, numdata 122, numcomm 58, numcommline 39
 
 IO_0_BUTTONS EQU $00
 I0_1_JOYSTICK? EQU $01
@@ -19,8 +19,18 @@ CLEAR_BACKGROUNDS_TOP_AND_BOTTOM EQU $0446
 START_ATTRACT_LOOP EQU $04a5
 NMI_STARTS_HERE? EQU $0b3c
 SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM EQU $0ca1
+GET_BYTES_FROM_NVRAM_AT_HL_INTO_RAM_AT_DE EQU $0dbc
+COPY_KO_TIME_FROM_BYTES_IN_RAM_TO_NYBBLES_IN_NVRAM EQU $0e2c
+GET_BYTES_FROM_RAM_AT_HL_INTO_NVRAM_AT_DE EQU $0e37
+CHECKSUM_KO_?_?_DATA_IN_RAM? EQU $0e4e
+COPY_? EQU $0fee
 DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE EQU $108d
+DISPLAY_(HL)_AS_2_SPACE_PADDED_DIGITS_AND_$2B_AT_DE EQU $109c
 PRINT_REMATCH? EQU $168f
+COPY_?2 EQU $198d
+MAKE_HL_POINT_TO_THE_KO_TABLE_FOR_THE_CURRENT_OPPONENT EQU $19a1
+COMPARE_3_BYTES_IN_HL-_TO_BDE EQU $19f3
+COPY_(HL)_TO_(DE)_EVERY_OTHER_BYTE_FOR_C_COUNT EQU $2d25
 WAIT___ EQU $2d2e
 DISPLAY_NEXT_FIGHTER_TEXT_IN_BOTTOM_SCREEN EQU $2d3a
 COPY_A_TO_DE+_FOR_C_COUNT EQU $2d52
@@ -38,6 +48,8 @@ DRAW_UPPER_SCREEN_FOR_A_FIGHTB EQU $2f7b
 DRAW_BANDAGE_ON_REMATCHED_FIGHTER EQU $2fb0
 DRAW_KO_BONUS_VALUE EQU $2fb6
 DRAW_RING_LEFT_CORNER EQU $30a4
+LOAD_DRAW_DESTINATION(HL)_AND_OPERANDS_COUNT(B)_FROM_IX EQU $30ce
+ADD_OFFSET_TO_ORIGINAL_DRAW_DESTINATION_AND_RETURN_IF_NO_MORE_OPERANDS EQU $30e0
 SELECT_INITIALS_BY_CONTROL_S EQU $3d49
 AND_PRESS_BUTTON_TO_PRINT_!_S EQU $3d69
 NAME_ENTRY_:_S EQU $3d98
@@ -138,6 +150,8 @@ KO_TIME_TABLE_DRAGON_CHAN EQU $d428
 KO_TIME_TABLE_VODKA_DRUNKENSKI EQU $d440
 KO_TIME_TABLE_GREAT_TIGER EQU $d458
 KO_TIME_TABLE_SUPER_CHAMPION EQU $d470
+HIGH_SCORE_OR_OTHER_TABLE1 EQU $d4b0
+HIGH_SCORE_TABLE_TO_D6AF EQU $d510
 game_status EQU $d7bf
 credits EQU $d7cb
 TIME EQU $d7f2
@@ -172,18 +186,14 @@ ORG $0000
 0000: 11 00 08       LD    DE,$0800       ;Z80 starts executing code at 0x0000
 0003: C3 81 02       JP    $0281
 
-0006: FF             RST7  $38
-
-0007: FF             RST7  $38
+0006: FF FF 
 
 
 *** draw with 1 line between operations
 0008: 11 40 00       LD    DE,$0040       ;$0040 = 1 line (32 flip/colors plus 32 characters)
-000b: C3 CE 30       JP    $30CE
+000b: C3 CE 30       JP    LOAD_DRAW_DESTINATION(HL)_AND_OPERANDS_COUNT(B)_FROM_IX
 
-000e: FF             RST7  $38
-
-000f: FF             RST7  $38
+000e: FF FF 
 
 0010: 3E FF          LD    A,#$FF
 0012: 32 CD D7       LD    ($D7CD),A
@@ -192,7 +202,7 @@ ORG $0000
 
 *** draw with 2 lines between operations
 0018: 11 80 00       LD    DE,$0080       ;$0080 = 2 lines (64 flip/colors plus 64 characters)
-001b: C3 CE 30       JP    $30CE
+001b: C3 CE 30       JP    LOAD_DRAW_DESTINATION(HL)_AND_OPERANDS_COUNT(B)_FROM_IX
 
 001e: FF             RST7  $38
 
@@ -880,7 +890,7 @@ ORG $0000
 03ca: CD 56 0D       CALL  $0D56
 03cd: 30 0C          JR    NC,$03DB
 
-03cf: CD 4E 0E       CALL  $0E4E
+03cf: CD 4E 0E       CALL  CHECKSUM_KO_?_?_DATA_IN_RAM?
 03d2: ED 5B 0E D5    LD    DE,($D50E)
 03d6: A7             AND   A,A
 03d7: ED 52          SBC   HL,DE
@@ -890,16 +900,16 @@ ORG $0000
 03de: CD 56 0D       CALL  $0D56
 03e1: 30 0C          JR    NC,$03EF
 
-03e3: CD 4E 0E       CALL  $0E4E
+03e3: CD 4E 0E       CALL  CHECKSUM_KO_?_?_DATA_IN_RAM?
 03e6: ED 5B 0E D5    LD    DE,($D50E)
 03ea: A7             AND   A,A
 03eb: ED 52          SBC   HL,DE
 03ed: 28 34          JR    Z,$0423
 
-03ef: 11 10 D5       LD    DE,$D510
+03ef: 11 10 D5       LD    DE,HIGH_SCORE_TABLE_TO_D6AF
 03f2: 01 A0 01       LD    BC,$01A0
 03f5: AF             XOR   A,A
-03f6: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT;Clear D510-D6AF
+03f6: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT;Clear high score table (D510-D6AF)
 03f9: 11 20 D5       LD    DE,$D520
 03fc: D5             PUSH  DE
 03fd: 21 35 04       LD    HL,$0435
@@ -1424,7 +1434,7 @@ START_ATTRACT_LOOP:
 07b4: 21 16 0B       LD    HL,$0B16
 07b7: 11 E5 DF       LD    DE,$DFE5
 07ba: 0E 06          LD    C,#$06
-07bc: CD 25 2D       CALL  $2D25
+07bc: CD 25 2D       CALL  COPY_(HL)_TO_(DE)_EVERY_OTHER_BYTE_FOR_C_COUNT
 07bf: 3E 44          LD    A,#$44
 07c1: CD 48 2D       CALL  $2D48
 07c4: D7             RST2  $10
@@ -1442,7 +1452,7 @@ START_ATTRACT_LOOP:
 07e1: 21 11 0B       LD    HL,$0B11
 07e4: 11 E5 DF       LD    DE,$DFE5
 07e7: 0E 05          LD    C,#$05
-07e9: CD 25 2D       CALL  $2D25
+07e9: CD 25 2D       CALL  COPY_(HL)_TO_(DE)_EVERY_OTHER_BYTE_FOR_C_COUNT
 07ec: CD 9A 30       CALL  $309A
 07ef: 0E 0A          LD    C,#$0A
 07f1: 28 0B          JR    Z,$07FE
@@ -1648,7 +1658,7 @@ START_ATTRACT_LOOP:
 097f: 21 1C 0B       LD    HL,$0B1C
 0982: 11 E5 DF       LD    DE,$DFE5
 0985: 0E 06          LD    C,#$06
-0987: CD 25 2D       CALL  $2D25
+0987: CD 25 2D       CALL  COPY_(HL)_TO_(DE)_EVERY_OTHER_BYTE_FOR_C_COUNT
 098a: CD 32 2D       CALL  $2D32
 098d: 3E FD          LD    A,#$FD
 098f: 32 CD D7       LD    ($D7CD),A
@@ -1880,25 +1890,14 @@ START_ATTRACT_LOOP:
 
 0b10: 20 78          JR    NZ,$0B8A
 
-0b12: 2C             INC   L
-0b13: 97             SUB   A,A
-0b14: F7             RST6  $30
+0b12: 2C 97 F7 88 
 
-0b15: 88             ADC   A,B
-0b16: 28 60          JR    Z,$0B78
+0b16: 28 60 B1 DD AA 90 
+                                          ;referenced at 07B4
 
-0b18: B1             OR    A,C
-0b19: DD AA          Illegal Opcode
-0b1b: 90             SUB   A,B
-0b1c: 4C             LD    C,H
-0b1d: 00             NOP   
-0b1e: 55             LD    D,L
-0b1f: DD 88          Illegal Opcode
-0b21: 90             SUB   A,B
-0b22: A6             AND   A,(HL)
-0b23: 1C             INC   E
-0b24: 45             LD    B,L
-0b25: DA 80 8C       JP    C,$8C80
+0b1c: 4C 00 55 DD 88 90 
+
+0b22: A6 1C 45 DA 80 8C 
 
 0b28: 7E             LD    A,(HL)
 0b29: A7             AND   A,A
@@ -2268,22 +2267,25 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 0da0: 06 02          LD    B,#$02
 0da2: CD C7 0D       CALL  $0DC7
 0da5: 0E 16          LD    C,#$16
-0da7: CD BC 0D       CALL  $0DBC
+0da7: CD BC 0D       CALL  GET_BYTES_FROM_NVRAM_AT_HL_INTO_RAM_AT_DE
 0daa: 0E 05          LD    C,#$05
-0dac: 11 B0 D4       LD    DE,$D4B0
-0daf: CD BC 0D       CALL  $0DBC
-0db2: 0E 0F          LD    C,#$0F
+0dac: 11 B0 D4       LD    DE,HIGH_SCORE_OR_OTHER_TABLE1
+0daf: CD BC 0D       CALL  GET_BYTES_FROM_NVRAM_AT_HL_INTO_RAM_AT_DE
+0db2: 0E 0F          LD    C,#$0F         ;number of KO records, top 3 for each boxer, 5 boxers, =0x0F/15
 0db4: 11 10 D4       LD    DE,KO_TIME_TABLE_BEAR_HUGGER
-0db7: CD BC 0D       CALL  $0DBC
+0db7: CD BC 0D       CALL  GET_BYTES_FROM_NVRAM_AT_HL_INTO_RAM_AT_DE
 0dba: 37             SCF   
 0dbb: C9             RET   
 
+
+*** this function is used to transfer the KO time records from nybbles in NVRAM to bytes in RAM
+GET_BYTES_FROM_NVRAM_AT_HL_INTO_RAM_AT_DE:
 0dbc: 06 06          LD    B,#$06
 0dbe: 13             INC   DE
 0dbf: 13             INC   DE
 0dc0: CD C7 0D       CALL  $0DC7
 0dc3: 0D             DEC   C
-0dc4: 20 F6          JR    NZ,$0DBC
+0dc4: 20 F6          JR    NZ,GET_BYTES_FROM_NVRAM_AT_HL_INTO_RAM_AT_DE
 
 0dc6: C9             RET   
 
@@ -2305,7 +2307,7 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 0dda: 47             LD    B,A
 0ddb: 79             LD    A,C
 0ddc: E6 0F          AND   A,#$0F
-0dde: B0             OR    A,B
+0dde: B0             OR    A,B            ;combine the two nybbles from NVRAM into a byte for RAM
 0ddf: D9             EXX   
 0de0: 12             LD    (DE),A
 0de1: 13             INC   DE
@@ -2315,7 +2317,7 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 
 0de5: AF             XOR   A,A
 0de6: 32 0F D4       LD    ($D40F),A
-0de9: CD 4E 0E       CALL  $0E4E
+0de9: CD 4E 0E       CALL  CHECKSUM_KO_?_?_DATA_IN_RAM?
 0dec: 22 0E D5       LD    ($D50E),HL
 0def: 21 01 C0       LD    HL,$C001
 0df2: CD F8 0D       CALL  $0DF8
@@ -2331,32 +2333,34 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 0e04: D9             EXX   
 0e05: 21 0E D5       LD    HL,$D50E
 0e08: 06 02          LD    B,#$02
-0e0a: CD 37 0E       CALL  $0E37
+0e0a: CD 37 0E       CALL  GET_BYTES_FROM_RAM_AT_HL_INTO_NVRAM_AT_DE
 0e0d: 0E 16          LD    C,#$16
-0e0f: CD 2C 0E       CALL  $0E2C
+0e0f: CD 2C 0E       CALL  COPY_KO_TIME_FROM_BYTES_IN_RAM_TO_NYBBLES_IN_NVRAM
 0e12: 0E 05          LD    C,#$05
-0e14: 21 B0 D4       LD    HL,$D4B0
-0e17: CD 2C 0E       CALL  $0E2C
-0e1a: 0E 0F          LD    C,#$0F
+0e14: 21 B0 D4       LD    HL,HIGH_SCORE_OR_OTHER_TABLE1
+0e17: CD 2C 0E       CALL  COPY_KO_TIME_FROM_BYTES_IN_RAM_TO_NYBBLES_IN_NVRAM
+0e1a: 0E 0F          LD    C,#$0F         ;number of KO records, top 3 for each boxer, 5 boxers, =0x0F/15
 0e1c: 21 10 D4       LD    HL,KO_TIME_TABLE_BEAR_HUGGER
-0e1f: CD 2C 0E       CALL  $0E2C
+0e1f: CD 2C 0E       CALL  COPY_KO_TIME_FROM_BYTES_IN_RAM_TO_NYBBLES_IN_NVRAM
 0e22: E1             POP   HL
 0e23: 3E 01          LD    A,#$01
 0e25: D3 0F          OUT   (I0_NVRAM_ENABLE?),A
 0e27: AF             XOR   A,A
-0e28: 77             LD    (HL),A
+0e28: 77             LD    (HL),A         ;todo: what is this location in NVRAM used for?
 0e29: D3 0F          OUT   (I0_NVRAM_ENABLE?),A
 0e2b: C9             RET   
 
+COPY_KO_TIME_FROM_BYTES_IN_RAM_TO_NYBBLES_IN_NVRAM:
 0e2c: 23             INC   HL
 0e2d: 23             INC   HL
 0e2e: 06 06          LD    B,#$06
-0e30: CD 37 0E       CALL  $0E37
+0e30: CD 37 0E       CALL  GET_BYTES_FROM_RAM_AT_HL_INTO_NVRAM_AT_DE
 0e33: 0D             DEC   C
-0e34: 20 F6          JR    NZ,$0E2C
+0e34: 20 F6          JR    NZ,COPY_KO_TIME_FROM_BYTES_IN_RAM_TO_NYBBLES_IN_NVRAM
 
 0e36: C9             RET   
 
+GET_BYTES_FROM_RAM_AT_HL_INTO_NVRAM_AT_DE:
 0e37: 7E             LD    A,(HL)
 0e38: 23             INC   HL
 0e39: D9             EXX   
@@ -2372,17 +2376,18 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 0e47: D3 0F          OUT   (I0_NVRAM_ENABLE?),A
 0e49: 23             INC   HL
 0e4a: D9             EXX   
-0e4b: 10 EA          DJNZ  $0E37
+0e4b: 10 EA          DJNZ  GET_BYTES_FROM_RAM_AT_HL_INTO_NVRAM_AT_DE
 
 0e4d: C9             RET   
 
+CHECKSUM_KO_?_?_DATA_IN_RAM?:
 0e4e: 21 00 FF       LD    HL,$FF00
 0e51: 45             LD    B,L
 0e52: D9             EXX   
-0e53: 21 10 D5       LD    HL,$D510
+0e53: 21 10 D5       LD    HL,HIGH_SCORE_TABLE_TO_D6AF
 0e56: 0E 16          LD    C,#$16
 0e58: CD 6D 0E       CALL  $0E6D
-0e5b: 21 B0 D4       LD    HL,$D4B0
+0e5b: 21 B0 D4       LD    HL,HIGH_SCORE_OR_OTHER_TABLE1
 0e5e: 0E 05          LD    C,#$05
 0e60: CD 6D 0E       CALL  $0E6D
 0e63: 21 10 D4       LD    HL,KO_TIME_TABLE_BEAR_HUGGER
@@ -2438,7 +2443,7 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 0eaa: 06 05          LD    B,#$05
 0eac: D9             EXX   
 0ead: E5             PUSH  HL
-0eae: CD F3 19       CALL  $19F3
+0eae: CD F3 19       CALL  COMPARE_3_BYTES_IN_HL-_TO_BDE
 0eb1: E1             POP   HL
 0eb2: 30 0E          JR    NC,$0EC2
 
@@ -2481,7 +2486,7 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 0eeb: FE 05          CP    A,#$05
 0eed: D0             RET   NC
 
-0eee: CD A1 19       CALL  $19A1
+0eee: CD A1 19       CALL  MAKE_HL_POINT_TO_THE_KO_TABLE_FOR_THE_CURRENT_OPPONENT
 0ef1: 7D             LD    A,L
 0ef2: C6 17          ADD   A,#$17
 0ef4: 6F             LD    L,A
@@ -2505,7 +2510,7 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 0f0a: 3E 03          LD    A,#$03
 0f0c: E5             PUSH  HL
 0f0d: 08             EX    AF,AF'
-0f0e: CD F3 19       CALL  $19F3
+0f0e: CD F3 19       CALL  COMPARE_3_BYTES_IN_HL-_TO_BDE
 0f11: E1             POP   HL
 0f12: 38 16          JR    C,$0F2A
 
@@ -2644,7 +2649,7 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 0fc3: CA 4A 10       JP    Z,$104A
 
 0fc6: FE 0B          CP    A,#$0B
-0fc8: 28 24          JR    Z,$0FEE
+0fc8: 28 24          JR    Z,COPY_?
 
 0fca: 34             INC   (HL)
 0fcb: 01 40 00       LD    BC,$0040
@@ -2673,6 +2678,7 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 0feb: ED B0          LDIR  
 0fed: C9             RET   
 
+COPY_?:
 0fee: 36 00          LD    (HL),#$00
 0ff0: 2C             INC   L
 0ff1: 11 12 DC       LD    DE,$DC12
@@ -2685,12 +2691,12 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 0ffc: 29             ADD   HL,HL
 0ffd: 01 18 D5       LD    BC,$D518
 1000: 09             ADD   HL,BC
-1001: CD 9C 10       CALL  $109C
+1001: CD 9C 10       CALL  DISPLAY_(HL)_AS_2_SPACE_PADDED_DIGITS_AND_$2B_AT_DE
 1004: 7B             LD    A,E
 1005: C6 04          ADD   A,#$04
 1007: 5F             LD    E,A
 1008: 0E 03          LD    C,#$03
-100a: CD 25 2D       CALL  $2D25
+100a: CD 25 2D       CALL  COPY_(HL)_TO_(DE)_EVERY_OTHER_BYTE_FOR_C_COUNT
 100d: 1C             INC   E
 100e: 1C             INC   E
 100f: ED 53 74 FF    LD    ($FF74),DE
@@ -2797,6 +2803,7 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 109a: 1C             INC   E
 109b: C9             RET   
 
+DISPLAY_(HL)_AS_2_SPACE_PADDED_DIGITS_AND_$2B_AT_DE:
 109c: 7E             LD    A,(HL)
 109d: 2C             INC   L
 109e: 2C             INC   L
@@ -2815,7 +2822,7 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 10b0: ED 5B D3 D7    LD    DE,($D7D3)
 10b4: 3A D5 D7       LD    A,($D7D5)
 10b7: 47             LD    B,A
-10b8: C3 F3 19       JP    $19F3
+10b8: C3 F3 19       JP    COMPARE_3_BYTES_IN_HL-_TO_BDE
 
 10bb: 21 12 DC       LD    HL,$DC12
 10be: 7E             LD    A,(HL)
@@ -2879,7 +2886,7 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 1131: DD 46 07       LD    B,(IX+$07)
 1134: DD 56 06       LD    D,(IX+$06)
 1137: DD 5E 05       LD    E,(IX+$05)
-113a: CD F3 19       CALL  $19F3
+113a: CD F3 19       CALL  COMPARE_3_BYTES_IN_HL-_TO_BDE
 113d: 28 22          JR    Z,$1161
 
 113f: 30 04          JR    NC,$1145
@@ -2917,7 +2924,7 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 116b: DD 46 07       LD    B,(IX+$07)
 116e: DD 56 06       LD    D,(IX+$06)
 1171: DD 5E 05       LD    E,(IX+$05)
-1174: CD F3 19       CALL  $19F3
+1174: CD F3 19       CALL  COMPARE_3_BYTES_IN_HL-_TO_BDE
 1177: 79             LD    A,C
 1178: 30 03          JR    NC,$117D
 
@@ -3356,7 +3363,7 @@ DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
 13f7: 11 E5 DF       LD    DE,$DFE5
 13fa: 21 22 0B       LD    HL,$0B22
 13fd: 0E 06          LD    C,#$06
-13ff: CD 25 2D       CALL  $2D25
+13ff: CD 25 2D       CALL  COPY_(HL)_TO_(DE)_EVERY_OTHER_BYTE_FOR_C_COUNT
 1402: C3 36 2D       JP    $2D36
 
 1405: 21 EE DF       LD    HL,$DFEE
@@ -4236,7 +4243,7 @@ PRINT_REMATCH?:
 18ee: D9             EXX   
 18ef: D5             PUSH  DE
 18f0: E5             PUSH  HL
-18f1: CD 8D 19       CALL  $198D
+18f1: CD 8D 19       CALL  COPY_?2
 18f4: CD B0 19       CALL  $19B0
 18f7: D1             POP   DE
 18f8: E1             POP   HL
@@ -4252,14 +4259,14 @@ PRINT_REMATCH?:
 
 1905: 11 02 D9       LD    DE,$D902
 1908: 01 40 00       LD    BC,$0040
-190b: 21 B0 D4       LD    HL,$D4B0
+190b: 21 B0 D4       LD    HL,HIGH_SCORE_OR_OTHER_TABLE1
 190e: D9             EXX   
 190f: 06 03          LD    B,#$03
 1911: D9             EXX   
 1912: C5             PUSH  BC
 1913: D5             PUSH  DE
 1914: E5             PUSH  HL
-1915: CD 8D 19       CALL  $198D
+1915: CD 8D 19       CALL  COPY_?2
 1918: 5E             LD    E,(HL)
 1919: 2C             INC   L
 191a: 56             LD    D,(HL)
@@ -4311,13 +4318,13 @@ PRINT_REMATCH?:
 1954: D2 AA 11       JP    NC,$11AA
 
 1957: 11 02 D9       LD    DE,$D902
-195a: CD A1 19       CALL  $19A1
+195a: CD A1 19       CALL  MAKE_HL_POINT_TO_THE_KO_TABLE_FOR_THE_CURRENT_OPPONENT
 195d: D9             EXX   
 195e: 06 03          LD    B,#$03
 1960: D9             EXX   
 1961: D5             PUSH  DE
 1962: E5             PUSH  HL
-1963: CD 8D 19       CALL  $198D
+1963: CD 8D 19       CALL  COPY_?2
 1966: 5E             LD    E,(HL)
 1967: 2C             INC   L
 1968: 56             LD    D,(HL)
@@ -4347,6 +4354,7 @@ PRINT_REMATCH?:
 
 198c: C9             RET   
 
+COPY_?2:
 198d: 7E             LD    A,(HL)
 198e: 12             LD    (DE),A
 198f: 7B             LD    A,E
@@ -4355,21 +4363,22 @@ PRINT_REMATCH?:
 1993: 2C             INC   L
 1994: 2C             INC   L
 1995: 0E 03          LD    C,#$03
-1997: CD 25 2D       CALL  $2D25
+1997: CD 25 2D       CALL  COPY_(HL)_TO_(DE)_EVERY_OTHER_BYTE_FOR_C_COUNT
 199a: 1C             INC   E
 199b: 1C             INC   E
 199c: ED 53 74 FF    LD    ($FF74),DE
 19a0: C9             RET   
 
+MAKE_HL_POINT_TO_THE_KO_TABLE_FOR_THE_CURRENT_OPPONENT:
 19a1: 21 10 D4       LD    HL,KO_TIME_TABLE_BEAR_HUGGER
 19a4: 3A 04 D0       LD    A,(OPPONENT_NUMBER)
 19a7: 87             ADD   A,A
 19a8: 87             ADD   A,A
 19a9: 87             ADD   A,A
-19aa: 4F             LD    C,A
-19ab: 87             ADD   A,A
+19aa: 4F             LD    C,A            ;C now has OPPONENT_NUMBER * 8
+19ab: 87             ADD   A,A            ;A now has OPPONENT_NUMBER * 16
 19ac: 81             ADD   A,C
-19ad: 85             ADD   A,L
+19ad: 85             ADD   A,L            ;A now has OPPONENT_NUMBER * 24 and is added to L
 19ae: 6F             LD    L,A
 19af: C9             RET   
 
@@ -4431,6 +4440,7 @@ PRINT_REMATCH?:
 19f1: 2C             INC   L
 19f2: C9             RET   
 
+COMPARE_3_BYTES_IN_HL-_TO_BDE:
 19f3: 7E             LD    A,(HL)
 19f4: B8             CP    A,B
 19f5: D8             RET   C
@@ -7856,13 +7866,16 @@ PRINT_REMATCH?:
 2d22: FE 02          CP    A,#$02
 2d24: C9             RET   
 
+
+*** this copies characters in RAM/ROM to the screen
+COPY_(HL)_TO_(DE)_EVERY_OTHER_BYTE_FOR_C_COUNT:
 2d25: 7E             LD    A,(HL)
 2d26: 12             LD    (DE),A
 2d27: 23             INC   HL
 2d28: 13             INC   DE
 2d29: 13             INC   DE
 2d2a: 0D             DEC   C
-2d2b: 20 F8          JR    NZ,$2D25
+2d2b: 20 F8          JR    NZ,COPY_(HL)_TO_(DE)_EVERY_OTHER_BYTE_FOR_C_COUNT
 
 2d2d: C9             RET   
 
@@ -8094,7 +8107,7 @@ DISPLAY_BEST_KO_TIMES_AND_HIT_AVG:
 
 2e6d: 11 18 F6       LD    DE,$F618
 2e70: 01 80 00       LD    BC,$0080
-2e73: 21 B0 D4       LD    HL,$D4B0
+2e73: 21 B0 D4       LD    HL,HIGH_SCORE_OR_OTHER_TABLE1
 2e76: D9             EXX   
 2e77: 0E 05          LD    C,#$05
 2e79: 06 01          LD    B,#$01
@@ -8138,12 +8151,12 @@ CLEAR_BOTTOM_SCREEN:
 GET_AND_DRAW_TOP_10_SCORES?:
 2eae: C5             PUSH  BC
 2eaf: D5             PUSH  DE
-2eb0: CD 9C 10       CALL  $109C
+2eb0: CD 9C 10       CALL  DISPLAY_(HL)_AS_2_SPACE_PADDED_DIGITS_AND_$2B_AT_DE
 2eb3: 1C             INC   E
 2eb4: 1C             INC   E
 2eb5: CD DA 2E       CALL  $2EDA
 2eb8: 0E 03          LD    C,#$03
-2eba: CD 25 2D       CALL  $2D25
+2eba: CD 25 2D       CALL  COPY_(HL)_TO_(DE)_EVERY_OTHER_BYTE_FOR_C_COUNT
 2ebd: CD DA 2E       CALL  $2EDA
 2ec0: ED 53 74 FF    LD    ($FF74),DE
 2ec4: 22 78 FF       LD    ($FF78),HL
@@ -8313,7 +8326,7 @@ DRAW_KO_BONUS_VALUE:
 2fc9: 11 5A DE       LD    DE,$DE5A
 2fcc: 21 FC D7       LD    HL,FIGHT_NUMBER_FOR_DISPLAY
 2fcf: 0E 03          LD    C,#$03
-2fd1: CD 25 2D       CALL  $2D25
+2fd1: CD 25 2D       CALL  COPY_(HL)_TO_(DE)_EVERY_OTHER_BYTE_FOR_C_COUNT
 2fd4: 1C             INC   E
 2fd5: 1C             INC   E
 2fd6: ED 53 74 FF    LD    ($FF74),DE
@@ -8482,6 +8495,7 @@ DRAW_RING_LEFT_CORNER:
 30c9: 11 80 00       LD    DE,$0080
 30cc: 18 17          JR    $30E5
 
+LOAD_DRAW_DESTINATION(HL)_AND_OPERANDS_COUNT(B)_FROM_IX:
 30ce: DD 6E 00       LD    L,(IX+$00)
 30d1: DD 23          INC   IX
 30d3: DD 66 00       LD    H,(IX+$00)
@@ -8491,6 +8505,7 @@ DRAW_RING_LEFT_CORNER:
 30dd: 2B             DEC   HL
 30de: 18 05          JR    $30E5
 
+ADD_OFFSET_TO_ORIGINAL_DRAW_DESTINATION_AND_RETURN_IF_NO_MORE_OPERANDS:
 30e0: D9             EXX   
 30e1: 19             ADD   HL,DE
 30e2: A7             AND   A,A
@@ -8503,7 +8518,7 @@ DRAW_RING_LEFT_CORNER:
 30e8: DD 7E 00       LD    A,(IX+$00)
 30eb: DD 23          INC   IX
 30ed: A7             AND   A,A            ;set flags (Z and M/sign)
-30ee: 28 F0          JR    Z,$30E0
+30ee: 28 F0          JR    Z,ADD_OFFSET_TO_ORIGINAL_DRAW_DESTINATION_AND_RETURN_IF_NO_MORE_OPERANDS
 
 30f0: 5F             LD    E,A
 30f1: FA 64 31       JP    M,$3164        ;if msb (sign) set, jump
@@ -8564,7 +8579,7 @@ DRAW_RING_LEFT_CORNER:
 314a: 0D             DEC   C
 314b: 10 FA          DJNZ  $3147
 
-314d: 30 91          JR    NC,$30E0
+314d: 30 91          JR    NC,ADD_OFFSET_TO_ORIGINAL_DRAW_DESTINATION_AND_RETURN_IF_NO_MORE_OPERANDS
 
 314f: 18 97          JR    $30E8
 
@@ -8577,7 +8592,7 @@ DRAW_RING_LEFT_CORNER:
 315b: 0C             INC   C
 315c: 10 FA          DJNZ  $3158
 
-315e: D2 E0 30       JP    NC,$30E0
+315e: D2 E0 30       JP    NC,ADD_OFFSET_TO_ORIGINAL_DRAW_DESTINATION_AND_RETURN_IF_NO_MORE_OPERANDS
 
 3161: C3 E8 30       JP    $30E8
 

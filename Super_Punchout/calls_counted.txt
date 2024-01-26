@@ -9,7 +9,7 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
      10 SPLIT_A_NYBBLES_INTO_A_AND_A'/C
       9 $0C94
       9 $2D3E
-      8 $2D25
+      8 COPY_(HL)_TO_(DE)_EVERY_OTHER_BYTE_FOR_C_COUNT
       8 COPY_A_TO_DE+_FOR_C_COUNT
       8 WAIT___
       7 $10E4
@@ -25,24 +25,20 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       5 $2DC4
       5 DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
       4 $19CD
-      4 $19F3
       4 $2D36
       4 $2F62
       4 $30E5
       4 $3A4C
       4 $BE97
+      4 COMPARE_3_BYTES_IN_HL-_TO_BDE
       4 DISPLAY_NEXT_FIGHTER_TEXT_IN_BOTTOM_SCREEN
       3 $0C78
-      3 $0DBC
-      3 $0E2C
-      3 $0E4E
       3 $0E6D
       3 $0F9C
       3 $10A6
       3 $1600
       3 $160A
       3 $188F
-      3 $198D
       3 $1FE2
       3 $29C1
       3 $2A93
@@ -50,7 +46,11 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       3 $3095
       3 $309A
       3 $357C
+      3 CHECKSUM_KO_?_?_DATA_IN_RAM?
+      3 COPY_?2
+      3 COPY_KO_TIME_FROM_BYTES_IN_RAM_TO_NYBBLES_IN_NVRAM
       3 DRAW_UPPER_SCREEN_FOR_A_FIGHTB
+      3 GET_BYTES_FROM_NVRAM_AT_HL_INTO_RAM_AT_DE
       3 M,$9172
       3 NZ,$9100
       3 RST10_CLEAR_BACKGROUNDS_TOP_AND_BOTTOM
@@ -61,9 +61,7 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       2 $0D56
       2 $0DC7
       2 $0DE5
-      2 $0E37
       2 $0E7E
-      2 $109C
       2 $1169
       2 $1245
       2 $126D
@@ -76,7 +74,6 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       2 $15F0
       2 $161F
       2 $18D1
-      2 $19A1
       2 $19B0
       2 $19CC
       2 $1DEE
@@ -95,11 +92,14 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       2 $396F
       2 C,$0528
       2 CLEAR_BACKGROUNDS_TOP_AND_BOTTOM
+      2 DISPLAY_(HL)_AS_2_SPACE_PADDED_DIGITS_AND_$2B_AT_DE
       2 DISPLAY_BEST_KO_TIMES_AND_HIT_AVG
       2 DRAW_HIGH_SCORES_ATTRACT_SCREEN
       2 DRAW_KO_BONUS_VALUE
       2 DRAW_RING_LEFT_CORNER
       2 GET_AND_DRAW_TOP_10_SCORES?
+      2 GET_BYTES_FROM_RAM_AT_HL_INTO_NVRAM_AT_DE
+      2 MAKE_HL_POINT_TO_THE_KO_TABLE_FOR_THE_CURRENT_OPPONENT
       2 SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM
       1 $0CBD
       1 $0D06
@@ -176,10 +176,10 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear D000-D1FF
       1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear D000-D7FF
       1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear D500-D6FF
-      1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear D510-D6AF
       1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear D800-FF7F
       1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear E000-E7FF (VRAM_CPU)
       1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear E800-EFFF (VRAM_PLAYER)
+      1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear high score table (D510-D6AF)
       1 COPY_A_TO_DE+_FOR_C_COUNT;draw (C)1984 Nintendo at bottom of bottom screen
       1 DRAW_BANDAGE_ON_REMATCHED_FIGHTER
       1 DRAW_MINI_CHAMP_WITH_BELT_AT_BOTTOM_OF_TOP_SCREEN
