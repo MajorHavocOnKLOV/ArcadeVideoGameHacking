@@ -80,6 +80,10 @@ comment 0388 If not free play, process coinage
 commentline 03BD End Process coinage dip switches?
 comment 03F6 Clear high score table (D510-D6AF)
 
+label 0435 DEFAULT_HIGH_SCORE
+data 0435-043C
+label 043D ???
+data 043D-0444
 label 0445 RST10_CLEAR_BACKGROUNDS_TOP_AND_BOTTOM
 label 0446 CLEAR_BACKGROUNDS_TOP_AND_BOTTOM
 label 04A5 START_ATTRACT_LOOP
@@ -121,11 +125,17 @@ label 0e4e CHECKSUM_KO_?_?_DATA_IN_RAM?
 
 label 0FEE COPY_?
 
+label 1000 REST_OF_HIGH_SCORE_TABLE_ENCODED
+data 1000-10B7
 commentline 108D A contains 2 bcd digits. Display A as 2 digits at DE with blank padding
 label 108D DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
 comment 1092 Replace 0 tens digit with a space
 label 109C DISPLAY_(HL)_AS_2_SPACE_PADDED_DIGITS_AND_$2B_AT_DE
+
+label 1161 VERIFY_SCORES_ARE_IN_ORDER?_AND_ADD_BCD_SCORE_NUMBERS
 comment 12F7 Clear D000-D1FF
+
+label 1640 START_FIGHT(WHAT_ABOUT_REMATCH?)
 commentline 1679 Process rematch (because credit and R punch pressed)
 commentline 1689 Input from 00 into A, check bit 3 (and $04) and if NZ, jmp 1676
 
@@ -474,8 +484,8 @@ data BFF0-BFFF
 
 label C000 NVRAM
 label D000 RAM
-label D004 OPPONENT_NUMBER
-label D005 FIGHT_NUMBER2
+label D004 OPPONENT_NUMBER_FOR_?1
+label D005 FIGHT_NUMBER_USED_TO_DRAW_OPPONENT_IN_TOP_WINDOW
 label D022 HEALTH
 label D023 HEALTH_DISPLAYED
 label D024 CPU_HEALTH
@@ -493,15 +503,16 @@ label D440 KO_TIME_TABLE_VODKA_DRUNKENSKI
 label D458 KO_TIME_TABLE_GREAT_TIGER
 label D470 KO_TIME_TABLE_SUPER_CHAMPION
 
-label D4B0 HIGH_SCORE_OR_OTHER_TABLE1
-label D510 HIGH_SCORE_TABLE_TO_D6AF
+label D4B0 HIGH_SCORE_OR_OTHER_TABLE_TO_D4D7_5_ENTRIES
+label D510 HIGH_SCORE_TABLE_TO_D6AF_2XALL_00_AND_50_ENTRIES
 
 commentline d7bf 01 = credit, 02 = start game, 03 = game over, 04 = game over 2?, 05 = game over 3?, 06 = rematch started,
 commentline d7bf or countdown value to add coins for rematch
 label D7BF game_status
 label D7CB credits
 label D7F2 TIME
-label D7FB FIGHT_NUMBER
+label D7FA FIGHT_NUMBER_ZERO_BASED
+label D7FB FIGHT_NUMBER+1_BCD_USED_FOR_DISPLAYED_FIGHT_NUMBER
 label D7FC FIGHT_NUMBER_FOR_DISPLAY
 label D800 VRAM_INFO
 
