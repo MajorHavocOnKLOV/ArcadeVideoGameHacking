@@ -1,4 +1,4 @@
-org 0, numlab 165, numio 13, numdata 122, numcomm 58, numcommline 39
+org 0, numlab 171, numio 13, numdata 125, numcomm 58, numcommline 39
 
 IO_0_BUTTONS EQU $00
 I0_1_JOYSTICK? EQU $01
@@ -14,6 +14,8 @@ I0_VLM5030_START EQU $0d
 I0_VLM5030_VCU EQU $0e
 I0_NVRAM_ENABLE? EQU $0f
 
+DEFAULT_HIGH_SCORE EQU $0435
+??? EQU $043d
 RST10_CLEAR_BACKGROUNDS_TOP_AND_BOTTOM EQU $0445
 CLEAR_BACKGROUNDS_TOP_AND_BOTTOM EQU $0446
 START_ATTRACT_LOOP EQU $04a5
@@ -24,8 +26,11 @@ COPY_KO_TIME_FROM_BYTES_IN_RAM_TO_NYBBLES_IN_NVRAM EQU $0e2c
 GET_BYTES_FROM_RAM_AT_HL_INTO_NVRAM_AT_DE EQU $0e37
 CHECKSUM_KO_?_?_DATA_IN_RAM? EQU $0e4e
 COPY_? EQU $0fee
+REST_OF_HIGH_SCORE_TABLE_ENCODED EQU $1000
 DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE EQU $108d
 DISPLAY_(HL)_AS_2_SPACE_PADDED_DIGITS_AND_$2B_AT_DE EQU $109c
+VERIFY_SCORES_ARE_IN_ORDER?_AND_ADD_BCD_SCORE_NUMBERS EQU $1161
+START_FIGHT(WHAT_ABOUT_REMATCH?) EQU $1640
 PRINT_REMATCH? EQU $168f
 COPY_?2 EQU $198d
 MAKE_HL_POINT_TO_THE_KO_TABLE_FOR_THE_CURRENT_OPPONENT EQU $19a1
@@ -136,8 +141,8 @@ __0W0A_S EQU $bf81
 0W000DISCOUNT_S EQU $bfcf
 NVRAM EQU $c000
 RAM EQU $d000
-OPPONENT_NUMBER EQU $d004
-FIGHT_NUMBER2 EQU $d005
+OPPONENT_NUMBER_FOR_?1 EQU $d004
+FIGHT_NUMBER_USED_TO_DRAW_OPPONENT_IN_TOP_WINDOW EQU $d005
 HEALTH EQU $d022
 HEALTH_DISPLAYED EQU $d023
 CPU_HEALTH EQU $d024
@@ -150,12 +155,13 @@ KO_TIME_TABLE_DRAGON_CHAN EQU $d428
 KO_TIME_TABLE_VODKA_DRUNKENSKI EQU $d440
 KO_TIME_TABLE_GREAT_TIGER EQU $d458
 KO_TIME_TABLE_SUPER_CHAMPION EQU $d470
-HIGH_SCORE_OR_OTHER_TABLE1 EQU $d4b0
-HIGH_SCORE_TABLE_TO_D6AF EQU $d510
+HIGH_SCORE_OR_OTHER_TABLE_TO_D4D7_5_ENTRIES EQU $d4b0
+HIGH_SCORE_TABLE_TO_D6AF_2XALL_00_AND_50_ENTRIES EQU $d510
 game_status EQU $d7bf
 credits EQU $d7cb
 TIME EQU $d7f2
-FIGHT_NUMBER EQU $d7fb
+FIGHT_NUMBER_ZERO_BASED EQU $d7fa
+FIGHT_NUMBER+1_BCD_USED_FOR_DISPLAYED_FIGHT_NUMBER EQU $d7fb
 FIGHT_NUMBER_FOR_DISPLAY EQU $d7fc
 VRAM_INFO EQU $d800
 VRAM_top_monitor EQU $d880
@@ -906,13 +912,13 @@ ORG $0000
 03eb: ED 52          SBC   HL,DE
 03ed: 28 34          JR    Z,$0423
 
-03ef: 11 10 D5       LD    DE,HIGH_SCORE_TABLE_TO_D6AF
+03ef: 11 10 D5       LD    DE,HIGH_SCORE_TABLE_TO_D6AF_2XALL_00_AND_50_ENTRIES
 03f2: 01 A0 01       LD    BC,$01A0
 03f5: AF             XOR   A,A
 03f6: CD 58 2D       CALL  COPY_A_TO_DE+_FOR_BC_COUNT;Clear high score table (D510-D6AF)
 03f9: 11 20 D5       LD    DE,$D520
 03fc: D5             PUSH  DE
-03fd: 21 35 04       LD    HL,$0435
+03fd: 21 35 04       LD    HL,DEFAULT_HIGH_SCORE
 0400: 0E 08          LD    C,#$08
 0402: ED B0          LDIR  
 0404: E1             POP   HL
@@ -934,29 +940,19 @@ ORG $0000
 
 0423: 11 C0 D5       LD    DE,$D5C0
 0426: D5             PUSH  DE
-0427: 21 3D 04       LD    HL,$043D
+0427: 21 3D 04       LD    HL,???
 042a: 01 08 00       LD    BC,$0008
 042d: ED B0          LDIR  
 042f: E1             POP   HL
 0430: 01 02 1D       LD    BC,$1D02
 0433: 18 D3          JR    $0408
 
-0435: 00             NOP   
-0436: 00             NOP   
-0437: 17             RLA   
-0438: 18 0A          JR    $0444
+DEFAULT_HIGH_SCORE:
+0435: 00 00 17 18 0A 00 87 08 
 
-043a: 00             NOP   
-043b: 87             ADD   A,A
-043c: 08             EX    AF,AF'
-043d: 00             NOP   
-043e: 00             NOP   
-043f: 17             RLA   
-0440: 0C             INC   C
-0441: 15             DEC   D
-0442: 00             NOP   
-0443: 80             ADD   A,B
-0444: 04             INC   B
+???:
+043d: 00 00 17 0C 15 00 80 04 
+
 RST10_CLEAR_BACKGROUNDS_TOP_AND_BOTTOM:
 0445: D7             RST2  $10
 
@@ -1410,7 +1406,7 @@ START_ATTRACT_LOOP:
 0789: 07             RLCA  
 078a: 38 EF          JR    C,$077B
 
-078c: CD 40 16       CALL  $1640
+078c: CD 40 16       CALL  START_FIGHT(WHAT_ABOUT_REMATCH?)
 078f: 3A CA D7       LD    A,($D7CA)
 0792: FE FF          CP    A,#$FF
 0794: 28 B5          JR    Z,$074B
@@ -1458,13 +1454,13 @@ START_ATTRACT_LOOP:
 07f1: 28 0B          JR    Z,$07FE
 
 07f3: 0E 14          LD    C,#$14
-07f5: 3A FA D7       LD    A,($D7FA)
+07f5: 3A FA D7       LD    A,(FIGHT_NUMBER_ZERO_BASED)
 07f8: FE 05          CP    A,#$05
 07fa: 30 02          JR    NC,$07FE
 
 07fc: 0E 00          LD    C,#$00
 07fe: 21 C0 0A       LD    HL,$0AC0
-0801: 3A 04 D0       LD    A,(OPPONENT_NUMBER)
+0801: 3A 04 D0       LD    A,(OPPONENT_NUMBER_FOR_?1)
 0804: 87             ADD   A,A
 0805: 81             ADD   A,C
 0806: 4F             LD    C,A
@@ -1581,7 +1577,7 @@ START_ATTRACT_LOOP:
 08df: 32 CD D7       LD    ($D7CD),A
 08e2: AF             XOR   A,A
 08e3: 32 C1 D0       LD    ($D0C1),A
-08e6: 21 FA D7       LD    HL,$D7FA
+08e6: 21 FA D7       LD    HL,FIGHT_NUMBER_ZERO_BASED
 08e9: 7E             LD    A,(HL)
 08ea: 3C             INC   A
 08eb: E6 0F          AND   A,#$0F
@@ -1743,7 +1739,7 @@ START_ATTRACT_LOOP:
 0a32: CD BB 10       CALL  $10BB
 0a35: D7             RST2  $10
 
-0a36: 3A FA D7       LD    A,($D7FA)
+0a36: 3A FA D7       LD    A,(FIGHT_NUMBER_ZERO_BASED)
 0a39: FE 05          CP    A,#$05
 0a3b: 38 0E          JR    C,$0A4B
 
@@ -2121,7 +2117,7 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 
 0cba: C3 3A 2D       JP    DISPLAY_NEXT_FIGHTER_TEXT_IN_BOTTOM_SCREEN
 
-0cbd: DD 21 00 10    LD    IX,$1000
+0cbd: DD 21 00 10    LD    IX,REST_OF_HIGH_SCORE_TABLE_ENCODED
 0cc1: 23             INC   HL
 0cc2: 13             INC   DE
 0cc3: 23             INC   HL
@@ -2269,7 +2265,7 @@ SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM:
 0da5: 0E 16          LD    C,#$16
 0da7: CD BC 0D       CALL  GET_BYTES_FROM_NVRAM_AT_HL_INTO_RAM_AT_DE
 0daa: 0E 05          LD    C,#$05
-0dac: 11 B0 D4       LD    DE,HIGH_SCORE_OR_OTHER_TABLE1
+0dac: 11 B0 D4       LD    DE,HIGH_SCORE_OR_OTHER_TABLE_TO_D4D7_5_ENTRIES
 0daf: CD BC 0D       CALL  GET_BYTES_FROM_NVRAM_AT_HL_INTO_RAM_AT_DE
 0db2: 0E 0F          LD    C,#$0F         ;number of KO records, top 3 for each boxer, 5 boxers, =0x0F/15
 0db4: 11 10 D4       LD    DE,KO_TIME_TABLE_BEAR_HUGGER
@@ -2337,7 +2333,7 @@ GET_BYTES_FROM_NVRAM_AT_HL_INTO_RAM_AT_DE:
 0e0d: 0E 16          LD    C,#$16
 0e0f: CD 2C 0E       CALL  COPY_KO_TIME_FROM_BYTES_IN_RAM_TO_NYBBLES_IN_NVRAM
 0e12: 0E 05          LD    C,#$05
-0e14: 21 B0 D4       LD    HL,HIGH_SCORE_OR_OTHER_TABLE1
+0e14: 21 B0 D4       LD    HL,HIGH_SCORE_OR_OTHER_TABLE_TO_D4D7_5_ENTRIES
 0e17: CD 2C 0E       CALL  COPY_KO_TIME_FROM_BYTES_IN_RAM_TO_NYBBLES_IN_NVRAM
 0e1a: 0E 0F          LD    C,#$0F         ;number of KO records, top 3 for each boxer, 5 boxers, =0x0F/15
 0e1c: 21 10 D4       LD    HL,KO_TIME_TABLE_BEAR_HUGGER
@@ -2384,10 +2380,10 @@ CHECKSUM_KO_?_?_DATA_IN_RAM?:
 0e4e: 21 00 FF       LD    HL,$FF00
 0e51: 45             LD    B,L
 0e52: D9             EXX   
-0e53: 21 10 D5       LD    HL,HIGH_SCORE_TABLE_TO_D6AF
+0e53: 21 10 D5       LD    HL,HIGH_SCORE_TABLE_TO_D6AF_2XALL_00_AND_50_ENTRIES
 0e56: 0E 16          LD    C,#$16
 0e58: CD 6D 0E       CALL  $0E6D
-0e5b: 21 B0 D4       LD    HL,HIGH_SCORE_OR_OTHER_TABLE1
+0e5b: 21 B0 D4       LD    HL,HIGH_SCORE_OR_OTHER_TABLE_TO_D4D7_5_ENTRIES
 0e5e: 0E 05          LD    C,#$05
 0e60: CD 6D 0E       CALL  $0E6D
 0e63: 21 10 D4       LD    HL,KO_TIME_TABLE_BEAR_HUGGER
@@ -2482,7 +2478,7 @@ CHECKSUM_KO_?_?_DATA_IN_RAM?:
 0ee2: 21 D1 D4       LD    HL,$D4D1
 0ee5: C3 89 0E       JP    $0E89
 
-0ee8: 3A FA D7       LD    A,($D7FA)
+0ee8: 3A FA D7       LD    A,(FIGHT_NUMBER_ZERO_BASED)
 0eeb: FE 05          CP    A,#$05
 0eed: D0             RET   NC
 
@@ -2690,138 +2686,21 @@ COPY_?:
 0ffb: 29             ADD   HL,HL
 0ffc: 29             ADD   HL,HL
 0ffd: 01 18 D5       LD    BC,$D518
-1000: 09             ADD   HL,BC
-1001: CD 9C 10       CALL  DISPLAY_(HL)_AS_2_SPACE_PADDED_DIGITS_AND_$2B_AT_DE
-1004: 7B             LD    A,E
-1005: C6 04          ADD   A,#$04
-1007: 5F             LD    E,A
-1008: 0E 03          LD    C,#$03
-100a: CD 25 2D       CALL  COPY_(HL)_TO_(DE)_EVERY_OTHER_BYTE_FOR_C_COUNT
-100d: 1C             INC   E
-100e: 1C             INC   E
-100f: ED 53 74 FF    LD    ($FF74),DE
-1013: C3 B0 19       JP    $19B0
+REST_OF_HIGH_SCORE_TABLE_ENCODED:
+1000: 09 CD 9C 10 7B C6 04 5F 0E 03 CD 25 2D 1C 1C ED 
+1010: 53 74 FF C3 B0 19 3C 18 13 A7 28 FA CD A6 10 0E 
+1020: 00 28 02 0E 01 7D E6 F8 6F 7E 81 27 ED 5B 04 D5 
+1030: CD 9F 10 21 FC D7 11 B2 D6 01 03 00 ED B0 2E D3 
+1040: 0E 03 ED B0 3E FD 32 00 D5 C9 2C 3A 01 D5 BE 28 
+1050: C8 7E 3D 77 2D FE 09 38 05 34 AF C3 CB 0F 36 80 
+1060: C9 3C FE 8B 28 02 77 C9 36 00 2C 6E 26 00 29 29 
+1070: 29 29 29 29 11 12 DC 19 22 04 D5 5D 54 01 40 00 
+1080: 09 06 1C 4E 1A 77 79 12 23 13 10 F7 C9 CD 75 2D 
+Error: missed a comment line at 108D, line=1091
+1090: 20 02 3E FF 12 1C 1C 79 12 1C 1C C9 7E 2C 2C CD ;Replace 0 tens digit with a space
+10a0: 8D 10 3E 2B 12 C9 6F 26 00 29 29 29 11 1F D5 19 
+10b0: ED 5B D3 D7 3A D5 D7 47 
 
-1016: 3C             INC   A
-1017: 18 13          JR    $102C
-
-1019: A7             AND   A,A
-101a: 28 FA          JR    Z,$1016
-
-101c: CD A6 10       CALL  $10A6
-101f: 0E 00          LD    C,#$00
-1021: 28 02          JR    Z,$1025
-
-1023: 0E 01          LD    C,#$01
-1025: 7D             LD    A,L
-1026: E6 F8          AND   A,#$F8
-1028: 6F             LD    L,A
-1029: 7E             LD    A,(HL)
-102a: 81             ADD   A,C
-102b: 27             DAA   
-102c: ED 5B 04 D5    LD    DE,($D504)
-1030: CD 9F 10       CALL  $109F
-1033: 21 FC D7       LD    HL,FIGHT_NUMBER_FOR_DISPLAY
-1036: 11 B2 D6       LD    DE,$D6B2
-1039: 01 03 00       LD    BC,$0003
-103c: ED B0          LDIR  
-103e: 2E D3          LD    L,#$D3
-1040: 0E 03          LD    C,#$03
-1042: ED B0          LDIR  
-1044: 3E FD          LD    A,#$FD
-1046: 32 00 D5       LD    ($D500),A
-1049: C9             RET   
-
-104a: 2C             INC   L
-104b: 3A 01 D5       LD    A,($D501)
-104e: BE             CP    A,(HL)
-104f: 28 C8          JR    Z,$1019
-
-1051: 7E             LD    A,(HL)
-1052: 3D             DEC   A
-1053: 77             LD    (HL),A
-1054: 2D             DEC   L
-1055: FE 09          CP    A,#$09
-1057: 38 05          JR    C,$105E
-
-1059: 34             INC   (HL)
-105a: AF             XOR   A,A
-105b: C3 CB 0F       JP    $0FCB
-
-105e: 36 80          LD    (HL),#$80
-1060: C9             RET   
-
-1061: 3C             INC   A
-1062: FE 8B          CP    A,#$8B
-1064: 28 02          JR    Z,$1068
-
-1066: 77             LD    (HL),A
-1067: C9             RET   
-
-1068: 36 00          LD    (HL),#$00
-106a: 2C             INC   L
-106b: 6E             LD    L,(HL)
-106c: 26 00          LD    H,#$00
-106e: 29             ADD   HL,HL
-106f: 29             ADD   HL,HL
-1070: 29             ADD   HL,HL
-1071: 29             ADD   HL,HL
-1072: 29             ADD   HL,HL
-1073: 29             ADD   HL,HL
-1074: 11 12 DC       LD    DE,$DC12
-1077: 19             ADD   HL,DE
-1078: 22 04 D5       LD    ($D504),HL
-107b: 5D             LD    E,L
-107c: 54             LD    D,H
-107d: 01 40 00       LD    BC,$0040
-1080: 09             ADD   HL,BC
-1081: 06 1C          LD    B,#$1C
-1083: 4E             LD    C,(HL)
-1084: 1A             LD    A,(DE)
-1085: 77             LD    (HL),A
-1086: 79             LD    A,C
-1087: 12             LD    (DE),A
-1088: 23             INC   HL
-1089: 13             INC   DE
-108a: 10 F7          DJNZ  $1083
-
-108c: C9             RET   
-
-
-*** A contains 2 bcd digits. Display A as 2 digits at DE with blank padding
-DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE:
-108d: CD 75 2D       CALL  SPLIT_A_NYBBLES_INTO_A_AND_A'/C
-1090: 20 02          JR    NZ,$1094
-
-1092: 3E FF          LD    A,#$FF         ;Replace 0 tens digit with a space
-1094: 12             LD    (DE),A
-1095: 1C             INC   E
-1096: 1C             INC   E
-1097: 79             LD    A,C
-1098: 12             LD    (DE),A
-1099: 1C             INC   E
-109a: 1C             INC   E
-109b: C9             RET   
-
-DISPLAY_(HL)_AS_2_SPACE_PADDED_DIGITS_AND_$2B_AT_DE:
-109c: 7E             LD    A,(HL)
-109d: 2C             INC   L
-109e: 2C             INC   L
-109f: CD 8D 10       CALL  DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
-10a2: 3E 2B          LD    A,#$2B
-10a4: 12             LD    (DE),A
-10a5: C9             RET   
-
-10a6: 6F             LD    L,A
-10a7: 26 00          LD    H,#$00
-10a9: 29             ADD   HL,HL
-10aa: 29             ADD   HL,HL
-10ab: 29             ADD   HL,HL
-10ac: 11 1F D5       LD    DE,$D51F
-10af: 19             ADD   HL,DE
-10b0: ED 5B D3 D7    LD    DE,($D7D3)
-10b4: 3A D5 D7       LD    A,($D7D5)
-10b7: 47             LD    B,A
 10b8: C3 F3 19       JP    COMPARE_3_BYTES_IN_HL-_TO_BDE
 
 10bb: 21 12 DC       LD    HL,$DC12
@@ -2887,7 +2766,7 @@ DISPLAY_(HL)_AS_2_SPACE_PADDED_DIGITS_AND_$2B_AT_DE:
 1134: DD 56 06       LD    D,(IX+$06)
 1137: DD 5E 05       LD    E,(IX+$05)
 113a: CD F3 19       CALL  COMPARE_3_BYTES_IN_HL-_TO_BDE
-113d: 28 22          JR    Z,$1161
+113d: 28 22          JR    Z,VERIFY_SCORES_ARE_IN_ORDER?_AND_ADD_BCD_SCORE_NUMBERS
 
 113f: 30 04          JR    NC,$1145
 
@@ -2915,6 +2794,7 @@ DISPLAY_(HL)_AS_2_SPACE_PADDED_DIGITS_AND_$2B_AT_DE:
 
 1160: C9             RET   
 
+VERIFY_SCORES_ARE_IN_ORDER?_AND_ADD_BCD_SCORE_NUMBERS:
 1161: DD 7E 00       LD    A,(IX+$00)
 1164: DD 77 08       LD    (IX+$08),A
 1167: 18 DF          JR    $1148
@@ -3136,7 +3016,7 @@ DISPLAY_(HL)_AS_2_SPACE_PADDED_DIGITS_AND_$2B_AT_DE:
 12ac: 21 90 13       LD    HL,$1390
 12af: CD 2F 13       CALL  $132F
 12b2: 2A F8 D7       LD    HL,($D7F8)
-12b5: 3A FA D7       LD    A,($D7FA)
+12b5: 3A FA D7       LD    A,(FIGHT_NUMBER_ZERO_BASED)
 12b8: 87             ADD   A,A
 12b9: 85             ADD   A,L
 12ba: 6F             LD    L,A
@@ -3150,7 +3030,7 @@ DISPLAY_(HL)_AS_2_SPACE_PADDED_DIGITS_AND_$2B_AT_DE:
 12c3: F5             PUSH  AF
 12c4: E6 1F          AND   A,#$1F
 12c6: 67             LD    H,A
-12c7: 22 04 D0       LD    (OPPONENT_NUMBER),HL
+12c7: 22 04 D0       LD    (OPPONENT_NUMBER_FOR_?1),HL
 12ca: F1             POP   AF
 12cb: 67             LD    H,A
 12cc: AF             XOR   A,A
@@ -3195,7 +3075,7 @@ DISPLAY_(HL)_AS_2_SPACE_PADDED_DIGITS_AND_$2B_AT_DE:
 1310: 3E 07          LD    A,#$07
 1312: 18 09          JR    $131D
 
-1314: 3A FA D7       LD    A,($D7FA)
+1314: 3A FA D7       LD    A,(FIGHT_NUMBER_ZERO_BASED)
 1317: FE 05          CP    A,#$05
 1319: 38 02          JR    C,$131D
 
@@ -3230,7 +3110,7 @@ DISPLAY_(HL)_AS_2_SPACE_PADDED_DIGITS_AND_$2B_AT_DE:
 
 1343: C9             RET   
 
-1344: 3A 04 D0       LD    A,(OPPONENT_NUMBER)
+1344: 3A 04 D0       LD    A,(OPPONENT_NUMBER_FOR_?1)
 1347: 87             ADD   A,A
 1348: 4F             LD    C,A
 1349: 87             ADD   A,A
@@ -3238,7 +3118,7 @@ DISPLAY_(HL)_AS_2_SPACE_PADDED_DIGITS_AND_$2B_AT_DE:
 134b: 81             ADD   A,C
 134c: 21 AE B3       LD    HL,$B3AE
 134f: CD 75 13       CALL  $1375
-1352: 3A 05 D0       LD    A,(FIGHT_NUMBER2)
+1352: 3A 05 D0       LD    A,(FIGHT_NUMBER_USED_TO_DRAW_OPPONENT_IN_TOP_WINDOW)
 1355: 87             ADD   A,A
 1356: 87             ADD   A,A
 1357: 87             ADD   A,A
@@ -3347,7 +3227,7 @@ DISPLAY_(HL)_AS_2_SPACE_PADDED_DIGITS_AND_$2B_AT_DE:
 
 13e3: FF             RST7  $38
 
-13e4: 3A FA D7       LD    A,($D7FA)
+13e4: 3A FA D7       LD    A,(FIGHT_NUMBER_ZERO_BASED)
 13e7: FE 05          CP    A,#$05
 13e9: D0             RET   NC
 
@@ -3796,6 +3676,7 @@ DISPLAY_(HL)_AS_2_SPACE_PADDED_DIGITS_AND_$2B_AT_DE:
 163e: 35             DEC   (HL)
 163f: C9             RET   
 
+START_FIGHT(WHAT_ABOUT_REMATCH?):
 1640: FD 21 C8 D7    LD    IY,$D7C8
 1644: FD 7E 02       LD    A,(IY+$02)
 1647: 4F             LD    C,A
@@ -4049,7 +3930,7 @@ PRINT_REMATCH?:
 17de: FE 04          CP    A,#$04
 17e0: 20 09          JR    NZ,$17EB
 
-17e2: 3A FA D7       LD    A,($D7FA)
+17e2: 3A FA D7       LD    A,(FIGHT_NUMBER_ZERO_BASED)
 17e5: FE 05          CP    A,#$05
 17e7: 38 7C          JR    C,$1865
 
@@ -4076,7 +3957,7 @@ PRINT_REMATCH?:
 1805: 32 A2 D4       LD    ($D4A2),A
 1808: 0E 02          LD    C,#$02
 180a: EB             EX    DE,HL
-180b: 3A FA D7       LD    A,($D7FA)
+180b: 3A FA D7       LD    A,(FIGHT_NUMBER_ZERO_BASED)
 180e: FE 05          CP    A,#$05
 1810: 38 09          JR    C,$181B
 
@@ -4259,7 +4140,7 @@ PRINT_REMATCH?:
 
 1905: 11 02 D9       LD    DE,$D902
 1908: 01 40 00       LD    BC,$0040
-190b: 21 B0 D4       LD    HL,HIGH_SCORE_OR_OTHER_TABLE1
+190b: 21 B0 D4       LD    HL,HIGH_SCORE_OR_OTHER_TABLE_TO_D4D7_5_ENTRIES
 190e: D9             EXX   
 190f: 06 03          LD    B,#$03
 1911: D9             EXX   
@@ -4313,7 +4194,7 @@ PRINT_REMATCH?:
 194a: CD CD 19       CALL  $19CD
 194d: 18 E6          JR    $1935
 
-194f: 3A FA D7       LD    A,($D7FA)
+194f: 3A FA D7       LD    A,(FIGHT_NUMBER_ZERO_BASED)
 1952: FE 05          CP    A,#$05
 1954: D2 AA 11       JP    NC,$11AA
 
@@ -4371,7 +4252,7 @@ COPY_?2:
 
 MAKE_HL_POINT_TO_THE_KO_TABLE_FOR_THE_CURRENT_OPPONENT:
 19a1: 21 10 D4       LD    HL,KO_TIME_TABLE_BEAR_HUGGER
-19a4: 3A 04 D0       LD    A,(OPPONENT_NUMBER)
+19a4: 3A 04 D0       LD    A,(OPPONENT_NUMBER_FOR_?1)
 19a7: 87             ADD   A,A
 19a8: 87             ADD   A,A
 19a9: 87             ADD   A,A
@@ -4829,7 +4710,7 @@ COMPARE_3_BYTES_IN_HL-_TO_BDE:
 1bf8: 28 6A          JR    Z,$1C64
 
 1bfa: ED 4B 40 D0    LD    BC,($D040)
-1bfe: 3A 04 D0       LD    A,(OPPONENT_NUMBER)
+1bfe: 3A 04 D0       LD    A,(OPPONENT_NUMBER_FOR_?1)
 1c01: FE 01          CP    A,#$01
 1c03: 20 20          JR    NZ,$1C25
 
@@ -4872,7 +4753,7 @@ COMPARE_3_BYTES_IN_HL-_TO_BDE:
 1c2f: 7E             LD    A,(HL)
 1c30: 2D             DEC   L
 1c31: 77             LD    (HL),A
-1c32: 3A 04 D0       LD    A,(OPPONENT_NUMBER)
+1c32: 3A 04 D0       LD    A,(OPPONENT_NUMBER_FOR_?1)
 1c35: FE 01          CP    A,#$01
 1c37: 28 14          JR    Z,$1C4D
 
@@ -4888,7 +4769,7 @@ COMPARE_3_BYTES_IN_HL-_TO_BDE:
 1c49: 6F             LD    L,A
 1c4a: C3 DE 1D       JP    $1DDE
 
-1c4d: 3A FA D7       LD    A,($D7FA)
+1c4d: 3A FA D7       LD    A,(FIGHT_NUMBER_ZERO_BASED)
 1c50: FE 0B          CP    A,#$0B
 1c52: 3A 1F D0       LD    A,($D01F)
 1c55: 30 02          JR    NC,$1C59
@@ -5149,7 +5030,7 @@ COMPARE_3_BYTES_IN_HL-_TO_BDE:
 1d94: C2 DF 1D       JP    NZ,$1DDF
 
 1d97: 4F             LD    C,A
-1d98: 3A 04 D0       LD    A,(OPPONENT_NUMBER)
+1d98: 3A 04 D0       LD    A,(OPPONENT_NUMBER_FOR_?1)
 1d9b: FE 01          CP    A,#$01
 1d9d: 3A 01 D0       LD    A,($D001)
 1da0: 20 03          JR    NZ,$1DA5
@@ -5685,7 +5566,7 @@ COMPARE_3_BYTES_IN_HL-_TO_BDE:
 2071: 36 02          LD    (HL),#$02
 2073: 21 D3 94       LD    HL,$94D3
 2076: 09             ADD   HL,BC
-2077: 3A 04 D0       LD    A,(OPPONENT_NUMBER)
+2077: 3A 04 D0       LD    A,(OPPONENT_NUMBER_FOR_?1)
 207a: FE 01          CP    A,#$01
 207c: 3A 01 D0       LD    A,($D001)
 207f: 28 3E          JR    Z,$20BF
@@ -6148,7 +6029,7 @@ COMPARE_3_BYTES_IN_HL-_TO_BDE:
 22f9: C3 76 21       JP    $2176
 
 22fc: D9             EXX   
-22fd: 3A 04 D0       LD    A,(OPPONENT_NUMBER)
+22fd: 3A 04 D0       LD    A,(OPPONENT_NUMBER_FOR_?1)
 2300: FE 01          CP    A,#$01
 2302: 20 03          JR    NZ,$2307
 
@@ -6415,7 +6296,7 @@ COMPARE_3_BYTES_IN_HL-_TO_BDE:
 
 2474: EB             EX    DE,HL
 2475: 23             INC   HL
-2476: 3A 04 D0       LD    A,(OPPONENT_NUMBER)
+2476: 3A 04 D0       LD    A,(OPPONENT_NUMBER_FOR_?1)
 2479: 5F             LD    E,A
 247a: 16 00          LD    D,#$00
 247c: 19             ADD   HL,DE
@@ -6486,7 +6367,7 @@ COMPARE_3_BYTES_IN_HL-_TO_BDE:
 24db: 32 1E D0       LD    ($D01E),A
 24de: 18 1B          JR    $24FB
 
-24e0: 3A 04 D0       LD    A,(OPPONENT_NUMBER)
+24e0: 3A 04 D0       LD    A,(OPPONENT_NUMBER_FOR_?1)
 24e3: A7             AND   A,A
 24e4: 20 09          JR    NZ,$24EF
 
@@ -7664,7 +7545,7 @@ COMPARE_3_BYTES_IN_HL-_TO_BDE:
 2bb2: 4F             LD    C,A
 2bb3: 3E 01          LD    A,#$01
 2bb5: 32 DA D7       LD    ($D7DA),A
-2bb8: 3A 05 D0       LD    A,(FIGHT_NUMBER2)
+2bb8: 3A 05 D0       LD    A,(FIGHT_NUMBER_USED_TO_DRAW_OPPONENT_IN_TOP_WINDOW)
 2bbb: 87             ADD   A,A
 2bbc: 87             ADD   A,A
 2bbd: 87             ADD   A,A
@@ -7683,7 +7564,7 @@ COMPARE_3_BYTES_IN_HL-_TO_BDE:
 2bd3: 4F             LD    C,A
 2bd4: 11 22 D0       LD    DE,HEALTH
 2bd7: 21 5E BD       LD    HL,$BD5E
-2bda: 3A FA D7       LD    A,($D7FA)
+2bda: 3A FA D7       LD    A,(FIGHT_NUMBER_ZERO_BASED)
 2bdd: FE 05          CP    A,#$05
 2bdf: 38 02          JR    C,$2BE3
 
@@ -7975,7 +7856,7 @@ SPLIT_A_NYBBLES_INTO_A_AND_A'/C:
 2d98: F1             POP   AF
 2d99: C9             RET   
 
-2d9a: 01 00 10       LD    BC,$1000
+2d9a: 01 00 10       LD    BC,REST_OF_HIGH_SCORE_TABLE_ENCODED
 2d9d: 86             ADD   A,(HL)
 2d9e: 23             INC   HL
 2d9f: 0D             DEC   C
@@ -8107,7 +7988,7 @@ DISPLAY_BEST_KO_TIMES_AND_HIT_AVG:
 
 2e6d: 11 18 F6       LD    DE,$F618
 2e70: 01 80 00       LD    BC,$0080
-2e73: 21 B0 D4       LD    HL,HIGH_SCORE_OR_OTHER_TABLE1
+2e73: 21 B0 D4       LD    HL,HIGH_SCORE_OR_OTHER_TABLE_TO_D4D7_5_ENTRIES
 2e76: D9             EXX   
 2e77: 0E 05          LD    C,#$05
 2e79: 06 01          LD    B,#$01
@@ -8205,10 +8086,10 @@ DRAW_UPPER_SCREEN_FOR_A_FIGHTA:
 2f08: C3 E5 18       JP    $18E5
 
 UNFURL_CPU_DRAWING:
-2f0b: 3A 04 D0       LD    A,(OPPONENT_NUMBER)
+2f0b: 3A 04 D0       LD    A,(OPPONENT_NUMBER_FOR_?1)
 2f0e: 21 C8 00       LD    HL,$00C8
 2f11: CD 62 2F       CALL  $2F62
-2f14: 3A FA D7       LD    A,($D7FA)
+2f14: 3A FA D7       LD    A,(FIGHT_NUMBER_ZERO_BASED)
 2f17: FE 05          CP    A,#$05
 2f19: 38 07          JR    C,$2F22
 
@@ -8285,7 +8166,7 @@ DRAW_UPPER_SCREEN_FOR_A_FIGHTB:
 2f85: DD 21 7F 49    LD    IX,$497F
 2f89: CF             RST1  $08
 
-2f8a: 3A FB D7       LD    A,(FIGHT_NUMBER)
+2f8a: 3A FB D7       LD    A,(FIGHT_NUMBER+1_BCD_USED_FOR_DISPLAYED_FIGHT_NUMBER)
 2f8d: CD 75 2D       CALL  SPLIT_A_NYBBLES_INTO_A_AND_A'/C
 2f90: DD 21 64 DA    LD    IX,$DA64
 2f94: A7             AND   A,A
@@ -8437,13 +8318,13 @@ DRAW_KO_BONUS_VALUE:
 3071: DF             RST3  $18
 
 3072: 21 AC 00       LD    HL,$00AC
-3075: 3A 04 D0       LD    A,(OPPONENT_NUMBER)
+3075: 3A 04 D0       LD    A,(OPPONENT_NUMBER_FOR_?1)
 3078: F5             PUSH  AF
 3079: CD 62 2F       CALL  $2F62
 307c: 21 BA 00       LD    HL,$00BA
 307f: F1             POP   AF
 3080: CD 62 2F       CALL  $2F62
-3083: 3A FA D7       LD    A,($D7FA)
+3083: 3A FA D7       LD    A,(FIGHT_NUMBER_ZERO_BASED)
 3086: FE 04          CP    A,#$04
 3088: D8             RET   C
 
