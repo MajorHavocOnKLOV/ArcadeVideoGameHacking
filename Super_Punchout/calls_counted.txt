@@ -6,23 +6,24 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
      11 $2D46
      10 $15EC
      10 CLEAR_BOTTOM_SCREEN
+     10 SPLIT_A_NYBBLES_INTO_A_AND_A'/C
       9 $0C94
       9 $2D3E
-      9 SPLIT_A_NYBBLES_INTO_A_AND_A'/C
+      8 COPY_(HL)_TO_(DE)_EVERY_OTHER_BYTE_FOR_C_COUNT
       8 COPY_A_TO_DE+_FOR_C_COUNT
       8 WAIT___
       7 $10E4
       7 $194F
-      7 COPY_(HL)_TO_(DE)_EVERY_OTHER_BYTE_FOR_C_COUNT
       6 $119A
       6 $1A00
       6 $29A7
-      6 $2D48
       6 $2DAF
+      6 WAIT_FOR_A_MILLISECONDS?
       5 $2A65
       5 $2D12
       5 $2D42
       5 $2DC4
+      5 DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
       4 $19CD
       4 $2D36
       4 $2F62
@@ -30,11 +31,11 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       4 $3A4C
       4 $BE97
       4 COMPARE_3_BYTES_IN_HL-_TO_BDE
-      4 DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
       4 DISPLAY_NEXT_FIGHTER_TEXT_IN_BOTTOM_SCREEN
       3 $0C78
       3 $0E6D
       3 $0F9C
+      3 $10A6
       3 $1600
       3 $160A
       3 $188F
@@ -61,7 +62,6 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       2 $0DC7
       2 $0DE5
       2 $0E7E
-      2 $10A6
       2 $1169
       2 $1245
       2 $126D
@@ -92,6 +92,7 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       2 $396F
       2 C,$0528
       2 CLEAR_BACKGROUNDS_TOP_AND_BOTTOM
+      2 DISPLAY_(HL)_AS_2_SPACE_PADDED_DIGITS_AND_$2B_AT_DE
       2 DISPLAY_BEST_KO_TIMES_AND_HIT_AVG
       2 DRAW_HIGH_SCORES_ATTRACT_SCREEN
       2 DRAW_KO_BONUS_VALUE
@@ -107,6 +108,7 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       1 $0E9C
       1 $0EE8
       1 $1083
+      1 $109F
       1 $10BB
       1 $1101
       1 $1281
@@ -122,7 +124,6 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       1 $157A
       1 $15B5
       1 $15EA
-      1 $16DC
       1 $1731
       1 $1842
       1 $184C
@@ -178,7 +179,6 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear E800-EFFF (VRAM_PLAYER)
       1 COPY_A_TO_DE+_FOR_BC_COUNT;Clear high score table (D510-D6AF)
       1 COPY_A_TO_DE+_FOR_C_COUNT;draw (C)1984 Nintendo at bottom of bottom screen
-      1 DISPLAY_(HL)_AS_2_SPACE_PADDED_DIGITS_AND_$2B_AT_DE
       1 DRAW_BANDAGE_ON_REMATCHED_FIGHTER
       1 DRAW_MINI_CHAMP_WITH_BELT_AT_BOTTOM_OF_TOP_SCREEN
       1 DRAW_UPPER_SCREEN_FOR_A_FIGHTA
@@ -219,4 +219,5 @@ cat spnchout.asm | grep CALL | cut -c28- | sort | uniq -c | sort -k1b,1nr -k2b,2
       1 PO,$E297
       1 PO,$F147
       1 PO,$F630
+      1 REMATCH_COUNTDOWN_WAITING_FOR_CREDIT
       1 START_FIGHT(WHAT_ABOUT_REMATCH?)

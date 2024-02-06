@@ -26,20 +26,20 @@
 ; 0001     Coin1   Srvc  x   x   D   U   L   R  Joystick
 
 IO_LABEL 00 IO_0_BUTTONS
-IO_LABEL 01 I0_1_JOYSTICK?
+IO_LABEL 01 IO_1_JOYSTICK
 ; Coins
-IO_LABEL 02 I0_DSW1_TO_2A03
+IO_LABEL 02 IO_DSW1_TO_2A03
 ; Difficulty, Time, Attract sounds, Rematch at a discount
-IO_LABEL 03 I0_DSW2_TO_2A03_BIT4_VLM5030_BUSY
-IO_LABEL 04 I0_TO_VLM5030
-IO_LABEL 08 I0_NMI_ENABLE_AND_WATCHDOG_RESET
-IO_LABEL 09 I0_WATCHDOG_RESET
-IO_LABEL 0A I0_LATCHED_INTO_Z80_BUS_REQ
-IO_LABEL 0B I0_2A03_RESET
-IO_LABEL 0C I0_VLM5030_RESET
-IO_LABEL 0D I0_VLM5030_START
-IO_LABEL 0E I0_VLM5030_VCU
-IO_LABEL 0F I0_NVRAM_ENABLE?
+IO_LABEL 03 IO_DSW2_TO_2A03_BIT4_VLM5030_BUSY
+IO_LABEL 04 IO_TO_VLM5030
+IO_LABEL 08 IO_NMI_ENABLE_AND_WATCHDOG_RESET
+IO_LABEL 09 IO_WATCHDOG_RESET
+IO_LABEL 0A IO_LATCHED_INTO_Z80_BUS_REQ
+IO_LABEL 0B IO_2A03_RESET
+IO_LABEL 0C IO_VLM5030_RESET
+IO_LABEL 0D IO_VLM5030_START
+IO_LABEL 0E IO_VLM5030_VCU
+IO_LABEL 0F IO_NVRAM_ENABLE?
 
 org 0000
 
@@ -110,6 +110,7 @@ comment 0b93 return from NMI
 comment 0C37 Clear D500-D6FF
 
 label 0CA1 SUPER_PUNCHOUT_SPRITES_DISPLAY_AND_ZOOM
+data 0D1A-0D55
 
 comment 0DB2 number of KO records, top 3 for each boxer, 5 boxers, =0x0F/15
 commentline 0DBC this function is used to transfer the KO time records from nybbles in NVRAM to bytes in RAM
@@ -125,8 +126,9 @@ label 0e4e CHECKSUM_KO_?_?_DATA_IN_RAM?
 
 label 0FEE COPY_?
 
-label 1000 REST_OF_HIGH_SCORE_TABLE_ENCODED
-data 1000-10B7
+; dang, I got this location wrong! where was it?
+;label 1000 REST_OF_HIGH_SCORE_TABLE_ENCODED
+;data 1000-10B7
 commentline 108D A contains 2 bcd digits. Display A as 2 digits at DE with blank padding
 label 108D DISPLAY_A_AS_2_SPACE_PADDED_DIGITS_AT_DE
 comment 1092 Replace 0 tens digit with a space
@@ -151,6 +153,7 @@ comment 16A4 ?
 comment 16A6 ?
 comment 16A8 ?
 
+label 16DC REMATCH_COUNTDOWN_WAITING_FOR_CREDIT
 label 198D COPY_?2
 
 label 19A1 MAKE_HL_POINT_TO_THE_KO_TABLE_FOR_THE_CURRENT_OPPONENT
@@ -163,7 +166,7 @@ commentline 2D25 this copies characters in RAM/ROM to the screen
 label 2D25 COPY_(HL)_TO_(DE)_EVERY_OTHER_BYTE_FOR_C_COUNT
 label 2D2E WAIT___
 label 2D3A DISPLAY_NEXT_FIGHTER_TEXT_IN_BOTTOM_SCREEN
-
+label 2D48 WAIT_FOR_A_MILLISECONDS?
 label 2D52 COPY_A_TO_DE+_FOR_C_COUNT
 label 2D58 COPY_A_TO_DE+_FOR_BC_COUNT
 
@@ -561,6 +564,8 @@ commentline f20E bottom screen background RAM, from top left corner to bottom ri
 commentline f20E ~F20E-FECF, 32x26?, 
 commentline f20E char then color palette (44 is white char on black background)
 label f20e VRAM_bottom_monitor
+
+; REMATCH string displayed at F89A and FCBC (drawn in reverse so this is (near) the rightmost point)
 label fcc8 REMATCH_AVAILABLE_DRAW_LOCATION
 
 ; fill f1ae,d22,0620 (fills bottom screen with green Ws)
