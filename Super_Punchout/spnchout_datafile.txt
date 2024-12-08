@@ -505,9 +505,8 @@ label D428 KO_TIME_TABLE_DRAGON_CHAN
 label D440 KO_TIME_TABLE_VODKA_DRUNKENSKI
 label D458 KO_TIME_TABLE_GREAT_TIGER
 label D470 KO_TIME_TABLE_SUPER_CHAMPION
-
-label D4B0 HIGH_SCORE_OR_OTHER_TABLE_TO_D4D7_5_ENTRIES
-label D510 HIGH_SCORE_TABLE_TO_D6AF_2XALL_00_AND_50_ENTRIES
+label D4B0 HIT_AVERAGE_BEST_5
+label D510 HIGH_SCORE_TABLE_2XALL_00_AND_50_ENTRIES_TO_D6AF
 
 commentline d7bf 01 = credit, 02 = start game, 03 = game over, 04 = game over 2?, 05 = game over 3?, 06 = rematch started,
 commentline d7bf or countdown value to add coins for rematch
